@@ -3,20 +3,23 @@
     <Menu v-model:currentTab="currentTab"/>
 
     <div class="tab-container">
-      <CodeTab ref="codeTab" v-show="currentTab === 0" />
+      <CodeTab v-show="currentTab === 0" />
+      <DisplayTab v-show="currentTab === 2" />
     </div>
   </div>
 </template>
 
 <script>
-import CodeTab from '@/components/tabs/CodeTab.vue'
-import Menu from '@/components/other/Menu.vue'
+import Menu from '@/components/other/Menu.vue';
+import CodeTab from '@/components/tabs/CodeTab.vue';
+import DisplayTab from '@/components/tabs/DisplayTab.vue';
+
 
 export default {
-  components: {CodeTab, Menu},
+  components: {Menu, CodeTab, DisplayTab},
   data() {
     return {
-      currentTab: 0,
+      currentTab: 2,
     }
   }
 }
@@ -84,6 +87,10 @@ export default {
   .flex-horizontal-center {
     display: flex;
     align-items: center;
+  }
+
+  .width-1-of-2 {
+    width: 50%;
   }
 
 </style>

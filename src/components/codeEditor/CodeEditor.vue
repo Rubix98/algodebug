@@ -28,6 +28,7 @@
     <CodeEditorTestCases
       v-model:inputs="inputs"
       v-model:outputs="outputs"
+      v-model:selectedTestCase="selectedTestCase"
       :readonly="readonly" />
 
   </div>
@@ -40,6 +41,8 @@ import CodeEditorBody from './CodeEditorBody.vue';
 import CodeEditorTestCases from './CodeEditorTestCases.vue';
 import {CodeParser} from '@/scripts/CodeParser.js';
 import {DeepSet} from '@/scripts/DeepSet.js';
+
+let instances = {};
 
 export default {
   props: ['id', 'readonly'],
@@ -56,7 +59,8 @@ export default {
       trackVariablesMode:   false,
       showExtendedCode:     false,
       inputs:               [''],
-      outputs:              ['']
+      outputs:              [''],
+      selectedTestCase:     0
     }
   },
 
@@ -67,6 +71,7 @@ export default {
     this.linesDOM = rootDOM.getElementsByClassName('code-editor-line-numbers')[0];
     this.highlightsDOM.innerHTML = this.code;
     this.reset();
+    instances[this.$props.id] = this;
   },
 
   methods: {
@@ -117,6 +122,16 @@ export default {
         this.code = this.getExtendedCode();
       } else {
         this.code = this.copyOfCode;
+      }
+    }
+  },
+
+  updated() {
+    for (let id in instances) {
+      if (id != this.$props.id) {
+        for (let key in this.$data) {
+          instances[id][key] = this[key];
+        }
       }
     }
   }

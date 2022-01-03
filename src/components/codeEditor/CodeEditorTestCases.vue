@@ -7,7 +7,7 @@
 
           <button v-for="number in numberOfTestCases" :key="number"
             :class="{'selected-button ': isSelected(number)}"
-            @click="selectTestCase(number)" >
+            @click="this.$emit('update:selectedTestCase', number-1)" >
             Test {{number}}
           </button>
 
@@ -24,6 +24,7 @@
           <div class="textarea-header">Wejście</div>
           <textarea 
             :value="inputs[selectedTestCase]"
+            :readonly="readonly"
             @input="inputHandler('inputs', selectedTestCase, $event.target.value)"></textarea>
         </div>
 
@@ -31,6 +32,7 @@
           <div class="textarea-header">Spodziewane wyjście</div>
           <textarea 
             :value="outputs[selectedTestCase]"
+            :readonly="readonly"
             @input="inputHandler('outputs', selectedTestCase, $event.target.value)"></textarea>
         </div>
       </div>
@@ -42,25 +44,16 @@
 <script>
 
 export default {
-  props: ['inputs', 'outputs', 'readonly'],
-  
-  data() {
-    return {
-      selectedTestCase: 0
-    }
-  },
+  props: ['inputs', 'outputs', 'selectedTestCase', 'readonly'],
 
   methods: {
     inputHandler(name, number, value) {
       let tab = this.$props[name];
       tab[number] = value;
-      console.log(`update:${name}`, tab);
       this.$emit(`update:${name}`, tab);
     },
     
     addTestCase() {
-      this.selectedTestCase = this.$props.inputs.length;
-
       let inputs = this.$props.inputs;
       inputs.push('');
       this.$emit('update:inputs', inputs);
@@ -68,10 +61,6 @@ export default {
       let outputs = this.$props.outputs;
       outputs.push('');
       this.$emit('update:outputs', outputs);
-    },
-
-    selectTestCase(number) {
-      this.selectedTestCase = number-1;
     }
   },
 
