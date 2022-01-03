@@ -24,6 +24,12 @@
         @codeareaClickEvent="codeareaClickHandler"
         @codeareaInputEvent="codeareaInputHandler" />
     </div>
+
+    <CodeEditorTestCases
+      v-model:inputs="inputs"
+      v-model:outputs="outputs"
+      :readonly="readonly" />
+
   </div>
 </template>
 
@@ -31,13 +37,14 @@
 import CodeEditorHeader from './CodeEditorHeader.vue';
 import CodeEditorLineNumbers from './CodeEditorLineNumbers.vue';
 import CodeEditorBody from './CodeEditorBody.vue';
+import CodeEditorTestCases from './CodeEditorTestCases.vue';
 import {CodeParser} from '@/scripts/CodeParser.js';
 import {DeepSet} from '@/scripts/DeepSet.js';
 
 export default {
   props: ['id', 'readonly'],
 
-  components: {CodeEditorHeader, CodeEditorLineNumbers, CodeEditorBody},
+  components: {CodeEditorHeader, CodeEditorLineNumbers, CodeEditorBody, CodeEditorTestCases},
 
   data() {
     return {
@@ -47,7 +54,9 @@ export default {
       breakpoints:          new DeepSet(),
       marks:                new DeepSet(),
       trackVariablesMode:   false,
-      showExtendedCode:     false
+      showExtendedCode:     false,
+      inputs:               [''],
+      outputs:              ['']
     }
   },
 
@@ -131,8 +140,13 @@ export default {
   }
 
   .code-editor-main {
-    width: 100%;
-    height: calc(100% - 40px);
+    height: calc(70% - 40px);
+    padding-right: 10px;
+  }
+  
+  .code-editor-test-cases {
+    height: 30%;
+    padding: 10px;
   }
 
   .code-editor-body {
