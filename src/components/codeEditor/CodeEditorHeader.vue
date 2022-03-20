@@ -15,6 +15,10 @@
     <button @click="this.$emit('update:showExtendedCode', !showExtendedCode)">
       {{buttonLabel(['Pokaż rozszerzony kod', 'Pokaż bazowy kod'], showExtendedCode)}}
     </button>
+
+    <button @click="this.$emit('compileEvent')">
+      Kompiluj
+    </button>
   </div>
 </template>
 

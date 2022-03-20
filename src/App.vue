@@ -13,13 +13,20 @@
 import Menu from '@/components/other/Menu.vue';
 import CodeTab from '@/components/tabs/CodeTab.vue';
 import DisplayTab from '@/components/tabs/DisplayTab.vue';
-
+import axios from 'axios';
 
 export default {
   components: {Menu, CodeTab, DisplayTab},
   data() {
     return {
       currentTab: 2,
+    }
+  },
+
+  methods: {
+    sendRequest(url, data) {
+      let response = axios.post(url, data);
+      return response;
     }
   }
 }

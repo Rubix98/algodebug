@@ -5,7 +5,8 @@
       v-model:language="language"
       v-model:trackVariablesMode="trackVariablesMode"
       v-model:showExtendedCode="showExtendedCode"
-      :readonly="readonly" />
+      :readonly="readonly" 
+      @compileEvent="compile" />
 
     <div class="code-editor-main flex-row">
       <CodeEditorLineNumbers
@@ -96,6 +97,9 @@ export default {
       if (!this.readonly && this.trackVariablesMode) {
         this.breakpoints.addOrDelete(index);
       }
+    },
+
+    compile() {
     },
 
     highlightCode() {
