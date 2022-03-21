@@ -73,7 +73,7 @@ export class CodeParser {
 	parse() {
 		this.breakpointsVariables = [];
 		this.stack = [];
-		this.roundBracketLevel = 0;
+		this.roundBracketsLevel = 0;
 		this.curlyBracketsLevel = 0;
 
 		while (this.findNextTag()) {
@@ -89,9 +89,8 @@ export class CodeParser {
 		}
 
 		for (let [i, breakpointVariables] of this.breakpointsVariables.entries()) {
-			let printLine = ` std::cout << "ALGOVIEW${i} " << `;
-			printLine += breakpointVariables.join(' << " " << ');
-			printLine += breakpointVariables.length ? ' << std::endl;' : 'std::endl;'
+			let variables =  breakpointVariables.length ? breakpointVariables.join(' << " " << ') : '""';
+			let printLine = `\tstd::cout << "<ALGOVIEW> ${i}" << ${variables} << "</ALGOVIEW>" << endl;`;
 			this.code = this.code.replace('<breakpoint>', printLine);
 		}
 	}
@@ -129,7 +128,7 @@ export class CodeParser {
 		let beginIndex = tag.position + tag.name.length;
 		let endIndex = this.parent.code.indexOf('</mark>', beginIndex);
 		let variableName = this.parent.code.slice(beginIndex, endIndex);
-		let variableLevel = this.parent.curlyBracketsLevel + (this.parent.roundBracketLevel? 1 : 0);
+		let variableLevel = this.parent.curlyBracketsLevel + (this.parent.roundBracketsLevel? 1 : 0);
 		this.parent.stack.push({variableName: variableName, level: variableLevel});
 	}
 

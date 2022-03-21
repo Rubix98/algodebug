@@ -52,7 +52,7 @@ export default {
 
   data() {
     return {
-      code:                 '#include <iostream>\n\nint main() {\n\tint a, b;\n\tstring zmienna;\n\tcout << a << b;\n}',
+      code:                 '#include <iostream>\n#include <cstdio>\nusing namespace std;\n\nint gcd(int a, int b) {\n\tif (b > a) {\n\t\tswap(a, b);\n\t}\n\tif (b == 0) {\n\t\treturn a;\n\t} else {\n\t\treturn gcd(b, a % b);\n\t}\n}\n\nint main() {\n\tint a, b;\n\tcin >> a >> b;\n\tcout << gcd(a, b) << endl;\n}',
       title:                'Tytuł',
       language:             'C++',
       breakpoints:          new DeepSet(),
@@ -100,6 +100,14 @@ export default {
     },
 
     compile() {
+      this.$root.sendRequest({
+        code:      this.getExtendedCode(),
+        language: "cpp",
+        input:    this.inputs[0]
+      }).then(response => {
+        console.log(response.data);
+        this.outputs[0] = response.data.output;
+      });
     },
 
     highlightCode() {

@@ -29,11 +29,19 @@
         </div>
 
         <div>
-          <div class="textarea-header">Spodziewane wyjście</div>
+          <div class="textarea-header">Wyjście</div>
           <textarea 
             :value="outputs[selectedTestCase]"
             :readonly="readonly"
             @input="inputHandler('outputs', selectedTestCase, $event.target.value)"></textarea>
+        </div>
+
+        <div>
+          <div class="textarea-header">Wartość śledzonych zmiennych</div>
+          <textarea 
+            :value="outputs[selectedTestCase]"
+            :readonly="readonly"
+            @input="inputHandler('inspector', selectedTestCase, $event.target.value)"></textarea>
         </div>
       </div>
 

@@ -4,7 +4,7 @@
       v-for="line in numberOfLines" :key="line" >
       
       <div class="flex-horizontal-center">
-        <i class="fa fa-circle breakpoint" v-if="isBreakpointSet(line)"></i>
+        <i class="fa fa-circle breakpoint" v-if="isBreakpointSet(line)" @click="this.$emit('breakPointClickEvent', line)"></i>
         <i class="fa fa-square-o" v-else-if="trackVariablesMode" @click="this.$emit('breakPointClickEvent', line)"></i>
       </div>
       <div class="line-index">{{line}}</div>
