@@ -4,12 +4,12 @@
 
       <textarea 
         class="codearea full-size"
-        :class="{'trackVariablesMode': trackVariablesMode}"
+        :class="{'cursor-pointer': isTrackingModeOn}"
         :value="code"
         @input="this.$emit('codeareaInputEvent', $event.target.value)"
         @scroll="this.$emit('codeareaScrollEvent')"
         @click="this.$emit('codeareaClickEvent')"
-        :readonly="!canEditCode"
+        :readonly="!isCodingModeOn"
         spellcheck="false">
       </textarea>
   </div>
@@ -18,11 +18,15 @@
 <script>
 
 export default {
-  props: ['code', 'trackVariablesMode', 'showExtendedCode', 'readonly'],
+  props: ['code', 'mode'],
 
   computed: {
-    canEditCode() {
-      return !this.$props.readonly && !this.$props.trackVariablesMode && !this.$props.showExtendedCode;
+    isCodingModeOn() {
+      return this.$props.mode === 'CODING';
+    },
+
+    isTrackingModeOn() {
+      return this.$props.mode === 'TRACKING';
     }
   }
 }
@@ -56,7 +60,7 @@ export default {
     text-decoration: none !important;
   }
 
-  .trackVariablesMode {
+  .cursor-pointer {
     cursor: pointer;
   }
 </style>

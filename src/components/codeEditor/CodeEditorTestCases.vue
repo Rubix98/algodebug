@@ -11,37 +11,20 @@
             Test {{number}}
           </button>
 
-          <button class="add-button" v-if="!readonly" @click="addTestCase">+</button>
+          <button class="add-button" v-if="isCodingModeOn" @click="addTestCase">+</button>
 
         </div>
         <div>
-            <button class="udebug-button" v-if="!readonly">uDebug</button>
+            <button class="udebug-button" v-if="isCodingModeOn">uDebug</button>
         </div>
       </div>
 
       <div class="test-cases-body full-size flex-row flex-vertical-space-between">
-        <div>
-          <div class="textarea-header">Wejście</div>
+        <div v-for="textarea in textareas" :key="textarea.fieldName" v-show="textarea.visible()">
+          <div class="textarea-header">{{ textarea.title }}</div>
           <textarea 
-            :value="inputs[selectedTestCase]"
-            :readonly="readonly"
-            @input="inputHandler('inputs', selectedTestCase, $event.target.value)"></textarea>
-        </div>
-
-        <div>
-          <div class="textarea-header">Wyjście</div>
-          <textarea 
-            :value="outputs[selectedTestCase]"
-            :readonly="readonly"
-            @input="inputHandler('outputs', selectedTestCase, $event.target.value)"></textarea>
-        </div>
-
-        <div>
-          <div class="textarea-header">Wartość śledzonych zmiennych</div>
-          <textarea 
-            :value="outputs[selectedTestCase]"
-            :readonly="readonly"
-            @input="inputHandler('inspector', selectedTestCase, $event.target.value)"></textarea>
+            :value="testCases[selectedTestCase][textarea.fieldName]"
+            @input="inputHandler(textarea.fieldName, $event.target.value)"></textarea>
         </div>
       </div>
 
@@ -52,35 +35,61 @@
 <script>
 
 export default {
-  props: ['inputs', 'outputs', 'selectedTestCase', 'readonly'],
+  props: ['testCases', 'selectedTestCase', 'mode'],
+
+  data() {
+    return {
+      textareas: [
+        {title: 'Wejście', fieldName: 'input', visible: () => true},
+        {title: 'Wyjście', fieldName: 'output', visible: () => this.isDebuggingModeOn},
+        {title: 'Wartość śledzonych zmiennych', fieldName: 'trackedVariables', visible: () => this.isDebuggingModeOn},
+      ]
+    }
+  },
 
   methods: {
-    inputHandler(name, number, value) {
-      let tab = this.$props[name];
-      tab[number] = value;
-      this.$emit(`update:${name}`, tab);
+    inputHandler(fieldName, newValue) {
+      let testCases = this.$props.testCases;
+      testCases[this.selectedTestCase][fieldName] = newValue;
+      this.$emit('update:testCases', testCases);
     },
     
     addTestCase() {
-      let inputs = this.$props.inputs;
-      inputs.push('');
-      this.$emit('update:inputs', inputs);
-
-      let outputs = this.$props.outputs;
-      outputs.push('');
-      this.$emit('update:outputs', outputs);
+      let testCases = this.$props.testCases;
+      testCases.push({
+        input: '',
+        output: '',
+        trackedVariables: ''
+      })
+      this.$emit('update:testCases', testCases);
     }
   },
 
   computed: {
     numberOfTestCases() {
-      return this.$props.inputs.length;
+      return this.$props.testCases.length;
     },
 
     isSelected() {
       return number => {
         return this.selectedTestCase === number-1;
       }
+    },
+
+    isCodingModeOn() {
+      return this.$props.mode === 'CODING';
+    },
+    
+    isTrackingModeOn() {
+      return this.$props.mode === 'TRACKING';
+    },
+
+    isExtendingModeOn() {
+      return this.$props.mode === 'EXTENDING';
+    },
+
+    isDebuggingModeOn() {
+      return this.$props.mode === 'DEBUGGING';
     }
   }
 
@@ -118,7 +127,7 @@ export default {
   }
 
   .test-cases-body > div {
-    width: calc(50% - 5px);
+    width: 100%;
   }
 
   .test-cases-body .textarea-header {

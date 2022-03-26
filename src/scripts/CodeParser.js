@@ -89,9 +89,13 @@ export class CodeParser {
 		}
 
 		for (let [i, breakpointVariables] of this.breakpointsVariables.entries()) {
-			let variables =  breakpointVariables.length ? breakpointVariables.join(' << " " << ') : '""';
-			let printLine = `\tstd::cout << "<ALGOVIEW> ${i}" << ${variables} << "</ALGOVIEW>" << endl;`;
-			this.code = this.code.replace('<breakpoint>', printLine);
+			let cout = '\tstd::cout << "<ALGOVIEW>\\n"'
+			cout += ` << "  <variable name=\\"breakpointId\\" value=\\"" << ${i} << "\\" />\\n"`;
+			for (let variable of breakpointVariables) {
+				cout += ` << "  <variable name=\\"${variable}\\" value=\\"" << ${variable} << "\\" />\\n"`;
+			}
+			cout += ' << "</ALGOVIEW>\\n";';
+			this.code = this.code.replace('<breakpoint>', cout);
 		}
 	}
 	

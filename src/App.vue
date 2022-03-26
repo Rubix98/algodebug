@@ -3,20 +3,18 @@
     <Menu v-model:currentTab="currentTab"/>
 
     <div class="tab-container">
-      <CodeTab v-show="currentTab === 0" />
-      <DisplayTab v-show="currentTab === 2" />
+      <CodeEditor />
     </div>
   </div>
 </template>
 
 <script>
 import Menu from '@/components/other/Menu.vue';
-import CodeTab from '@/components/tabs/CodeTab.vue';
-import DisplayTab from '@/components/tabs/DisplayTab.vue';
+import CodeEditor from '@/components/codeEditor/CodeEditor.vue';
 import axios from 'axios';
 
 export default {
-  components: {Menu, CodeTab, DisplayTab},
+  components: {Menu, CodeEditor},
   data() {
     return {
       currentTab: 2,
@@ -45,13 +43,12 @@ export default {
   }
 
   .menu {
-    height: 60px;
+    height: 40px;
   }
 
   .tab-container {
     width: 100%;
-    height: calc(100% - 60px);
-    padding: 10px;
+    height: calc(100% - 40px);
   }
 
   /* Global */

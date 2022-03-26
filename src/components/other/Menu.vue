@@ -1,12 +1,7 @@
 <template>
   <div class="menu">
     <div class="menu-content flex-row flex-horizontal-center">
-      <div class="menu-option" 
-        v-for="(tab, index) in tabs" :key="index" 
-        @click="this.$emit('update:currentTab', index)"
-        :class="{selected: currentTab === index}">
-          {{tab}}
-        </div>
+      <i class="fa fa-bars"></i>
     </div>
     <div class="menu-placeholder"></div>
   </div>
@@ -14,10 +9,8 @@
 
 <script>
 export default {
-  props: ['currentTab'],
   data() {
     return {
-      tabs: ['Edycja kodu', 'Konfiguracja sceny', 'Wyświetlanie']
     }
   }
 }
@@ -35,14 +28,9 @@ export default {
     height: inherit;
   }
 
-  .menu-option {
-    padding: 10px;
-    border: 2px solid black;
-    margin: 0 10px;
-    cursor: pointer
-  }
-
-  .selected {
-    background-color: lime;
+  i {
+    color: white;
+    font-size: 25px;
+    margin-left: 10px;
   }
 </style>

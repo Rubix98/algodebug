@@ -1,36 +1,40 @@
 <template>
-  <div :id="id" class="code-editor full-size">
-    <CodeEditorHeader
-      v-model:title="title"
-      v-model:language="language"
-      v-model:trackVariablesMode="trackVariablesMode"
-      v-model:showExtendedCode="showExtendedCode"
-      :readonly="readonly" 
-      @compileEvent="compile" />
+  <div class="code-editor full-size">
+    <div class="editor-main flex-row">
+      <div :class="{'width-1-of-2': isDebuggingModeOn, 'full-size': !isDebuggingModeOn}" style="position:relative">
+        <CodeEditorHeader
+          v-model:language="language"
+          v-model:mode="mode" />
 
-    <div class="code-editor-main flex-row">
-      <CodeEditorLineNumbers
-        :code="code"
-        :breakpoints="breakpoints"
-        :trackVariablesMode="trackVariablesMode"
-        :readonly="readonly"
-        @breakPointClickEvent="breakPointClickHandler" />
+        <div class="code-editor-main flex-row">
+          <CodeEditorLineNumbers
+            :code="code"
+            :breakpoints="breakpoints"
+            :mode="mode"
+            @breakPointClickEvent="breakPointClickHandler" />
 
-      <CodeEditorBody 
-        v-model:code="code"
-        :trackVariablesMode="trackVariablesMode"
-        :showExtendedCode="showExtendedCode"
-        :readonly="readonly"
-        @codeareaScrollEvent="codeareaScrollHandler"
-        @codeareaClickEvent="codeareaClickHandler"
-        @codeareaInputEvent="codeareaInputHandler" />
+          <CodeEditorBody 
+            v-model:code="code"
+            :mode="mode"
+            @codeareaScrollEvent="codeareaScrollHandler"
+            @codeareaClickEvent="codeareaClickHandler"
+            @codeareaInputEvent="codeareaInputHandler" />
+        </div>
+      </div>
+        
+      <div v-if="isDebuggingModeOn" class="width-1-of-2">
+        <SceneCanvas 
+          v-model:selectedFrame="selectedFrame"
+          :testCases="testCases"
+          :selectedTestCase="selectedTestCase" />
+      </div>
     </div>
 
     <CodeEditorTestCases
-      v-model:inputs="inputs"
-      v-model:outputs="outputs"
+      v-model:testCases="testCases"
       v-model:selectedTestCase="selectedTestCase"
-      :readonly="readonly" />
+      :mode="mode"
+      :selectedFrame="selectedFrame" />
 
   </div>
 </template>
@@ -40,39 +44,37 @@ import CodeEditorHeader from './CodeEditorHeader.vue';
 import CodeEditorLineNumbers from './CodeEditorLineNumbers.vue';
 import CodeEditorBody from './CodeEditorBody.vue';
 import CodeEditorTestCases from './CodeEditorTestCases.vue';
+import SceneCanvas from './SceneCanvas.vue';
 import {CodeParser} from '@/scripts/CodeParser.js';
 import {DeepSet} from '@/scripts/DeepSet.js';
 
-let instances = {};
 
 export default {
-  props: ['id', 'readonly'],
-
-  components: {CodeEditorHeader, CodeEditorLineNumbers, CodeEditorBody, CodeEditorTestCases},
+  components: {CodeEditorHeader, CodeEditorLineNumbers, CodeEditorBody, CodeEditorTestCases, SceneCanvas},
 
   data() {
     return {
       code:                 '#include <iostream>\n#include <cstdio>\nusing namespace std;\n\nint gcd(int a, int b) {\n\tif (b > a) {\n\t\tswap(a, b);\n\t}\n\tif (b == 0) {\n\t\treturn a;\n\t} else {\n\t\treturn gcd(b, a % b);\n\t}\n}\n\nint main() {\n\tint a, b;\n\tcin >> a >> b;\n\tcout << gcd(a, b) << endl;\n}',
-      title:                'Tytuł',
       language:             'C++',
       breakpoints:          new DeepSet(),
       marks:                new DeepSet(),
-      trackVariablesMode:   false,
-      showExtendedCode:     false,
-      inputs:               [''],
-      outputs:              [''],
-      selectedTestCase:     0
+      mode:                'CODING',
+      testCases:            [{
+        input:              '',
+        output:             '',
+        trackedVariables:   '',
+      }],
+      selectedTestCase:     0,
+      selectedFrame:        null
     }
   },
 
   mounted() {
-    let rootDOM = document.getElementById(this.$props.id);
-    this.codeareaDOM = rootDOM.getElementsByClassName('codearea')[0];
-    this.highlightsDOM = rootDOM.getElementsByClassName('highlights')[0];
-    this.linesDOM = rootDOM.getElementsByClassName('code-editor-line-numbers')[0];
+    this.codeareaDOM = document.getElementsByClassName('codearea')[0];
+    this.highlightsDOM = document.getElementsByClassName('highlights')[0];
+    this.linesDOM = document.getElementsByClassName('code-editor-line-numbers')[0];
     this.highlightsDOM.innerHTML = this.code;
     this.reset();
-    instances[this.$props.id] = this;
   },
 
   methods: {
@@ -81,7 +83,7 @@ export default {
     },
 
     codeareaClickHandler() {
-      if (!this.readonly && this.trackVariablesMode) {
+      if (this.mode === 'TRACKING') {
         let mark = CodeParser.getSelectedMark(this.code, this.codeareaDOM.selectionStart);
         this.marks.addOrDelete(mark);
         this.highlightCode();
@@ -94,20 +96,39 @@ export default {
     },
 
     breakPointClickHandler(index) {
-      if (!this.readonly && this.trackVariablesMode) {
+      if (this.mode === 'TRACKING') {
         this.breakpoints.addOrDelete(index);
       }
     },
 
     compile() {
-      this.$root.sendRequest({
-        code:      this.getExtendedCode(),
-        language: "cpp",
-        input:    this.inputs[0]
-      }).then(response => {
-        console.log(response.data);
-        this.outputs[0] = response.data.output;
-      });
+      let extendedCode = this.getExtendedCode();
+      for (let testCase of this.testCases) {
+        this.$root.sendRequest({
+          code:      extendedCode,
+          language: "cpp",
+          input:    testCase.input
+        }).then(response => {
+          console.log(response.data);
+          let output = response.data.output;
+          var htmlDoc = new DOMParser().parseFromString(output, 'text/html');
+          testCase.frames = [];
+          for (let algoviewTag of htmlDoc.getElementsByTagName("ALGOVIEW")) {
+            let frame = {};
+            for (let variable of algoviewTag.getElementsByTagName("variable")) {
+              let variableName = variable.getAttribute("name")
+              let variableValue = variable.getAttribute("value")
+              frame[variableName] = variableValue;
+            }
+            testCase.frames.push(frame);
+          }
+          output = output.replace(/<ALGOVIEW>[\s\S]*?<\/ALGOVIEW>\n*/g, '');
+          testCase.output = output;
+          this.selectedFrame = 0;
+        });
+
+      }
+      
     },
 
     highlightCode() {
@@ -126,26 +147,53 @@ export default {
     }
   },
 
-  watch: {
-    showExtendedCode(value) {
-      if (value) {
-        this.trackVariablesMode = false;
-        this.copyOfCode = this.code;
-        this.code = this.getExtendedCode();
-      } else {
-        this.code = this.copyOfCode;
-      }
+  computed: {
+    isCodingModeOn() {
+      return this.mode === 'CODING';
+    },
+    
+    isTrackingModeOn() {
+      return this.mode === 'TRACKING';
+    },
+
+    isExtendingModeOn() {
+      return this.mode === 'EXTENDING';
+    },
+
+    isDebuggingModeOn() {
+      return this.mode === 'DEBUGGING';
+    },
+
+    currentTestCase() {
+      return this.testCases[this.selectedTestCase];
+    },
+
+    currentFrame() {
+      return this.currentTestCase.frames[this.selectedFrame]
     }
+
   },
 
-  updated() {
-    for (let id in instances) {
-      if (id != this.$props.id) {
-        for (let key in this.$data) {
-          instances[id][key] = this[key];
-        }
+  watch: {
+    mode(value, oldValue) {
+      if (value === 'EXTENDING') {
+        this.copyOfCode = this.code;
+        this.code = this.getExtendedCode();
       }
+      if (oldValue === 'EXTENDING') {
+        this.code = this.copyOfCode;
+      }
+
+      if (value === 'DEBUGGING') {
+        this.compile();
+      }
+    },
+
+    selectedFrame() {
+      this.testCases[this.selectedTestCase].trackedVariables = JSON.stringify(this.testCases[this.selectedTestCase].frames[this.selectedFrame]);
     }
+
+
   }
 
 }
@@ -154,26 +202,25 @@ export default {
 <style scoped>
   .code-editor {
     background-color: silver;
-    font: 20px Consolas;
+    font: 15px Consolas;
+    padding: 10px;
   }
 
   .code-editor-line-numbers {
     width: 70px;
   }
 
-  .code-editor-header {
-    height: 40px;
-    padding-left: 70px;
+  .code-editor-main {
+    height: 100%;
+    padding-right: 10px;
   }
 
-  .code-editor-main {
-    height: calc(70% - 40px);
-    padding-right: 10px;
+  .editor-main {
+    height: 70%;
   }
   
   .code-editor-test-cases {
     height: 30%;
-    padding: 10px;
   }
 
   .code-editor-body {
