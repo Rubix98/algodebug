@@ -35,6 +35,18 @@ export class CodeParser {
 		return {name: variableName, start: start, end: end};
 	}
 
+	static highlightLine(code, line, style) {
+		let lines = code.split('\n');
+		lines[line] = lines[line] !== '' ? lines[line] : ' ';
+		lines[line] = `<mark>${lines[line]}</mark>`;
+		code = lines.join('\n');
+		code = code.replaceAll('<', '&lt');
+		code = code.replaceAll('>', '&gt');
+		code = code.replaceAll('&ltmark&gt', `<mark style="${style}">`);
+		code = code.replaceAll('&lt/mark&gt', '</mark>');
+		return code;
+	}
+
 	static highlightCode(code, marks, style) {
 		code = this.insertMarkTags(code, marks);
 		code = code.replaceAll('<', '&lt');
@@ -49,7 +61,7 @@ export class CodeParser {
 		code = this.insertBreakpointTags(code, breakpoints);
 		let codeParser = new CodeParser(code);
 		codeParser.parse();
-		codeParser.insertPrintLines();
+		codeParser.insertPrintLines(breakpoints);
 		codeParser.removeMarks();
 		return codeParser.code;
 	}
@@ -83,14 +95,14 @@ export class CodeParser {
 		}
 	}
 
-	insertPrintLines() {
+	insertPrintLines(breakpoints) {
 		if (!this.code.includes('#include <iostream>'))  {
 			this.code = '#include <iostream>' + this.code;
 		}
-
+		breakpoints = Array.from(breakpoints).sort((a, b) => a - b);
 		for (let [i, breakpointVariables] of this.breakpointsVariables.entries()) {
 			let cout = '\tstd::cout << "<ALGOVIEW>\\n"'
-			cout += ` << "  <variable name=\\"breakpointId\\" value=\\"" << ${i} << "\\" />\\n"`;
+			cout += ` << "  <variable name=\\"line\\" value=\\"" << ${breakpoints[i]} << "\\" />\\n"`;
 			for (let variable of breakpointVariables) {
 				cout += ` << "  <variable name=\\"${variable}\\" value=\\"" << ${variable} << "\\" />\\n"`;
 			}

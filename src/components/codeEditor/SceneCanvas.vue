@@ -37,23 +37,21 @@ export default {
     this.canvasWidth = canvasDOM.width = canvasDOM.offsetWidth;
     this.canvasHeight = canvasDOM.height = canvasDOM.offsetHeight;
     this.painter = new Painter(this.canvas);
-
-    let graph = new Graph([
-      {from: 0, to: 1},
-      {from: 1, to: 2},
-      {from: 0, to: 5},
-    ]);
-
-    this.painter.drawGraph(graph)
   },
 
   methods: {
     setSelectedFrame(selectedFrame) {
       if (selectedFrame >= 0 && selectedFrame < this.numberOfFrames) {
         this.$emit('update:selectedFrame', selectedFrame);
+        this.drawFrame(this.$parent.currentFrame);
       }
-    }
+    },
     
+    drawFrame(frame) {
+      this.painter.clear();
+      let graph = new Graph(frame.graph);
+      this.painter.drawGraph(graph);
+    }
   },
 
   computed: {

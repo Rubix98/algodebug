@@ -2,7 +2,7 @@ export class Graph {
 	defaultProperties = {
 		cx: 300,
 		cy: 300,		
-		graphRadius: 100,
+		graphRadius: 200,
 		vertexRadius: 20,
 		vertexColor: 'silver',
 		vertexLabelColor: 'black',
@@ -14,9 +14,9 @@ export class Graph {
 
 	constructor(edges, properties) {
 		this.properties = properties != null ? properties : this.defaultProperties;
-		this.edges = edges;
-		this.vertices = this.calculateVertices(edges, properties)
-		this.edges = this.calculateEdges(edges, this.vertices);
+		this.edges = JSON.parse(JSON.stringify(edges));
+		this.vertices = this.calculateVertices(this.edges, properties)
+		this.edges = this.calculateEdges(this.edges, this.vertices);
 	}
 
 	calculateEdges() {

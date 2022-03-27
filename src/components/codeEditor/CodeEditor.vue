@@ -116,12 +116,17 @@ export default {
           for (let algoviewTag of htmlDoc.getElementsByTagName("ALGOVIEW")) {
             let frame = {};
             for (let variable of algoviewTag.getElementsByTagName("variable")) {
-              let variableName = variable.getAttribute("name")
-              let variableValue = variable.getAttribute("value")
+              let variableName = variable.getAttribute("name");
+              let variableValue = variable.getAttribute("value");
+              if (variableName === 'edges') {
+                variableName = 'graph'
+                variableValue = this.parseGraph(variableValue);
+              }
               frame[variableName] = variableValue;
             }
             testCase.frames.push(frame);
           }
+          console.log(testCase)
           output = output.replace(/<ALGOVIEW>[\s\S]*?<\/ALGOVIEW>\n*/g, '');
           testCase.output = output;
           this.selectedFrame = 0;
@@ -131,9 +136,28 @@ export default {
       
     },
 
+    parseGraph(graphValue) {
+      let result = [];
+      for (let edge of graphValue.split(';')) {
+        if (edge !== '') {
+          let edgeSplitted = edge.split(',');
+          result.push({
+            from: edgeSplitted[0],
+            to: edgeSplitted[1]
+          })
+        }
+      }
+      return result;
+    },
+
     highlightCode() {
       const markStyle = 'background-color: purple; color: transparent; border-radius: 3px';
       this.highlightsDOM.innerHTML = CodeParser.highlightCode(this.code, this.marks, markStyle);
+    },
+
+    highlightLine(line) {
+      const markStyle = 'background-color: orange; color: transparent; border-radius: 3px; display:block; width: 100%';
+      this.highlightsDOM.innerHTML = CodeParser.highlightLine(this.code, line, markStyle);
     },
 
     getExtendedCode() {
@@ -191,6 +215,7 @@ export default {
 
     selectedFrame() {
       this.testCases[this.selectedTestCase].trackedVariables = JSON.stringify(this.testCases[this.selectedTestCase].frames[this.selectedFrame]);
+      this.highlightLine(this.testCases[this.selectedTestCase].frames[this.selectedFrame].line-1);
     }
 
 

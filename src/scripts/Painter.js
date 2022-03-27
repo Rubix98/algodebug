@@ -20,6 +20,10 @@ export class Painter {
 		this.setStyle(this.defaultStyle);
 	}
 
+	clear() {
+		this.canvas.clearRect(0, 0, 1000, 1000);
+	}
+
 	drawGraph(graph) {
 		this.drawEdges(graph);
 		this.drawVertices(graph);
