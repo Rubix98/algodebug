@@ -22,8 +22,8 @@ export default {
   },
 
   methods: {
-    async sendRequest(data) {
-      let response = await axios.post('https://codexweb.netlify.app/.netlify/functions/enforceCode', data);
+    async sendRequest(url, data) {
+      let response = await axios.post(url, data);
       return response;
     }
   }

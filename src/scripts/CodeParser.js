@@ -99,7 +99,7 @@ export class CodeParser {
 		if (!this.code.includes('#include <iostream>'))  {
 			this.code = '#include <iostream>' + this.code;
 		}
-		breakpoints = Array.from(breakpoints).sort((a, b) => a - b);
+		breakpoints = breakpoints.sorted();
 		for (let [i, breakpointVariables] of this.breakpointsVariables.entries()) {
 			let cout = '\tstd::cout << "<ALGOVIEW>\\n"'
 			cout += ` << "  <variable name=\\"line\\" value=\\"" << ${breakpoints[i]} << "\\" />\\n"`;

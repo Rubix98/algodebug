@@ -35,6 +35,14 @@ export class DeepSet extends Set {
 		return Array.from(this).reverse();
 	}
 
+	sorted() {
+		return Array.from(this).sort((a, b) => a - b);
+	}
+
+	toArray() {
+		return Array.from(this);
+	}
+
 	find(element) {
 		for (let el of this) {
 			if (this.deepCompare(el, element)) {

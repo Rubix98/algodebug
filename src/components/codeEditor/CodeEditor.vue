@@ -58,12 +58,12 @@ export default {
       language:             'C++',
       breakpoints:          new DeepSet(),
       marks:                new DeepSet(),
-      mode:                'CODING',
       testCases:            [{
         input:              '',
         output:             '',
         trackedVariables:   '',
       }],
+      mode:                'CODING',
       selectedTestCase:     0,
       selectedFrame:        null
     }
@@ -75,6 +75,8 @@ export default {
     this.linesDOM = document.getElementsByClassName('code-editor-line-numbers')[0];
     this.highlightsDOM.innerHTML = this.code;
     this.reset();
+
+    this.emitter.on('saveProject', this.saveProject)
   },
 
   methods: {
@@ -104,7 +106,7 @@ export default {
     compile() {
       let extendedCode = this.getExtendedCode();
       for (let testCase of this.testCases) {
-        this.$root.sendRequest({
+        this.$root.sendRequest('https://codexweb.netlify.app/.netlify/functions/enforceCode', {
           code:      extendedCode,
           language: "cpp",
           input:    testCase.input
@@ -148,6 +150,18 @@ export default {
         }
       }
       return result;
+    },
+
+    saveProject(title) {
+      let data = {
+        title: title,
+        language: this.language,
+        code: this.code,
+        breakpoints: this.breakpoints.sorted(),
+        marks: this.marks.sorted(),
+        testCases: this.testCases
+      };
+      this.$root.sendRequest("http://localhost:8080/project/save", data);
     },
 
     highlightCode() {

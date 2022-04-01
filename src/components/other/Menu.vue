@@ -1,16 +1,26 @@
 <template>
   <div class="menu">
     <div class="menu-content flex-row flex-horizontal-center">
-      <i class="fa fa-bars"></i>
+      <i class="fa fa-save" @click="openDialog('saveProject')"></i>
+      <i class="fa fa-search" @click="openDialog('saveProject')"></i>
     </div>
     <div class="menu-placeholder"></div>
+    <SaveProject ref="saveProject"/>
   </div>
 </template>
 
 <script>
+import SaveProject from '@/components/dialogs/SaveProject.vue'
 export default {
+  components: { SaveProject },
   data() {
     return {
+    }
+  },
+
+  methods: {
+    openDialog(dialog) {
+      this.$refs[dialog].openDialog();
     }
   }
 }
@@ -32,5 +42,6 @@ export default {
     color: white;
     font-size: 25px;
     margin-left: 10px;
+    cursor: pointer;
   }
 </style>
