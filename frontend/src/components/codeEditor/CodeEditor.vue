@@ -106,7 +106,7 @@ export default {
     compile() {
       let extendedCode = this.getExtendedCode();
       for (let testCase of this.testCases) {
-        this.$root.sendRequest('https://codexweb.netlify.app/.netlify/functions/enforceCode', {
+        this.$root.sendRequest('compilator/.netlify/functions/enforceCode', {
           code:      extendedCode,
           language: "cpp",
           input:    testCase.input
@@ -161,7 +161,7 @@ export default {
         marks: this.marks.sorted(),
         testCases: this.testCases
       };
-      this.$root.sendRequest("http://localhost:8080/project/save", data);
+      this.$root.sendRequest("backend/project/save", data);
     },
 
     highlightCode() {
