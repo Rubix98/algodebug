@@ -22,7 +22,7 @@ export default {
   },
 
   methods: {
-    async sendRequest(url, data) {
+    async sendRequest(url, data={}) {
       let response = await axios.post(url, data);
       return response;
     }

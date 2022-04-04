@@ -77,6 +77,19 @@ export default {
     this.reset();
 
     this.emitter.on('saveProject', this.saveProject)
+
+    console.log(this.projectId);
+    if (this.projectId != '') {
+      this.$root.sendRequest('backend/project/find/' + this.projectId).then(response => {
+        let data = response.data;
+        this.code = data.code;
+        this.language = data.language;
+        this.breakpoints = new DeepSet(data.breakpoints);
+        this.marks = new DeepSet(data.marks);
+        this.testCases = data.testCases;
+        this.highlightCode();
+      })
+    }
   },
 
   methods: {
@@ -208,6 +221,11 @@ export default {
 
     currentFrame() {
       return this.currentTestCase.frames[this.selectedFrame]
+    },
+
+    projectId() {
+      let projectId = window.location.pathname;
+      return projectId[0] === '/' ? projectId.substring(1) : projectId;
     }
 
   },

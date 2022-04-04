@@ -2,19 +2,23 @@ package algoview.models;
 
 import algoview.pojos.MarkPojo;
 import algoview.pojos.TestCasePojo;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Vector;
 
+@Getter
+@Setter
 @Document("projects")
 public class Project {
     @Id
-    String id;
-    String title;
-    String language;
-    String code;
-    Vector<Integer> breakpoints;
-    Vector<MarkPojo> marks;
-    Vector<TestCasePojo> testCases;
+    private String id;
+    private String title;
+    private String language;
+    private String code;
+    private Vector<Integer> breakpoints;
+    private Vector<MarkPojo> marks;
+    private Vector<TestCasePojo> testCases;
 }

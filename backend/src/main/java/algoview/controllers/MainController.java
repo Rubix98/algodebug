@@ -17,16 +17,19 @@ public class MainController {
     @PostMapping("save")
     public Boolean save(@RequestBody Project project) {
         System.out.println("save");
+        System.out.println(project.getTestCases().get(0).getInput());
         return projectService.save(project);
     }
 
-    @PostMapping("get/{id}")
-    public Project getById(@PathVariable String id) {
+    @PostMapping("find/{id}")
+    public Project findById(@PathVariable String id) {
+        System.out.println("find/" + id);
         return projectService.findById(id);
     }
 
-    @PostMapping("getAll")
-    public List<Project> getAll(@PathVariable String id) {
+    @PostMapping("findAll")
+    public List<Project> findAll() {
+        System.out.println("findAll");
         return projectService.findAll();
     }
 

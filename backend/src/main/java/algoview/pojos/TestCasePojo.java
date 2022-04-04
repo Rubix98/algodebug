@@ -1,6 +1,11 @@
 package algoview.pojos;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class TestCasePojo {
-    String input;
-    String output;
+    private String input;
+    private String output;
 }
