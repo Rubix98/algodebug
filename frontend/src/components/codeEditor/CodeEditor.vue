@@ -79,6 +79,9 @@ export default {
     this.emitter.on('saveProject', this.saveProject)
     this.emitter.on('addMark', this.addMark)
     
+    this.$root.sendRequest("backend/code/load/cpp").then(response=> {
+			console.log(response);
+		})
 
     console.log(this.projectId);
     if (this.projectId != '') {
