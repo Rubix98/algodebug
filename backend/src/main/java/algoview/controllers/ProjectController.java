@@ -9,15 +9,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("project")
-public class MainController {
+public class ProjectController {
 
     @Autowired
     ProjectService projectService;
 
     @PostMapping("save")
-    public Boolean save(@RequestBody Project project) {
-        System.out.println("save");
-        System.out.println(project.getTestCases().get(0).getInput());
+    public Project save(@RequestBody Project project) {
         return projectService.save(project);
     }
 

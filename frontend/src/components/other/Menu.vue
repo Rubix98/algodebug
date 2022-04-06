@@ -5,16 +5,13 @@
       <i class="fa fa-search" @click="openDialog('loadProjectsDialog')"></i>
     </div>
     <div class="menu-placeholder"></div>
-    <SaveProjectDialog ref="saveProjectDialog"/>
-    <LoadProjectsDialog ref="loadProjectsDialog"/>
+    
   </div>
 </template>
 
 <script>
-import SaveProjectDialog from '@/components/dialogs/SaveProjectDialog.vue'
-import LoadProjectsDialog from '@/components/dialogs/LoadProjectsDialog.vue'
+
 export default {
-  components: { SaveProjectDialog, LoadProjectsDialog },
   data() {
     return {
     }
@@ -22,7 +19,7 @@ export default {
 
   methods: {
     openDialog(dialog) {
-      this.$refs[dialog].openDialog();
+      this.$root.openDialog(dialog);
     }
   }
 }

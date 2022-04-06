@@ -22,7 +22,7 @@ export default {
       icons: [
         {icon: 'fa fa-play', title: 'Uruchom program', mode: 'DEBUGGING'},
         {icon: 'fa fa-hand-pointer', title: 'Zaznacz zmienne i breakpointy', mode: 'TRACKING'},
-        {icon: 'fa fa-magnifying-glass', title: 'Pokaż rozszerzony kod', mode: 'EXTENDING'},
+        {icon: 'fa fa-eye', title: 'Pokaż rozszerzony kod', mode: 'EXTENDING'},
 
       ]
     }

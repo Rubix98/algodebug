@@ -14,8 +14,8 @@ public class ProjectService {
     @Autowired
     ProjectRepository projectRepository;
 
-    public Boolean save(Project project) {
-        return projectRepository.save(project) != null;
+    public Project save(Project project) {
+        return projectRepository.save(project);
     }
 
     public Project findById(String id) {

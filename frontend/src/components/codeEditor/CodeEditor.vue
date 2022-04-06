@@ -77,6 +77,8 @@ export default {
     this.reset();
 
     this.emitter.on('saveProject', this.saveProject)
+    this.emitter.on('addMark', this.addMark)
+    
 
     console.log(this.projectId);
     if (this.projectId != '') {
@@ -100,9 +102,17 @@ export default {
     codeareaClickHandler() {
       if (this.mode === 'TRACKING') {
         let mark = CodeParser.getSelectedMark(this.code, this.codeareaDOM.selectionStart);
-        this.marks.addOrDelete(mark);
-        this.highlightCode();
+        console.log(mark);
+        if (mark) {
+          this.$root.openDialog('selectVariableTypeDialog', mark);
+        }
       }
+    },
+
+    addMark(mark) {
+      console.log(mark);
+      this.marks.addOrDelete(mark);
+      this.highlightCode();
     },
 
     codeareaInputHandler(code) {
@@ -115,6 +125,7 @@ export default {
         this.breakpoints.addOrDelete(index);
       }
     },
+    
 
     compile() {
       let extendedCode = this.getExtendedCode();

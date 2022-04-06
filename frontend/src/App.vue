@@ -5,16 +5,29 @@
     <div class="tab-container">
       <CodeEditor />
     </div>
+
+    <SaveProjectDialog ref="saveProjectDialog" />
+    <LoadProjectsDialog ref="loadProjectsDialog" />
+    <SelectVariableTypeDialog ref="selectVariableTypeDialog" />
+    <SelectVariableConstructorDialog ref="selectVariableConstructorDialog" />
+    <AddNewVariableConstructorDialog ref="addNewVariableConstructorDialog" />
   </div>
 </template>
 
 <script>
 import Menu from '@/components/other/Menu.vue';
 import CodeEditor from '@/components/codeEditor/CodeEditor.vue';
+import SaveProjectDialog from '@/components/dialogs/SaveProjectDialog.vue'
+import LoadProjectsDialog from '@/components/dialogs/LoadProjectsDialog.vue'
+import SelectVariableTypeDialog from '@/components/dialogs/SelectVariableTypeDialog.vue'
+import SelectVariableConstructorDialog from '@/components/dialogs/SelectVariableConstructorDialog.vue'
+import AddNewVariableConstructorDialog from '@/components/dialogs/AddNewVariableConstructorDialog.vue'
+
+
 import axios from 'axios';
 
 export default {
-  components: {Menu, CodeEditor},
+  components: {Menu, CodeEditor, SaveProjectDialog, LoadProjectsDialog, SelectVariableTypeDialog, SelectVariableConstructorDialog, AddNewVariableConstructorDialog},
   data() {
     return {
       currentTab: 2,
@@ -25,6 +38,10 @@ export default {
     async sendRequest(url, data={}) {
       let response = await axios.post(url, data);
       return response;
+    },
+
+    openDialog(dialog, data) {
+      this.$refs[dialog].openDialog(data);
     }
   }
 }
