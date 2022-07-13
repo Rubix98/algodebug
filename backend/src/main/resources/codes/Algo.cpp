@@ -1,93 +1,105 @@
 #include <iostream>
-#include <vector>
+#include <list>
 #include <string>
 
 const std::string ALGO_FIRST_SEPARATOR = " ";
 const std::string ALGO_SECOND_SEPARATOR = "|";
 
-std::string algoPrint(std::string name, std::string type, std::string value) {
-    char *result;
-    sprintf(result, "<var name='%s' type='%s' value='%s'", name.c_str(), type.c_str(), value.c_str());
-    return std::string(result);
-}
+class Object {
 
-class AlgoEdge {
+};
+
+class Variable: Object {
+std::string value;
+
 public:
+  Variable(){}
+
+  Variable(std::string value) {
+    this->value = value;
+  }
+
+  Variable(int value) {
+    this->value = std::to_string(value);
+  }
+
+  std::string getType() {
+    return "Variable";
+  }
+
+  std::string toString() {
+    return value;
+  }
+};
+
+
+class Edge: Object {
   int a, b;
   double w;
 
-  AlgoEdge(){}
+public:
+  Edge(){}
 
-  /*<ALGOEDGE-CONSTRUCTOR>*/
-
-  AlgoEdge(int a, int b, double w) {
+  Edge(int a, int b, double w) {
     this->a = a;
     this->b = b;
     this->w = w;
   }
 
+  std::string getType() {
+    return "Edge";
+  }
+
   std::string toString() {
-    return std::to_string(this->a) + ALGO_FIRST_SEPARATOR + std::to_string(this->b) + ALGO_FIRST_SEPARATOR + std::to_string(this->w);
+    return std::to_string(a) + ALGO_FIRST_SEPARATOR + std::to_string(b) + ALGO_FIRST_SEPARATOR + std::to_string(w);
   }
 };
 
-class AlgoGraph {
+class Graph: Object {
+  std::list<Edge> edges;
+
 public:
-  std::vector<AlgoEdge> edges;
-
-  AlgoGraph() {}
-
-  /*<ALGOGRAPH-CONSTRUCTOR>*/
+  Graph() {}
 
   void addEdge(int a, int b, double w) {
-    this->edges.push_back(AlgoEdge(a, b, w));
+    this->edges.push_back(Edge(a, b, w));
+  }
+
+  std::string getType() {
+    return "Graph";
   }
 
   std::string toString() {
     std::string result = "";
-    for (AlgoEdge edge: this->edges) {
+    for (Edge edge: edges) {
         result += edge.toString() + (result != "" ? ALGO_SECOND_SEPARATOR : "");
     }
     return result;
   }
 };
 
-class AlgoPoint {
-public:
-  double x, y;
+struct VariableData {
+    std::string name, type, value;
 
-  AlgoPoint(){}
+    VariableData(std::string name, std::string type, std::string value) {
+        this->name = name;
+        this->type = type;
+        this->value = value;
+    }
 
-  /*<ALGOPOINT-CONSTRUCTOR>*/
-
-  AlgoPoint(double x, double y) {
-    this->x = x;
-    this->y = y;
-  }
-
-  std::string toString() {
-    return std::to_string(this->x) + ALGO_FIRST_SEPARATOR + std::to_string(this->y);
-  }
+    std::string toString() {
+        return "\t<algo-variable name='" + name + "' type='" + type + "' value='" + value + "' />\n";
+    }
 };
 
-class AlgoLine {
-public:
-  AlgoPoint a, b;
+void algoPrint(std::list<VariableData> variables) {
+    std::string breakpointMessage = "";
+    breakpointMessage += "<algo-breakpoint>\n";
+    for (VariableData variable: variables) {
+        breakpointMessage += variable.toString();
+    }
+    breakpointMessage += "</algo-breakpoint>\n";
+    std::cout << breakpointMessage;
+}
 
-  /*<ALGOLINE-CONSTRUCTOR>*/
-
-  AlgoLine(AlgoPoint a, AlgoPoint b) {
-    this->a = a;
-    this->b = b;
-  }
-
-  AlgoLine(double x1, double y1, double x2, double y2) {
-    this->a = AlgoPoint(x1, y1);
-    this->b = AlgoPoint(x2, y2);
-  }
-
-  std::string toString() {
-    return this->a.toString() + ALGO_SECOND_SEPARATOR + this->b.toString();
-  }
-};
 

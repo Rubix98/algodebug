@@ -19,6 +19,6 @@ public class Project {
     private String language;
     private String code;
     private Vector<Integer> breakpoints;
-    private Vector<MarkPojo> marks;
+    private Vector<MarkPojo> variables;
     private Vector<TestCasePojo> testCases;
 }

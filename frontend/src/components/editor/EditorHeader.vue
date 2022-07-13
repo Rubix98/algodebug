@@ -3,7 +3,9 @@
       <i v-for="icon in icons" :key="icon.icon" 
         :class="getIconClass(icon)"
         :title="icon.title"
-        @click="iconClickHandler(icon.mode)" /> 
+        @click="iconClickHandler(icon.mode)"
+        v-show="icon.isVisible()"
+      /> 
       
       <select :value="language" @input="this.$emit('update:language', $event.target.value)" :disabled="isLanguageSelectDisabled">
         <option v-for="language in availableLanguages" :key="language">{{language}}</option>
@@ -12,18 +14,20 @@
 </template>
 
 <script>
+import {EditorModes} from '@/scripts/EditorModes';
 
 export default {
-  props: ['language', 'mode'],
+  props: ['language', 'isMode'],
 
   data() {
     return {
+      EditorModes,
       availableLanguages:   ['C++', 'C', 'Java', 'C#', 'Python'],
       icons: [
-        {icon: 'fa fa-play', title: 'Uruchom program', mode: 'DEBUGGING'},
-        {icon: 'fa fa-hand-pointer', title: 'Zaznacz zmienne i breakpointy', mode: 'TRACKING'},
-        {icon: 'fa fa-eye', title: 'Pokaż rozszerzony kod', mode: 'EXTENDING'},
-
+        {icon: 'fa fa-stop', title: 'Zatrzymaj program', mode: EditorModes.MODE_DEBUGGING, isVisible: () => this.$props.isMode(EditorModes.MODE_DEBUGGING)},
+        {icon: 'fa fa-play', title: 'Uruchom program', mode: EditorModes.MODE_COMPILING, isVisible: () => !this.$props.isMode(EditorModes.MODE_DEBUGGING)},
+        {icon: 'fa fa-hand-pointer', title: 'Zaznacz zmienne i breakpointy', mode: EditorModes.MODE_SETTINGS, isVisible: () => true},
+        {icon: 'fa fa-eye', title: 'Pokaż rozszerzony kod', mode: EditorModes.MODE_INSPECTING, isVisible: () => true},
       ]
     }
   },
@@ -31,8 +35,8 @@ export default {
   methods: {
     iconClickHandler(mode) {
       if (this.isIconActive(mode)) {
-        if (this.$props.mode === mode) {
-          mode = 'CODING';
+        if (this.$props.isMode(mode)) {
+          mode = EditorModes.MODE_CODING;
         }
         this.$emit('update:mode', mode);
       }
@@ -52,12 +56,8 @@ export default {
 
     isIconActive() {
       return (mode) => {
-        return this.$props.mode === 'CODING' || this.$props.mode === mode;
+        return this.isMode(mode) || this.isMode(EditorModes.MODE_CODING);
       }
-    },
-
-    isLanguageSelectDisabled() {
-      return this.$props.mode !== 'CODING';
     }
   }
 }
@@ -100,7 +100,7 @@ export default {
     color: silver;
   }
 
-  i:hover {
+  .icon-active:hover {
     color: white;
   }
 

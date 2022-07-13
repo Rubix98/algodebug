@@ -3,7 +3,7 @@
     <Menu v-model:currentTab="currentTab"/>
 
     <div class="tab-container">
-      <CodeEditor />
+      <Editor />
     </div>
 
     <SaveProjectDialog ref="saveProjectDialog" />
@@ -16,7 +16,7 @@
 
 <script>
 import Menu from '@/components/other/Menu.vue';
-import CodeEditor from '@/components/codeEditor/CodeEditor.vue';
+import Editor from '@/components/editor/Editor.vue';
 import SaveProjectDialog from '@/components/dialogs/SaveProjectDialog.vue'
 import LoadProjectsDialog from '@/components/dialogs/LoadProjectsDialog.vue'
 import SelectVariableTypeDialog from '@/components/dialogs/SelectVariableTypeDialog.vue'
@@ -27,7 +27,7 @@ import AddNewVariableConstructorDialog from '@/components/dialogs/AddNewVariable
 import axios from 'axios';
 
 export default {
-  components: {Menu, CodeEditor, SaveProjectDialog, LoadProjectsDialog, SelectVariableTypeDialog, SelectVariableConstructorDialog, AddNewVariableConstructorDialog},
+  components: {Menu, Editor, SaveProjectDialog, LoadProjectsDialog, SelectVariableTypeDialog, SelectVariableConstructorDialog, AddNewVariableConstructorDialog},
   data() {
     return {
       currentTab: 2,

@@ -23,9 +23,9 @@ export default {
     return {
       isDialogVisible: false,
       options: [
-        {label: 'Zwykła zmienna', alias: 'var'},
-        {label: 'Graf', alias: 'graph'},
-        {label: 'Kolorowanie krawędzi', alias: 'edges'},
+        {label: 'Zwykła zmienna', alias: 'Variable'},
+        {label: 'Graf', alias: 'Graph'},
+        {label: 'Kolorowanie krawędzi', alias: 'Edges'},
         {label: 'Kolorowanie wierzchołków', alias: 'vertices'},
         {label: 'Punkt', alias: 'point'},
         {label: 'Zbiór punktów', alias: 'points'},
@@ -51,8 +51,8 @@ export default {
     
     selectOption(option) {
       this.mark.type = option
-      if (option === 'var') {
-        this.emitter.emit('addMark', this.mark)
+      if (option === 'Variable') {
+        this.emitter.emit('trackVariableEvent', this.mark)
       } else {
         this.emitter.emit('SelectVariableConstructorDialog:open', this.mark);
       }

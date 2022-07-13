@@ -49,7 +49,7 @@ export default {
     },
     
     saveConstructor() {
-      this.$root.sendRequest("backend/constructor/save", {
+      this.$root.sendRequest("BACKEND/constructor/save", {
         title: this.title,
         language: 'C++',
         type: 'graph',

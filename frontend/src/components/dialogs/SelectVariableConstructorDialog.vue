@@ -45,7 +45,7 @@ export default {
 
       this.mark = data;
       
-      this.$root.sendRequest('backend/constructor/findAll').then(response=> {
+      this.$root.sendRequest('BACKEND/constructor/findAll').then(response=> {
         this.constructors = response.data;
       })
     },

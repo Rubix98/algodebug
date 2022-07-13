@@ -38,7 +38,7 @@ export default {
     },
     
     loadProjects() {
-      this.$root.sendRequest("backend/project/findAll").then(response => {
+      this.$root.sendRequest("BACKEND/project/findAll").then(response => {
         this.projects = response.data;
       });
     },

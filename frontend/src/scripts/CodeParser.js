@@ -1,74 +1,106 @@
 export class CodeParser {
-	constructor(code) {
+	actions = {
+		'<variable>': function(parent, tag) {
+			let beginIndex = tag.position + tag.key.length;
+			let endIndex = parent.code.indexOf('</variable>', beginIndex);
+			let variableName = parent.code.slice(beginIndex, endIndex);
+			let variableLevel = parent.curlyBracketsLevel + (parent.roundBracketsLevel ? 1 : 0);
+			let variableType = parent.variables.get(variableName).type;
+			parent.variablesStack.push({name: variableName, level: variableLevel, type: variableType});
+		},
+		'<breakpoint/>': function(parent) {
+			parent.breakpointVariables.push(parent.variablesStack);
+		},
+		'{': function(parent) {
+			parent.curlyBracketsLevel++;
+		},
+		'}': function(parent) {
+			parent.variablesStack = parent.variablesStack.filter(variable => variable.level < parent.curlyBracketsLevel)
+			parent.curlyBracketsLevel--;
+		},
+		'(': function(parent) {
+			parent.roundBracketsLevel++;
+		},
+		')': function(parent) {
+			parent.roundBracketsLevel--;
+		}
+	};
+
+	constructor(code, variables, breakpoints) {
 		this.code = code;
-		this.tags = [
-			{id: 0, position: 0, parent: this, name: '<mark>',			 	action: this.markAction},
-			{id: 1, position: 0, parent: this, name: '<breakpoint>', 	action: this.breakpointAction},
-			{id: 2, position: 0, parent: this, name: '{',							action: this.openingCurlyBracketAction},
-			{id: 3, position: 0, parent: this, name: '}',							action: this.closingCurlyBracketAction},
-			{id: 4, position: 0, parent: this, name: '(',							action: this.openingRoundBracketAction},
-			{id: 5, position: 0, parent: this, name: ')',	 						action: this.closingRoundBracketAction},
-		];
-		this.updateAllTags();
+		this.variables = variables;
+		this.breakpoints = breakpoints;
+
+		this.breakpointVariables = [];
+		this.variablesStack = [];
+		this.roundBracketsLevel = 0;
+		this.curlyBracketsLevel = 0;
 	}
 
-	static getSelectedMark(code, cursorPosition) {
-		const isAllowedCharacter = function(ch) {
-				return ch != undefined && (/[a-zA-Z0-9_]/).test(ch);
-		}
-		
-		if (!isAllowedCharacter(code[cursorPosition]) && isAllowedCharacter(code[cursorPosition-1])) {
-				cursorPosition--;
-		} else if (!isAllowedCharacter(code[cursorPosition]) && !isAllowedCharacter(code[cursorPosition-1])) {
-				return null;
+	parse() {
+		this.prepareCode();
+		this.initializeTags();
+
+		while (this.findNextTag()) {
+			let tag = this.findNextTag();
+			tag.action(this, tag);
+			this.updateTagPosition(tag);
 		}
 
-		let start = cursorPosition, end = cursorPosition;
-		while (isAllowedCharacter(code[start-1])) {
-				start--;
+		this.parseCode();
+		return this.code;
+	}
+
+	initializeTags() {
+		this.tags = [];
+		for (let actionKey in this.actions) {
+			this.tags.push({
+				id: this.tags.length,
+				key: actionKey,
+				position: 0,
+				action: this.actions[actionKey]
+			})
 		}
-		while (isAllowedCharacter(code[end])) {
-				end++;
+		this.updateAllTagsPosition();
+	}
+
+	updateAllTagsPosition() {
+		for (let tag of this.tags) {
+			this.updateTagPosition(tag);
 		}
-
-		let variableName = code.slice(start, end);
-		return {name: variableName, start: start, end: end};
 	}
 
-	static highlightLine(code, line, style) {
-		let lines = code.split('\n');
-		lines[line] = lines[line] !== '' ? lines[line] : ' ';
-		lines[line] = `<mark>${lines[line]}</mark>`;
-		code = lines.join('\n');
-		code = code.replaceAll('<', '&lt');
-		code = code.replaceAll('>', '&gt');
-		code = code.replaceAll('&ltmark&gt', `<mark style="${style}">`);
-		code = code.replaceAll('&lt/mark&gt', '</mark>');
-		return code;
+	updateTagPosition(tag) {
+		let position = this.code.indexOf(tag.key, tag.position+1);
+		position = position !== -1 ? position : this.inf;
+		this.tags[tag.id].position = position;
 	}
 
-	static highlightCode(code, marks, style) {
-		code = this.insertMarkTags(code, marks);
-		code = code.replaceAll('<', '&lt');
-		code = code.replaceAll('>', '&gt');
-		code = code.replaceAll('&ltmark&gt', `<mark style="${style}">`);
-		code = code.replaceAll('&lt/mark&gt', '</mark>');
-		return code;
+	findNextTag() {
+		let result = null;
+		for (let tag of this.tags) {
+			if (tag.position !== this.inf && (result == null || tag.position < result.position)) {
+				result = tag;
+			}
+		}
+		return result;
 	}
 
-	static extendCode(code, marks, breakpoints) {
-		code = this.insertMarkTags(code, marks);
-		code = this.insertBreakpointTags(code, breakpoints);
-		let codeParser = new CodeParser(code);
-		codeParser.parse();
-		codeParser.insertPrintLines(breakpoints);
-		codeParser.removeMarks();
-		return codeParser.code;
+	prepareCode() {
+		this.code = CodeUtils.insertVariableTags(this.code, this.variables);
+		this.code = CodeUtils.insertBreakpointTags(this.code, this.breakpoints);
 	}
 
-	static insertMarkTags(code, marks) {
-		for (let mark of marks.sortedBy('start', -1)) {
-			code = code.slice(0, mark.start) + '<mark>' + code.slice(mark.start, mark.end) + '</mark>' + code.slice(mark.end);
+	parseCode() {
+		this.code = CodeUtils.removeVariableTags(this.code);
+		this.code = CodeUtils.replaceBreakpointTags(this.code, this.breakpointVariables);
+	}
+}
+
+class CodeUtils {
+	static insertVariableTags(code, variables) {
+		for (let variable of variables.sortedBy('start', -1)) {
+			code = code.slice(0, variable.start) + '<variable>' + code.slice(variable.start, variable.end) + '</variable>' + code.slice(variable.end);
 		}
 		return code;
 	}
@@ -76,96 +108,26 @@ export class CodeParser {
 	static insertBreakpointTags(code, breakpoints) {
 		let lines = code.split('\n');
 		for (let breakpoint of breakpoints.reversed()) {
-			lines[breakpoint-1] += "<breakpoint>";
+			lines[breakpoint.id] += "<breakpoint/>";
 		}
 		code = lines.join('\n');
 		return code;
 	}
 
-	parse() {
-		this.breakpointsVariables = [];
-		this.stack = [];
-		this.roundBracketsLevel = 0;
-		this.curlyBracketsLevel = 0;
+	static removeVariableTags(code) {
+		code = code
+				.replaceAll('<variable>', '')
+				.replaceAll('</variable>', '');
+		return code;
+	}
 
-		while (this.findNextTag()) {
-				let tag = this.findNextTag();
-				tag.action(tag);
-				this.updateTag(tag);
+	static replaceBreakpointTags(code, breakpointVariables) {
+		for (let breakpoint of breakpointVariables) {
+			let variables = breakpoint
+				.map(variable => `VariableData("${variable.name}", "${variable.type}", ${variable.type}(${variable.name}).toString())`)
+				.join(",\t");
+			code = code.replace('<breakpoint/>', ` algoPrint({${variables}});`);
 		}
-	}
-
-	insertPrintLines(breakpoints) {
-		
-		breakpoints = breakpoints.sorted();
-		for (let [i, breakpointVariables] of this.breakpointsVariables.entries()) {
-			let cout = '\tstd::cout << "<ALGOVIEW>\\n"'
-			cout += ` << "  <variable name=\\"line\\" value=\\"" << ${breakpoints[i]} << "\\" />\\n"`;
-			for (let variable of breakpointVariables) {
-				cout += ` << "  <variable name=\\"${variable}\\" value=\\"" << ${variable} << "\\" />\\n"`;
-			}
-			cout += ' << "</ALGOVIEW>\\n";';
-			this.code = this.code.replace('<breakpoint>', cout);
-		}
-	}
-	
-	removeMarks() {
-		this.code = this.code.replaceAll('<mark>', '');
-		this.code = this.code.replaceAll('</mark>', '');
-	}
-
-	updateAllTags() {
-		for (let tag of this.tags) {
-			this.updateTag(tag);
-		}
-	}
-
-	updateTag(tag) {
-		tag.position = this.code.indexOf(tag.name, tag.position+1);
-		tag.position = tag.position !== -1 ? tag.position : this.code.length;
-		this.tags[tag.id] = tag;
-	}
-
-	findNextTag() {
-		let result = this.tags[0];
-		for (let tag of this.tags) {
-			if (tag.position < result.position) {
-				result = tag;
-			}
-		}
-		if (result.position !== this.code.length) {
-			return result;
-		}
-	}
-
-	markAction(tag) {
-		let beginIndex = tag.position + tag.name.length;
-		let endIndex = this.parent.code.indexOf('</mark>', beginIndex);
-		let variableName = this.parent.code.slice(beginIndex, endIndex);
-		let variableLevel = this.parent.curlyBracketsLevel + (this.parent.roundBracketsLevel? 1 : 0);
-		this.parent.stack.push({variableName: variableName, level: variableLevel});
-	}
-
-	breakpointAction() {
-		this.parent.breakpointsVariables.push(this.parent.stack.map(el => el.variableName));
-	}
-
-	openingCurlyBracketAction() {
-		this.parent.curlyBracketsLevel++;
-	}
-
-	closingCurlyBracketAction() {
-		while (this.parent.stack.length > 0 && this.parent.stack.at(-1).level == this.parent.curlyBracketsLevel) {
-			this.parent.stack.pop();
-		}
-		this.parent.curlyBracketsLevel--;
-	}
-
-	openingRoundBracketAction() {
-		this.parent.roundBracketsLevel++;
-	}
-
-	closingRoundBracketAction() {
-		this.parent.roundBracketsLevel--;
+		return code;
 	}
 }

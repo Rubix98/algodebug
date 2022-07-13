@@ -1,13 +1,13 @@
 module.exports = {
   devServer: {
       proxy: {
-        '/backend': {
+        '/BACKEND': {
           target: 'http://localhost:8081/',
-          pathRewrite: {'^/backend' : ''}
+          pathRewrite: {'^/BACKEND' : ''}
         },
-        '/compilator': {
-          target: 'https://codexweb.netlify.app/',
-          pathRewrite: {'^/compilator' : ''}
+        '/COMPILATOR': {
+          target: 'https://codex-api.herokuapp.com/',
+          pathRewrite: {'^/COMPILATOR' : ''}
         }
     }
   }

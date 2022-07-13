@@ -1,38 +1,34 @@
 <template>
   <div class="code-editor-body full-size">
       <div class="highlights full-size"></div>
-
       <textarea 
         class="codearea full-size"
-        :class="{'cursor-pointer': isTrackingModeOn}"
+        :class="{'cursor-pointer': isMode(EditorModes.MODE_SETTINGS)}"
         :value="code"
         @input="this.$emit('codeareaInputEvent', $event.target.value)"
         @scroll="this.$emit('codeareaScrollEvent')"
         @click="this.$emit('codeareaClickEvent')"
-        :readonly="!isCodingModeOn"
+        :readonly="!isMode(EditorModes.MODE_CODING)"
         spellcheck="false">
       </textarea>
   </div>
 </template>
 
 <script>
+import {EditorModes} from '@/scripts/EditorModes';
 
 export default {
-  props: ['code', 'mode'],
+  props: ['code', 'isMode'],
 
-  computed: {
-    isCodingModeOn() {
-      return this.$props.mode === 'CODING';
-    },
-
-    isTrackingModeOn() {
-      return this.$props.mode === 'TRACKING';
+  data() {
+    return {
+      EditorModes
     }
   }
 }
 </script>
 
-<style scoped>
+<style>
   .code-editor-body {
     display: block;
     transform: translateZ(0);
@@ -62,5 +58,18 @@ export default {
 
   .cursor-pointer {
     cursor: pointer;
+  }
+
+  highlight {
+    color: transparent;
+    border-radius: 2px;
+  }
+
+  .highlight-variable {
+    background-color: purple;
+  }
+
+  .highlight-line {
+    background-color: orange;
   }
 </style>
