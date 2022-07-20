@@ -107,7 +107,9 @@ export default {
         if (this.variables.hasElement(variable)) {
           this.variables.deleteElement(variable);
         } else {
-          this.$root.openDialog('selectVariableTypeDialog', variable);
+          this.$root.openDialog('SelectVariableTypeDialog', variable => {
+            this.variables.addElement(variable);
+          });
         }
       }
     },

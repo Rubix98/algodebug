@@ -1,8 +1,8 @@
 <template>
   <div class="menu">
     <div class="menu-content flex-row flex-horizontal-center">
-      <i class="fa fa-save" @click="openDialog('saveProjectDialog')"></i>
-      <i class="fa fa-search" @click="openDialog('loadProjectsDialog')"></i>
+      <i class="fa fa-save" @click="openSaveProjectDialog()"></i>
+      <i class="fa fa-search" @click="openLoadProjectDialog()"></i>
     </div>
     <div class="menu-placeholder"></div>
     
@@ -18,8 +18,16 @@ export default {
   },
 
   methods: {
-    openDialog(dialog) {
-      this.$root.openDialog(dialog);
+    openLoadProjectDialog() {
+      this.$root.openDialog('SelectProjectDialog', selectedOption => {
+        this.$root.redirectTo(selectedOption.key);
+      });
+    },
+
+    openSaveProjectDialog() {
+      this.$root.openDialog('SaveProjectDialog', output => {
+        console.log(output);
+      });
     }
   }
 }
@@ -29,7 +37,7 @@ export default {
   .menu-content {
     background-color: green;
     position: fixed;
-    z-index: 1;
+    z-index: 9;
   }
 
   .menu-content, .menu-placeholder {

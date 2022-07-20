@@ -1,13 +1,13 @@
 package algoview.models;
 
-import algoview.pojos.MarkPojo;
-import algoview.pojos.TestCasePojo;
+import algoview.pojos.DialogDataPojo;
+import algoview.pojos.LabelValuePojo;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Vector;
+import java.util.Arrays;
 
 @Getter
 @Setter
@@ -19,4 +19,8 @@ public class Constructor {
     private String language;
     private String type;
     private String code;
+
+    public DialogDataPojo getDialogData() {
+        return new DialogDataPojo(this.title);
+    }
 }

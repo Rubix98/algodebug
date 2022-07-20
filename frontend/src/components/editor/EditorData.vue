@@ -16,6 +16,7 @@
         <div v-for="textarea in textareas" :key="textarea.fieldName" v-show="textarea.isVisible()">
           <div class="textarea-header">{{ textarea.title }}</div>
           <textarea 
+            class="algo-textarea"
             :value="testCases.current()[textarea.fieldName]"
             @input="inputHandler($event.target.value)"></textarea>
         </div>

@@ -2,7 +2,7 @@
   <div class="code-editor-body full-size">
       <div class="highlights full-size"></div>
       <textarea 
-        class="codearea full-size"
+        class="codearea algo-textarea full-size"
         :class="{'cursor-pointer': isMode(EditorModes.MODE_SETTINGS)}"
         :value="code"
         @input="this.$emit('codeareaInputEvent', $event.target.value)"
@@ -40,7 +40,6 @@ export default {
     padding: 0;
     border: 0px;
     overflow: auto;
-    resize: none;
     font: inherit;
   }
 

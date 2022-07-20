@@ -58,6 +58,10 @@ export default {
       return (mode) => {
         return this.isMode(mode) || this.isMode(EditorModes.MODE_CODING);
       }
+    },
+
+    isLanguageSelectDisabled() {
+      return this.isMode(EditorModes.MODE_COMPILING) || this.isMode(EditorModes.MODE_DEBUGGING);
     }
   }
 }
@@ -67,7 +71,7 @@ export default {
   .code-editor-header {
     position: absolute;
     justify-content:flex-end;
-    z-index: 10;
+    z-index: 1;
     padding: 5px 15px;
     width: 100%;
     font: initial;
