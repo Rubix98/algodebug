@@ -1,115 +1,84 @@
 <template>
-  <div>
-    <Modal
-      v-if="isVisible"
-      v-model="isVisible"
-      :close="closeDialog">
+  <div class="dialog">
+    <div class="dialog-header flex-vertical-space-between">
+        <h1>{{title}}</h1>
+        <i class="fa fa-close" title="Zamknij pop-up" @click="popModal()"></i> 
+    </div>
 
-      <div class="dialog">
-        <div class="dialog-header">
-          <h1>{{currentDialog.title}}</h1>
-        </div>
-        <div class="dialog-content">
-          <SelectListDialog 
-            ref="SelectListDialog"
-            v-if="currentDialog.type === 'SelectListDialog'"
-            @selectOptionEvent="accept()"
-            :options="currentDialog.options">
-          </SelectListDialog>
-          
-          <SaveProjectDialog 
-            ref="SaveProjectDialog"
-            v-if="currentDialog.type === 'SaveProjectDialog'"
-            :data="currentDialog.data">
-          </SaveProjectDialog>
-        </div>
+    <div class="dialog-content">
+      <component :is="modalComponentName" :data="data" :callback="callback" ref="modalComponent"></component>
+    </div>
 
-        <div class="flex-vertical-right">
-          <button class="algo-button-default" v-if="dialogsQueue.length > 1" @click="back()">Cofnij</button>
-          <button class="algo-button-ok" @click="accept()">OK</button>
-        </div>
-      </div>
-
-    </Modal>
+    <div class="flex-vertical-right">
+      <span v-for="(button, index) in buttons" :key="index">
+        <button :class="button.class" @click="button.action">{{button.label}}</button>
+      </span>
+      
+    </div>
   </div>
 </template>
 
 <script>
-import SelectListDialog from './global/SelectListDialog.vue';
+/* eslint-disable vue/no-unused-components */
+import LoadProjectModal from './custom/LoadProjectModal.vue';
 import SaveProjectDialog from './custom/SaveProjectDialog.vue';
-import { DialogsFactory } from '@/scripts/DialogsFactory';
+import ShowSceneObjectsModal from './custom/ShowSceneObjectsModal.vue';
+import SelectSceneObjectTypeModal from './custom/SelectSceneObjectTypeModal.vue';
+import ConfigureSceneObjectModal from './custom/ConfigureSceneObjectModal.vue'
+import PickVariableModal from './custom/PickVariableModal.vue'
+import SelectConverterModal from './custom/SelectConverterModal.vue';
+import AddNewConverterModal from './custom/AddNewConverterModal.vue';
+import SelectSubobjectTypeModal from './custom/SelectSubobjectTypeModal.vue';
+import ShowExtendedCodeModal from './custom/ShowExtendedCodeModal.vue';
 
 export default {
-  components: {SelectListDialog, SaveProjectDialog},
+  components: {LoadProjectModal, SaveProjectDialog, ShowSceneObjectsModal, SelectSceneObjectTypeModal, ConfigureSceneObjectModal, PickVariableModal, SelectConverterModal, AddNewConverterModal, SelectSubobjectTypeModal, ShowExtendedCodeModal},
+
+  props: ['modalComponentName', 'data', 'callback'],
 
   data() {
     return {
-      isVisible: false,
-      dialogsQueue: [],
-      callback: null
+      title: '',
+      buttons: []
     }
   },
 
+  mounted() {
+    this.title = this.modalComponent.title;
+    this.buttons = this.modalComponent.buttons;
+
+  },
+
   methods: {
-    async openDialog(dialog, callback) {
-      let dialogData = await DialogsFactory.get(dialog, this.$root.sendRequest);
-      console.log(dialogData);
-      this.dialogsQueue.push(dialogData);
-      this.isVisible = true;
-      if (callback) {
-        this.callback = callback;
-      }
-    },
-
-    accept() {
-      let output = this.currentComponent.getOutput();
-      let nextDialog = this.currentDialog.nextDialog != null ? this.currentDialog.nextDialog(output) : null;
-      this.currentDialog.output = output;
-
-      this.isVisible = false;
-      if (nextDialog != null) {
-        this.openDialog(nextDialog);
-      } else {
-        this.callback(output);
-      }
-    },
-
-    closeDialog() {
-      this.isVisible = false;
-      this.dialogsQueue = [];
-    },
-
-    back() {
-      this.dialogsQueue.pop();
+    popModal() {
+      this.$root.popDialog()
     },
   },
 
   computed: {
-    currentDialog() {
-      return this.dialogsQueue.at(-1);
-    },
-
-    currentComponent() {
-      return this.$refs[this.currentDialog.type];
+    modalComponent() {
+      return this.$refs.modalComponent;
     }
   }
 }
 </script>
 
 <style>
-  .vue-universal-modal, .vue-universal-modal-content {
+  .modal-container {
     z-index: 10;
   }
 
   .dialog {
-    position: relative;
-    width: auto;
     padding: 30px 50px;
     box-sizing: border-box;
     background-color: #fff;
     font-size: 20px;
-    z-index: 1000;
+    z-index: 100;
     border-radius: 20px;
+  }
+
+  .dialog-header {
+    margin-bottom: 15px;
   }
 
   .dialog-content {
@@ -117,7 +86,11 @@ export default {
     overflow: auto;
   }
 
-  .button {
+  button {
     margin-left: 5px;
+  }
+
+  i {
+    cursor: pointer;
   }
 </style>

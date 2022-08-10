@@ -1,6 +1,6 @@
 package algoview.pojos;
 
-import algoview.models.Constructor;
+import algoview.models.Converter;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +11,5 @@ public class MarkPojo {
     private Integer end;
     private String name;
     private String type;
-    private Constructor constructor;
+    private Converter constructor;
 }

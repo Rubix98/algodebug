@@ -5,6 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TestCasePojo {
-    private String input;
+public class BreakpointPojo {
+    Integer id;
 }

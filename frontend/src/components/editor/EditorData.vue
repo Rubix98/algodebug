@@ -9,7 +9,7 @@
           Test {{number}}
         </button>
 
-        <button class="add-button" v-if="!isMode(EditorModes.MODE_DEBUGGING)" @click="addTestCase()">+</button>
+        <button class="add-button" v-if="!isRunning" @click="addTestCase()">+</button>
       </div>
 
       <div class="test-cases-body full-size flex-row flex-vertical-space-between">
@@ -19,6 +19,14 @@
             class="algo-textarea"
             :value="testCases.current()[textarea.fieldName]"
             @input="inputHandler($event.target.value)"></textarea>
+        </div>
+
+
+        <div v-show="isRunning">
+          <div class="textarea-header">Zawartość pułapki</div>
+          <textarea 
+            class="algo-textarea"
+            :value="testCases.current().frames[testCases.current().selectedFrameId]"></textarea>
         </div>
       </div>
 
@@ -30,15 +38,14 @@
 import {EditorModes} from '@/scripts/EditorModes';
 
 export default {
-  props: ['testCases', 'isMode'],
+  props: ['testCases', 'isRunning'],
 
   data() {
     return {
       EditorModes,
       textareas: [
         {title: 'Wejście', fieldName: 'input', isVisible: () => true},
-        {title: 'Wyjście', fieldName: 'output', isVisible: () => this.$props.isMode(EditorModes.MODE_DEBUGGING)},
-        {title: 'Zawartość pułapki', fieldName: 'breakpoint', isVisible: () => this.$props.isMode(EditorModes.MODE_DEBUGGING)},
+        {title: 'Wyjście', fieldName: 'output', isVisible: () => this.$props.isRunning},
       ]
     }
   },

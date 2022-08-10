@@ -5,12 +5,8 @@
     <div class="tab-container">
       <Editor />
     </div>
-    <Dialog ref="dialog"/>
-    <!-- <SaveProjectDialog ref="saveProjectDialog" />
-    <LoadProjectsDialog ref="loadProjectsDialog" />
-    <SelectVariableTypeDialog ref="selectVariableTypeDialog" />
-    <SelectVariableConstructorDialog ref="selectVariableConstructorDialog" />
-    <AddNewVariableConstructorDialog ref="addNewVariableConstructorDialog" />-->
+
+    <Modal/>
   </div>
 </template>
 
@@ -18,16 +14,13 @@
 import Menu from '@/components/other/Menu.vue';
 import Editor from '@/components/editor/Editor.vue';
 import Dialog from '@/components/dialogs/Dialog.vue'
-/*import SaveProjectDialog from '@/components/dialogs/SaveProjectDialog.vue'
-import LoadProjectsDialog from '@/components/dialogs/LoadProjectsDialog.vue'
-import SelectVariableTypeDialog from '@/components/dialogs/SelectVariableTypeDialog.vue'
-import SelectVariableConstructorDialog from '@/components/dialogs/SelectVariableConstructorDialog.vue'
-import AddNewVariableConstructorDialog from '@/components/dialogs/AddNewVariableConstructorDialog.vue'*/
 
 import axios from 'axios';
+import {container} from "jenesius-vue-modal";
+import {openModal, pushModal, closeModal, popModal} from "jenesius-vue-modal";
 
 export default {
-  components: {Menu, Editor, Dialog, /*SaveProjectDialog, LoadProjectsDialog, SelectVariableTypeDialog, SelectVariableConstructorDialog, AddNewVariableConstructorDialog*/},
+  components: {Modal: container, Menu, Editor},
   data() {
     return {
       currentTab: 2,
@@ -39,8 +32,20 @@ export default {
       return axios.post(url, data);
     },
 
-    openDialog(dialog, callback) {
-      this.$refs.dialog.openDialog(dialog, callback);
+    openDialog(modalComponentName, data, callback) {
+      openModal(Dialog, {modalComponentName, data, callback})
+    },
+
+    pushDialog(modalComponentName, data, callback) {
+      pushModal(Dialog, {modalComponentName, data, callback})
+    },
+
+    closeDialog() {
+      closeModal()
+    },
+
+    popDialog() {
+      popModal()
     },
 
     redirectTo(url) {
@@ -82,6 +87,12 @@ export default {
     display: flex;
   }
 
+  .flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+  }
+
   .flex-row {
     display: flex;
     flex-direction: row;
@@ -120,6 +131,7 @@ export default {
 
   .flex-horizontal-center {
     display: flex;
+
     align-items: center;
   }
 
@@ -127,18 +139,8 @@ export default {
     width: 50%;
   }
 
-  .algo-button-default, .algo-button-ok {
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-
-  .algo-button-ok {
-    background-color: lime;
-    border: 1px solid green;
-  }
-
-  .algo-textarea {
-    resize: none;
-  }
+  .modal-container{
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
 </style>

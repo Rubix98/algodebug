@@ -1,36 +1,35 @@
 <template>
   <div class="code-editor-line-numbers">
-    <div class="line flex-row flex-vertical-space-between" 
-      v-for="(line, index) in numberOfCodeLines" :key="index" >
-      
+    <div v-for="(line, index) in numberOfCodeLines" :key="index" class="line flex-row flex-vertical-space-between">
       <div class="flex-horizontal-center">
-        <i :class="{'fa fa-circle breakpoint': isBreakpointSet(index), 'fa-regular fa-square': !isBreakpointSet(index)}" 
-          v-if="isBreakpointIconVisible(index)"
+        <i :class="bindIconClass(index)" 
           @click="addOrDeleteBreakpoint(index)">
         </i>
       </div>
       <div class="line-index">{{line}}</div>
     </div>
+    <br/>
   </div>
 </template>
 
 <script>
-import {EditorModes} from '@/scripts/EditorModes';
-
 export default {
-  props: ['breakpoints', 'numberOfCodeLines', 'isMode'],
+  props: ['breakpoints', 'numberOfCodeLines', 'editable'],
 
   data() {
     return {
-      EditorModes
     }
   },
 
+  mounted() {
+    console.log(this.$props.breakpoints)
+  },
+
   methods: {
-    addOrDeleteBreakpoint(lineNumber) {
-      if (this.$props.isMode(EditorModes.MODE_SETTINGS)) {
+    addOrDeleteBreakpoint(lineIndex) {
+      if (this.$props.editable) {
         let breakpoints = this.$props.breakpoints;
-        breakpoints.addOrDelete({id: lineNumber});
+        breakpoints.addOrDelete({id: lineIndex});
         this.$emit("update:breakpoints", breakpoints);
       }
     }
@@ -38,15 +37,18 @@ export default {
 
   computed: {
     isBreakpointSet() {
-      return line => {
-        return this.$props.breakpoints.has(line);
+      return lineIndex => {
+        return this.$props.breakpoints ? this.$props.breakpoints.has(lineIndex) : false;
       }
     },
 
-    isBreakpointIconVisible() {
-      return line => {
-        return !this.$props.isMode(EditorModes.MODE_INSPECTING) && 
-                (this.$props.isMode(EditorModes.MODE_SETTINGS) || this.isBreakpointSet(line));
+    bindIconClass() {
+      return lineIndex => {
+        if (this.isBreakpointSet(lineIndex)) {
+          return 'fa fa-circle breakpoint';
+        } else if (this.$props.editable) {
+          return 'fa-regular fa-square';
+        }
       }
     }
   }
@@ -56,6 +58,7 @@ export default {
 <style scoped>
   .code-editor-line-numbers {
     overflow: hidden;
+    height: 100%;
   }
  
   .line {

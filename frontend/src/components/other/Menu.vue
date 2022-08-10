@@ -19,14 +19,15 @@ export default {
 
   methods: {
     openLoadProjectDialog() {
-      this.$root.openDialog('SelectProjectDialog', selectedOption => {
-        this.$root.redirectTo(selectedOption.key);
+      this.$root.openDialog('LoadProjectModal', {}, selectedOption => {
+        this.$root.redirectTo(selectedOption.id);
       });
     },
 
     openSaveProjectDialog() {
-      this.$root.openDialog('SaveProjectDialog', output => {
-        console.log(output);
+      this.$root.openDialog('SaveProjectDialog', {}, title => {
+        this.emitter.emit('saveProjectEvent', title);
+        this.$root.closeDialog();
       });
     }
   }

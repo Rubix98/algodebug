@@ -22,6 +22,23 @@ export class HighlightUtils {
 		return {id: variableName, start: start, end: end};
 	}
 
+	static insertTargetTagsIntoCode(code) {
+		let result = code;
+		let codeIndex = 0;
+		let resultIndex = 0;
+
+		for (let word of code.getWordsArray()) {
+			let start = code.indexOf(word, codeIndex);
+			let end = start + word.length;
+
+			result = result.replaceFromIndex(word, `<algo-target start=${start} end=${end}>${word}</algo-target>`, resultIndex);
+
+			codeIndex = end;
+			resultIndex = result.lastIndexOf('</algo-target>') + '</algo-target>'.length;
+		}
+		return result.escapeHTML();
+	}
+
 	static highlightLine(code, lineNumber) {
 		let lines = code.split('\n');
         let line = lines[lineNumber];
@@ -33,20 +50,11 @@ export class HighlightUtils {
 	}
 
 	static highlightVariables(code, variables) {
+		console.log(code, variables);
 		for (let variable of variables.sortedBy('start', -1)) {
 			console.log(variable);
-			code = code.slice(0, variable.start) + '<highlight class="highlight-variable">' + code.slice(variable.start, variable.end) + '</highlight>' + code.slice(variable.end);
+			code = code.slice(0, variable.start) + '<algo-highlight class="highlight-variable">' + code.slice(variable.start, variable.end) + '</algo-highlight>' + code.slice(variable.end);
 		}
-		return this.sanitizeCode(code);
+		return code.escapeHTML();
 	}
-
-    static sanitizeCode(code) {
-        code = code
-                .replaceAll('<', '&lt')
-                .replaceAll('>', '&gt')
-                .replaceAll('&lthighlight class="highlight-variable"&gt', '<highlight class="highlight-variable">')
-				.replaceAll('&lthighlight class="highlight-line"&gt', '<highlight class="highlight-line">')
-                .replaceAll('&lt/highlight&gt', '</highlight>');
-        return code;
-    }
 }

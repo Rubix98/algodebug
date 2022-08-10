@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 @Getter
 @Setter
-@Document("constructors")
-public class Constructor {
+@Document("converters")
+public class Converter {
     @Id
     private String id;
     private String title;
@@ -21,6 +21,11 @@ public class Constructor {
     private String code;
 
     public DialogDataPojo getDialogData() {
-        return new DialogDataPojo(this.title);
+        return new DialogDataPojo("", Arrays.asList(
+                new LabelValuePojo("Nazwa", this.title),
+                new LabelValuePojo("Typ zmiennej", this.type),
+                new LabelValuePojo("Język programowania", this.language),
+                new LabelValuePojo("Kod", this.code, "textarea")
+        ));
     }
 }

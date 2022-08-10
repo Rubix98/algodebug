@@ -1,70 +1,68 @@
 <template>
   <div class="code-editor full-size">
     <div class="editor-main flex-row">
-      <div :class="{'width-1-of-2': isMode(EditorModes.MODE_DEBUGGING), 'full-size': !isMode(EditorModes.MODE_DEBUGGING)}" style="position:relative">
-        <EditorHeader
-          v-model:language="language"
-          v-model:mode="mode"
-          :isMode="isMode"
-        />
+      <div class="width-1-of-2" style="position:relative">
 
-        <div class="code-editor-main flex-row">
-          <EditorLineNumbers
-            v-model:breakpoints="breakpoints"
-            :numberOfCodeLines="numberOfCodeLines"
-            :isMode="isMode"
-          />
+        <CodeEditor 
+          id="main-editor"
+          v-model:code="code"
+          :variables="variables"
+          :breakpoints="breakpoints"
+          :editable="!isRunning"
+          :clickable="false">
 
-          <EditorBody 
-            v-model:code="code"
-            :isMode="isMode"
-            @codeareaInputEvent="codeareaInputHandler"
-            @codeareaScrollEvent="codeareaScrollHandler"
-            @codeareaClickEvent="codeareaClickHandler"
+          <EditorHeader v-model:language="language" :isRunning="isRunning" 
+            @showExtendedCodeEvent="showExtendedCode()"
+            @runProgramEvent="runProgram"
+            @stopProgramEvent="stopProgram"
           />
-        </div>
+        
+        </CodeEditor>
+
       </div>
-      <div v-if="isMode(EditorModes.MODE_DEBUGGING)" class="width-1-of-2">
+      <div class="width-1-of-2">
+
         <EditorScene
           :testCases="testCases"
-          :isMode="isMode"
+          :isRunning="isRunning"
+          :code="code"
+          :variables="variables"
+          :breakpoints="breakpoints"
+          :language="language"
+          :sceneObjects="sceneObjects"
         />
+
       </div>
     </div>
 
     <EditorData
       v-model:testCases="testCases"
-      :isMode="isMode"
+      :isRunning="isRunning"
     />
 
   </div>
 </template>
 
 <script>
-import EditorBody from './EditorBody.vue';
 import EditorHeader from './EditorHeader.vue';
-import EditorLineNumbers from './EditorLineNumbers.vue';
 import EditorData from './EditorData.vue';
 import EditorScene from './EditorScene.vue';
-import {EditorModes} from '@/scripts/EditorModes';
 import {TestCases} from '@/scripts/TestCases.js';
 import {HighlightUtils} from '@/scripts/HighlightUtils.js';
 import {CodeParser} from '@/scripts/CodeParser.js';
-
-import '@/prototypes/Map.js';
+import CodeEditor from './CodeEditor.vue';
 
 export default {
-  components: {EditorBody, EditorHeader, EditorLineNumbers, EditorData, EditorScene},
+  components: { EditorHeader, EditorData, EditorScene, CodeEditor },
 
   data() {
     return {
-      EditorModes,
       code:                 '#include <iostream>\n#include <cstdio>\nusing namespace std;\n\nint gcd(int a, int b) {\n\tif (b > a) {\n\t\tswap(a, b);\n\t}\n\tif (b == 0) {\n\t\treturn a;\n\t} else {\n\t\treturn gcd(b, a % b);\n\t}\n}\n\nint main() {\n\tint a, b;\n\tcin >> a >> b;\n\tcout << gcd(a, b) << endl;\n}',
-      language:             'C++',
-      breakpoints:          new Map(),
-      variables:            new Map(),
-      mode:                 EditorModes.MODE_DEFAULT,
+      language:             'cpp',
+      breakpoints:            new Map(),
+      isRunning:            false,
       testCases:            new TestCases(),
+      sceneObjects:         [],
       selectedFrame:        null
     }
   },
@@ -74,12 +72,9 @@ export default {
       this.loadProject(this.projectId);
     }
 
-    this.codeareaDOM = document.getElementsByClassName('codearea')[0];
-    this.highlightsDOM = document.getElementsByClassName('highlights')[0];
-    this.linesDOM = document.getElementsByClassName('code-editor-line-numbers')[0];
-
     this.emitter.on('saveProjectEvent', this.saveProject)
     this.emitter.on('trackVariableEvent', this.trackVariable)
+    this.emitter.on('saveSceneObjectEvent', this.saveSceneObject)
 
     this.$root.sendRequest('BACKEND/code/load/cpp').then(response => {
       this.algoLib = response.data;
@@ -87,63 +82,39 @@ export default {
   },
 
   methods: {
-    codeareaInputHandler(code) {
-      this.code = code;
-      this.variables = new Map();
-      this.breakpoints = new Map();
-    },
-
-    codeareaScrollHandler() {
-      this.linesDOM.scrollTop = this.highlightsDOM.scrollTop = this.codeareaDOM.scrollTop;
-    },
-
-    codeareaClickHandler() {
-      if (this.isMode(EditorModes.MODE_SETTINGS)) {
-        let variable = HighlightUtils.selectVariable(this.code, this.codeareaDOM.selectionStart);
-        if (variable == null) {
-          return;
-        }
-
-        if (this.variables.hasElement(variable)) {
-          this.variables.deleteElement(variable);
-        } else {
-          this.$root.openDialog('SelectVariableTypeDialog', variable => {
-            this.variables.addElement(variable);
-          });
-        }
-      }
-    },
-
-    trackVariable(variable) {
-      if (this.isMode(this.editorModes.MODE_SETTINGS)) {
-        this.variables.addElement(variable);
-      }
-    },
-
     loadProject(projectId) {
       this.$root.sendRequest('BACKEND/project/find/' + projectId).then(response => {
         let data = response.data;
         this.code = data.code;
-        this.breakpoints = new Map(data.breakpoints); // TODO: array -> map
-        this.variables = new Map(data.variables);
+        this.breakpoints = new Map(data.breakpoints.map(breakpoint => {
+          return [breakpoint.id, breakpoint];
+        })); // TODO: array -> map
         this.language = data.language;
-        this.testCases = data.testCases;
+        this.testCases = new TestCases(data.testCases);
+        console.log(data.testCases, this.testCases);
+        this.sceneObjects = data.sceneObjects;
       })
     },
 
     saveProject(title) {
-      let data = {
+      this.$root.sendRequest("BACKEND/project/save", {
+        id: this.projectId != null && this.projectId.length !== 0 ? this.projectId : undefined,
         title: title,
         language: this.language,
         code: this.code,
         breakpoints: this.breakpoints.toArray(), // TODO: save as map
-        marks: this.marks.toArray(),
-        testCases: this.testCases
-      };
-      this.$root.sendRequest("BACKEND/project/save", data);
+        testCases: this.testCases.testCases,
+        sceneObjects: this.sceneObjects
+      });
     },
 
-    compile() {
+    showExtendedCode() {
+      this.$root.openDialog('ShowExtendedCodeModal', {
+        code: this.debugCode
+      });
+    },
+
+    runProgram() {
       for (let testCase of this.testCases.testCases) {
         this.$root.sendRequest('COMPILATOR/', {
           code:     this.debugCode,
@@ -151,14 +122,43 @@ export default {
           input:    testCase.input
         }).then(response => {
           console.log(response.data)
+          
           if (response.data.success) {
-            testCase.output = response.data.output;
+            let output = response.data.output;
+            testCase.output = output;
+
+            const parser = new DOMParser();
+            const parsedOutput = parser.parseFromString(output, "text/html");
+            console.log(parsedOutput.innerText);
+
+            testCase.frames = [];
+            for (let breakpoint of parsedOutput.getElementsByTagName("algodebug-breakpoint")) {
+              console.log(breakpoint.outerHTML)
+              testCase.frames.push(breakpoint.outerHTML);
+            }
+
           } else {
             testCase.output = response.data.error;
           }
-          this.mode = EditorModes.MODE_DEBUGGING;
+
+
+          this.isRunning = true;
         });
       }
+    },
+
+    stopProgram() {
+      this.isRunning = false;
+    },
+
+    saveSceneObject(sceneObject) {
+      if (sceneObject.id != null) {
+        this.sceneObjects[sceneObject.id] = sceneObject;
+      } else {
+        sceneObject.id = this.sceneObjects.length;
+        this.sceneObjects.push(sceneObject);
+      }
+      
     },
 
     highlightVariables() {
@@ -175,14 +175,37 @@ export default {
   },
 
   computed: {
-    isMode() {
-      return mode => {
-        return this.mode === mode;
-      }
+    debugCode() {
+      return new CodeParser(this.code, this.variables, this.breakpoints, this.converters).parse();
     },
 
-    debugCode() {
-      return this.algoLib + new CodeParser(this.code, this.variables, this.breakpoints).parse();
+    variables() {
+      let variables = new Map();
+      for (let sceneObject of this.sceneObjects) {
+        sceneObject.variable.id = sceneObject.variable.name;
+        variables.addElement(sceneObject.variable);
+        for (let subobject of sceneObject.subobjects) {
+          subobject.variable.id = subobject.variable.name;
+          variables.addElement(subobject.variable);
+        }
+      }
+      return variables;
+    },
+
+    converters() {
+      let converters = new Map();
+      for (let sceneObject of this.sceneObjects) {
+        if (sceneObject.converter) {
+          converters.addElement(sceneObject.converter);
+        }
+        
+        for (let subobject of sceneObject.subobjects) {
+          if (subobject.variable) {
+            converters.addElement(subobject.variable);
+          }
+        }
+      }
+      return converters;
     },
 
     numberOfCodeLines() {
@@ -204,59 +227,32 @@ export default {
   },
 
   watch: {
-    mode(value, oldValue) {
-      if (value === EditorModes.MODE_CODING) {
-        if (oldValue === EditorModes.MODE_INSPECTING) {
-          this.code = this.copyOfCode;
-          this.highlightVariables();
-        }
-      }
-
-      if (value === EditorModes.MODE_INSPECTING) {
-        this.copyOfCode = this.code;
-        this.code = this.debugCode;
-        this.clearHighlights()
-      }
-
-      if (value === EditorModes.MODE_COMPILING) {
-        this.compile();
-      }
-    },
-
     selectedFrame() {
       this.currentTestCase.trackedVariables = JSON.stringify(this.currentFrame);
       this.highlightLine(this.currentFrame.line-1);
-    },
-
-    variables: {
-      deep: true,
-      handler() {
-        this.highlightVariables();
-      }
     }
   }
 
 }
 </script>
 
-<style scoped>
+<style>
   .code-editor {
     background-color: silver;
-    font: 15px Consolas;
+    font: 16px Consolas;
     padding: 10px;
   }
 
   .code-editor-line-numbers {
     width: 70px;
-  }
-
-  .code-editor-main {
     height: 100%;
-    padding-right: 10px;
+    background-color: silver;
+    color: black;
   }
 
   .editor-main {
     height: 70%;
+    gap: 10px;
   }
   
   .code-editor-test-cases {

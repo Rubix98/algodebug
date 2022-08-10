@@ -1,18 +1,24 @@
 <template>
   <div class="dialog-content">
     <input type="text" v-model="projectTitle" class="full-size" placeholder="Tytuł projektu"> 
-    <textarea v-model="projectDescription" class="algo-textarea full-size"  placeholder="Opis projektu"></textarea>
   </div>
 </template>
 
 <script>
+import { ButtonsFactory } from '../../../scripts/ButtonsFactory'
+
 export default {
-  props: ['data'],
+  props: ['data', 'callback'],
 
   data() {
     return {
+      title: 'Zapisz projekt',
+      buttons: [
+        ButtonsFactory.buttonOK('Zapisz', () => {
+          this.$props.callback(this.projectTitle);
+        })
+      ],
       projectTitle: '',
-      projectDescription: ''
     }
   },
 
@@ -20,7 +26,6 @@ export default {
     getOutput() {
       return {
         projectTitle: this.projectTitle,
-        projectDescription: this.projectDescription
       }
     }
   },

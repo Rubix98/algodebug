@@ -1,12 +1,12 @@
 import { createApp } from 'vue';
 import App from '@/App.vue';
 import mitt from 'mitt';
-import VueUniversalModal from 'vue-universal-modal';
-import 'vue-universal-modal/dist/index.css';
+import Vue3Sanitize from "vue-3-sanitize";
+
+import '@/prototypes/Map.js';
+import '@/prototypes/String.js';
 
 const app = createApp(App);
 app.config.globalProperties.emitter = mitt();
 app.mount('#app');
-app.use(VueUniversalModal, {
-  teleportTarget: '#modals'
-})
+app.use(Vue3Sanitize);

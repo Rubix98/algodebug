@@ -1,9 +1,6 @@
 package algoview.models;
 
-import algoview.pojos.DialogDataPojo;
-import algoview.pojos.LabelValuePojo;
-import algoview.pojos.MarkPojo;
-import algoview.pojos.TestCasePojo;
+import algoview.pojos.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -24,9 +21,9 @@ public class Project {
 
     private String code;
     private String language;
-    private Vector<Integer> breakpoints;
-    private Vector<MarkPojo> variables;
+    private Vector<BreakpointPojo> breakpoints;
     private Vector<TestCasePojo> testCases;
+    private Vector<SceneObject> sceneObjects;
 
     private String author = "AlgoDebug"; // TODO: system logowania użytkowników
     private Date creationDate;

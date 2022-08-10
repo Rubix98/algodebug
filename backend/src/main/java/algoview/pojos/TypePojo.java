@@ -5,6 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TestCasePojo {
-    private String input;
+public class TypePojo {
+    String key;
+    String label;
+    String image;
 }

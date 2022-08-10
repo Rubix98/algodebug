@@ -1,67 +1,48 @@
 <template>
   <div class="code-editor-header flex-horizontal-center"> 
-      <i v-for="icon in icons" :key="icon.icon" 
-        :class="getIconClass(icon)"
-        :title="icon.title"
-        @click="iconClickHandler(icon.mode)"
-        v-show="icon.isVisible()"
-      /> 
-      
-      <select :value="language" @input="this.$emit('update:language', $event.target.value)" :disabled="isLanguageSelectDisabled">
-        <option v-for="language in availableLanguages" :key="language">{{language}}</option>
+      <i class="fa fa-play" title="Uruchom program" v-show="!isRunning" @click="runProgram()" />
+      <i class="fa fa-stop" title="Zatrzymaj program" v-show="isRunning" @click="stopProgram()" />
+      <i class="fa fa-eye" title="Pokaż zmodyfikowany program" @click="showExtendedCode()" />
+
+      <select :value="language" @input="changeLanguage" :disabled="isRunning">
+        <option v-for="language in languages" :key="language.key" :value="language.key" :disabled="language.disabled">{{language.label}}</option>
       </select>
+      
   </div>
 </template>
 
 <script>
-import {EditorModes} from '@/scripts/EditorModes';
 
 export default {
-  props: ['language', 'isMode'],
+  props: ['code', 'breakpoints', 'variables', 'converters', 'language', 'isRunning'],
 
   data() {
     return {
-      EditorModes,
-      availableLanguages:   ['C++', 'C', 'Java', 'C#', 'Python'],
-      icons: [
-        {icon: 'fa fa-stop', title: 'Zatrzymaj program', mode: EditorModes.MODE_DEBUGGING, isVisible: () => this.$props.isMode(EditorModes.MODE_DEBUGGING)},
-        {icon: 'fa fa-play', title: 'Uruchom program', mode: EditorModes.MODE_COMPILING, isVisible: () => !this.$props.isMode(EditorModes.MODE_DEBUGGING)},
-        {icon: 'fa fa-hand-pointer', title: 'Zaznacz zmienne i breakpointy', mode: EditorModes.MODE_SETTINGS, isVisible: () => true},
-        {icon: 'fa fa-eye', title: 'Pokaż rozszerzony kod', mode: EditorModes.MODE_INSPECTING, isVisible: () => true},
+      languages:  [
+        {key: "cpp", label: "C++"},
+        {key: "c", label: "C", disabled: true},
+        {key: "java", label: "Java", disabled: true},
+        {key: "csharp", label: "C#", disabled: true},
+        {key: "python", label: "Python", disabled: true},
       ]
     }
   },
 
   methods: {
-    iconClickHandler(mode) {
-      if (this.isIconActive(mode)) {
-        if (this.$props.isMode(mode)) {
-          mode = EditorModes.MODE_CODING;
-        }
-        this.$emit('update:mode', mode);
-      }
-    }
-  },
-
-  computed: {
-    getIconClass() {
-      return (icon) => {
-        let result = icon.icon;
-        if (this.isIconActive(icon.mode)) {
-          result += ' icon-active';
-        }
-        return result;
-      }
+    changeLanguage(e) {
+      this.$emit('update:language', e.target.value);
     },
 
-    isIconActive() {
-      return (mode) => {
-        return this.isMode(mode) || this.isMode(EditorModes.MODE_CODING);
-      }
+    runProgram() {
+      this.$emit('runProgramEvent');
     },
 
-    isLanguageSelectDisabled() {
-      return this.isMode(EditorModes.MODE_COMPILING) || this.isMode(EditorModes.MODE_DEBUGGING);
+    stopProgram() {
+      this.$emit('stopProgramEvent');
+    },
+
+    showExtendedCode() {
+      this.$emit("showExtendedCodeEvent");
     }
   }
 }
@@ -97,14 +78,10 @@ export default {
     padding: 0 5px;
     font-size: 30px;
     cursor: pointer;
-    color: #111;
+    color: #ccc;
   }
 
-  .icon-active {
-    color: silver;
-  }
-
-  .icon-active:hover {
+  i:hover {
     color: white;
   }
 

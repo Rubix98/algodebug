@@ -12,4 +12,9 @@ import lombok.Setter;
 public class LabelValuePojo {
     private String label;
     private Object value;
+    private String fieldType;
+
+    public LabelValuePojo(String label, Object value) {
+        this(label, value, null);
+    }
 }
