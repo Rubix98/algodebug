@@ -35,7 +35,6 @@ export class TestCases {
 class TestCase {
     id; input; output; frames; selectedFrameId;
     constructor(id) {
-        console.log("?")
         this.id = id;
         this.input = '';
         this.frames = [];

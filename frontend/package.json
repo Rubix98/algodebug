@@ -12,9 +12,11 @@
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "jenesius-vue-modal": "^1.5.4",
+    "konva": "^8.3.11",
     "mitt": "^3.0.0",
     "vue": "^3.0.0",
     "vue-3-sanitize": "^0.1.4",
+    "vue-konva": "^3.0.1",
     "vue-modaltor": "^1.5.4",
     "vue-universal-modal": "^1.1.3"
   },

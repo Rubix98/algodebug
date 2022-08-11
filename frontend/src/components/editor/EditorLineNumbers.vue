@@ -22,7 +22,6 @@ export default {
   },
 
   mounted() {
-    console.log(this.$props.breakpoints)
   },
 
   methods: {

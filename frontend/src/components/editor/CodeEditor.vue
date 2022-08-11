@@ -10,8 +10,8 @@
         :editable="editable"
       />
 
-      <div class="code-editor-containter">
-        <pre class="full-size codearea" @scroll="codeareaScrollHandler()" :contenteditable="editable" spellcheck="false" @input="onInput"><code v-html="extendedCode" @click="pickVariable" ></code></pre>
+      <div class="code-editor-containter" @scroll="codeareaScrollHandler()">
+        <pre class="full-size codearea"  :contenteditable="editable" spellcheck="false" @input="onInput"><code v-html="extendedCode" @click="pickVariable" ></code></pre>
       </div>
     </div>
     
@@ -25,14 +25,14 @@ import EditorLineNumbers from './EditorLineNumbers.vue';
 
 export default {
     components: { EditorLineNumbers },
-    props: ["id", "code", "variables", "breakpoints", "editable", "clickable"],
+    props: ["id", "code", "variables", "breakpoints", "testCases", "editable", "clickable", "isRunning"],
     data() {
       return {
         extendedCode: ""
       };
     },
     mounted() {
-      this.codeareaDOM = document.getElementById(this.id).getElementsByClassName('codearea')[0];
+      this.codeareaDOM = document.getElementById(this.id).getElementsByClassName('code-editor-containter')[0];
       this.linesDOM = document.getElementById(this.id).getElementsByClassName('code-editor-line-numbers')[0];
 
       if (this.$props.clickable) {
@@ -44,7 +44,8 @@ export default {
         this.extendedCode = this.$props.code.escapeHTML();
       }
 
-      console.log(this.extendedCode);
+      this.emitter.on("startDebuggingEvent", this.highlightLine);
+      this.emitter.on("currentFrameChangedEvent", this.highlightLine);
     },
 
     methods: {
@@ -53,9 +54,7 @@ export default {
       },
 
       pickVariable(e) {
-        console.log(e);
         if (e.target.localName === 'algo-target') {
-          console.log("here")
           let start = Number(e.target.attributes.start.value);
           let end = Number(e.target.attributes.end.value);
           let name = this.code.slice(start, end);
@@ -65,6 +64,11 @@ export default {
 
       highlightVariables() {
         this.extendedCode = HighlightUtils.highlightVariables(this.$props.code, this.$props.variables);
+        return this.extendedCode
+      },
+
+      highlightLine(currentFrame) {
+        this.extendedCode = HighlightUtils.highlightLine(this.$props.code, currentFrame.line-1);
       },
 
       onInput(event) {
@@ -78,7 +82,6 @@ export default {
 
     computed: {
       numberOfCodeLines() {
-        console.log(this.code);
         return this.code.split("\n").length;
       },
     },
@@ -89,7 +92,7 @@ export default {
         handler() {
           this.highlightVariables();
         }
-      }
+      },
     }
     
 }
@@ -102,14 +105,16 @@ export default {
     color: white;
     word-wrap: break-word;
     word-break: break-all;
-    overflow: auto;
     display:inline-block;
+    outline: none;
+    width: 100%;
   }
 
   .code-editor-containter {
     width: calc(100% - 70px);
     height: 100%;
     display:inline-block;
+    overflow: auto;
   }
 
   algo-target {
@@ -124,5 +129,16 @@ export default {
 
   algo-highlight {
     background-color: red;
+    border-radius: 5px;
+  }
+
+  .highlight-variable {
+    background-color: purple;
+  }
+
+  .highlight-line {
+    background-color: orange;
+    width: 100%;
+    display: inline-block;
   }
 </style>

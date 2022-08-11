@@ -41,18 +41,16 @@ export class HighlightUtils {
 
 	static highlightLine(code, lineNumber) {
 		let lines = code.split('\n');
-        let line = lines[lineNumber];
+    let line = lines[lineNumber];
 		line = line !== '' ? line : ' ';
-		line = '<highlight class="highlight-line">' + line + '</highlight>';
-        lines[lineNumber] = line;
+		line = '<algo-highlight class="highlight-line">' + line + '</algo-highlight>';
+    lines[lineNumber] = line;
 		code = lines.join('\n');
-		return this.sanitizeCode(code);
+		return code.escapeHTML();
 	}
 
 	static highlightVariables(code, variables) {
-		console.log(code, variables);
 		for (let variable of variables.sortedBy('start', -1)) {
-			console.log(variable);
 			code = code.slice(0, variable.start) + '<algo-highlight class="highlight-variable">' + code.slice(variable.start, variable.end) + '</algo-highlight>' + code.slice(variable.end);
 		}
 		return code.escapeHTML();

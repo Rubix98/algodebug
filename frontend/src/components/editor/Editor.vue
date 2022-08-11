@@ -9,7 +9,9 @@
           :variables="variables"
           :breakpoints="breakpoints"
           :editable="!isRunning"
-          :clickable="false">
+          :clickable="false"
+          :testCases="testCases"
+          :isRunning="isRunning">
 
           <EditorHeader v-model:language="language" :isRunning="isRunning" 
             @showExtendedCodeEvent="showExtendedCode()"
@@ -91,7 +93,6 @@ export default {
         })); // TODO: array -> map
         this.language = data.language;
         this.testCases = new TestCases(data.testCases);
-        console.log(data.testCases, this.testCases);
         this.sceneObjects = data.sceneObjects;
       })
     },
@@ -114,37 +115,38 @@ export default {
       });
     },
 
-    runProgram() {
+    async runProgram() {
+      console.log("compiling")
       for (let testCase of this.testCases.testCases) {
-        this.$root.sendRequest('COMPILATOR/', {
+        let response = await this.$root.sendRequest('COMPILATOR/', {
           code:     this.debugCode,
           language: "cpp",
           input:    testCase.input
-        }).then(response => {
-          console.log(response.data)
-          
-          if (response.data.success) {
-            let output = response.data.output;
-            testCase.output = output;
+        });
+        console.log(response.data)
+        
+        if (response.data.success) {
+          let output = response.data.output;
+          testCase.output = output;
 
-            const parser = new DOMParser();
-            const parsedOutput = parser.parseFromString(output, "text/html");
-            console.log(parsedOutput.innerText);
+          const parser = new DOMParser();
+          const parsedOutput = parser.parseFromString(output, "text/html");
 
-            testCase.frames = [];
-            for (let breakpoint of parsedOutput.getElementsByTagName("algodebug-breakpoint")) {
-              console.log(breakpoint.outerHTML)
-              testCase.frames.push(breakpoint.outerHTML);
-            }
-
-          } else {
-            testCase.output = response.data.error;
+          testCase.frames = [];
+          for (let breakpoint of parsedOutput.getElementsByTagName("algodebug-breakpoint")) {
+            testCase.frames.push({
+              output: breakpoint.outerHTML,
+              line: Number(breakpoint.getAttribute("line")),
+              variables: breakpoint.getElementsByTagName("algodebug-variable")
+            });
           }
 
-
-          this.isRunning = true;
-        });
+        } else {
+          testCase.output = response.data.error;
+        }
       }
+      this.isRunning = true;
+      this.emitter.emit("startDebuggingEvent", this.testCases.currentFrame());
     },
 
     stopProgram() {

@@ -1,7 +1,7 @@
 <template>
   <div class="scene-canvas full-size">
     
-    <canvas id="canvas" class="full-size"></canvas>
+    <Scene class="full-size" :sceneObjects="sceneObjects" :currentFrame="testCases.currentFrame()" :isRunning="isRunning"></Scene>
 
     <div class="buttons-container" v-if="!isRunning">
       <button class="algo-button-default" @click="addNewSceneObject()">Dodaj nowy obiekt</button> <br/><br/>
@@ -10,93 +10,79 @@
 
     <div class="scene-navigation" v-if="isRunning">
 
-      <i v-for="icon in icons" :key="icon.icon"
+      <i v-for="icon in icons.slice(0, 2)" :key="icon.icon"
         :class="icon.icon"
         @click="icon.action"
       />
+      <span class="frame-number">{{testCases.current().selectedFrameId+1}}/{{testCases.current().frames.length}}</span>
+      
+      <i v-for="icon in icons.slice(2)" :key="icon.icon"
+        :class="icon.icon"
+        @click="icon.action"
+      />
+
     </div>
   </div>
 </template>
 
 <script>
-import {Graph} from '@/scripts/Graph.js';
-import {Painter} from '@/scripts/Painter.js';
+import Scene from './Scene.vue';
 
 export default {
-  props: ['testCases', 'isRunning', 'code', 'variables', 'breakpoints', 'language', 'sceneObjects'],
+    props: ["testCases", "isRunning", "code", "variables", "breakpoints", "language", "sceneObjects"],
+    data() {
+        return {
+            icons: [
+                { icon: "fa-solid fa-backward-step", action: () => { this.setSelectedFrame(0); } },
+                { icon: "fa-solid fa-backward", action: () => { this.setSelectedFrame(this.selectedFrameId - 1); } },
+                /*{ icon: "fa-solid fa-play", action: () => { } },*/
+                { icon: "fa-solid fa-forward", action: () => { this.setSelectedFrame(this.selectedFrameId + 1); } },
+                { icon: "fa-solid fa-forward-step", action: () => { this.setSelectedFrame(this.numberOfFrames - 1); } },
+            ]
+        };
+    },
+    mounted() {
+    },
+    methods: {
+        setSelectedFrame(selectedFrameId) {
+            if (selectedFrameId >= 0 && selectedFrameId < this.numberOfFrames) {
+                this.$props.testCases.current().selectedFrameId = selectedFrameId;
+                this.emitter.emit('currentFrameChangedEvent', this.$props.testCases.currentFrame());
+            }
+        },
 
-  data() {
-    return {
-      icons: [
-        {icon: 'fa-solid fa-backward-step', action: () => {this.setSelectedFrame(0)}},
-        {icon: 'fa-solid fa-backward', action: () => {this.setSelectedFrame(this.selectedFrameId-1)}},
-        {icon: 'fa-solid fa-play', action: () => {}},
-        {icon: 'fa-solid fa-forward', action: () => {this.setSelectedFrame(this.selectedFrameId+1)}},
-        {icon: 'fa-solid fa-forward-step', action: () => {this.setSelectedFrame(this.numberOfFrames-1)}},
-      ]
-    }
-  },
+        addNewSceneObject() {
+            this.$root.openDialog("ConfigureSceneObjectModal", {
+                code: this.$props.code,
+                variables: this.$props.variables,
+                breakpoints: this.$props.breakpoints,
+                language: this.language
+            });
+        },
 
-  mounted() {
-    let canvasDOM = document.getElementById('canvas');
-    this.canvas = canvasDOM.getContext('2d');
-    this.canvasWidth = canvasDOM.width = canvasDOM.offsetWidth;
-    this.canvasHeight = canvasDOM.height = canvasDOM.offsetHeight;
-    this.painter = new Painter(this.canvas);
-  },
-
-  methods: {
-    setSelectedFrame(selectedFrameId) {
-      if (selectedFrameId >= 0 && selectedFrameId < this.numberOfFrames) {
-        this.$props.testCases.current().selectedFrameId = selectedFrameId;
+        showSceneObjects() {
+            this.$root.openDialog("ShowSceneObjectsModal", {
+                sceneObjects: this.$props.sceneObjects,
+                code: this.$props.code,
+                variables: this.$props.variables,
+                breakpoints: this.$props.breakpoints,
+                language: this.language
+            });
+        }
+    },
+    computed: {
+      numberOfFrames() {
+        return this.testCases.current().frames.length;
+      },
+      selectedFrameId() {
+        return this.$props.testCases.current().selectedFrameId;
       }
-      
     },
-    
-    drawFrame(frame) {
-      this.painter.clear();
-      let graph = new Graph(frame.graph);
-      this.painter.drawGraph(graph);
-    },
-
-    addNewSceneObject() {
-      this.$root.openDialog('ConfigureSceneObjectModal', {
-        code: this.$props.code,
-        variables: this.$props.variables,
-        breakpoints: this.$props.breakpoints,
-        language: this.language
-      });
-    },
-
-    showSceneObjects() {
-      this.$root.openDialog('ShowSceneObjectsModal', {
-        sceneObjects: this.$props.sceneObjects,
-        code: this.$props.code,
-        variables: this.$props.variables,
-        breakpoints: this.$props.breakpoints,
-        language: this.language
-      })
-    }
-  },
-
-  computed: {
-    numberOfFrames() {
-      return this.testCases.current().frames.length;
-    },
-
-    selectedFrameId() {
-      return this.$props.testCases.current().selectedFrameId;
-    }
-  }
+    components: { Scene }
 }
 </script>
 
 <style scoped>
-  canvas {
-    border: 1px solid black;
-    background-color: white;
-  }
-
   .scene-canvas {
     position: relative;
   }
@@ -108,6 +94,7 @@ export default {
     text-align: center;
     bottom: 0px;
     font-size: 40px;
+    user-select:none;
   }
 
   .scene-navigation i {
@@ -126,6 +113,11 @@ export default {
   .buttons-container button {
     font-size: 30px;
 
+  }
+
+  .frame-number {
+    width: 150px;
+    display: inline-block;
   }
 
 

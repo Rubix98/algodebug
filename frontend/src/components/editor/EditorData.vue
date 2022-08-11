@@ -22,11 +22,11 @@
         </div>
 
 
-        <div v-show="isRunning">
+        <div v-if="isRunning">
           <div class="textarea-header">Zawartość pułapki</div>
           <textarea 
             class="algo-textarea"
-            :value="testCases.current().frames[testCases.current().selectedFrameId]"></textarea>
+            :value="testCases.current().frames[testCases.current().selectedFrameId].output"></textarea>
         </div>
       </div>
 
@@ -61,6 +61,7 @@ export default {
       let testCases = this.$props.testCases;
       testCases.selectedId = index; 
       this.$emit('update:testCases', testCases);
+      this.emitter.emit('currentFrameChangedEvent', this.$props.testCases.currentFrame());
     },
     
     addTestCase() {
