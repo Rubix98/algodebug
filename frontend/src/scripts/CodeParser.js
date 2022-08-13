@@ -1,5 +1,3 @@
-/*  */
-
 export class CodeParser {
 	actions = {
 		'<algodebug-variable>': function(parent, tag) {
@@ -14,7 +12,7 @@ export class CodeParser {
 			let beginIndex = tag.position + tag.key.length;
 			let endIndex = parent.code.indexOf('</algodebug-breakpoint>', beginIndex);
 			let line = parent.code.slice(beginIndex, endIndex);
-			parent.parsedBreakpoints.push({line: line, variables: parent.stack});
+			parent.parsedBreakpoints.push({line: line, variables: [...parent.stack]});
 		},
 		'{': function(parent) {
 			parent.curlyBracketsLevel++;
@@ -101,6 +99,7 @@ export class CodeParser {
 		this.code = CodeUtils.removeVariableTags(this.code);
 		this.code = CodeUtils.replaceBreakpointTags(this.code, this.parsedBreakpoints);
 		this.code = CodeUtils.insertConvertersAfterIncludes(this.code, this.converters);
+		this.code = CodeUtils.insertConvertersAtTheEnd(this.code, this.converters);
 		this.code = CodeUtils.insertAlgodebugMacros(this.code);
 	}
 }
@@ -147,7 +146,8 @@ class CodeUtils {
 	}
 
 	static insertConvertersAfterIncludes(code, converters) {
-		converters = converters.toArray().map(converter => converter.code).join("\n\n");
+		converters = converters.toArray().map(converter => converter.code.slice(0, converter.code.indexOf("{")).trim() + ";").join("\n");
+		console.log(converters)
 
 		let includeStartPosition = code.lastIndexOf("#include");
 		let includeEndPosition = code.indexOf(">", includeStartPosition);
@@ -157,5 +157,10 @@ class CodeUtils {
 		let position = Math.max(includeEndPosition, usingNamespaceEndPosition)+1;
 		code = code.slice(0, position) + "\n\n" + converters + code.slice(position);
 		return code;
+	}
+
+	static insertConvertersAtTheEnd(code, converters) {
+		converters = converters.toArray().map(converter => converter.code).join("\n\n");
+		return code + "\n\n" + converters;
 	}
 }

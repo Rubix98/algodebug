@@ -80,7 +80,7 @@ export default {
     },
 
     selectConverter() {
-      this.$root.pushDialog("SelectConverterModal", {...this.$props.data, type: this.type}, (selectedConverter) => {
+      this.$root.pushDialog("SelectConverterModal", {...this.$props.data, type: this.sceneObject.type}, (selectedConverter) => {
         this.sceneObject.converter = selectedConverter;
       });
     }

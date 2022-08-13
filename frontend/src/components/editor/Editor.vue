@@ -202,8 +202,8 @@ export default {
         }
         
         for (let subobject of sceneObject.subobjects) {
-          if (subobject.variable) {
-            converters.addElement(subobject.variable);
+          if (subobject.converter) {
+            converters.addElement(subobject.converter);
           }
         }
       }

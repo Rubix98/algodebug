@@ -11,10 +11,10 @@ export class Variable {
     const Konva = window.Konva
     this.layer = new Konva.Layer();
     this.layer.add(new Konva.Text({
-      text: "abc",
+      text: "",
       fontSize: 30,
-      x: 50,
-      y: 50,
+      x: this.position.x,
+      y: this.position.y,
       draggable: true
     }));
   }
