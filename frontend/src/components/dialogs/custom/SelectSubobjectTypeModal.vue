@@ -23,15 +23,9 @@ export default {
           {label: 'Ścieżka', key: 'graph_path'},
         ],
         points: [
-          {label: 'Wyróżnienie punktu/punktów', key: 'graph_edges'},
-          {label: 'Odcinek/Odcinki (współrzędne)', key: 'graph_edges'},
-          {label: 'Odcinek/Odcinki (identyfikatory)', key: 'graph_edges'},
-          {label: 'Łamana (współrzędne)', key: 'graph_edges'},
-          {label: 'Łamana (identyfikatory)', key: 'graph_edges'},
-          {label: 'Łamana zamknięta (współrzędne)', key: 'graph_edges'},
-          {label: 'Łamana zamknięta (identyfikatory)', key: 'graph_edges'},
-          {label: 'Prosta', key: 'graph_edges'},
-          {label: 'Półprosta', key: 'graph_edges'},
+          {label: 'Wyróżnienie punktu/punktów', key: 'points_point'},
+          {label: 'Odcinek/Odcinki', key: 'points_stretch'},
+          {label: 'Łamana', key: 'points_path'},
         ],
         array: [
           {label: 'Wyróżnienie elementu/elementów', key: 'array_index'},

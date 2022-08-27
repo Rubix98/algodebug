@@ -27,7 +27,6 @@ export class Array {
       this.position = {x: array.x(), y: array.y()};
       array.destroy();
     }
-    console.log(this.position)
 
     if (value) {
       let i = 0;

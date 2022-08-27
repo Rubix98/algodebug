@@ -8,6 +8,7 @@
 import {Variable} from '@/scripts/SceneObjects/Variable.js';
 import {Graph} from '@/scripts/SceneObjects/Graph.js';
 import {Array} from '@/scripts/SceneObjects/Array.js';
+import {Points} from '@/scripts/SceneObjects/Points.js';
 
 export default {
   props: ['isRunning', 'currentFrame', 'sceneObjects'],
@@ -47,6 +48,8 @@ export default {
           object = new Graph(sceneObject, {x: width/2, y: height/2});
         } else if (sceneObject.type.key === 'array') {
           object = new Array(sceneObject, {x: 5, y: 3*height/4});
+        } else if (sceneObject.type.key === 'points') {
+          object = new Points(sceneObject, {x: width/2, y: height/2});
         }
 
         this.objects.push(object);
@@ -54,12 +57,24 @@ export default {
       }
 
       this.drawFrame(currentFrame);
+
+      //var dataURL = this.stage.toDataURL({ pixelRatio: 3 });
+      //this.downloadURI(dataURL, 'stage.png');
     },
 
     drawFrame(currentFrame) {
       for (let object of this.objects) {
         object.updateLayer(currentFrame);
       }
+    },
+
+    downloadURI(uri, name) {
+      var link = document.createElement('a');
+      link.download = name;
+      link.href = uri;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   }
 }
