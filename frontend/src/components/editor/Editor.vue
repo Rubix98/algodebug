@@ -184,11 +184,17 @@ export default {
     variables() {
       let variables = new Map();
       for (let sceneObject of this.sceneObjects) {
-        sceneObject.variable.id = sceneObject.variable.name;
-        variables.addElement(sceneObject.variable);
+        if (sceneObject.variable) {
+          sceneObject.variable.id = sceneObject.variable.name;
+          variables.addElement(sceneObject.variable);
+        }
+        
         for (let subobject of sceneObject.subobjects) {
-          subobject.variable.id = subobject.variable.name;
-          variables.addElement(subobject.variable);
+          if (subobject.variable) {
+            subobject.variable.id = subobject.variable.name;
+            variables.addElement(subobject.variable);
+          }
+          
         }
       }
       return variables;

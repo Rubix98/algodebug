@@ -6,6 +6,7 @@ export class Graph {
 
   constructor(sceneObject, position) {
     this.variable = sceneObject.variable.name;
+    this.sceneObject = sceneObject;
     this.position = position;
     this.createLayer();
   }
@@ -28,6 +29,8 @@ export class Graph {
       this.updateVertices();
       this.clearEdges();
       this.updateEdges();
+      
+      this.addSubobjects(currentFrame);
       
     }
     //this.layer.setAttr("visible", value ? true : false);
@@ -73,9 +76,9 @@ export class Graph {
 
         
         let circle = new Konva.Circle({
-          fill: 'blue',
+          fill: 'white',
           stroke: 'black',
-          strokeWidth: 5,
+          strokeWidth: 1,
           radius: 20,
         });
         group.add(circle);
@@ -83,7 +86,7 @@ export class Graph {
 
         group.add(new Konva.Text({
           text: String(vertex),
-          fill: 'white',
+          fill: 'black',
           fontSize: 20,
           x: -25, 
           y:-25,
@@ -119,8 +122,8 @@ export class Graph {
       
       
       let line = new Konva.Line({
+        id: `${edge.a}_${edge.b}`,
         stroke: 'black',
-        fill: 'black',
         points: [vertexFrom.x(), vertexFrom.y(), vertexTo.x(), vertexTo.y()]
       });
       this.layer.add(line)
@@ -134,6 +137,58 @@ export class Graph {
         fontSize: 20,
       })
       this.layer.add(text);
+    }
+  }
+
+  addSubobjects(currentFrame) {
+    for (let vertexNode of this.layer.find('Circle')) {
+      vertexNode.fill('white');
+      vertexNode.strokeWidth(1);
+    }
+
+    for (let subobject of this.sceneObject.subobjects) {
+      let value = null;
+      for (let variable of currentFrame.variables) {
+        if (variable.getAttribute("name") == subobject.variable.name) {
+          value = variable.innerText;
+        }
+      }
+
+      if (value) {
+        if (subobject.type.key === 'graph_edges') {
+          for (let edge of value.split("\n")) {
+            if (edge != "") {
+              let edgeSplitted = edge.split(" ");
+              let a = Number(edgeSplitted[0]);
+              let b = Number(edgeSplitted[1]);
+              
+      
+              let edgeNode;
+              if (this.layer.find(`#${a}_${b}`).length !== 0) {
+                edgeNode = this.layer.find(`#${a}_${b}`)[0];
+              } else {
+                edgeNode = this.layer.find(`#${b}_${a}`)[0];
+              }
+
+              if (edgeNode) {
+                edgeNode.stroke(subobject.color);
+                edgeNode.strokeWidth(5);
+              }
+            }
+            
+          }
+        } else if (subobject.type.key === 'graph_vertices') {
+          for (let vertex of value.split(" ")) {
+            if (vertex != "") {
+              let vertexNode = this.layer.find(`#${vertex}`)[0].find('Circle')[0];
+              if (vertexNode) {
+                vertexNode.fill(subobject.color);
+                vertexNode.strokeWidth(3);
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

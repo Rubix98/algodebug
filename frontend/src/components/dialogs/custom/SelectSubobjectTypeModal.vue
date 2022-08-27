@@ -18,24 +18,24 @@ export default {
       buttons: [],
       types: {
         graph: [
-          {label: 'Wyróżnienie krawędzi', value: 'graph_edges'},
-          {label: 'Wyróżnienie wierzchołka/wierzchołków', value: 'graph_vertices'},
-          {label: 'Ścieżka', value: 'graph_path'},
+          {label: 'Wyróżnienie krawędzi', key: 'graph_edges'},
+          {label: 'Wyróżnienie wierzchołka/wierzchołków', key: 'graph_vertices'},
+          {label: 'Ścieżka', key: 'graph_path'},
         ],
         points: [
-          {label: 'Wyróżnienie punktu/punktów', value: 'graph_edges'},
-          {label: 'Odcinek/Odcinki (współrzędne)', value: 'graph_edges'},
-          {label: 'Odcinek/Odcinki (identyfikatory)', value: 'graph_edges'},
-          {label: 'Łamana (współrzędne)', value: 'graph_edges'},
-          {label: 'Łamana (identyfikatory)', value: 'graph_edges'},
-          {label: 'Łamana zamknięta (współrzędne)', value: 'graph_edges'},
-          {label: 'Łamana zamknięta (identyfikatory)', value: 'graph_edges'},
-          {label: 'Prosta', value: 'graph_edges'},
-          {label: 'Półprosta', value: 'graph_edges'},
+          {label: 'Wyróżnienie punktu/punktów', key: 'graph_edges'},
+          {label: 'Odcinek/Odcinki (współrzędne)', key: 'graph_edges'},
+          {label: 'Odcinek/Odcinki (identyfikatory)', key: 'graph_edges'},
+          {label: 'Łamana (współrzędne)', key: 'graph_edges'},
+          {label: 'Łamana (identyfikatory)', key: 'graph_edges'},
+          {label: 'Łamana zamknięta (współrzędne)', key: 'graph_edges'},
+          {label: 'Łamana zamknięta (identyfikatory)', key: 'graph_edges'},
+          {label: 'Prosta', key: 'graph_edges'},
+          {label: 'Półprosta', key: 'graph_edges'},
         ],
         array: [
-          {label: 'Wyróżnienie elementu/elementów', value: 'graph_edges'},
-          {label: 'Przedział', value: 'graph_edges'},
+          {label: 'Wyróżnienie elementu/elementów', key: 'array_index'},
+          {label: 'Przedział', key: 'array_part'},
         ]
       }
     }

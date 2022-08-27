@@ -6,7 +6,8 @@
 
 <script>
 import {Variable} from '@/scripts/SceneObjects/Variable.js';
-import { Graph } from '@/scripts/SceneObjects/Graph.js';
+import {Graph} from '@/scripts/SceneObjects/Graph.js';
+import {Array} from '@/scripts/SceneObjects/Array.js';
 
 export default {
   props: ['isRunning', 'currentFrame', 'sceneObjects'],
@@ -44,6 +45,8 @@ export default {
           variableY += 40;
         } else if (sceneObject.type.key === 'graph') {
           object = new Graph(sceneObject, {x: width/2, y: height/2});
+        } else if (sceneObject.type.key === 'array') {
+          object = new Array(sceneObject, {x: 5, y: 3*height/4});
         }
 
         this.objects.push(object);
