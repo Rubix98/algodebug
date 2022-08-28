@@ -14,7 +14,7 @@
     </AlgoFieldRow><br />
 
     <AlgoTable 
-      v-if="sceneObject.type && sceneObject.type.key !== 'variable'"
+      v-if="sceneObject.type && sceneObject.type.key !== 'variable' && sceneObject.type.key !== 'circle' && sceneObject.type.key !== 'shape' && sceneObject.type.key !== 'line'"
       v-model:value="sceneObject.subobjects"
       :type="sceneObject.type"
       label="Obiekty wewnętrzne"
@@ -24,8 +24,6 @@
     >
         
     </AlgoTable>
-
-    {{sceneObject}}
   </div>
 </template>
 

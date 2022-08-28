@@ -1,17 +1,15 @@
 <template>
   <div class="dialog-content">
-    <div class="flex-wrap flex-vertical-center">
-      <div v-for="option in options" :key="option.key" class="option flex-column flex-center" @click="addNewObject(option)">
-        <img :src="option.image" alt="graf" /> <br/>
-        {{option.label}}
-      </div>
-    </div>
+    <AlgoPickList :options="options" @selectOptionEvent="addNewObject" />
   </div>
 </template>
 
 <script>
+import AlgoPickList from '@/components/global/AlgoPickList.vue';
 
 export default {
+  components: {AlgoPickList},
+
   props: ['data', 'callback'],
 
   data() {
@@ -19,10 +17,12 @@ export default {
       title: 'Dodaj nowy obiekt',
       buttons: [],
       options: [
-        {key: 'variable', label: 'Zmienna', image: 'images/variable.png'},
-        {key: 'graph', label: 'Graf', image: 'images/graph.png'},
-        {key: 'points', label: 'Zbiór punktów', image: 'images/points.png'},
-        {key: 'array', label: 'Tablica', image: 'images/array.png'},
+        {key: 'variable', label: 'Zmienna'},
+        {key: 'graph', label: 'Graf'},
+        {key: 'array', label: 'Tablica'},
+        {key: 'points', label: 'Zbiór punktów'},
+        {key: 'circle', label: 'Okrąg'},
+        {key: 'shape', label: 'Wielokąt'},
       ]
     }
   },

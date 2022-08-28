@@ -9,6 +9,8 @@ import {Variable} from '@/scripts/SceneObjects/Variable.js';
 import {Graph} from '@/scripts/SceneObjects/Graph.js';
 import {Array} from '@/scripts/SceneObjects/Array.js';
 import {Points} from '@/scripts/SceneObjects/Points.js';
+import {Circle} from '@/scripts/SceneObjects/Circle.js';
+import {Shape} from '@/scripts/SceneObjects/Shape.js';
 
 export default {
   props: ['isRunning', 'currentFrame', 'sceneObjects'],
@@ -50,6 +52,10 @@ export default {
           object = new Array(sceneObject, {x: 5, y: 3*height/4});
         } else if (sceneObject.type.key === 'points') {
           object = new Points(sceneObject, {x: width/2, y: height/2});
+        } else if (sceneObject.type.key === 'circle') {
+          object = new Circle(sceneObject, {x: width/2, y: height/2});
+        } else if (sceneObject.type.key === 'shape') {
+          object = new Shape(sceneObject, {x: width/2, y: height/2});
         }
 
         this.objects.push(object);
