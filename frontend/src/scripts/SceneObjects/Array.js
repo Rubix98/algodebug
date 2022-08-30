@@ -1,10 +1,12 @@
 export class Array {
   variable; value; position; layer;
 
-  constructor(sceneObject, position) {
+  constructor(sceneObject, position, width, height) {
     this.sceneObject = sceneObject;
     this.variable = sceneObject.variable.name;
     this.position = position;
+    this.width = width;
+    this.height = height;
     this.createLayer();
   }
 
@@ -37,12 +39,17 @@ export class Array {
         draggable: true
       });
       this.layer.add(arrayGroup);
-      for (let char of value) {
-        char;
+      
+      if (value.includes(" ")) {
+        value = value.trim().split(" ")
+      }
+      let row = Math.floor(this.width / 50)-1;
+      console.log(row);
+      for (let element of value) {
         const group = new Konva.Group({
           id: String(i),
-          x: i*50,
-          y: 0,
+          x: (i % row)*50,
+          y: Math.floor(i / row) * 70,
           width: 50,
           height: 50,
         })
@@ -55,7 +62,7 @@ export class Array {
         }))
 
         group.add(new Konva.Text({
-          text: String(char),
+          text: String(element),
           fill: 'black',
           fontSize: 20,
           x: 0, 
@@ -102,15 +109,17 @@ export class Array {
 
       if (value) {
         if (subobject.type.key === 'array_index') {
-          let group = this.layer.find("#" + value)[0];
-          let rect = group.find("Rect")[0];
-          let index = group.find(".index")[0];
+          for (let arrayIndex of value.trim().split(" ")) {
+            let group = this.layer.find("#" + arrayIndex)[0];
+            let rect = group.find("Rect")[0];
+            let index = group.find(".index")[0];
 
-          rect.stroke(subobject.color);
-          rect.strokeWidth(5);
-          group.moveToTop();
+            rect.stroke(subobject.color);
+            rect.strokeWidth(5);
+            group.moveToTop();
 
-          index.fill(subobject.color);
+            index.fill(subobject.color);
+          }
         } else if (subobject.type.key === 'array_part') { 
           value = value.split(" ");
           let a = Number(value[0]);

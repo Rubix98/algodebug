@@ -36,9 +36,17 @@ export default {
       this.stage = new Konva.Stage({
         container: 'canvas',
         width: width,
-        height: width
+        height: height
       });
       this.objects = [];
+
+      let backgroundLayer = new Konva.Layer();
+      this.stage.add(backgroundLayer);
+      backgroundLayer.add(new Konva.Rect({
+        width: width,
+        height: height,
+        fill: 'white'
+      }))
 
       let variableY = 5;
       for (let sceneObject of this.$props.sceneObjects) {
@@ -49,7 +57,7 @@ export default {
         } else if (sceneObject.type.key === 'graph') {
           object = new Graph(sceneObject, {x: width/2, y: height/2});
         } else if (sceneObject.type.key === 'array') {
-          object = new Array(sceneObject, {x: 5, y: 3*height/4});
+          object = new Array(sceneObject, {x: 5, y: 3*height/4}, width, height);
         } else if (sceneObject.type.key === 'points') {
           object = new Points(sceneObject, {x: width/2, y: height/2});
         } else if (sceneObject.type.key === 'circle') {
@@ -63,15 +71,15 @@ export default {
       }
 
       this.drawFrame(currentFrame);
-
-      //var dataURL = this.stage.toDataURL({ pixelRatio: 3 });
-      //this.downloadURI(dataURL, 'stage.png');
     },
 
     drawFrame(currentFrame) {
       for (let object of this.objects) {
         object.updateLayer(currentFrame);
       }
+
+      //var dataURL = this.stage.toDataURL({ pixelRatio: 3 });
+      //this.downloadURI(dataURL, 'stage.jpeg');
     },
 
     downloadURI(uri, name) {
