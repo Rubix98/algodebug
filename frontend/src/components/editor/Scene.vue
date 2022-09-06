@@ -24,6 +24,7 @@ export default {
   mounted() {
     this.emitter.on("startDebuggingEvent", this.prepareStage);
     this.emitter.on("currentFrameChangedEvent", this.drawFrame);
+    this.emitter.on("downloadStageEvent", this.download);
   },
 
   methods: {
@@ -77,14 +78,13 @@ export default {
       for (let object of this.objects) {
         object.updateLayer(currentFrame);
       }
-
-      //var dataURL = this.stage.toDataURL({ pixelRatio: 3 });
-      //this.downloadURI(dataURL, 'stage.jpeg');
+      //this.download();
     },
 
-    downloadURI(uri, name) {
+    download() {
+      let uri = this.stage.toDataURL({ pixelRatio: 3 });
       var link = document.createElement('a');
-      link.download = name;
+      link.download = "stage.jpeg";
       link.href = uri;
       document.body.appendChild(link);
       link.click();

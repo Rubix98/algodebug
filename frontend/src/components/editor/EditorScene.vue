@@ -1,7 +1,11 @@
 <template>
   <div class="scene-canvas full-size">
-    
+
     <Scene class="full-size" :sceneObjects="sceneObjects" :currentFrame="testCases.currentFrame()" :isRunning="isRunning"></Scene>
+
+    <div class="download-container" v-if="isRunning">
+      <i class="fa-solid fa-download" @click="download"></i>
+    </div>
 
     <div class="buttons-container" v-if="!isRunning">
       <button class="algo-button-default" @click="addNewSceneObject()">Dodaj nowy obiekt</button> <br/><br/>
@@ -68,6 +72,10 @@ export default {
                 breakpoints: this.$props.breakpoints,
                 language: this.language
             });
+        },
+
+        download() {
+          this.emitter.emit('downloadStageEvent');
         }
     },
     computed: {
@@ -112,7 +120,18 @@ export default {
 
   .buttons-container button {
     font-size: 30px;
+  }
 
+  .download-container {
+    color: black;
+    position: absolute;
+    text-align: right;
+    top: 0px;
+    right: 0px;
+    font-size: 40px;
+    user-select:none;
+    padding-right: 10px;
+    padding-top: 5px;
   }
 
   .frame-number {

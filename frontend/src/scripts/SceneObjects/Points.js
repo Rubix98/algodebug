@@ -27,7 +27,6 @@ export class Points {
     }
 
     if (value) {
-      
       let pointsGroup = new Konva.Group({
         x: this.position.x,
         y: this.position.y,
@@ -73,6 +72,8 @@ export class Points {
       this.pointsGroup = pointsGroup;
       this.addSubobjects(currentFrame)
     }
+
+    this.layer.find('Line').forEach(line => line.moveToBottom());
     
     this.layer.draw();
     
