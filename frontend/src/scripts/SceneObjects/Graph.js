@@ -129,14 +129,17 @@ export class Graph {
       this.layer.add(line)
       line.moveToBottom();
 
-      let text = new Konva.Text({
-        name: 'edge-label',
-        x: cx,
-        y: cy,
-        text: String(edge.d),
-        fontSize: 20,
-      })
-      this.layer.add(text);
+      if (edge.d) {
+        let text = new Konva.Text({
+          name: 'edge-label',
+          x: cx,
+          y: cy,
+          text: String(edge.d),
+          fontSize: 20,
+        })
+        this.layer.add(text);
+      }
+      
     }
   }
 
@@ -178,7 +181,27 @@ export class Graph {
             
           }
         } else if (subobject.type.key === 'graph_vertices') {
-          for (let vertex of value.split(" ")) {
+          let verticesTab = value.trim().split(" ");
+          let flag = true;
+          for (let vertex of verticesTab) {
+            if (vertex != "0" && vertex != "1") {
+              flag = false;
+              break;
+            }
+          }
+
+          let vertices = [];
+          if (flag && verticesTab.length > 1) {
+            for (let key in verticesTab) {
+              if (verticesTab[key] == "1") {
+                vertices.push(key);
+              }
+            }
+          } else {
+            vertices = verticesTab;
+          }
+
+          for (let vertex of vertices) {
             if (vertex != "") {
               let vertexNode = this.layer.find(`#${vertex}`)[0].find('Circle')[0];
               if (vertexNode) {

@@ -120,21 +120,22 @@ export class Array {
 
             index.fill(subobject.color);
           }
-        } else if (subobject.type.key === 'array_part') { 
-          value = value.split(" ");
-          let a = Number(value[0]);
-          let b = Number(value[1]);
+        } else if (subobject.type.key === 'array_part') {
+          for (let part of value.trim().split("\n")) {
+            part = part.split(" ");
+            let a = Number(part[0]);
+            let b = Number(part[1]);
+            for (let i = a; i < b; i++) {
+              let group = this.layer.find("#" + i)[0];
+              let rect = group.find("Rect")[0];
+              let index = group.find(".index")[0];
 
-          for (let i = a; i < b; i++) {
-            let group = this.layer.find("#" + i)[0];
-            let rect = group.find("Rect")[0];
-            let index = group.find(".index")[0];
+              rect.stroke(subobject.color);
+              rect.strokeWidth(5);
+              group.moveToTop();
 
-            rect.stroke(subobject.color);
-            rect.strokeWidth(5);
-            group.moveToTop();
-
-            index.fill(subobject.color);
+              index.fill(subobject.color);
+            }
           }
         }
       }

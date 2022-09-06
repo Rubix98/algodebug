@@ -1,6 +1,7 @@
 <template>
   <div class="menu">
     <div class="menu-content flex-row flex-horizontal-center">
+      <img src="images/logo.png" />
       <i class="fa fa-save" @click="openSaveProjectDialog()"></i>
       <i class="fa fa-search" @click="openLoadProjectDialog()"></i>
     </div>
@@ -49,7 +50,12 @@ export default {
   i {
     color: white;
     font-size: 25px;
-    margin-left: 10px;
+    margin-left: 10px; 
     cursor: pointer;
+  }
+
+  img {
+    width: 150px;
+    height: auto;
   }
 </style>
