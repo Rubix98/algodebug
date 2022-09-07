@@ -118,7 +118,7 @@ export default {
     async runProgram() {
       console.log("compiling")
       for (let testCase of this.testCases.testCases) {
-        let response = await this.$root.sendRequest('COMPILATOR/', {
+        let response = await this.$root.sendRequest('https://codex-api.herokuapp.com/', {
           code:     this.debugCode,
           language: "cpp",
           input:    testCase.input
