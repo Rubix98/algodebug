@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
     <div class="menu-content flex-row flex-horizontal-center">
-      <img src="images/logo.png" />
+      <img src="images/logo.png" @click="redirectToRoot()" />
       <i class="fa fa-save" @click="openSaveProjectDialog()"></i>
       <i class="fa fa-search" @click="openLoadProjectDialog()"></i>
     </div>
@@ -21,7 +21,7 @@ export default {
   methods: {
     openLoadProjectDialog() {
       this.$root.openDialog('LoadProjectModal', {}, selectedOption => {
-        this.$root.redirectTo(selectedOption.id);
+        this.$root.redirectTo("?projectId=" + selectedOption.id);
       });
     },
 
@@ -30,6 +30,10 @@ export default {
         this.emitter.emit('saveProjectEvent', title);
         this.$root.closeDialog();
       });
+    },
+
+    redirectToRoot() {
+      this.$root.redirectTo(window.location.origin + window.location.pathname)
     }
   }
 }
@@ -57,5 +61,6 @@ export default {
   img {
     width: 150px;
     height: auto;
+    cursor: pointer;
   }
 </style>

@@ -70,8 +70,7 @@ export default {
   },
 
   mounted() {
-    if (this.projectId != '') {
-      
+    if (this.projectId) {
       this.loadProject(this.projectId);
     }
 
@@ -226,10 +225,8 @@ export default {
     },
 
     projectId() {
-      let projectId = window.location.pathname;
-      projectId = projectId.replace("algodebug", "");
-      projectId = projectId.replaceAll("/", "");
-      return projectId;
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get("projectId");
     }
   },
 

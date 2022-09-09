@@ -55,7 +55,7 @@ export default {
     },
 
     redirectTo(url) {
-      window.location.href = "algodebug/" + url;
+      window.location.href = url;
     }
   }
 }
