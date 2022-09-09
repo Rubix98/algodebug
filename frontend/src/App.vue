@@ -29,6 +29,12 @@ export default {
 
   methods: {
     sendRequest(url, data={}) {
+      console.log(window.location)
+      if (window.location.origin.includes("localhost")) {
+        url = url.replace("BACKEND", "http://localhost:8080")
+      } else {
+        url = url.replace("BACKEND", "https://algodebug.herokuapp.com")
+      }
       return axios.post(url, data);
     },
 
@@ -49,7 +55,7 @@ export default {
     },
 
     redirectTo(url) {
-      window.location.href = url;
+      window.location.href = "algodebug/" + url;
     }
   }
 }

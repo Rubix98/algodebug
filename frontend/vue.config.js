@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/algoview/',
+  publicPath: '/algodebug/',
   devServer: {
       proxy: {
         '/BACKEND': {

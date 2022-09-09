@@ -71,16 +71,13 @@ export default {
 
   mounted() {
     if (this.projectId != '') {
+      
       this.loadProject(this.projectId);
     }
 
     this.emitter.on('saveProjectEvent', this.saveProject)
     this.emitter.on('trackVariableEvent', this.trackVariable)
     this.emitter.on('saveSceneObjectEvent', this.saveSceneObject)
-
-    this.$root.sendRequest('BACKEND/code/load/cpp').then(response => {
-      this.algoLib = response.data;
-    });
   },
 
   methods: {
@@ -230,7 +227,9 @@ export default {
 
     projectId() {
       let projectId = window.location.pathname;
-      return projectId[0] === '/' ? projectId.substring(1) : projectId;
+      projectId = projectId.replace("algodebug", "");
+      projectId = projectId.replaceAll("/", "");
+      return projectId;
     }
   },
 
