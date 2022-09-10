@@ -1,5 +1,7 @@
 <template>
-  <textarea :class="size" v-model="model" />
+  <textarea :class="size" 
+    :value="value" 
+    @input="$emit('update:value', $event.target.value)" />
 </template>
 
 <script>
@@ -8,18 +10,11 @@ export default {
 
   data() {
     return {
-      model: ''
     }
   },
 
   mounted() {
     this.model = this.$props.value;
-  },
-
-  watch: {
-    model() {
-      this.$emit('update:value', this.model)
-    }
   }
 }
 </script>
@@ -29,6 +24,10 @@ export default {
     width: 100%;
     height: 250px;
     resize: none;
+    outline: none;
+    border: none;
+    border-radius: 0 0 10px 10px;
+    font-size: 16px;
   }
 
   .small {

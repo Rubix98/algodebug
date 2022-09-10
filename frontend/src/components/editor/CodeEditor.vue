@@ -111,10 +111,12 @@ export default {
   }
 
   .code-editor-containter {
-    width: calc(100% - 70px);
+    width: calc(100% - 60px);
     height: 100%;
     display:inline-block;
     overflow: auto;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 0 10px 10px 0;
   }
 
   algo-target {

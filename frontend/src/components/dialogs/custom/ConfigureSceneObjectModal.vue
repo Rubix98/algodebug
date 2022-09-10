@@ -55,7 +55,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$props.data);
     if (this.$props.data.sceneObject) {
       this.sceneObject = this.$props.data.sceneObject;
     }

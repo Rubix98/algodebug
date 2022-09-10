@@ -1,9 +1,19 @@
 <template>
   <div class="menu">
-    <div class="menu-content flex-row flex-horizontal-center">
+    <div class="menu-content flex-row flex-horizontal-center flex-vertical-space-between">
       <img src="images/logo.png" @click="redirectToRoot()" />
-      <i class="fa fa-save" @click="openSaveProjectDialog()"></i>
-      <i class="fa fa-search" @click="openLoadProjectDialog()"></i>
+      <div class="buttons-container">
+        <AlgoButton @click="openSaveProjectDialog()">
+          <i class="fa fa-save"></i> Zapisz projekt
+        </AlgoButton>
+
+        <AlgoButton @click="openLoadProjectDialog()">
+          <i class="fa fa-search" ></i> Otwórz projekt
+        </AlgoButton>
+      </div>
+      
+      
+      
     </div>
     <div class="menu-placeholder"></div>
     
@@ -11,37 +21,36 @@
 </template>
 
 <script>
+import AlgoButton from '../global/AlgoButton.vue';
 
 export default {
-  data() {
-    return {
-    }
-  },
-
-  methods: {
-    openLoadProjectDialog() {
-      this.$root.openDialog('LoadProjectModal', {}, selectedOption => {
-        this.$root.redirectTo("?projectId=" + selectedOption.id);
-      });
+    data() {
+        return {};
     },
-
-    openSaveProjectDialog() {
-      this.$root.openDialog('SaveProjectDialog', {}, title => {
-        this.emitter.emit('saveProjectEvent', title);
-        this.$root.closeDialog();
-      });
+    methods: {
+        openLoadProjectDialog() {
+            this.$root.openDialog("LoadProjectModal", {}, selectedOption => {
+                this.$root.redirectTo("?projectId=" + selectedOption.id);
+            });
+        },
+        openSaveProjectDialog() {
+            this.$root.openDialog("SaveProjectDialog", {}, title => {
+                this.emitter.emit("saveProjectEvent", title);
+                this.$root.closeDialog();
+            });
+        },
+        redirectToRoot() {
+            this.$root.redirectTo(window.location.origin + window.location.pathname);
+        }
     },
-
-    redirectToRoot() {
-      this.$root.redirectTo(window.location.origin + window.location.pathname)
-    }
-  }
+    components: { AlgoButton }
 }
 </script>
 
 <style scoped>
   .menu-content {
-    background-color: green;
+    background: linear-gradient(#427AA1, #05668D);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
     position: fixed;
     z-index: 9;
   }
@@ -51,16 +60,13 @@ export default {
     height: inherit;
   }
 
-  i {
-    color: white;
-    font-size: 25px;
-    margin-left: 10px; 
+  img {
+    height: 300px;
+    width: auto;
     cursor: pointer;
   }
 
-  img {
-    width: 150px;
-    height: auto;
-    cursor: pointer;
+  button {
+    margin-right:20px;
   }
 </style>

@@ -2,7 +2,7 @@
   <div class="dialog">
     <div class="dialog-header flex-vertical-space-between">
         <h1>{{title}}</h1>
-        <i class="fa fa-close" title="Zamknij pop-up" @click="popModal()"></i> 
+        <i class="fa fa-close" title="Zamknij okno" @click="popModal()"></i> 
     </div>
 
     <div class="dialog-content">

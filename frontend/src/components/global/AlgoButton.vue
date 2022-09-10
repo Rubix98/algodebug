@@ -13,38 +13,45 @@ export default {
 
   data() {
     return {
-      buttonClass: '',
-      label: ''
+      buttonClass: ''
     }
   },
 
   mounted() {
-    if (this.$props.type === "plus") {
-      this.buttonClass = 'ok';
-      this.label = '+';
-    } else if (this.$props.type === "minus") {
-      this.buttonClass = 'cancel';
-      this.label = '-';
-    }
+    this.buttonClass = this.$props.type || 'default';
   }
 }
 </script>
 
 <style scoped>
   button {
-    padding: 5px 10px;
+    padding: 7px 15px;
     cursor: pointer;
     border-radius: 10px;
+    border: none;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    margin: 0;
   }
 
+  button:hover {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.7);
+    
+  }
+  
   .ok {
-    background-color: lime;
-    border: 1px solid green;
+    background: linear-gradient(#C3EB78, #508B54); 
+  }
+
+  .ok:hover {
+    background: linear-gradient(#D3FB88, #609B64);
   }
 
   .cancel {
     background-color: red;
-    border: 1px solid rgb(128, 0, 0);
+  }
+
+  .cancel:hover {
+    background-color: red;
   }
 
 

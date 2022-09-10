@@ -44,7 +44,7 @@ export class Array {
         value = value.trim().split(" ")
       }
       let row = Math.floor(this.width / 50)-1;
-      console.log(row);
+      
       for (let element of value) {
         const group = new Konva.Group({
           id: String(i),

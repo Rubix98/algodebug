@@ -147,7 +147,6 @@ class CodeUtils {
 
 	static insertConvertersAfterIncludes(code, converters) {
 		converters = converters.toArray().map(converter => converter.code.slice(0, converter.code.indexOf("{")).trim() + ";").join("\n");
-		console.log(converters)
 
 		let includeStartPosition = code.lastIndexOf("#include");
 		let includeEndPosition = code.indexOf(">", includeStartPosition);

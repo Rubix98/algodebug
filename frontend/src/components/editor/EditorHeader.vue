@@ -54,9 +54,9 @@ export default {
     justify-content:flex-end;
     z-index: 1;
     padding: 5px 15px;
-    width: 100%;
     font: initial;
-    color: white; 
+    color: white;
+    right: 0;
   }
 
   input, select, button {
@@ -83,6 +83,10 @@ export default {
 
   i:hover {
     color: white;
+  }
+
+  select {
+    cursor: pointer;
   }
 
 </style>

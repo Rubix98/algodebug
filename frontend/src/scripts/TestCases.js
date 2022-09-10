@@ -19,6 +19,15 @@ export class TestCases {
         this.testCases.push(new TestCase(this.selectedId));
     }
 
+    deleteTestCase(index) {
+        if (this.testCases.length > 1) {
+            this.testCases.splice(index, 1);
+            if (this.selectedId >= this.testCases.length) {
+                this.selectedId = this.testCases.length-1;
+            }
+        }
+    }
+
     current() {
         return this.testCases[this.selectedId];
     }

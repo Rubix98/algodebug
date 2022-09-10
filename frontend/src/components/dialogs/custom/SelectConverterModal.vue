@@ -30,7 +30,6 @@ export default {
   created() {
     this.$root.sendRequest('BACKEND/converter/findAll')
       .then((response) => {
-        console.log(response);
         this.converters = response.data;
       });
   },

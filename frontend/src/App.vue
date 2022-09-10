@@ -29,7 +29,6 @@ export default {
 
   methods: {
     sendRequest(url, data={}) {
-      console.log(window.location)
       if (window.location.origin.includes("localhost")) {
         url = url.replace("BACKEND", "http://localhost:8080")
       } else {
@@ -74,12 +73,12 @@ export default {
   }
 
   .menu {
-    height: 40px;
+    height: 50px;
   }
 
   .tab-container {
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - 50px);
   }
 
   /* Global */

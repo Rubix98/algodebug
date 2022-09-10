@@ -11,7 +11,6 @@
 export default {
   props: ['label'],
   mounted() {
-    console.log(this.$props.label)
   }
 }
 </script>

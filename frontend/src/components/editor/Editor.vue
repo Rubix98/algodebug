@@ -242,16 +242,17 @@ export default {
 
 <style>
   .code-editor {
-    background-color: silver;
+    background-image: url('/background.png');
     font: 16px Consolas;
     padding: 10px;
   }
 
   .code-editor-line-numbers {
-    width: 70px;
+    width: 60px;
     height: 100%;
     background-color: silver;
     color: black;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
   }
 
   .editor-main {
@@ -261,11 +262,13 @@ export default {
   
   .code-editor-test-cases {
     height: 30%;
+    margin-top: 5px;
   }
 
   .code-editor-body {
     background-color: black;
     color: white;
+    border-radius: 10px;
   }
 
 </style>

@@ -7,9 +7,17 @@
       <i class="fa-solid fa-download" @click="download"></i>
     </div>
 
-    <div class="buttons-container" v-if="!isRunning">
-      <button class="algo-button-default" @click="addNewSceneObject()">Dodaj nowy obiekt</button> <br/><br/>
-      <button v-if="sceneObjects.length" class="algo-button-default" @click="showSceneObjects()">Konfiguruj obiekty</button>
+    <div class="scene-objects-container" v-if="!isRunning">
+      <div class="scene-object-tile flex-row flex-vertical-space-between"
+        v-for="(sceneObject, index) of sceneObjects" :key="index"
+      >
+        {{sceneObject.type.label}} {{sceneObject.variable.name}}
+        <AlgoIcon type="x" @click="deleteSceneObject(index)"/>
+      </div>
+    </div>
+
+    <div class="buttons-container flex-center" v-if="!isRunning">
+      <AlgoButton @click="addNewSceneObject()"><i class="fa-solid fa-square-plus"></i> Dodaj nowy obiekt</AlgoButton>
     </div>
 
     <div class="scene-navigation" v-if="isRunning">
@@ -31,6 +39,8 @@
 
 <script>
 import Scene from './Scene.vue';
+import AlgoButton from '../global/AlgoButton.vue';
+import AlgoIcon from '../global/AlgoIcon.vue';
 
 export default {
     props: ["testCases", "isRunning", "code", "variables", "breakpoints", "language", "sceneObjects"],
@@ -65,13 +75,19 @@ export default {
         },
 
         showSceneObjects() {
-            this.$root.openDialog("ShowSceneObjectsModal", {
-                sceneObjects: this.$props.sceneObjects,
-                code: this.$props.code,
-                variables: this.$props.variables,
-                breakpoints: this.$props.breakpoints,
-                language: this.language
-            });
+          this.$root.openDialog("ShowSceneObjectsModal", {
+              sceneObjects: this.$props.sceneObjects,
+              code: this.$props.code,
+              variables: this.$props.variables,
+              breakpoints: this.$props.breakpoints,
+              language: this.language
+          });
+        },
+
+        deleteSceneObject(index) {
+          let sceneObjects = this.$props.sceneObjects;
+          sceneObjects.splice(index, 1);
+          this.$emit("update:sceneObjects", sceneObjects);
         },
 
         download() {
@@ -86,13 +102,15 @@ export default {
         return this.$props.testCases.current().selectedFrameId;
       }
     },
-    components: { Scene }
+    components: { Scene, AlgoButton, AlgoIcon }
 }
 </script>
 
 <style scoped>
   .scene-canvas {
     position: relative;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
   }
 
   .scene-navigation {
@@ -110,12 +128,29 @@ export default {
     cursor: pointer;
   }
 
+  .scene-objects-container {
+    color: black;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .scene-object-tile {
+    background: linear-gradient(#427AA1, #05668D);
+    margin: 5px;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 10px;
+    gap: 10px;
+  }
+
   .buttons-container {
     color: black;
     position: absolute;
     width: 100%;
     text-align: center;
-    top: 45%;
+    top: 0;
+    height: 100%;
   }
 
   .buttons-container button {
