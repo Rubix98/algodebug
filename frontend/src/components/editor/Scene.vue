@@ -13,7 +13,7 @@ import {Circle} from '@/scripts/SceneObjects/Circle.js';
 import {Shape} from '@/scripts/SceneObjects/Shape.js';
 
 export default {
-  props: ['isRunning', 'currentFrame', 'sceneObjects'],
+  props: ['isRunning', 'sceneObjects'],
 
   data() {
     return {

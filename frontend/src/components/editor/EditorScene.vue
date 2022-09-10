@@ -1,23 +1,24 @@
 <template>
   <div class="scene-canvas full-size">
 
-    <Scene class="full-size" :sceneObjects="sceneObjects" :currentFrame="testCases.currentFrame()" :isRunning="isRunning"></Scene>
+    <Scene class="full-size" :sceneObjects="sceneObjects" :isRunning="isRunning"></Scene>
 
     <div class="download-container" v-if="isRunning">
       <i class="fa-solid fa-download" @click="download"></i>
     </div>
 
+    <div class="buttons-container flex-center" v-if="!isRunning">
+      <AlgoButton @click="addNewSceneObject()"><i class="fa-solid fa-square-plus"></i> Dodaj nowy obiekt</AlgoButton>
+    </div>
+
     <div class="scene-objects-container" v-if="!isRunning">
       <div class="scene-object-tile flex-row flex-vertical-space-between"
         v-for="(sceneObject, index) of sceneObjects" :key="index"
+        @click="configureSceneObject(sceneObject, $event)"
       >
         {{sceneObject.type.label}} {{sceneObject.variable.name}}
         <AlgoIcon type="x" @click="deleteSceneObject(index)"/>
       </div>
-    </div>
-
-    <div class="buttons-container flex-center" v-if="!isRunning">
-      <AlgoButton @click="addNewSceneObject()"><i class="fa-solid fa-square-plus"></i> Dodaj nowy obiekt</AlgoButton>
     </div>
 
     <div class="scene-navigation" v-if="isRunning">
@@ -25,13 +26,13 @@
       <i v-for="icon in icons.slice(0, 2)" :key="icon.icon"
         :class="icon.icon"
         @click="icon.action"
-      />
+      ></i>
       <span class="frame-number">{{testCases.current().selectedFrameId+1}}/{{testCases.current().frames.length}}</span>
       
       <i v-for="icon in icons.slice(2)" :key="icon.icon"
         :class="icon.icon"
         @click="icon.action"
-      />
+      ></i>
 
     </div>
   </div>
@@ -74,9 +75,11 @@ export default {
             });
         },
 
-        showSceneObjects() {
-          this.$root.openDialog("ShowSceneObjectsModal", {
-              sceneObjects: this.$props.sceneObjects,
+        configureSceneObject(sceneObject, event) {
+          if (event.target.localName === 'i') return;
+
+          this.$root.openDialog("ConfigureSceneObjectModal", {
+              sceneObject: sceneObject,
               code: this.$props.code,
               variables: this.$props.variables,
               breakpoints: this.$props.breakpoints,
@@ -142,6 +145,7 @@ export default {
     color: white;
     border-radius: 10px;
     gap: 10px;
+    cursor: pointer;
   }
 
   .buttons-container {

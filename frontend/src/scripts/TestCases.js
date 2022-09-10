@@ -21,10 +21,10 @@ export class TestCases {
 
     deleteTestCase(index) {
         if (this.testCases.length > 1) {
-            this.testCases.splice(index, 1);
-            if (this.selectedId >= this.testCases.length) {
-                this.selectedId = this.testCases.length-1;
+            if (this.selectedId === this.testCases.length-1) {
+                this.selectedId--;
             }
+            this.testCases.splice(index, 1);
         }
     }
 

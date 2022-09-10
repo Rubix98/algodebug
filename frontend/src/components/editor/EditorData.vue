@@ -6,7 +6,7 @@
           <ul>
             <li v-for="(number, index) in numberOfTestCases" :key="index" 
               :class="{'selected ': isSelected(index)}"
-              @click="changeSelectedTestCase(index)"
+              @click="changeSelectedTestCase(index, $event)"
             >
             <div class="flex-row flex-vertical-space-between">
               Test {{number}}
@@ -77,7 +77,9 @@ export default {
             this.$emit("update:testCases", testCases);
         },
 
-        changeSelectedTestCase(index) {
+        changeSelectedTestCase(index, event) {
+            if (event.target.localName === 'i') return;
+
             let testCases = this.$props.testCases;
             testCases.selectedId = index;
             testCases.current().selectedFrameId = 0;

@@ -12,8 +12,6 @@
         </AlgoButton>
       </div>
       
-      
-      
     </div>
     <div class="menu-placeholder"></div>
     
@@ -61,9 +59,10 @@ export default {
   }
 
   img {
-    height: 300px;
+    height: 50px;
     width: auto;
     cursor: pointer;
+    margin-left: 10px;
   }
 
   button {

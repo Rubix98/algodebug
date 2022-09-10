@@ -10,8 +10,8 @@
         :editable="editable"
       />
 
-      <div class="code-editor-containter" @scroll="codeareaScrollHandler()">
-        <pre class="full-size codearea"  :contenteditable="editable" spellcheck="false" @input="onInput"><code v-html="extendedCode" @click="pickVariable" ></code></pre>
+      <div class="code-editor-containter" @scroll="codeareaScrollHandler()" @keydown.tab.prevent="insertTab($event)">
+        <pre class="full-size codearea" id="editor"  :contenteditable="editable" spellcheck="false" @input="onInput"><code v-html="extendedCode" @click="pickVariable" ></code></pre>
       </div>
     </div>
     
@@ -77,6 +77,24 @@ export default {
           code = code.slice(0,-1);
         }
         this.$emit("update:code", code);
+      },
+
+      insertTab(event) {
+        if (event) {
+          event.preventDefault(); 
+          var editor = document.getElementById("editor");
+          var doc = editor.ownerDocument.defaultView;
+          var sel = doc.getSelection();
+          var range = sel.getRangeAt(0);
+
+          var tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0");
+          range.insertNode(tabNode);
+
+          range.setStartAfter(tabNode);
+          range.setEndAfter(tabNode); 
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
       }
     },
 
