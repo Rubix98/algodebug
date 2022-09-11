@@ -25,6 +25,7 @@ export default {
     this.emitter.on("startDebuggingEvent", this.prepareStage);
     this.emitter.on("currentFrameChangedEvent", this.drawFrame);
     this.emitter.on("downloadStageEvent", this.download);
+    this.emitter.on("stopDebuggingEvent", this.clearStage);
   },
 
   methods: {
@@ -89,6 +90,10 @@ export default {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    },
+
+    clearStage() {
+      this.stage.find('Layer').forEach(layer => layer.destroy());
     }
   }
 }

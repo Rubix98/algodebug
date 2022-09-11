@@ -9,7 +9,7 @@
       <AlgoLink :value="variableName" @click="selectVariable()" />
     </AlgoFieldRow>
 
-    <AlgoFieldRow label="Operator wyjścia" v-if="sceneObject.type">
+    <AlgoFieldRow label="Konwerter" v-if="sceneObject.type">
       <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" />
     </AlgoFieldRow><br />
 
@@ -17,8 +17,8 @@
       v-if="sceneObject.type && sceneObject.type.key !== 'variable' && sceneObject.type.key !== 'circle' && sceneObject.type.key !== 'shape' && sceneObject.type.key !== 'line'"
       v-model:value="sceneObject.subobjects"
       :type="sceneObject.type"
-      label="Obiekty wewnętrzne"
-      :headers="['Rodzaj', 'Przypisana zmienna', 'Operator wyjścia', 'Kolor']"
+      label="Właściwości"
+      :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
       :emptyRow="{name: '', type: null, variable: null, converter: null}"
       :codeData="data"
     >
@@ -35,7 +35,7 @@ import AlgoTable from '../../global/AlgoTable.vue';
 
 export default {
   props: ["data"],
-  components: { AlgoLink, AlgoFieldRow, AlgoTable },
+  components: {AlgoLink, AlgoFieldRow, AlgoTable },
   data() {
     return {
       title: this.$props.data.sceneObject ? "Konfiguruj obiekt" : "Dodaj nowy obiekt",

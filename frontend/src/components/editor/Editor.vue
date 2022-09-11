@@ -147,6 +147,8 @@ export default {
 
     stopProgram() {
       this.isRunning = false;
+      this.emitter.emit("stopDebuggingEvent");
+      this.testCases.current().selectedFrameId = 0;
     },
 
     saveSceneObject(sceneObject) {

@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
@@ -30,12 +31,12 @@ public class Project {
     private Date modificationDate;
 
     public DialogDataPojo getDialogData() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return new DialogDataPojo(this.title, Arrays.asList(
                 new LabelValuePojo("Tytuł", this.title),
                 new LabelValuePojo("Język programowania", this.language),
                 new LabelValuePojo("Autor", this.author),
-                new LabelValuePojo("Data utworzenia", this.creationDate),
-                new LabelValuePojo("Data modyfikacji", this.modificationDate)
+                new LabelValuePojo("Data modyfikacji", sdf.format(this.modificationDate))
         ));
     }
 }

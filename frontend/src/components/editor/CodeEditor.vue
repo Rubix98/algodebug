@@ -46,6 +46,7 @@ export default {
 
       this.emitter.on("startDebuggingEvent", this.highlightLine);
       this.emitter.on("currentFrameChangedEvent", this.highlightLine);
+      this.emitter.on("stopDebuggingEvent", this.highlightVariables);
     },
 
     methods: {

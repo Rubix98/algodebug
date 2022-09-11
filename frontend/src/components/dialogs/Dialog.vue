@@ -9,9 +9,9 @@
       <component :is="modalComponentName" :data="data" :callback="callback" ref="modalComponent"></component>
     </div>
 
-    <div class="flex-vertical-right">
+    <div class="flex-vertical-right" style="margin-top: 10px">
       <span v-for="(button, index) in buttons" :key="index">
-        <button :class="button.class" @click="button.action">{{button.label}}</button>
+        <AlgoButton :class="button.class" @click="button.action">{{button.label}}</AlgoButton>
       </span>
       
     </div>
@@ -30,9 +30,10 @@ import SelectConverterModal from './custom/SelectConverterModal.vue';
 import AddNewConverterModal from './custom/AddNewConverterModal.vue';
 import SelectSubobjectTypeModal from './custom/SelectSubobjectTypeModal.vue';
 import ShowExtendedCodeModal from './custom/ShowExtendedCodeModal.vue';
+import AlgoButton from '../global/AlgoButton.vue';
 
 export default {
-  components: {LoadProjectModal, SaveProjectDialog, ShowSceneObjectsModal, SelectSceneObjectTypeModal, ConfigureSceneObjectModal, PickVariableModal, SelectConverterModal, AddNewConverterModal, SelectSubobjectTypeModal, ShowExtendedCodeModal},
+  components: {LoadProjectModal, SaveProjectDialog, ShowSceneObjectsModal, SelectSceneObjectTypeModal, ConfigureSceneObjectModal, PickVariableModal, SelectConverterModal, AddNewConverterModal, SelectSubobjectTypeModal, ShowExtendedCodeModal, AlgoButton},
 
   props: ['modalComponentName', 'data', 'callback'],
 

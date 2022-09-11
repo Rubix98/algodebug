@@ -42,7 +42,7 @@ export class Points {
         const group = new Konva.Group({
           id: "group_" + i,
           x: Number(cords[0]),
-          y: Number(cords[1]),
+          y: -Number(cords[1]),
           width: 50,
           height: 50,
         })
@@ -56,13 +56,13 @@ export class Points {
         group.add(new Konva.Text({
           text: String(i),
           fill: 'black',
-          fontSize: 15,
-          x: 5, 
-          y: 5,
+          fontSize: 20,
+          x: 7, 
+          y: 7,
           align: 'center',
           verticalAlign: 'middle',
-          width: 10,
-          height: 10
+          width: 20,
+          height: 20
         }));
 
         pointsGroup.add(group);
@@ -95,7 +95,7 @@ export class Points {
             if (point === "") break;
             let pointNode = this.layer.find("#circle_" + point)[0];
             pointNode.fill(subobject.color)
-            pointNode.radius(5);
+            pointNode.radius(7);
           }
         } else if (subobject.type.key === 'points_stretch') { 
           for (let stretch of value.split("\n")) {
@@ -108,6 +108,7 @@ export class Points {
             
             this.pointsGroup.add(new Konva.Line({
               stroke: subobject.color,
+              strokeWidth: 5,
               points: [pointA.x(), pointA.y(), pointB.x(), pointB.y()]
             }));
 
@@ -119,7 +120,7 @@ export class Points {
 
             let pointNode = this.layer.find("#circle_" + point)[0];
             pointNode.fill(subobject.color)
-            pointNode.radius(5);
+            pointNode.radius(7);
 
             if (previous !== -1) {
               let a = point;
@@ -130,6 +131,7 @@ export class Points {
               
               this.pointsGroup.add(new Konva.Line({
                 stroke: subobject.color,
+                strokeWidth: 5,
                 points: [pointA.x(), pointA.y(), pointB.x(), pointB.y()]
               }));
             }

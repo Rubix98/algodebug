@@ -4,14 +4,14 @@
 
     <table>
       <thead>
-        <th><AlgoButton type="plus" @click="addRow" /></th>
+        <th style="text-align: center"><AlgoIcon type="+" @click="addRow" /></th>
         <th v-for="header in headers" :key="header">{{header}}</th>
       </thead>
       <tbody>
 
         <tr v-for="(row, index) in data" :key="index">
-          <td>
-            <AlgoButton type="minus" @click="removeRow(index)" />
+          <td style="text-align: center">
+            <AlgoIcon type="x" @click="removeRow(index)" />
           </td>
 
           <td>
@@ -40,11 +40,11 @@
 </template>
 
 <script>
-import AlgoButton from './AlgoButton.vue';
 import AlgoLink from './AlgoLink.vue';
+import AlgoIcon from './AlgoIcon.vue';
 export default {
     props: ["value", "type", "label", "headers", "emptyRow", "codeData"],
-    components: { AlgoButton, AlgoLink },
+    components: {AlgoLink, AlgoIcon },
 
     data() {
       return {
