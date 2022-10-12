@@ -20,20 +20,19 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
-import LoadProjectModal from './custom/LoadProjectModal.vue';
-import SaveProjectDialog from './custom/SaveProjectDialog.vue';
-import ShowSceneObjectsModal from './custom/ShowSceneObjectsModal.vue';
-import SelectSceneObjectTypeModal from './custom/SelectSceneObjectTypeModal.vue';
-import ConfigureSceneObjectModal from './custom/ConfigureSceneObjectModal.vue'
-import PickVariableModal from './custom/PickVariableModal.vue'
-import SelectConverterModal from './custom/SelectConverterModal.vue';
-import AddNewConverterModal from './custom/AddNewConverterModal.vue';
-import SelectSubobjectTypeModal from './custom/SelectSubobjectTypeModal.vue';
-import ShowExtendedCodeModal from './custom/ShowExtendedCodeModal.vue';
-import AlgoButton from '../global/AlgoButton.vue';
+import LoadProjectModal from '@/components/modals/menu/LoadProjectModal.vue';
+import SaveProjectModal from '@/components/modals/menu/SaveProjectModal.vue';
+import SelectSceneObjectTypeModal from '@/components/modals/sceneObject/type/SelectSceneObjectTypeModal.vue';
+import ConfigureSceneObjectModal from '@/components/modals/sceneObject/ConfigureSceneObjectModal.vue'
+import PickVariableModal from '@/components/modals/code/PickVariableModal.vue'
+import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
+import CreateConverterModal from '@/components/modals/sceneObject/converter/CreateConverterModal.vue';
+import SelectPropertyTypeModal from '@/components/modals/sceneObject/type/SelectPropertyTypeModal.vue';
+import ShowDebugCodeModal from '@/components/modals/code/ShowDebugCodeModal.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
 
 export default {
-  components: {LoadProjectModal, SaveProjectDialog, ShowSceneObjectsModal, SelectSceneObjectTypeModal, ConfigureSceneObjectModal, PickVariableModal, SelectConverterModal, AddNewConverterModal, SelectSubobjectTypeModal, ShowExtendedCodeModal, AlgoButton},
+  components: {LoadProjectModal, SaveProjectModal, SelectSceneObjectTypeModal, ConfigureSceneObjectModal, PickVariableModal, SelectConverterModal, CreateConverterModal, SelectPropertyTypeModal, ShowDebugCodeModal, AlgoButton},
 
   props: ['modalComponentName', 'data', 'callback'],
 

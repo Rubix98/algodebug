@@ -1,7 +1,7 @@
 <template>
   <div class="scene-canvas full-size">
 
-    <Scene class="full-size" :sceneObjects="sceneObjects" :isRunning="isRunning"></Scene>
+    <SceneCanvas class="full-size" :sceneObjects="sceneObjects" :isRunning="isRunning"></SceneCanvas>
 
     <div class="download-container" v-if="isRunning">
       <i class="fa-solid fa-download" @click="download"></i>
@@ -39,11 +39,12 @@
 </template>
 
 <script>
-import Scene from './Scene.vue';
-import AlgoButton from '../global/AlgoButton.vue';
-import AlgoIcon from '../global/AlgoIcon.vue';
+import SceneCanvas from './subcomponents/SceneCanvas.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
+import AlgoIcon from '@/components/global/AlgoIcon.vue';
 
 export default {
+    components: { SceneCanvas, AlgoButton, AlgoIcon },
     props: ["testCases", "isRunning", "code", "variables", "breakpoints", "language", "sceneObjects"],
     data() {
         return {
@@ -104,8 +105,7 @@ export default {
       selectedFrameId() {
         return this.$props.testCases.current().selectedFrameId;
       }
-    },
-    components: { Scene, AlgoButton, AlgoIcon }
+    }
 }
 </script>
 

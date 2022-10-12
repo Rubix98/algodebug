@@ -4,7 +4,7 @@
       
       <slot></slot>
 
-      <EditorLineNumbers
+      <CodeEditorLineNumbers
         :breakpoints="breakpoints"
         :numberOfCodeLines="numberOfCodeLines"
         :editable="editable"
@@ -19,12 +19,11 @@
 </template>
 
 <script>
-import { HighlightUtils } from '../../scripts/HighlightUtils';
-import EditorLineNumbers from './EditorLineNumbers.vue';
-
+import CodeEditorLineNumbers from './subcomponents/CodeEditorLineNumbers.vue';
+import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
 
 export default {
-    components: { EditorLineNumbers },
+    components: { CodeEditorLineNumbers },
     props: ["id", "code", "variables", "breakpoints", "testCases", "editable", "clickable", "isRunning"],
     data() {
       return {

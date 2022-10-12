@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { ButtonsFactory } from '../../../scripts/ButtonsFactory'
-
 export default {
   props: ['data', 'callback'],
 
@@ -14,9 +12,9 @@ export default {
     return {
       title: 'Zapisz projekt',
       buttons: [
-        ButtonsFactory.buttonOK('Zapisz', () => {
+        {class: 'ok', label: 'Zapisz', action: () => {
           this.$props.callback(this.projectTitle);
-        })
+        }}
       ],
       projectTitle: '',
     }

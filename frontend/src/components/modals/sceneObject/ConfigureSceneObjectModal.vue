@@ -28,10 +28,9 @@
 </template>
 
 <script>
-import {ButtonsFactory} from '@/scripts/ButtonsFactory';
-import AlgoLink from '../../global/AlgoLink.vue';
-import AlgoFieldRow from '../../global/AlgoFieldRow.vue';
-import AlgoTable from '../../global/AlgoTable.vue';
+import AlgoLink from '@/components/global/AlgoLink.vue';
+import AlgoFieldRow from '@/components/global/AlgoFieldRow.vue';
+import AlgoTable from '@/components/global/AlgoTable.vue';
 
 export default {
   props: ["data"],
@@ -40,10 +39,10 @@ export default {
     return {
       title: this.$props.data.sceneObject ? "Konfiguruj obiekt" : "Dodaj nowy obiekt",
       buttons: [
-        ButtonsFactory.buttonOK("Zapisz", () => {
+        {class: 'ok', label: "Zapisz", action: () => {
           this.emitter.emit('saveSceneObjectEvent', this.sceneObject);
           this.$root.popDialog();
-        })
+        }}
       ],
       sceneObject: {
         type: null,

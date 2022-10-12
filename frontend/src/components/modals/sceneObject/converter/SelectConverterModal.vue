@@ -6,7 +6,6 @@
 
 <script>
 import AlgoPickList from '@/components/global/AlgoPickList.vue';
-import {ButtonsFactory} from '@/scripts/ButtonsFactory';
 
 export default {
   components: {AlgoPickList},
@@ -18,11 +17,11 @@ export default {
       title: 'Wybierz operator wyjścia',
       converters: [],
       buttons: [
-        ButtonsFactory.buttonOK('Utwórz nowy operator', () => {
+        {class: 'ok', label: 'Utwórz nowy operator', action: () => {
           this.$root.pushDialog('AddNewConverterModal', this.$props.data, (newConverter) => {
             this.converters.push(newConverter);
           });
-        })
+        }}
       ]
     }
   },

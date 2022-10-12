@@ -53,17 +53,15 @@
 </template>
 
 <script>
-import {EditorModes} from '@/scripts/EditorModes';
-import AlgoTextarea from '../global/AlgoTextarea.vue';
-import AlgoBlock from '../global/AlgoBlock.vue';
-import AlgoButton from '../global/AlgoButton.vue';
-import AlgoIcon from '../global/AlgoIcon.vue';
+import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
+import AlgoBlock from '@/components/global/AlgoBlock.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
+import AlgoIcon from '@/components/global/AlgoIcon.vue';
 
 export default {
     props: ["testCases", "isRunning"],
     data() {
         return {
-            EditorModes,
             textareas: [
                 { title: "Wejście", fieldName: "input", isVisible: () => true },
                 { title: "Wyjście", fieldName: "output", isVisible: () => this.$props.isRunning },

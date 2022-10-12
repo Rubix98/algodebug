@@ -19,13 +19,12 @@
 </template>
 
 <script>
-import {ButtonsFactory} from '@/scripts/ButtonsFactory';
-import AlgoFieldRow from '../../global/AlgoFieldRow.vue';
-import AlgoInput from '../../global/AlgoInput.vue';
-import AlgoTextarea from '../../global/AlgoTextarea.vue';
+import AlgoFieldRow from '@/components/global/AlgoFieldRow.vue';
+import AlgoInput from '@/components/global/AlgoInput.vue';
+import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
 
 export default {
-  components: {AlgoFieldRow, AlgoInput, AlgoTextarea },
+  components: {AlgoFieldRow, AlgoInput, AlgoTextarea},
 
   props: ['data', 'callback'],
 
@@ -33,12 +32,12 @@ export default {
     return {
       title: 'Utwórz nowy operator wyjścia',
       buttons: [
-        ButtonsFactory.buttonOK('Zapisz', async () => {
+        {class: 'ok', label: 'Zapisz', action: async () => {
           let response = await this.$root.sendRequest('BACKEND/converter/save', this.converter);
           this.converter = response.data;
           this.$props.callback(this.converter);
           this.$root.popDialog();
-        })
+        }}
       ],
       converter: {
         title: '',

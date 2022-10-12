@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import CodeEditor from "../../editor/CodeEditor.vue";
+import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
 
 export default {
   components: { CodeEditor },

@@ -13,7 +13,7 @@
           :testCases="testCases"
           :isRunning="isRunning">
 
-          <EditorHeader v-model:language="language" :isRunning="isRunning" 
+          <CodeEditorPanel v-model:language="language" :isRunning="isRunning" 
             @showExtendedCodeEvent="showExtendedCode()"
             @runProgramEvent="runProgram"
             @stopProgramEvent="stopProgram"
@@ -24,7 +24,7 @@
       </div>
       <div class="width-1-of-2">
 
-        <EditorScene
+        <Scene
           :testCases="testCases"
           :isRunning="isRunning"
           :code="code"
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <EditorData
+    <TestData
       v-model:testCases="testCases"
       :isRunning="isRunning"
     />
@@ -46,22 +46,22 @@
 </template>
 
 <script>
-import EditorHeader from './EditorHeader.vue';
-import EditorData from './EditorData.vue';
-import EditorScene from './EditorScene.vue';
-import {TestCases} from '@/scripts/TestCases.js';
-import {HighlightUtils} from '@/scripts/HighlightUtils.js';
-import {CodeParser} from '@/scripts/CodeParser.js';
-import CodeEditor from './CodeEditor.vue';
+import CodeEditor from './codeEditor/CodeEditor.vue';
+import CodeEditorPanel from './codeEditor/subcomponents/CodeEditorPanel.vue';
+import TestData from './testData/TestData.vue';
+import Scene from './scene/Scene.vue';
+import {TestCases} from '@/javascript/models/TestCases.js';
+import {HighlightUtils} from '@/javascript/utils/HighlightUtils.js';
+import {CodeParser} from '@/javascript/codeParser/CodeParser.js';
 
 export default {
-  components: { EditorHeader, EditorData, EditorScene, CodeEditor },
+  components: { CodeEditor, CodeEditorPanel, TestData, Scene },
 
   data() {
     return {
       code:                 '#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout << "Hello world" << endl;\n}',
       language:             'cpp',
-      breakpoints:            new Map(),
+      breakpoints:          new Map(),
       isRunning:            false,
       testCases:            new TestCases(),
       sceneObjects:         [],
@@ -244,7 +244,7 @@ export default {
 
 <style>
   .code-editor {
-    background-image: url('/background.png');
+    background-image: url('/images/background.png');
     font: 16px Consolas;
     padding: 10px;
   }

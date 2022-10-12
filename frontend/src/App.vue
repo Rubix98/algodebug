@@ -1,9 +1,9 @@
 <template>
   <div class="main-container">
-    <Menu v-model:currentTab="currentTab"/>
+    <Menu />
 
     <div class="tab-container">
-      <Editor />
+      <MainPage />
     </div>
 
     <Modal/>
@@ -12,20 +12,14 @@
 
 <script>
 import Menu from '@/components/other/Menu.vue';
-import Editor from '@/components/editor/Editor.vue';
-import Dialog from '@/components/dialogs/Dialog.vue'
-
-import axios from 'axios';
+import MainPage from '@/components/mainPage/MainPage.vue';
+import AlgoModal from '@/components/global/AlgoModal.vue'
 import {container} from "jenesius-vue-modal";
 import {openModal, pushModal, closeModal, popModal} from "jenesius-vue-modal";
+import axios from 'axios';
 
 export default {
-  components: {Modal: container, Menu, Editor},
-  data() {
-    return {
-      currentTab: 2,
-    }
-  },
+  components: {Modal: container, Menu, MainPage},
 
   methods: {
     sendRequest(url, data={}) {
@@ -38,11 +32,11 @@ export default {
     },
 
     openDialog(modalComponentName, data, callback) {
-      openModal(Dialog, {modalComponentName, data, callback})
+      openModal(AlgoModal, {modalComponentName, data, callback})
     },
 
     pushDialog(modalComponentName, data, callback) {
-      pushModal(Dialog, {modalComponentName, data, callback})
+      pushModal(AlgoModal, {modalComponentName, data, callback})
     },
 
     closeDialog() {

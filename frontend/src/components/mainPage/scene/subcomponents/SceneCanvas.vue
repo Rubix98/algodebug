@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import {Variable} from '@/scripts/SceneObjects/Variable.js';
-import {Graph} from '@/scripts/SceneObjects/Graph.js';
-import {Array} from '@/scripts/SceneObjects/Array.js';
-import {Points} from '@/scripts/SceneObjects/Points.js';
-import {Circle} from '@/scripts/SceneObjects/Circle.js';
-import {Shape} from '@/scripts/SceneObjects/Shape.js';
+import {Variable} from '@/javascript/models/sceneObjects/Variable.js';
+import {Graph} from '@/javascript/models/sceneObjects/Graph.js';
+import {Array} from '@/javascript/models/sceneObjects/Array.js';
+import {Points} from '@/javascript/models/sceneObjects/Points.js';
+import {Circle} from '@/javascript/models/sceneObjects/Circle.js';
+import {Shape} from '@/javascript/models/sceneObjects/Shape.js';
 
 export default {
   props: ['isRunning', 'sceneObjects'],
