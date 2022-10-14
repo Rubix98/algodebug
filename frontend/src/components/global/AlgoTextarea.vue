@@ -1,20 +1,21 @@
 <template>
   <textarea :class="size" 
-    :value="value" 
+    v-model="model" 
+    :readonly="readonly"
     @input="$emit('update:value', $event.target.value)" />
 </template>
 
 <script>
 export default {
-  props: ['value', 'size'],
+  props: ['value', 'size', 'readonly'],
 
-  data() {
-    return {
+  computed: {
+    model: {
+      get() {
+        return this.$props.value;
+      },
+      set() {}
     }
-  },
-
-  mounted() {
-    this.model = this.$props.value;
   }
 }
 </script>

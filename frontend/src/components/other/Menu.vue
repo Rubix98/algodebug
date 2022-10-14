@@ -3,11 +3,11 @@
     <div class="menu-content flex-row flex-horizontal-center flex-vertical-space-between">
       <img src="images/logo.png" @click="redirectToRoot()" />
       <div class="buttons-container">
-        <AlgoButton @click="openSaveProjectDialog()">
+        <AlgoButton @click="openSaveProjectModal()">
           <i class="fa fa-save"></i> Zapisz projekt
         </AlgoButton>
 
-        <AlgoButton @click="openLoadProjectDialog()">
+        <AlgoButton @click="openLoadProjectModal()">
           <i class="fa fa-search" ></i> Otwórz projekt
         </AlgoButton>
       </div>
@@ -22,26 +22,20 @@
 import AlgoButton from '../global/AlgoButton.vue';
 
 export default {
-    data() {
-        return {};
+  components: { AlgoButton },
+
+  methods: {
+    openLoadProjectModal() {
+      this.$root.openDialog("LoadProjectModal");
     },
-    methods: {
-        openLoadProjectDialog() {
-            this.$root.openDialog("LoadProjectModal", {}, selectedOption => {
-                this.$root.redirectTo("?projectId=" + selectedOption.id);
-            });
-        },
-        openSaveProjectDialog() {
-            this.$root.openDialog("SaveProjectDialog", {}, title => {
-                this.emitter.emit("saveProjectEvent", title);
-                this.$root.closeDialog();
-            });
-        },
-        redirectToRoot() {
-            this.$root.redirectTo(window.location.origin + window.location.pathname);
-        }
+    openSaveProjectModal() {
+      this.$root.openDialog("SaveProjectModal");
     },
-    components: { AlgoButton }
+    redirectToRoot() {
+      this.$root.redirectTo(window.location.origin + window.location.pathname);
+    }
+  },
+  
 }
 </script>
 

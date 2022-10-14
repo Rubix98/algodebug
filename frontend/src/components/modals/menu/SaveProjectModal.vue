@@ -5,28 +5,32 @@
 </template>
 
 <script>
-export default {
-  props: ['data', 'callback'],
+import { mapState, mapActions } from 'vuex';
 
+export default {
   data() {
     return {
       title: 'Zapisz projekt',
       buttons: [
         {class: 'ok', label: 'Zapisz', action: () => {
-          this.$props.callback(this.projectTitle);
+          this.saveProject(this.projectTitle);
         }}
       ],
       projectTitle: '',
     }
   },
 
-  methods: {
-    getOutput() {
-      return {
-        projectTitle: this.projectTitle,
-      }
-    }
+  mounted() {
+    this.projectTitle = this.project.title;
   },
+
+  methods: {
+    ...mapActions('project', ['saveProject'],)
+  },
+
+  computed: {
+    ...mapState(['project']),
+  }
 }
 </script>
 

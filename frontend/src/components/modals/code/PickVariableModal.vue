@@ -2,9 +2,8 @@
   <div class="dialog-content">
     <CodeEditor 
       id="pick-variable-editor"
-      :code="data.code"
-      :variables="data.variables"
-      :breakpoints="data.breakpoints"
+      :project="data.project"
+      :code="project.code"
       :editable="false"
       :clickable="true"
       @pickVariableEvent="pickVariable"/>

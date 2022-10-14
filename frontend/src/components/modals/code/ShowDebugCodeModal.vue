@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-content">
-    <CodeEditor id="debug-code-editor" :code="data.code" :editable="false" :clickable="false"/>
+    <CodeEditor id="debug-code-editor" :project="data.project" :code="data.code" :editable="false" :clickable="false"/>
   </div>
 </template>
 
@@ -20,6 +20,7 @@ export default {
   },
 
   mounted() {
+    console.log()
   },
 
   methods: {

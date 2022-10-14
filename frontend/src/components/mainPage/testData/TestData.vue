@@ -1,50 +1,28 @@
 <template>
   <div class="code-editor-test-cases">
     <div class="full-size flex-row flex-vertical-space-between">
-      <AlgoBlock header="Wybór testów" class="tests-block">
-        <div class="tests-container">
-          <ul>
-            <li v-for="(number, index) in numberOfTestCases" :key="index" 
-              :class="{'selected ': isSelected(index)}"
-              @click="changeSelectedTestCase(index, $event)"
-            >
-            <div class="flex-row flex-vertical-space-between">
-              Test {{number}}
-              <AlgoIcon type="x" @click="deleteTestCase(index)" v-if="!isRunning && testCases.length() > 1"/>
-            </div>
-            
-            </li>
-          </ul>
-
-          <div class="button-container">
-            <AlgoButton class="add-button" v-if="!isRunning" @click="addTestCase()">
-              <i class="fa-solid fa-square-plus"></i> Dodaj nowy test
-            </AlgoButton>
-          </div>
-        </div>
-      </AlgoBlock>
-
-
+      <TestCasePicker />
+      
       <div class="test-cases-body full-size flex-row flex-vertical-space-between">
         <AlgoBlock header="Dane wejściowe">
           <AlgoTextarea 
-            :value="testCases.current().input"
+            v-model:value="input"
             placeholder="Wprowadź dane wejściowe do programu"
-            @input="inputHandler($event.target.value)">
+            :readonly="project.isRunning">
           </AlgoTextarea>
         </AlgoBlock>
 
-        <AlgoBlock header="Dane wyjściowe" v-if="isRunning">
+        <AlgoBlock header="Dane wyjściowe" v-if="project.isRunning">
           <AlgoTextarea 
-            :value="testCases.current().output"
-            @input="inputHandler($event.target.value)">
+            :value="currentTestCase.output"
+            :readonly="true">
           </AlgoTextarea>
         </AlgoBlock>
 
-
-        <AlgoBlock header="Zawartość pułapki" v-if="isRunning">
+        <AlgoBlock header="Zawartość pułapki" v-if="project.isRunning">
           <AlgoTextarea 
-            :value="testCases.current().frames[testCases.current().selectedFrameId].output">
+            :value="currentTestCase.output"
+            :readonly="true">
           </AlgoTextarea>
         </AlgoBlock>
       </div>
@@ -53,64 +31,51 @@
 </template>
 
 <script>
+import TestCasePicker from "./subcomponents/TestCasePicker.vue";
 import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
 import AlgoBlock from '@/components/global/AlgoBlock.vue';
-import AlgoButton from '@/components/global/AlgoButton.vue';
-import AlgoIcon from '@/components/global/AlgoIcon.vue';
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
-    props: ["testCases", "isRunning"],
-    data() {
-        return {
-            textareas: [
-                { title: "Wejście", fieldName: "input", isVisible: () => true },
-                { title: "Wyjście", fieldName: "output", isVisible: () => this.$props.isRunning },
-            ]
-        };
+  components: { TestCasePicker, AlgoTextarea, AlgoBlock },
+
+  data() {
+    return {
+      textareasData: [ // TODO zastosować tablicę do budowania template
+        {key: 'input', title: "Dane wejściowe", model: this.input, isVisible: () => true},
+        {key: 'output', title: "Dane wyjściowe", model: this.output, isVisible: () => this.project.isRunning},
+        {key: 'frame', title: "Zawartość pułapki", model: this.frame, isVisible: () => this.project.isRunning},
+      ]
+    };
+  },
+
+  methods: {
+    ...mapActions('project', ['updateCurrentTestCaseInput']),
+  },
+  computed: {
+    ...mapState(['project']),
+    ...mapGetters('project', ['currentTestCase', 'currentFrame']),
+
+    input: {
+      get() {return this.currentTestCase.input;},
+      set(newValue) {this.updateCurrentTestCaseInput(newValue)}
     },
-    methods: {
-        inputHandler(newValue) {
-            let testCases = this.$props.testCases;
-            testCases.current().input = newValue;
-            this.$emit("update:testCases", testCases);
-        },
 
-        changeSelectedTestCase(index, event) {
-            if (event.target.localName === 'i') return;
-
-            let testCases = this.$props.testCases;
-            testCases.selectedId = index;
-            testCases.current().selectedFrameId = 0;
-            this.$emit("update:testCases", testCases);
-            if (this.$props.isRunning) {
-              this.emitter.emit("currentFrameChangedEvent", this.$props.testCases.currentFrame());
-            }
-            
-        },
-
-        addTestCase() {
-            let testCases = this.$props.testCases;
-            testCases.addTestCase();
-            this.$emit("update:testCases", testCases);
-        }, 
-
-        deleteTestCase(index) {
-            let testCases = this.$props.testCases;
-            testCases.deleteTestCase(index);
-            this.$emit("update:testCases", testCases);
-        }
+    output: {
+      get() {return this.currentTestCase.output},
+      set() {}
     },
-    computed: {
-        numberOfTestCases() {
-            return this.$props.testCases.length();
-        },
-        isSelected() {
-            return number => {
-                return this.testCases.selectedId === number;
-            };
-        }
+
+    frame: {
+      get() {return this.currentFrame.output},
+      set() {}
     },
-    components: { AlgoTextarea, AlgoBlock, AlgoButton, AlgoIcon }
+
+    isTestCaseSelected() {
+      return (index) => index === this.project.selectedTestCaseId;
+    }
+  },
+  
 }
 </script>
 

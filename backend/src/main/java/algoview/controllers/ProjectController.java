@@ -16,6 +16,7 @@ public class ProjectController {
 
     @PostMapping("save")
     public Project save(@RequestBody Project project) {
+        System.out.println("save/" + project.getId());
         return projectService.save(project);
     }
 

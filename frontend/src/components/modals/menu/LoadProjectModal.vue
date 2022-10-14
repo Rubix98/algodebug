@@ -26,13 +26,9 @@ export default {
       });
   },
 
-  mounted() {
-    
-  },
-
   methods: {
     loadProject(selectedProject) {
-      this.$props.callback(selectedProject);
+      this.$root.redirectTo("?projectId=" + selectedProject.id);
     }
   },
 }

@@ -11,6 +11,7 @@ import {Array} from '@/javascript/models/sceneObjects/Array.js';
 import {Points} from '@/javascript/models/sceneObjects/Points.js';
 import {Circle} from '@/javascript/models/sceneObjects/Circle.js';
 import {Shape} from '@/javascript/models/sceneObjects/Shape.js';
+import { mapGetters } from 'vuex';
 
 export default {
   props: ['isRunning', 'sceneObjects'],
@@ -24,12 +25,11 @@ export default {
   mounted() {
     this.emitter.on("startDebuggingEvent", this.prepareStage);
     this.emitter.on("currentFrameChangedEvent", this.drawFrame);
-    this.emitter.on("downloadStageEvent", this.download);
     this.emitter.on("stopDebuggingEvent", this.clearStage);
   },
 
   methods: {
-    prepareStage(currentFrame) {
+    prepareStage() {
       let canvasDOM = document.getElementById("canvas");
       let width = canvasDOM.offsetWidth;
       let height = canvasDOM.offsetHeight;
@@ -72,10 +72,11 @@ export default {
         this.stage.add(object.layer);
       }
 
-      this.drawFrame(currentFrame);
+      this.drawFrame();
     },
 
-    drawFrame(currentFrame) {
+    drawFrame() {
+      let currentFrame = this.currentFrame;
       for (let object of this.objects) {
         object.updateLayer(currentFrame);
       }
@@ -95,6 +96,10 @@ export default {
     clearStage() {
       this.stage.find('Layer').forEach(layer => layer.destroy());
     }
+  },
+
+  computed: {
+    ...mapGetters('project', ['currentFrame']),
   }
 }
 </script>

@@ -2,16 +2,16 @@
   <div :id="id" class="code-editor-body full-size">
     <div class="flex-row full-size">
       
-      <slot></slot>
+      <CodePanel v-if="editable" />
 
-      <CodeEditorLineNumbers
-        :breakpoints="breakpoints"
-        :numberOfCodeLines="numberOfCodeLines"
+      <CodeLineNumbers
+        :code="code"
         :editable="editable"
       />
 
-      <div class="code-editor-containter" @scroll="codeareaScrollHandler()" @keydown.tab.prevent="insertTab($event)">
-        <pre class="full-size codearea" id="editor"  :contenteditable="editable" spellcheck="false" @input="onInput"><code v-html="extendedCode" @click="pickVariable" ></code></pre>
+      <div class="code-editor-containter" >
+        <pre v-if="!editable" class="full-size codearea" id="editor" spellcheck="false"><code v-html="code" @click="pickVariable" ></code></pre>
+        <textarea class="codearea" v-if="editable" v-model="displayCode" spellcheck="false" @scroll="codeareaScrollHandler()"></textarea>
       </div>
     </div>
     
@@ -19,36 +19,40 @@
 </template>
 
 <script>
-import CodeEditorLineNumbers from './subcomponents/CodeEditorLineNumbers.vue';
+import CodeLineNumbers from './subcomponents/CodeLineNumbers.vue';
+import CodePanel from './subcomponents/CodePanel.vue';
 import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
-    components: { CodeEditorLineNumbers },
-    props: ["id", "code", "variables", "breakpoints", "testCases", "editable", "clickable", "isRunning"],
+    components: { CodeLineNumbers, CodePanel },
+    props: ["id", "code", "editable", "clickable"],
     data() {
       return {
         extendedCode: ""
       };
     },
     mounted() {
-      this.codeareaDOM = document.getElementById(this.id).getElementsByClassName('code-editor-containter')[0];
+      this.codeareaDOM = document.getElementById(this.id).getElementsByClassName('codearea')[0];
       this.linesDOM = document.getElementById(this.id).getElementsByClassName('code-editor-line-numbers')[0];
 
-      if (this.$props.clickable) {
+      /*if (this.$props.clickable) {
         this.extendedCode = HighlightUtils.insertTargetTagsIntoCode(this.$props.code);
       }
       else if (this.$props.variables) {
-        this.extendedCode = HighlightUtils.highlightVariables(this.$props.code, this.$props.variables);
+        this.extendedCode = HighlightUtils.highlightVariables(this.$props.code, this.$props.project.variables);
       } else {
         this.extendedCode = this.$props.code.escapeHTML();
-      }
+      }*/
 
-      this.emitter.on("startDebuggingEvent", this.highlightLine);
-      this.emitter.on("currentFrameChangedEvent", this.highlightLine);
-      this.emitter.on("stopDebuggingEvent", this.highlightVariables);
+      //this.emitter.on("startDebuggingEvent", this.highlightLine);
+      //this.emitter.on("currentFrameChangedEvent", this.highlightLine);
+      //this.emitter.on("stopDebuggingEvent", this.highlightVariables);
     },
 
     methods: {
+      ...mapActions('project', ['setCode']),
+
       codeareaScrollHandler() {
         this.linesDOM.scrollTop = this.codeareaDOM.scrollTop;
       },
@@ -67,57 +71,26 @@ export default {
         return this.extendedCode
       },
 
-      highlightLine(currentFrame) {
-        this.extendedCode = HighlightUtils.highlightLine(this.$props.code, currentFrame.line-1);
+      highlightLine() {
+        this.extendedCode = HighlightUtils.highlightLine(this.$props.code, this.currentFrame.line-1);
       },
-
-      onInput(event) {
-        let code = event.target.innerText;
-        if (code.split("\n").at(-1) == "") {
-          code = code.slice(0,-1);
-        }
-        this.$emit("update:code", code);
-      },
-
-      insertTab(event) {
-        if (event) {
-          event.preventDefault(); 
-          var editor = document.getElementById("editor");
-          var doc = editor.ownerDocument.defaultView;
-          var sel = doc.getSelection();
-          var range = sel.getRangeAt(0);
-
-          var tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0");
-          range.insertNode(tabNode);
-
-          range.setStartAfter(tabNode);
-          range.setEndAfter(tabNode); 
-          sel.removeAllRanges();
-          sel.addRange(range);
-        }
-      }
     },
 
     computed: {
-      numberOfCodeLines() {
-        return this.code.split("\n").length;
-      },
-    },
+      ...mapState(['project']),
+      ...mapGetters('project', ['currentFrame']),
 
-    watch: {
-      variables: {
-        deep: true,
-        handler() {
-          this.highlightVariables();
-        }
-      },
-    }
+      displayCode: {
+        get() {return this.project.code},
+        set(newValue) {this.setCode(newValue)}
+      }
+    },
     
 }
 </script>
 
-<style>
-  pre, code {
+<style scoped>
+  pre, code, textarea {
     border: 0px;
     background-color: black;
     color: white;
@@ -126,6 +99,9 @@ export default {
     display:inline-block;
     outline: none;
     width: 100%;
+    height: 99%; /* TODO: Poprawić ostylowanie */
+    resize: none;
+    font: 16px Consolas;
   }
 
   .code-editor-containter {

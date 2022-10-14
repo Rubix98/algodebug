@@ -13,8 +13,10 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  props: ['breakpoints', 'numberOfCodeLines', 'editable'],
+  props: ['code', 'breakpoints', 'editable'],
 
   data() {
     return {
@@ -27,17 +29,18 @@ export default {
   methods: {
     addOrDeleteBreakpoint(lineIndex) {
       if (this.$props.editable) {
-        let breakpoints = this.$props.breakpoints;
-        breakpoints.addOrDelete({id: lineIndex});
-        this.$emit("update:breakpoints", breakpoints);
+        console.log(this.project.breakpoints)
+        this.project.breakpoints.addOrDelete({id: lineIndex});
       }
     }
   },
 
   computed: {
+    ...mapState(['project']),
+    
     isBreakpointSet() {
       return lineIndex => {
-        return this.$props.breakpoints ? this.$props.breakpoints.has(lineIndex) : false;
+        return this.$store.state.project.breakpoints ? this.$store.state.project.breakpoints.has(lineIndex) : false;
       }
     },
 
@@ -49,6 +52,10 @@ export default {
           return 'fa-regular fa-square';
         }
       }
+    },
+
+    numberOfCodeLines() {
+      return this.$store.state.project.code.split("\n").length;
     }
   }
 }
