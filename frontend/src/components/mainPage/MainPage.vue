@@ -2,10 +2,11 @@
   <div class="code-editor full-size">
     <div class="editor-main flex-row">
       <div class="width-1-of-2" style="position:relative">
+        <!-- no property !isRunning -->
         <CodeEditor 
           id="main-editor"
           :code="project.code"
-          :editable="!isRunning"
+          :editable="true"
           :clickable="false" />
 
       </div>
@@ -56,7 +57,7 @@ export default {
 
 <style>
   .code-editor {
-    background-image: url('/images/background.png');
+    /* background-image: url('/images/background.png');  */
     font: 16px Consolas;
     padding: 10px;
   }

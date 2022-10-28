@@ -37,7 +37,7 @@ export default {
   components: {AlgoLink, AlgoFieldRow, AlgoTable },
   data() {
     return {
-      title: this.$props.data.sceneObject ? "Konfiguruj obiekt" : "Dodaj nowy obiekt",
+      title: (this.$props.data && this.$props.data.sceneObject) ? "Konfiguruj obiekt" : "Dodaj nowy obiekt",
       buttons: [
         {class: 'ok', label: "Zapisz", action: () => {
           this.emitter.emit('saveSceneObjectEvent', this.sceneObject);
@@ -54,7 +54,7 @@ export default {
     };
   },
   mounted() {
-    if (this.$props.data.sceneObject) {
+    if (this.$props.data && this.$props.data.sceneObject) {
       this.sceneObject = this.$props.data.sceneObject;
     }
     

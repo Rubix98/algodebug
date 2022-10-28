@@ -1,0 +1,129 @@
+[{
+  "_id": {
+    "$oid": "63540e8afb2e15269acbe3aa"
+  },
+  "title": "DNA II",
+  "description": null,
+  "code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\n\nstring dnaToAlphabet(string s) {\n    replace(s.begin(), s.end(), 'A', 'A');\n    replace(s.begin(), s.end(), 'C', 'B');\n    replace(s.begin(), s.end(), 'G', 'C');\n    replace(s.begin(), s.end(), 'T', 'D');\n    return s;\n}\n\nstring alphabetToNumber(string s) {\n    replace(s.begin(), s.end(), 'A', '0');\n    replace(s.begin(), s.end(), 'B', '1');\n    replace(s.begin(), s.end(), 'C', '2');\n    replace(s.begin(), s.end(), 'D', '3');\n    return s;\n}\n\nint main() {\n    int T;\n    cin >> T;\n    for (int t = 1; t <= T; t++) {\n        string s;\n        cin >> s;\n        int length = s.size();\n        \n        s = dnaToAlphabet(s);\n        s = alphabetToNumber(s);\n        long long order = stoll(s, 0, 4);\n        \n        printf(\"Case %d: (%d:%lld)\\n\", t, length, order);\n    }\n}\n\n",
+  "language": "cpp",
+  "breakpoints": [
+    {
+      "id": 25
+    },
+    {
+      "id": 26
+    },
+    {
+      "id": 28
+    },
+    {
+      "id": 29
+    },
+    {
+      "id": 30
+    }
+  ],
+  "testCases": [
+    {
+      "input": "1\nTAGCAGCAGCAGCGAA"
+    },
+    {
+      "input": "16\nAA\nAC\nAG\nAT\nCA\nCC\nCG\nCT\nGA\nGC\nGG\nGT\nTA\nTC\nTG\nTT"
+    },
+    {
+      "input": "1\nACGTACGTACGTACGTACGTACGTACGTAC"
+    }
+  ],
+  "sceneObjects": [
+    {
+      "id": 0,
+      "type": {
+        "key": "array",
+        "label": "Tablica",
+        "image": null
+      },
+      "variable": {
+        "start": 598,
+        "end": 599,
+        "name": "s",
+        "type": null,
+        "constructor": null
+      },
+      "converter": null,
+      "color": null,
+      "subobjects": []
+    },
+    {
+      "id": 1,
+      "type": {
+        "key": "variable",
+        "label": "Zmienna",
+        "image": null
+      },
+      "variable": {
+        "start": 631,
+        "end": 637,
+        "name": "length",
+        "type": null,
+        "constructor": null
+      },
+      "converter": null,
+      "color": null,
+      "subobjects": []
+    },
+    {
+      "id": 2,
+      "type": {
+        "key": "variable",
+        "label": "Zmienna",
+        "image": null
+      },
+      "variable": {
+        "start": 740,
+        "end": 745,
+        "name": "order",
+        "type": null,
+        "constructor": null
+      },
+      "converter": null,
+      "color": null,
+      "subobjects": []
+    }
+  ],
+  "author": "AlgoDebug",
+  "creationDate": {
+    "$date": {
+      "$numberLong": "1666993869059"
+    }
+  },
+  "modificationDate": {
+    "$date": {
+      "$numberLong": "1666993869059"
+    }
+  },
+  "dialogData": {
+    "label": "DNA II",
+    "properties": [
+      {
+        "label": "Tytuł",
+        "value": "DNA II",
+        "fieldType": null
+      },
+      {
+        "label": "Język programowania",
+        "value": "cpp",
+        "fieldType": null
+      },
+      {
+        "label": "Autor",
+        "value": "AlgoDebug",
+        "fieldType": null
+      },
+      {
+        "label": "Data modyfikacji",
+        "value": "2022-10-22 15:38",
+        "fieldType": null
+      }
+    ]
+  }
+}]

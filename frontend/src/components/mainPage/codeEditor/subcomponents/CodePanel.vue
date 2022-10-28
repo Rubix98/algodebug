@@ -18,6 +18,9 @@
 <script>
 import { mapState, mapActions, mapGetters } from "vuex";
 
+// CORS Error: No 'Access-Control-Allow-Origin' header on response
+const COMPILER_API_URL = 'https://codex-api.herokuapp.com/';
+
 export default {
   props: [],
 
@@ -46,7 +49,7 @@ export default {
     async runProgram() {
       console.log("compiling")
       for (let testCase of this.project.testData) {
-        let response = await this.$root.sendRequest('https://codex-api.herokuapp.com/', {
+        let response = await this.$root.sendRequest(COMPILER_API_URL, {
           code:     this.debugCode,
           language: "cpp",
           input:    testCase.input

@@ -29,6 +29,7 @@
 import AlgoTextarea from './AlgoTextarea.vue';
 export default {
     props: ["options"],
+    emits: ['selectOptionEvent'],
     components: { AlgoTextarea },
 
     methods: {
