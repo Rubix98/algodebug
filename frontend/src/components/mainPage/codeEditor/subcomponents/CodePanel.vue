@@ -16,7 +16,9 @@
 </template>
 
 <script>
+import { openModal } from "jenesius-vue-modal";
 import { mapState, mapActions, mapGetters } from "vuex";
+import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
 
 export default {
   props: [],
@@ -37,10 +39,7 @@ export default {
     ...mapActions('project', ['setLanguage', 'setIsRunning', 'changeCurrentFrame']),
 
     showExtendedCode() {
-      console.log(this.debugCode)
-      this.$root.openDialog('ShowDebugCodeModal', {
-        code: this.debugCode
-      });
+      openModal(ShowDebugCodeModal)
     },
 
     async runProgram() {

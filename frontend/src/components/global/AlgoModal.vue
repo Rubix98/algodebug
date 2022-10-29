@@ -6,88 +6,56 @@
     </div>
 
     <div class="dialog-content">
-      <component :is="modalComponentName" :data="data" :callback="callback" ref="modalComponent"></component>
+      <slot></slot>
     </div>
-
-    <div class="flex-vertical-right" style="margin-top: 10px">
-      <span v-for="(button, index) in buttons" :key="index">
-        <AlgoButton :class="button.class" @click="button.action">{{button.label}}</AlgoButton>
-      </span>
-      
+    
+    <div class="buttons flex-vertical-right">
+      <AlgoButton @click="popModal()">Anuluj</AlgoButton>
+      <slot name="buttons"></slot>
     </div>
   </div>
 </template>
 
 <script>
-/* eslint-disable vue/no-unused-components */
-import LoadProjectModal from '@/components/modals/menu/LoadProjectModal.vue';
-import SaveProjectModal from '@/components/modals/menu/SaveProjectModal.vue';
-import SelectSceneObjectTypeModal from '@/components/modals/sceneObject/type/SelectSceneObjectTypeModal.vue';
-import ConfigureSceneObjectModal from '@/components/modals/sceneObject/ConfigureSceneObjectModal.vue'
-import PickVariableModal from '@/components/modals/code/PickVariableModal.vue'
-import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
-import CreateConverterModal from '@/components/modals/sceneObject/converter/CreateConverterModal.vue';
-import SelectPropertyTypeModal from '@/components/modals/sceneObject/type/SelectPropertyTypeModal.vue';
-import ShowDebugCodeModal from '@/components/modals/code/ShowDebugCodeModal.vue';
-import AlgoButton from '@/components/global/AlgoButton.vue';
+import { popModal } from 'jenesius-vue-modal';
+import AlgoButton from './AlgoButton.vue';
 
 export default {
-  components: {LoadProjectModal, SaveProjectModal, SelectSceneObjectTypeModal, ConfigureSceneObjectModal, PickVariableModal, SelectConverterModal, CreateConverterModal, SelectPropertyTypeModal, ShowDebugCodeModal, AlgoButton},
+  components: { AlgoButton },
 
-  props: ['modalComponentName', 'data', 'callback'],
-
-  data() {
-    return {
-      title: '',
-      buttons: []
-    }
-  },
-
-  mounted() {
-    this.title = this.modalComponent.title;
-    this.buttons = this.modalComponent.buttons;
-
-  },
+  props: ["title"],
 
   methods: {
     popModal() {
-      this.$root.popDialog()
+      popModal()
     },
-  },
-
-  computed: {
-    modalComponent() {
-      return this.$refs.modalComponent;
-    }
   }
 }
 </script>
 
 <style>
-  .modal-container {
-    z-index: 10;
-  }
-
   .dialog {
+    width: 60vw;
     padding: 30px 50px;
-    box-sizing: border-box;
     background-color: #fff;
-    font-size: 20px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.5);
     z-index: 100;
     border-radius: 20px;
+    font-size: 20px;
   }
 
   .dialog-header {
-    margin-bottom: 15px;
+    font-size: 20px;
   }
 
   .dialog-content {
     max-height: 70vh;
+    margin: 15px 0;
     overflow: auto;
   }
 
-  button {
-    margin-left: 5px;
+  .buttons {
+    gap: 20px;
   }
 
   i {

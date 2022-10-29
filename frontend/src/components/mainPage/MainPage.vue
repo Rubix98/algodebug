@@ -6,7 +6,9 @@
           id="main-editor"
           :code="project.code"
           :editable="!isRunning"
-          :clickable="false" />
+          :clickable="false">
+            <CodePanel />
+        </CodeEditor>
 
       </div>
       <div class="width-1-of-2">
@@ -23,12 +25,13 @@
 
 <script>
 import CodeEditor from './codeEditor/CodeEditor.vue';
+import CodePanel from '@/components/mainPage/codeEditor/subcomponents/CodePanel.vue';
 import TestData from './testData/TestData.vue';
 import Scene from './scene/Scene.vue';
 import {mapState, mapActions} from "vuex";
 
 export default {
-  components: { CodeEditor, TestData, Scene },
+  components: { CodeEditor, CodePanel, TestData, Scene },
 
   mounted() {
     if (this.projectId) {

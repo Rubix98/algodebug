@@ -1,106 +1,124 @@
 <template>
-  <div class="dialog-content">
+  <AlgoModal :title="modalTitle">
+    <template #default>
+      <AlgoFieldRow label="Rodzaj obiektu">
+        <AlgoLink :value="typeLabel" @click="selectType()" />
+      </AlgoFieldRow>
 
-    <AlgoFieldRow label="Rodzaj obiektu">
-      <AlgoLink :value="typeLabel" @click="selectType()" />
-    </AlgoFieldRow>
+      <AlgoFieldRow label="Przypisana zmienna">
+        <AlgoLink :value="variableName" @click="selectVariable()" />
+      </AlgoFieldRow>
 
-    <AlgoFieldRow label="Przypisana zmienna">
-      <AlgoLink :value="variableName" @click="selectVariable()" />
-    </AlgoFieldRow>
+      <AlgoFieldRow label="Konwerter">
+        <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" />
+      </AlgoFieldRow><br />
 
-    <AlgoFieldRow label="Konwerter" v-if="sceneObject.type">
-      <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" />
-    </AlgoFieldRow><br />
+      <AlgoTable 
+        v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
+        :sceneObject="model"
+        label="Właściwości"
+        :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
+        :emptyRow="{name: '', type: null, variable: null, converter: null}"
+      ></AlgoTable>
+    </template>
 
-    <AlgoTable 
-      v-if="sceneObject.type && sceneObject.type.key !== 'variable' && sceneObject.type.key !== 'circle' && sceneObject.type.key !== 'shape' && sceneObject.type.key !== 'line'"
-      v-model:value="sceneObject.subobjects"
-      :type="sceneObject.type"
-      label="Właściwości"
-      :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-      :emptyRow="{name: '', type: null, variable: null, converter: null}"
-      :codeData="data"
-    >
-        
-    </AlgoTable>
-  </div>
+    <template #buttons>
+      <AlgoButton @click="save()">Zapisz</AlgoButton>
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import AlgoLink from '@/components/global/AlgoLink.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
 import AlgoFieldRow from '@/components/global/AlgoFieldRow.vue';
 import AlgoTable from '@/components/global/AlgoTable.vue';
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import { mapState } from 'vuex';
+import {pushModal} from "jenesius-vue-modal";
+import PickVariableModal from '@/components/modals/code/PickVariableModal.vue';
+import SelectSceneObjectTypeModal from '@/components/modals/sceneObject/type/SelectSceneObjectTypeModal.vue';
+import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
 
 export default {
-  props: ["data"],
-  components: {AlgoLink, AlgoFieldRow, AlgoTable },
+  components: { AlgoLink, AlgoFieldRow, AlgoButton, AlgoTable, AlgoModal },
+  props: ["sceneObject"],
+  
   data() {
     return {
-      title: this.$props.data.sceneObject ? "Konfiguruj obiekt" : "Dodaj nowy obiekt",
-      buttons: [
-        {class: 'ok', label: "Zapisz", action: () => {
-          this.emitter.emit('saveSceneObjectEvent', this.sceneObject);
-          this.$root.popDialog();
-        }}
-      ],
-      sceneObject: {
+      model: {
         type: null,
         variable: null,
         converter: null,
         subobjects: []
       }
-      
     };
   },
+
   mounted() {
-    if (this.$props.data.sceneObject) {
-      this.sceneObject = this.$props.data.sceneObject;
+    if (this.$props.sceneObject) {
+      this.model = {...this.$props.sceneObject};
     }
-    
   },
 
   methods: {
+    save() {
+
+    },
+
     selectType() {
-      this.$root.pushDialog("SelectSceneObjectTypeModal", {}, (selectedType) => {
-        this.sceneObject.type = selectedType;
-        this.sceneObject.converter = null;
-        this.sceneObject.subobjects = [];
+      pushModal(SelectSceneObjectTypeModal, {
+        callback: (selectedType) => {
+          this.model.type = selectedType;
+          this.model.converter = null;
+          this.model.subobjects = [];
+        }
       });
     },
 
     selectVariable() {
-      this.$root.pushDialog("PickVariableModal", this.$props.data, (selectedVariable) => {
-        this.sceneObject.variable = selectedVariable;
+      pushModal(PickVariableModal, {
+        callback: (selectedVariable) => {
+          this.model.variable = selectedVariable;
+        }
       });
     },
 
     selectConverter() {
-      this.$root.pushDialog("SelectConverterModal", {...this.$props.data, type: this.sceneObject.type}, (selectedConverter) => {
-        this.sceneObject.converter = selectedConverter;
-      });
+      pushModal(SelectConverterModal, {
+        callback: (selectedConverter) => {
+          this.model.converter = selectedConverter;
+        }
+      })
     }
   },
 
   computed: {
+    ...mapState(["project"]),
+
+    modalTitle() {
+      return this.$props.sceneObject ? "Konfiguruj obiekt" : "Dodaj nowy obiekt";
+    },
+
     typeLabel() {
-      return this.sceneObject.type ? this.sceneObject.type.label : null;
+      return this.model.type ? this.model.type.label : null;
     },
 
     variableName() {
-      return this.sceneObject.variable ? this.sceneObject.variable.name : null;
+      return this.model.variable ? this.model.variable.name : null;
     },
 
     converterTitle() {
-      return this.sceneObject.converter ? this.sceneObject.converter.title : null;
+      return this.model.converter ? this.model.converter.title : null;
     }
+
   }
 }
 </script>
 
 <style scoped>
-  .dialog-content {
-    width: 60vw;
+  .dialog {
+    width: 80vw;
   }
 
 </style>

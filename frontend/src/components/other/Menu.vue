@@ -19,17 +19,20 @@
 </template>
 
 <script>
-import AlgoButton from '../global/AlgoButton.vue';
+import { openModal } from 'jenesius-vue-modal';
+import AlgoButton from '@/components/global/AlgoButton.vue';
+import LoadProjectModal from '@/components/modals/menu/LoadProjectModal.vue';
+import SaveProjectModal from '@/components/modals/menu/SaveProjectModal.vue';
 
 export default {
   components: { AlgoButton },
 
   methods: {
     openLoadProjectModal() {
-      this.$root.openDialog("LoadProjectModal");
+      openModal(LoadProjectModal);
     },
     openSaveProjectModal() {
-      this.$root.openDialog("SaveProjectModal");
+      openModal(SaveProjectModal);
     },
     redirectToRoot() {
       this.$root.redirectTo(window.location.origin + window.location.pathname);

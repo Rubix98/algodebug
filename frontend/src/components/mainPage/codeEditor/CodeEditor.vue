@@ -1,8 +1,7 @@
 <template>
   <div :id="id" class="code-editor-body full-size">
     <div class="flex-row full-size">
-      
-      <CodePanel v-if="editable" />
+      <slot></slot>
 
       <CodeLineNumbers
         :code="code"
@@ -20,12 +19,11 @@
 
 <script>
 import CodeLineNumbers from './subcomponents/CodeLineNumbers.vue';
-import CodePanel from './subcomponents/CodePanel.vue';
 import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
-    components: { CodeLineNumbers, CodePanel },
+    components: { CodeLineNumbers },
     props: ["id", "code", "editable", "clickable"],
     data() {
       return {

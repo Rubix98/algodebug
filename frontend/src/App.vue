@@ -13,9 +13,7 @@
 <script>
 import Menu from '@/components/other/Menu.vue';
 import MainPage from '@/components/mainPage/MainPage.vue';
-import AlgoModal from '@/components/global/AlgoModal.vue'
 import {container} from "jenesius-vue-modal";
-import {openModal, pushModal, closeModal, popModal} from "jenesius-vue-modal";
 import axios from 'axios';
 
 export default {
@@ -29,22 +27,6 @@ export default {
         url = url.replace("BACKEND", "https://algodebug.herokuapp.com")
       }
       return axios.post(url, data);
-    },
-
-    openDialog(modalComponentName, data, callback) {
-      openModal(AlgoModal, {modalComponentName, data, callback})
-    },
-
-    pushDialog(modalComponentName, data, callback) {
-      pushModal(AlgoModal, {modalComponentName, data, callback})
-    },
-
-    closeDialog() {
-      closeModal()
-    },
-
-    popDialog() {
-      popModal()
     },
 
     redirectTo(url) {
@@ -73,6 +55,10 @@ export default {
   .tab-container {
     width: 100%;
     height: calc(100% - 50px);
+  }
+
+  .modal-container {
+    z-index: 10;
   }
 
   /* Global */
