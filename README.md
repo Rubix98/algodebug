@@ -1,6 +1,8 @@
 # AlgoDebug
 
-picking variables not working yet
+For working version check `stable` branch
+
+picking variables and adding new converters not working yet  
 rest should be mostly working
 
 ## Frontend
