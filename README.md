@@ -20,8 +20,8 @@ Local MongoDB database - mongo community server:
 
 some test data can be imported from `backend/database-import`
 
-To use (original) Java backend
-`cd backend && ./mvnw spring-boot:run`
-OR
-`cd backend-node && npm install -d && npm run dev`
-To use (alternative) node.js backend
+To use (original) Java backend  
+`cd backend && ./mvnw spring-boot:run`  
+OR  
+`cd backend-node && npm install -d && npm run dev`  
+To use (alternative) node.js backend  
