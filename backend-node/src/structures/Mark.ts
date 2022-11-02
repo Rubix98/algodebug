@@ -2,11 +2,11 @@ import { Converter } from "../models/Converter";
 
 export class Mark {
     constructor (
-        public start: number,
-        public end: number,
-        public name: string,
-        public type: string,
-        public converter: Converter
+        public start: number = 0,
+        public end: number = 0,
+        public name: string = "",
+        public type: string = "",
+        public converter: Converter = new Converter(),
     ) {
         this.start = start;
         this.end = end;

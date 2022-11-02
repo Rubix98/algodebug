@@ -20,13 +20,13 @@ public class ProjectController {
         return projectService.save(project);
     }
 
-    @PostMapping("find/{id}")
+    @GetMapping("find/{id}")
     public Project findById(@PathVariable String id) {
         System.out.println("find/" + id);
         return projectService.findById(id);
     }
 
-    @PostMapping("findAll")
+    @GetMapping("findAll")
     public List<Project> findAll() {
         System.out.println("findAll");
         return projectService.findAll();

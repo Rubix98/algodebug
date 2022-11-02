@@ -27,7 +27,7 @@ export default {
   },
 
   created() {
-    this.$root.sendRequest('BACKEND/converter/findAll')
+    this.$root.sendRequest('BACKEND/converter/findAll', {}, 'get')
       .then((response) => {
         this.converters = response.data;
       });

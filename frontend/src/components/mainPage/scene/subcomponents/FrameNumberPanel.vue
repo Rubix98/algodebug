@@ -1,5 +1,6 @@
 <template>
-  <div class="frame-number-panel-container">
+  <div class="frame-number-panel-container" v-if="currentFrame">
+    <!-- Cannot read properties of undefined reading id -->
     {{currentFrame.id+1}}/{{numberOfFrames}}
   </div>
 </template>

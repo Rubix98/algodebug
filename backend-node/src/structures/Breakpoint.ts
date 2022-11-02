@@ -1,6 +1,6 @@
 export class Breakpoint {
     constructor (
-        public id: string
+        public id: number
     ) {
         this.id = id;
     }

@@ -20,7 +20,7 @@ export default {
   },
 
   created() {
-    this.$root.sendRequest('BACKEND/project/findAll')
+    this.$root.sendRequest('BACKEND/project/findAll', {}, 'get')
       .then((response) => {
         this.projects = response.data;
       });

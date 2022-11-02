@@ -126,7 +126,7 @@ export default {
     deleteSceneObject: ({commit}, index) => commit('deleteSceneObject', index),
 
     loadProject({commit}, projectId) {
-      sendRequest('BACKEND/project/find/' + projectId).then(response => {
+      sendRequest('BACKEND/project/find/' + projectId, {}, "get").then(response => {
         commit('setProject', response.data)
       })
     },

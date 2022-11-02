@@ -39,7 +39,7 @@ import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   components: { TestCasePicker, AlgoTextarea, AlgoBlock },
 
-  data() {
+  watch() {
     return {
       textareasData: [ // TODO zastosować tablicę do budowania template
         {key: 'input', title: "Dane wejściowe", model: this.input, isVisible: () => true},

@@ -1,10 +1,14 @@
 import axios from 'axios';
 
-export function sendRequest(url, data={}) {
+export function sendRequest(url, data={}, method='post') {
   if (window.location.origin.includes("localhost")) {
     url = url.replace("BACKEND", "http://localhost:8080")
   } else {
     //url = url.replace("BACKEND", "https://algodebug.herokuapp.com")
+  }
+
+  if (method === 'get') {
+    return axios.get(url, data);
   }
   return axios.post(url, data);
 }

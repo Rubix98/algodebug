@@ -19,14 +19,20 @@ import {openModal, pushModal, closeModal, popModal} from "jenesius-vue-modal";
 import axios from 'axios';
 
 export default {
+  // ERROR: Name "Menu" is reserved in HTML
+  // eslint-disable-next-line
   components: {Modal: container, Menu, MainPage},
 
   methods: {
-    sendRequest(url, data={}) {
+    sendRequest(url, data = {}, method = 'post') {
       if (window.location.origin.includes("localhost")) {
         url = url.replace("BACKEND", "http://localhost:8080")
       } else {
         //url = url.replace("BACKEND", "https://algodebug.herokuapp.com")
+      }
+
+      if (method === 'get') {
+        return axios.get(url, data);
       }
       return axios.post(url, data);
     },

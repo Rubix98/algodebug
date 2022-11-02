@@ -20,13 +20,13 @@ public class ConverterController {
         return converterService.save(converter);
     }
 
-    @PostMapping("find/{id}")
+    @GetMapping("find/{id}")
     public Converter findById(@PathVariable String id) {
         System.out.println("find/" + id);
         return converterService.findById(id);
     }
 
-    @PostMapping("findAll")
+    @GetMapping("findAll")
     public List<Converter> findAll() {
         System.out.println("findAll");
         return converterService.findAll();

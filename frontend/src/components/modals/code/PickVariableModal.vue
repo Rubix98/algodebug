@@ -1,6 +1,6 @@
 <template>
   <div class="dialog-content">
-    <CodeEditor 
+    <CodeEditor v-if="data"
       id="pick-variable-editor"
       :project="data.project"
       :code="project.code"

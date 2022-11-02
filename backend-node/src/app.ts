@@ -44,11 +44,14 @@ app.get('/project/findAll', async (_req, res) => {
     try {
         const result = await projects.find({}).toArray();
         if (!result || result.length === 0) {
-            res.status(202).send({ message: 'No projects found' });
+            res.status(204).send({ message: 'No projects found' });
+            return;
         }
-        else {
-            res.status(200).json(result);
-        }
+
+        // for backwards compatibility
+        result.forEach((project) => { project.id = project._id; });
+
+        res.status(200).json(result);
     }
     catch (err) {
         res.status(500).send({ error: err });
@@ -61,10 +64,13 @@ app.get('/project/find/:id', async (req, res) => {
         const result = await projects.findOne({ _id: new ObjectId(req.params.id) });
         if (!result) {
             res.status(404).send({ error: 'Project not found' });
+            return;
         }
-        else {
-            res.status(200).json(result);
-        }
+
+        // for backwards compatibility
+        result.id = result._id;
+
+        res.status(200).json(result);
     }
     catch (err) {
         res.status(500).send({ error: err });
@@ -72,16 +78,20 @@ app.get('/project/find/:id', async (req, res) => {
 });
 
 // POST new project
-app.post('/project/create', async (req, res) => {
-    // TODO validate request body
-    const toPost = req.body as Project;
-
+app.post('/project/save', async (req, res) => {
     try {
-        const result = await projects.insertOne(toPost);
-        res.status(200).json(result);
+        const toPost = req.body as Project;
+
+        try {
+            const result = await projects.insertOne(toPost);
+            res.status(200).json(result);
+        }
+        catch (err) {
+            res.status(500).send({ error: err });
+        }
     }
     catch (err) {
-        res.status(500).send({ error: err });
+        res.status(400).send({ error: 'Invalid request body:' + err });
     }
 });
 
@@ -90,11 +100,14 @@ app.get('/converter/findAll', async (_req, res) => {
     try {
         const result = await converters.find({}).toArray();
         if (!result || result.length === 0) {
-            res.status(202).send({ message: 'No converters found' });
+            res.status(204).send({ message: 'No converters found' });
+            return;
         }
-        else {
-            res.status(200).json(result);
-        }
+
+        // for backwards compatibility
+        result.forEach((converter) => converter.id = converter._id);
+
+        res.status(200).json(result);
     }
     catch (err) {
         res.status(500).send({ error: err });
@@ -105,12 +118,16 @@ app.get('/converter/findAll', async (_req, res) => {
 app.get('/converter/find/:id', async (req, res) => {
     try {
         const result = await converters.findOne({ _id: new ObjectId(req.params.id) });
+
         if (!result) {
             res.status(404).send({ error: 'Converter not found' });
+            return;
         }
-        else {
-            res.status(200).json(result);
-        }
+
+        // for backwards compatibility
+        result.id = result._id;
+
+        res.status(200).json(result);
     }
     catch (err) {
         res.status(500).send({ error: err });
@@ -118,15 +135,20 @@ app.get('/converter/find/:id', async (req, res) => {
 });
 
 // POST new project
-app.post('/converter/create', async (req, res) => {
-    // TODO validate request body
-    const toPost = req.body as Converter;
+app.post('/converter/save', async (req, res) => {
 
     try {
-        const result = await converters.insertOne(toPost);
-        res.status(200).json(result);
+       const toPost = req.body as Converter;
+
+        try {
+            const result = await converters.insertOne(toPost);
+            res.status(200).json(result);
+        }
+        catch (err) {
+            res.status(500).send({ error: err });
+        }
     }
     catch (err) {
-        res.status(500).send({ error: err });
+        res.status(400).send({ error: 'Invalid request body:' + err });
     }
 });
