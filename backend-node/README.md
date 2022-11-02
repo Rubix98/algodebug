@@ -1,18 +1,19 @@
-# Somewhat minimalistic backend in node.js
+# Somewhat minimalistic backend in node.js / typescript
 
 REST API in `Express.js` with `MongoDB` integration  
 written in `typescript`
 
 ## Compatibility with frontend
 
-Apart from changing relevant endpoints from POST to GET this backend works similarly to the Java backend.  
-If you wish to restore previous functionallity (which I consider bug/oversight) change the endpoints back to POST in `src/app.ts`
+This backend aims to work similarly to Java backend and unless specified will produce same results.
 
 ## Installing
 
-Obviously requires node.js: <https://nodejs.org>
+Obviously requires node.js: <https://nodejs.org>  
+(which is needed for frontend anyways)
 
-Then install dependencies with `npm install`
+After consideraton I decided to remove compiled javascript from this repository and us such you should always install this with dev dependencies using:  
+`npm install -d`
 
 ## Running
 
@@ -28,23 +29,23 @@ Example `.env` file might look like this:
 PORT=8080
 DATABASE_URI=mongodb://localhost:27017
 DATABASE_NAME=AlgoDebug
-ORIGINS=http://127.0.0.1:8081, https://my-service.com
+ORIGINS=http://127.0.0.1:8081,https://my-service.com
 ```
 
 then you have two options:
 
-- Install typescript with `npm install -d` and then you can use `npm run dev`
+- You can run this with `npm run dev` which  will use `ts-node` to autocompile and run
 OR
-- Run compiled javascript code with `npm start`
+- Compile to javascript yourself with `npm run build` and then you can use `npm start`  
+(note: you will need to recompile after introducing changes)
 
 ### Project Overview
 
-All files not listed bellow are either config files or dependencies related files which you should not worry about
+All files not listed below are either config files or dependencies related files which you should not worry about
 
 - `src` - source code
   - `models` - schema for database (mongo bson document templates)
   - `structures` - smaller classes which compose models
   - `app.ts` - main file with all API endpoints and middleware
   - `dbservice.ts` - implements connection to database
-- `dist` - compiled javascript code
 - `global.d.ts` - global interface adding hinting for env variables

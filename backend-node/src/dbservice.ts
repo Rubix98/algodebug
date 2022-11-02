@@ -4,10 +4,7 @@ import { Converter } from './models/Converter';
 
 export const InitializeConnection = async () => {
     try {
-        // it will be always defined because of the check in app.ts
-        // this is just to make typescript happy
-        if (!process.env.DATABASE_URI) throw "Environment variable DATABASE_URI is not set";
-        const client = new MongoClient(process.env.DATABASE_URI);
+        const client = new MongoClient(process.env.DATABASE_URI as string);
         
         await client.connect();
 

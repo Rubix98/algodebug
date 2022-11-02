@@ -25,7 +25,7 @@ const app = express();
 /* Middleware */
 
 // allow cross-origin requests for all origins in config
-app.use(cors({origin: process.env.ORIGINS}));
+app.use(cors({origin: (process.env.ORIGINS as string).split(",")}));
 
 // parse request body as JSON
 app.use(express.json());
