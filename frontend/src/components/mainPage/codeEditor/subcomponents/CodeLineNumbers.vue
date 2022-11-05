@@ -18,14 +18,6 @@ import { mapState } from "vuex";
 export default {
   props: ['code', 'breakpoints', 'editable'],
 
-  data() {
-    return {
-    }
-  },
-
-  mounted() {
-  },
-
   methods: {
     addOrDeleteBreakpoint(lineIndex) {
       if (this.$props.editable) {
@@ -55,7 +47,7 @@ export default {
     },
 
     numberOfCodeLines() {
-      return this.$store.state.project.code.split("\n").length;
+      return this.$props.code.split("\n").length;
     }
   }
 }

@@ -20,6 +20,8 @@ import { mapState } from "vuex";
 export default {
   components: { CodeEditor, AlgoModal },
 
+  props: ['callback'],
+
   methods: {
     handlePickVariable(variable) {
       this.$props.callback(variable);

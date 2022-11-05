@@ -3,19 +3,26 @@
     <template #default>
       <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="true"/>
     </template>
+
+    <template #buttons>
+      <AlgoButton @click="copy()">Kopiuj</AlgoButton>
+    </template>
   </AlgoModal>
 </template>
 
 <script>
 import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
 import AlgoModal from '@/components/global/AlgoModal.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
 import { mapGetters } from "vuex";
 
 export default {
-  components: { AlgoModal, CodeEditor },
+  components: { AlgoModal, CodeEditor, AlgoButton },
 
-  mounted() {
-    console.log(this.debugCode)
+  methods: {
+    copy() {
+      navigator.clipboard.writeText(this.debugCode).then(() => alert("Skopiowano"))
+    }
   },
 
   computed: {
@@ -26,6 +33,10 @@ export default {
 
 <style scoped>
   .dialog {
-    width: 60vw;
+    width: 80vw;
+  }
+
+  .code-editor-container {
+    height: 70vh;
   }
 </style>

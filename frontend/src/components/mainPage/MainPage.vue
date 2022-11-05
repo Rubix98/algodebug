@@ -1,5 +1,5 @@
 <template>
-  <div class="code-editor full-size">
+  <div class="main-page-container full-size">
     <div class="editor-main flex-row">
       <div class="width-1-of-2" style="position:relative">
         <CodeEditor 
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style>
-  .code-editor {
+  .main-page-container {
     background-image: url('/images/background.png');
     font: 16px Consolas;
     padding: 10px;
@@ -82,7 +82,7 @@ export default {
     margin-top: 5px;
   }
 
-  .code-editor-body {
+  .code-editor-container {
     background-color: black;
     color: white;
     border-radius: 10px;

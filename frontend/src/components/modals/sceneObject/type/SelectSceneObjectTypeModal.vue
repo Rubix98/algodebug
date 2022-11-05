@@ -9,6 +9,7 @@
 <script>
 import AlgoPickList from '@/components/global/AlgoPickList.vue';
 import AlgoModal from '@/components/global/AlgoModal.vue';
+import { popModal } from 'jenesius-vue-modal';
 
 export default {
   components: {AlgoPickList, AlgoModal},
@@ -31,7 +32,7 @@ export default {
   methods: {
     handleSelectOption(selectedType) {
       this.$props.callback(selectedType);
-      this.$root.popDialog();
+      popModal();
     }
   },
 }

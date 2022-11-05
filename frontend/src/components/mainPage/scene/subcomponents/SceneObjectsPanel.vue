@@ -10,7 +10,9 @@
 </template>
 
 <script>
+import ConfigureSceneObjectModal from '@/components/modals/sceneObject/ConfigureSceneObjectModal.vue';
 import AlgoIcon from '@/components/global/AlgoIcon';
+import { openModal } from 'jenesius-vue-modal';
 import { mapActions, mapState } from 'vuex';
 
 export default {
@@ -22,9 +24,7 @@ export default {
     configureSceneObject(sceneObject, event) {
       if (event.target.localName === 'i') return;
 
-      this.$root.openDialog("ConfigureSceneObjectModal", {
-        sceneObject: sceneObject
-      });
+      openModal(ConfigureSceneObjectModal, {sceneObject})
     },
   },
 

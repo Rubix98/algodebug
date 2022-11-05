@@ -36,7 +36,7 @@ export class HighlightUtils {
 			codeIndex = end;
 			resultIndex = result.lastIndexOf('</algo-target>') + '</algo-target>'.length;
 		}
-		return result.escapeHTML();
+		return result;
 	}
 
 	static highlightLine(code, lineNumber) {
@@ -53,6 +53,6 @@ export class HighlightUtils {
 		for (let variable of variables.sortedBy('start', -1)) {
 			code = code.slice(0, variable.start) + '<algo-highlight class="highlight-variable">' + code.slice(variable.start, variable.end) + '</algo-highlight>' + code.slice(variable.end);
 		}
-		return code.escapeHTML();
+		return code;
 	}
 }
