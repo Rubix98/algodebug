@@ -44,8 +44,21 @@ export default {
 
     async runProgram() {
       console.log("compiling")
+
+      let inputs = [];
       for (let testCase of this.project.testData) {
-        let response = await this.$root.sendRequest('https://codex-api.herokuapp.com/', {
+        inputs.push(testCase.input);
+      }
+      console.log(inputs);
+      let response = await this.$root.sendRequest('BACKEND/compilator/compile', {
+        code:     this.debugCode,
+        language: "cpp",
+        inputs:    inputs
+      });
+      console.log(response.data)
+
+      /*for (let testCase of this.project.testData) {
+        let response = await this.$root.sendRequest('/compiler/compile', {
           code:     this.debugCode,
           language: "cpp",
           input:    testCase.input
@@ -74,7 +87,7 @@ export default {
         }
       }
       this.setIsRunning(true);
-      this.emitter.emit("startDebuggingEvent");
+      this.emitter.emit("startDebuggingEvent");*/
     },
 
     stopProgram() {
