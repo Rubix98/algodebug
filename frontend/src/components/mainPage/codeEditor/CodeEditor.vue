@@ -1,67 +1,70 @@
 <template>
-  <div :id="id" class="code-editor-container full-size" >
+  <div :id="id" class="code-editor-container full-size flex-row" >
     <slot></slot>
-    <div class="flex-row full-size" >
-      <CodeLineNumbers
-        :code="code"
-        :editable="editable"
-      />
 
-      <Codearea :id="id" :code="code" :editable="editable" :clickable="clickable" @scrollEvent="handleScroll" @pickVariableEvent="handlePickVariable"/>
-    </div>
-    
+    <CodeLineNumbers
+      :id="id"
+      :code="code"
+      :editable="editable"
+    />
+
+    <Codearea 
+      :id="id" 
+      :code="code" 
+      :editable="editable" 
+      @scrollEvent="handleScroll" 
+      @pickVariableEvent="handlePickVariable"
+    />
   </div>
 </template>
 
 <script>
-import CodeLineNumbers from './subcomponents/CodeLineNumbers.vue';
-import Codearea from './subcomponents/Codearea.vue';
-import { mapState, mapActions, mapGetters } from "vuex";
+import CodeLineNumbers from '@/components/mainPage/codeEditor/subcomponents/CodeLineNumbers.vue';
+import Codearea from '@/components/mainPage/codeEditor/subcomponents/Codearea.vue';
 
 export default {
     components: { CodeLineNumbers, Codearea },
-    props: ["id", "code", "editable", "clickable"],
-
-    mounted() {
-      this.codeareaDOM = document.getElementById(this.id).getElementsByClassName('codearea')[0];
-      this.highlightsDOM = document.getElementById(this.id).getElementsByClassName('highlights')[0];
-      this.linesDOM = document.getElementById(this.id).getElementsByClassName('code-editor-line-numbers')[0];
-    },
+    props: ["id", "code", "editable"],
 
     methods: {
-      ...mapActions('project', ['setCode']),
-
-      handleScroll() {
-        const target = this.codeareaDOM ?? this.highlightsDOM;
+      handleScroll(target) {
+        target = target.localName === 'textarea' ? this.codeareaDOM : this.highlightsDOM;
         this.linesDOM.scrollTop = this.highlightsDOM.scrollTop = target.scrollTop;
         this.highlightsDOM.scrollLeft = target.scrollLeft;
       },
 
       handlePickVariable(variable) {
-        this.$emit('pickVariableEvent', variable)
+        this.$emit('pickVariableEvent', variable);
       }
     },
 
     computed: {
-      ...mapState(['project']),
-      ...mapGetters('project', ['variables', 'currentFrame']),
-    },
+      codeareaDOM() {
+        return this.elementDOM('codearea');
+      },
+
+      highlightsDOM() {
+        return this.elementDOM('highlights');
+      },
+
+      linesDOM() {
+        return this.elementDOM('code-line-numbers-container');
+      },
+
+      elementDOM() {
+        return (className) => document.getElementById(this.id).getElementsByClassName(className)[0];
+      },
+    }
     
 }
 </script>
 
 <style scoped>
   .code-editor-container {
-    display: block;
     transform: translateZ(0);
-    height: 100%;
-    font-size: 16px;
-  }
-
-  .codearea-container {
-    width: calc(100% - 60px);
-    height: 100%;
+    font: 16px Consolas;
+    border-radius: 10px;
+    background-color: black;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-    border-radius: 0 10px 10px 0;
   }
 </style>

@@ -31,10 +31,10 @@ export class HighlightUtils {
 			let start = code.indexOf(word, codeIndex);
 			let end = start + word.length;
 
-			result = result.replaceFromIndex(word, `<algo-target start=${start} end=${end}>${word}</algo-target>`, resultIndex);
+			result = result.replaceFromIndex(word, `<algodebug-highlight-target start=${start} end=${end}>${word}</algodebug-highlight-target>`, resultIndex);
 
 			codeIndex = end;
-			resultIndex = result.lastIndexOf('</algo-target>') + '</algo-target>'.length;
+			resultIndex = result.lastIndexOf('</algodebug-highlight-target>') + '</algodebug-highlight-target>'.length;
 		}
 		return result;
 	}
@@ -43,15 +43,15 @@ export class HighlightUtils {
 		let lines = code.split('\n');
     let line = lines[lineNumber];
 		line = line !== '' ? line : ' ';
-		line = '<algo-highlight class="highlight-line">' + line + '</algo-highlight>';
+		line = '<algodebug-highlight-line>' + line + '</algodebug-highlight-line>';
     lines[lineNumber] = line;
 		code = lines.join('\n');
-		return code.escapeHTML();
+		return code;
 	}
 
 	static highlightVariables(code, variables) {
 		for (let variable of variables.sortedBy('start', -1)) {
-			code = code.slice(0, variable.start) + '<algo-highlight class="highlight-variable">' + code.slice(variable.start, variable.end) + '</algo-highlight>' + code.slice(variable.end);
+			code = code.slice(0, variable.start) + '<algodebug-highlight-variable>' + code.slice(variable.start, variable.end) + '</algodebug-highlight-variable>' + code.slice(variable.end);
 		}
 		return code;
 	}

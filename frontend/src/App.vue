@@ -1,8 +1,8 @@
 <template>
-  <div class="main-container">
+  <div class="app-container">
     <Menu />
 
-    <div class="tab-container">
+    <div class="content-container">
       <MainPage />
     </div>
 
@@ -17,7 +17,7 @@ import {container} from "jenesius-vue-modal";
 import axios from 'axios';
 
 export default {
-  components: {Modal: container, Menu, MainPage},
+  components: {Menu, MainPage, Modal: container},
 
   methods: {
     sendRequest(url, data={}) {
@@ -37,31 +37,36 @@ export default {
 </script>
 
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  .main-container {
+  .app-container {
     width: 100vw;
     height: 100vh;
   }
 
-  .menu {
+  .menu-container {
     height: 50px;
   }
 
-  .tab-container {
+  .content-container {
     width: 100%;
     height: calc(100% - 50px);
   }
 
   .modal-container {
     z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   /* Global */
+
+  body {
+    font-family: 'Tahoma', sans-serif;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
   .full-size {
     width: 100%;
@@ -123,9 +128,4 @@ export default {
   .width-1-of-2 {
     width: 50%;
   }
-
-  .modal-container{
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
 </style>

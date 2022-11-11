@@ -1,7 +1,18 @@
 <template>
-  <div class="codearea-container">
-    <div class="highlights" :class="{'visible': !editable}" v-html="extendedCode" @scroll="emitScrollEvent" @click="handleClick"></div>
-    <textarea class="codearea" v-if="editable" v-model="modelCode" spellcheck="false" @scroll="emitScrollEvent"></textarea>
+  <div class="codearea-container full-size">
+    <pre 
+      class="highlights" 
+      :class="{'visible': !editable}" 
+      v-html="extendedCode" 
+      @scroll="emitScrollEvent" 
+      @click="handleVariableClick"></pre>
+
+    <textarea 
+      class="codearea full-size" 
+      v-show="editable" 
+      v-model="modelCode" 
+      @scroll="emitScrollEvent"
+      spellcheck="false"></textarea>
   </div>
 </template>
 
@@ -10,83 +21,79 @@ import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
-    props: ["id", "code", "editable", "clickable"],
+  props: ["id", "code", "editable"],
 
-    mounted() {
+  methods: {
+    ...mapActions('project', ['setCode']),
 
-
-      //this.emitter.on("startDebuggingEvent", this.highlightLine);
-      //this.emitter.on("currentFrameChangedEvent", this.highlightLine);
-      //this.emitter.on("stopDebuggingEvent", this.highlightVariables);
+    handleVariableClick(event) {
+      if (!this.$props.clickable || event.target.localName !== 'algo-target') return;
+      const variable = {
+        name: event.target.innerText,
+        start: event.target.attributes.start.value,
+        end: event.target.attributes.end.value,
+      }
+      this.$emit('pickVariableEvent', variable);
     },
 
-    methods: {
-      ...mapActions('project', ['setCode']),
+    emitScrollEvent(event) {
+      this.$emit('scrollEvent', event.target);
+    },
+  },
 
-      pickVariable(e) {
-        if (e.target.localName === 'algo-target') {
-          let start = Number(e.target.attributes.start.value);
-          let end = Number(e.target.attributes.end.value);
-          let name = this.code.slice(start, end);
-          this.$emit('pickVariableEvent', {start, end, name});
-        }
-      },
+  computed: {
+    ...mapState(['project']),
+    ...mapGetters('project', ['variables', 'currentFrame']),
 
-      emitScrollEvent(event) {
-        this.$emit('scrollEvent', event.target);
-      },
+    modelCode: {
+      get() {return this.$props.code},
+      set(newValue) {this.setCode(newValue)}
+    },
 
-      handleClick(event) {
-        if (!this.$props.clickable || event.target.localName !== 'algo-target') return;
-
-        const variable = {
-          name: event.target.innerText,
-          start: event.target.attributes.start.value,
-          end: event.target.attributes.end.value,
-        }
-        console.log("a")
-        this.$emit('pickVariableEvent', variable);
+    extendedCode() {
+      switch (this.$props.id) {
+        case 'main-editor':
+          return this.extendedCodeForMainEditor;
+        case 'debug-code-editor':
+          return this.extendedCodeForDebugCodeEditor;
+        case 'pick-variable-editor':
+          return this.extendedCodeForPickVariableEditor;
+        default: 
+          return this.modelCode.escapeHTML();
       }
     },
 
-    computed: {
-      ...mapState(['project']),
-      ...mapGetters('project', ['variables', 'currentFrame']),
-
-      modelCode: {
-        get() {return this.$props.code},
-        set(newValue) {this.setCode(newValue)}
-      },
-
-      extendedCode() {
-        let code = this.modelCode;
-        if (this.$props.editable) {
-          code =  HighlightUtils.highlightVariables(code, this.variables);
-        } if (this.$props.clickable) {
-          code = HighlightUtils.insertTargetTagsIntoCode(code);
-        }
-        return code.escapeHTML();
-      },
+    extendedCodeForMainEditor() {
+      let code = this.modelCode;
+      code = HighlightUtils.highlightVariables(code, this.variables);
+      if (this.project.isRunning) {
+        code = HighlightUtils.highlightLine(code, this.currentFrame?.line);
+      }
+      return code.escapeHTML();
     },
-    
+
+    extendedCodeForDebugCodeEditor() {
+      let code = this.modelCode;
+      return code.escapeHTML();
+    },
+
+    extendedCodeForPickVariableEditor() {
+      let code = this.modelCode;
+      code = HighlightUtils.insertTargetTagsIntoCode(code);
+      return code.escapeHTML();
+    }
+  },
 }
 </script>
 
-<style>
-  .codearea-container {
-    display: block;
-  }
-
+<style scoped>
   .codearea, .highlights {
-    width: 100%;
-    height: 100%;
+    overflow: auto;
     border: none;
     outline: none;
     white-space: pre;
-    font: 16px Consolas;
-    overflow: auto;
-    overflow-x: auto;
     color: white;
+    font: inherit;
   }
 
   .codearea {
@@ -96,36 +103,39 @@ export default {
 
   .highlights {
     position: absolute;
+    width: calc(100% - 60px);
+    height: 100%;
     z-index: -1;
-    width: inherit;
   }
 
   .visible {
-    z-index: 0 !important;
+    z-index: 0;
   }
+</style>
 
-  algo-target {
-    transition: background-color 0.2s;
+<style>
+  algodebug-highlight-variable,
+  algodebug-highlight-line,
+  algodebug-highlight-target {
     border-radius: 5px;
   }
 
-  algo-target:hover {
-    background-color: orange;
-    cursor: pointer;
-  }
-
-  algo-highlight {
-    background-color: red;
-    border-radius: 5px;
-  }
-
-  .highlight-variable {
+  algodebug-highlight-variable {
     background-color: purple;
   }
 
-  .highlight-line {
+  algodebug-highlight-line {
     background-color: orange;
     width: 100%;
     display: inline-block;
+  }
+
+  algodebug-highlight-target {
+    transition: background-color 0.2s;
+  }
+
+  algodebug-highlight-target:hover {
+    background-color: orange;
+    cursor: pointer;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="frame-number-panel-container">
-    {{currentFrame.id+1}}/{{numberOfFrames}}
+    {{currentFrameId}}/{{numberOfFrames}}
   </div>
 </template>
 
@@ -10,6 +10,10 @@ import { mapGetters } from 'vuex';
 export default {
   computed: {
     ...mapGetters('project', ['currentFrame', 'numberOfFrames']),
+
+    currentFrameId() {
+      return this.numberOfFrames ? this.currentFrame.id + 1 : 0;
+    }
   }
 }
 </script>
