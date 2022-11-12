@@ -1,6 +1,6 @@
 package algoview.compilator.utils;
 
-import algoview.compilator.models.BreakpointPojo;
+import algoview.compilator.models.FramePojo;
 import algoview.compilator.models.OutputPojo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,20 +27,27 @@ public class CompilatorUtils {
 
             int breakpointEndPosition = outputText.indexOf(BREAKPOINT_END_TAG, breakpointStartPosition) + BREAKPOINT_END_TAG.length();
             String breakpointText = outputText.substring(breakpointStartPosition, breakpointEndPosition);
-            output.getBreakpoints().add(parseBreakpoint(breakpointText));
+            output.getFrames().add(parseFrame(breakpointText));
 
             position = breakpointEndPosition;
         }
 
+        addIndexesToFrames(output);
         return output;
     }
 
-    private static BreakpointPojo parseBreakpoint(String breakpointText) {
+    private static FramePojo parseFrame(String breakpointText) {
         Document breakpointDoc = Jsoup.parse(breakpointText);
         int line = Integer.parseInt(breakpointDoc.select("algodebug-breakpoint").get(0).attr("line"));
         Map<String, String> variables = breakpointDoc.select("algodebug-variable").stream()
                 .map(variable -> new AbstractMap.SimpleEntry<>(variable.attr("name"), variable.text()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (prev, next) -> next, HashMap::new));
-        return new BreakpointPojo(line, variables);
+        return new FramePojo(line, variables);
+    }
+
+    private static void addIndexesToFrames(OutputPojo output) {
+        for (int i = 0; i < output.getFrames().size(); i++) {
+            output.getFrames().get(i).setId(i);
+        }
     }
 }

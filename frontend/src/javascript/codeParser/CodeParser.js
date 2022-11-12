@@ -115,7 +115,7 @@ class CodeUtils {
 	static insertBreakpointTags(code, breakpoints) {
 		let lines = code.split('\n');
 		for (let breakpoint of breakpoints.reversed()) {
-			lines[breakpoint.id] += `<algodebug-breakpoint>${breakpoint.id+1}</algodebug-breakpoint>`;
+			lines[breakpoint.id] += `<algodebug-breakpoint>${breakpoint.id}</algodebug-breakpoint>`;
 		}
 		code = lines.join('\n');
 		return code;

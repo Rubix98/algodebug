@@ -10,11 +10,17 @@ import java.util.Map;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BreakpointPojo {
+public class FramePojo {
+    private Integer id;
     private Integer line;
     private Map<String, String> variables;
 
-    public BreakpointPojo() {
+    public FramePojo() {
         this.variables = new HashMap<>();
+    }
+
+    public FramePojo(Integer line, Map<String, String> variables) {
+        this.line = line;
+        this.variables = variables;
     }
 }

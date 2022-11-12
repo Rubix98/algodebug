@@ -16,7 +16,7 @@ export default {
   },
 
   getters: {
-    variables(state) {
+    variables(state) { // TODO: zrefaktoryzować
       let variables = new Map();
       for (let sceneObject of state.sceneObjects) {
         if (sceneObject.variable) {
@@ -35,7 +35,7 @@ export default {
       return variables;
     },
   
-    converters(state) {
+    converters(state) {  // TODO: zrefaktoryzować
       let converters = new Map();
         for (let sceneObject of state.sceneObjects) {
           if (sceneObject.converter) {
@@ -79,7 +79,7 @@ export default {
     },
 
     addTestCase(state) {
-      state.testData.push({input: 'b'});
+      state.testData.push({input: ''});
     }, 
 
     deleteTestCase(state, index) {
@@ -112,7 +112,16 @@ export default {
       state.testData = project.testCases;
       state.sceneObjects = project.sceneObjects;
       state.title = project.title;
-    }
+    },
+
+    addOutputs(state, outputs) {
+      for (let i in state.testData) {
+        state.testData[i] = {
+          ...state.testData[i],
+          ...outputs[i].output,
+        };
+      }
+    },
   },
 
   actions: {
@@ -141,11 +150,23 @@ export default {
         testCases: state.testData,
         sceneObjects: state.sceneObjects
       }).then(response => {
-        if (response.status === 200) {
-          commit('set', {key: 'id', value: response.data.id});
-          commit('set', {key: 'title', value: response.data.title});
-        }
+        if (response.status !== 200) return;
+        commit('set', {key: 'id', value: response.data.id});
+        commit('set', {key: 'title', value: response.data.title});
       })
     },
+
+    compile({commit, state, getters}) {
+      const inputs = state.testData.map(testCase => testCase.input)
+      return sendRequest('BACKEND/compilator/compile', {
+        code:     getters.debugCode,
+        language: "cpp",
+        inputs:    inputs
+      }).then(response => {
+        if (response.status !== 200 || !response.data.success) return;
+        commit('addOutputs', response.data.details);
+        commit('set', {key: 'isRunning', value: true})
+      });
+    }
   }
 }

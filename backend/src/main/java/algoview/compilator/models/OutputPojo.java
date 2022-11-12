@@ -1,6 +1,5 @@
 package algoview.compilator.models;
 
-import algoview.compilator.models.BreakpointPojo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,11 +13,11 @@ import java.util.List;
 public class OutputPojo {
     private String fullOutput;
     private List<String> partialOutputs;
-    private List<BreakpointPojo> breakpoints;
+    private List<FramePojo> frames;
 
     public OutputPojo(String fullOutput) {
         this.fullOutput = fullOutput;
         this.partialOutputs = new ArrayList<>();
-        this.breakpoints = new ArrayList<>();
+        this.frames = new ArrayList<>();
     }
 }

@@ -36,64 +36,22 @@ export default {
   },
 
   methods: {
-    ...mapActions('project', ['setLanguage', 'setIsRunning', 'changeCurrentFrame']),
+    ...mapActions('project', ['setLanguage', 'setIsRunning', 'changeCurrentFrame', 'compile']),
 
     showExtendedCode() {
       openModal(ShowDebugCodeModal)
     },
 
-    async runProgram() {
+    runProgram() {
       console.log("compiling")
-
-      let inputs = [];
-      for (let testCase of this.project.testData) {
-        inputs.push(testCase.input);
-      }
-      console.log(inputs);
-      let response = await this.$root.sendRequest('BACKEND/compilator/compile', {
-        code:     this.debugCode,
-        language: "cpp",
-        inputs:    inputs
+      this.compile().then(() => {
+        console.log(this.project)
       });
-      console.log(response.data)
-
-      /*for (let testCase of this.project.testData) {
-        let response = await this.$root.sendRequest('/compiler/compile', {
-          code:     this.debugCode,
-          language: "cpp",
-          input:    testCase.input
-        });
-        console.log(response.data)
-        
-        if (response.data.success) {
-          let output = response.data.output;
-          testCase.output = output;
-
-          const parser = new DOMParser();
-          const parsedOutput = parser.parseFromString(output, "text/html");
-
-          testCase.frames = [];
-          for (let breakpoint of parsedOutput.getElementsByTagName("algodebug-breakpoint")) {
-            testCase.frames.push({
-              id: testCase.frames.length,
-              output: breakpoint.outerHTML,
-              line: Number(breakpoint.getAttribute("line")),
-              variables: breakpoint.getElementsByTagName("algodebug-variable")
-            });
-          }
-
-        } else {
-          testCase.output = response.data.error;
-        }
-      }
-      this.setIsRunning(true);
-      this.emitter.emit("startDebuggingEvent");*/
     },
 
     stopProgram() {
       this.setIsRunning(false);
       this.changeCurrentFrame(0);
-      this.emitter.emit('stopDebuggingEvent');
     },
   },
 

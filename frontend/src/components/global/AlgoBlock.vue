@@ -1,10 +1,13 @@
 <template>
   <div class="algo-block">
-    <div class="header">{{header}}</div>
+    <div class="header flex-vertical-space-between">
+      {{header}} 
+      <div><slot name="checkbox"></slot></div>
+    </div>
+
     <div class="content">
       <slot></slot>
     </div>
-    
   </div>
 </template>
 
@@ -13,11 +16,6 @@
 
 export default {
   props: ['header'],
-
-  data() {
-    return {
-    }
-  },
 }
 </script>
 
