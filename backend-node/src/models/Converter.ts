@@ -1,33 +1,30 @@
+import { Language } from "../structures/Language";
+import { Static, Record, String, Unknown, Optional, Null } from 'runtypes';
+
 import { ObjectId } from "mongodb";
-import { DialogData } from "../structures/DialogData";
-import { LabelValue } from "../structures/LabelValue";
 
-export class Converter {
+const isId = (x: any): x is ObjectId => typeof x === 'string' || typeof x === 'number';
 
-    public dialogData: DialogData
+export const Converter = Record({
+    title: String.withConstraint((s) => s.length > 0),
+    language: Language,
+    type: String.withConstraint((s) => s.length > 0).Or(Null),
+    code: String,
 
-    constructor(
-        public title: string = "", 
-        public language: string = "", 
-        public type: string = "", 
-        public code: string = "",
+    _id: Optional(Unknown.withGuard(isId))
+});
 
-        public id?: ObjectId,
-    ) {
-        this.title = title;
-        this.language = language;
-        this.type = type;
-        this.code = code;
-        this.dialogData = new DialogData(
-            "", // title ???
-            [
-                new LabelValue("Nazwa" , title),
-                new LabelValue("Typ zmiennej", type),
-                new LabelValue("Język programowania", language),
-                new LabelValue("Kod", code, "textarea"),
-            ]
-        );
+export type Converter = Static<typeof Converter>;
 
-        this.id = id ? id : new ObjectId();
-    };
+export const sanitizeConverter = (c: Converter | null) => {
+    if (c === null) {
+        return null;
+    }
+    return {
+        title: c.title,
+        language: c.language,
+        type: c.type,
+        code: c.code,
+        _id: c._id ? new ObjectId(c._id) : undefined
+    } as Converter;
 }

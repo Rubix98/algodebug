@@ -1,17 +1,22 @@
-import { Converter } from "../models/Converter";
+import { Converter, sanitizeConverter } from "../models/Converter";
+import { Static, Record, String, Number, Null } from 'runtypes';
 
-export class Mark {
-    constructor (
-        public start: number = 0,
-        public end: number = 0,
-        public name: string = "",
-        public type: string = "",
-        public converter: Converter = new Converter(),
-    ) {
-        this.start = start;
-        this.end = end;
-        this.name = name;
-        this.type = type;
-        this.converter = converter;
-    }
+export const Mark = Record({
+    start: Number,
+    end: Number,
+    name: String,
+    type: String.Or(Null),
+    converter: Converter.Or(Null),
+});
+
+export type Mark = Static<typeof Mark>;
+
+export const sanitizeMark = (m: Mark) => {
+    return {
+        start: m.start,
+        end: m.end,
+        name: m.name,
+        type: m.type,
+        converter: sanitizeConverter(m.converter)
+    } as Mark;
 }

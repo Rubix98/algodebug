@@ -11,10 +11,7 @@ dotenv.config();
     }
 });
 
-import { InitializeConnection } from './dbservice';
-import { Project } from './models/Project';
-import { Converter } from './models/Converter';
-
+import { InitializeConnection, validateConverter, validateProject } from './dbservice';
 
 // initialize database connection
 const { projects, converters } = await InitializeConnection();
@@ -47,10 +44,6 @@ app.get('/project/findAll', async (_req, res) => {
             res.status(204).send({ message: 'No projects found' });
             return;
         }
-
-        // for backwards compatibility
-        result.forEach((project) => { project.id = project._id; });
-
         res.status(200).json(result);
     }
     catch (err) {
@@ -66,10 +59,6 @@ app.get('/project/find/:id', async (req, res) => {
             res.status(404).send({ error: 'Project not found' });
             return;
         }
-
-        // for backwards compatibility
-        result.id = result._id;
-
         res.status(200).json(result);
     }
     catch (err) {
@@ -80,10 +69,16 @@ app.get('/project/find/:id', async (req, res) => {
 // POST new project
 app.post('/project/save', async (req, res) => {
     try {
-        const toPost = req.body as Project;
+        
+        const [isOk, data] = validateProject(req.body);
 
+        if (!isOk) {
+            res.status(400).send({ error: 'Invalid request body: ' + data });
+            return;
+        }
+        
         try {
-            const result = await projects.insertOne(toPost);
+            const result = await projects.insertOne(data);
             res.status(200).json(result);
         }
         catch (err) {
@@ -91,7 +86,7 @@ app.post('/project/save', async (req, res) => {
         }
     }
     catch (err) {
-        res.status(400).send({ error: 'Invalid request body:' + err });
+        res.status(400).send({ error: 'Invalid request body: ' + err });
     }
 });
 
@@ -103,10 +98,6 @@ app.get('/converter/findAll', async (_req, res) => {
             res.status(204).send({ message: 'No converters found' });
             return;
         }
-
-        // for backwards compatibility
-        result.forEach((converter) => converter.id = converter._id);
-
         res.status(200).json(result);
     }
     catch (err) {
@@ -123,10 +114,6 @@ app.get('/converter/find/:id', async (req, res) => {
             res.status(404).send({ error: 'Converter not found' });
             return;
         }
-
-        // for backwards compatibility
-        result.id = result._id;
-
         res.status(200).json(result);
     }
     catch (err) {
@@ -134,14 +121,19 @@ app.get('/converter/find/:id', async (req, res) => {
     }
 });
 
-// POST new project
+// POST new converter
 app.post('/converter/save', async (req, res) => {
-
     try {
-       const toPost = req.body as Converter;
+        
+        const [isOk, data] = validateConverter(req.body);
+
+        if (!isOk) {
+            res.status(400).send({ error: 'Invalid request body: ' + data });
+            return;
+        }
 
         try {
-            const result = await converters.insertOne(toPost);
+            const result = await converters.insertOne(data);
             res.status(200).json(result);
         }
         catch (err) {
@@ -149,6 +141,6 @@ app.post('/converter/save', async (req, res) => {
         }
     }
     catch (err) {
-        res.status(400).send({ error: 'Invalid request body:' + err });
+        res.status(400).send({ error: 'Invalid request body: ' + err });
     }
 });

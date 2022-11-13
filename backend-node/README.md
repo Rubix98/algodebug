@@ -3,9 +3,19 @@
 REST API in `Express.js` with `MongoDB` integration  
 written in `typescript`
 
+Since javascript is dynamically typed this backend uses [runtypes](https://www.npmjs.com/package/runtypes) for run time validation.  
+Invalid POST requests return RuntypeError which contains informaion why request body was not validated.
+
 ## Compatibility with frontend
 
-This backend aims to work similarly to Java backend and unless specified will produce same results.
+This backend aims to work similarly to Java backend however due to both technical and design reasons I decided to make some changes:
+
+- `find/:id` and `findAll` endpoints are now GET instead of POST
+- `constructor` property on SceneObject is now `converter`
+- GET endpoints no longer return DialogData in response since it can be generated from informations within response
+- there is a strict validation of request body on POST
+- because of the above database is now treated as source of truth and GET responses are no longer validated before sending
+- this results in `id` being returned as `_id`
 
 ## Installing
 

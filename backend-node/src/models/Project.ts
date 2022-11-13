@@ -1,57 +1,47 @@
-import { Breakpoint } from '../structures/Breakpoint';
-import { TestCase } from '../structures/TestCase';
-import { SceneObject } from '../structures/SceneObject';
-import { DialogData } from '../structures/DialogData';
-import { LabelValue } from '../structures/LabelValue';
+import { Breakpoint, sanitizeBreakpoint } from '../structures/Breakpoint';
+import { TestCase, sanitizeTestCase } from '../structures/TestCase';
+import { SceneObject, sanitizeSceneObject } from '../structures/SceneObject';
+import { Language } from '../structures/Language';
+import { Static, Record, String, Array, Null, Unknown, Optional, InstanceOf } from 'runtypes';
 
 import { ObjectId } from 'mongodb';
 
-export class Project {
+const isId = (x: any): x is ObjectId => typeof x === 'string' || typeof x === 'number';
 
-    public dialogData: DialogData
+export const Project = Record({
+    // project description
+    title: String.withConstraint((s) => s.length > 0),
+    description: String.Or(Null),
 
-    constructor(
-        // project description
-        public title: string = "",
-        public description: string = "",
+    // project data
+    code: String,
+    language: Language,
+    breakpoints: Array(Breakpoint),
+    testCases: Array(TestCase),
+    sceneObjects: Array(SceneObject),
 
-        // project data
-        public code: string = "",
-        public language: string = "",
-        public breakpoints: Breakpoint[] = [],
-        public testCases: TestCase[] = [],
-        public sceneObjects: SceneObject[] = [],
+     // project metadata
+    author: String,
+    creationDate: InstanceOf(Date).Or(String),
+    modificationDate: InstanceOf(Date).Or(String),
 
-        // project metadata
-        public author: string = "AlgoDebug", // TODO: system logowania użytkowników
-        public creationDate: Date = new Date(),
-        public lastModified: Date = new Date(),
+    _id: Optional(Unknown.withGuard(isId))
+});
 
-        public id?: ObjectId,
-    ) {
-        this.title = title;
-        this.description = description;
-        this.code = code;
-        this.language = language;
-        this.breakpoints = breakpoints;
-        this.testCases = testCases;
-        this.sceneObjects = sceneObjects;
-        this.author = author;
-        this.creationDate = creationDate;
-        this.lastModified = lastModified;
+export type Project = Static<typeof Project>;
 
-        this.dialogData = new DialogData(
-            title,
-            [
-                new LabelValue("Tytuł", title),
-                new LabelValue("Język programowania", language),
-                new LabelValue("Autor", author),
-                
-                // format "yyyy-MM-dd HH:mm"
-                new LabelValue("Data modyfikacji", lastModified.toISOString().slice(0, 16).replace('T', ' ')),
-            ]
-        )
-
-        this.id = id ? id : new ObjectId();
-    }
+export const sanitizeProject = (p: Project) => {
+    return {
+        title: p.title,
+        description: p.description,
+        code: p.code,
+        language: p.language,
+        breakpoints: p.breakpoints.map(sanitizeBreakpoint),
+        testCases: p.testCases.map(sanitizeTestCase),
+        sceneObjects: p.sceneObjects.map(sanitizeSceneObject),
+        author: p.author,
+        creationDate: new Date(p.creationDate),
+        modificationDate: new Date(p.modificationDate),
+        _id: p._id ? new ObjectId(p._id) : undefined
+    } as Project;
 }
