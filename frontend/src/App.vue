@@ -1,8 +1,8 @@
 <template>
-  <div class="main-container">
+  <div class="app-container">
     <Menu />
 
-    <div class="tab-container">
+    <div class="content-container">
       <MainPage />
     </div>
 
@@ -13,15 +13,13 @@
 <script>
 import Menu from '@/components/other/Menu.vue';
 import MainPage from '@/components/mainPage/MainPage.vue';
-import AlgoModal from '@/components/global/AlgoModal.vue'
 import {container} from "jenesius-vue-modal";
-import {openModal, pushModal, closeModal, popModal} from "jenesius-vue-modal";
 import axios from 'axios';
 
 export default {
   // ERROR: Name "Menu" is reserved in HTML
   // eslint-disable-next-line
-  components: {Modal: container, Menu, MainPage},
+  components: {Menu, MainPage, Modal: container},
 
   methods: {
     sendRequest(url, data = {}, method = 'post') {
@@ -37,22 +35,6 @@ export default {
       return axios.post(url, data);
     },
 
-    openDialog(modalComponentName, data, callback) {
-      openModal(AlgoModal, {modalComponentName, data, callback})
-    },
-
-    pushDialog(modalComponentName, data, callback) {
-      pushModal(AlgoModal, {modalComponentName, data, callback})
-    },
-
-    closeDialog() {
-      closeModal()
-    },
-
-    popDialog() {
-      popModal()
-    },
-
     redirectTo(url) {
       window.location.href = url;
     }
@@ -61,27 +43,36 @@ export default {
 </script>
 
 <style>
+  .app-container {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .menu-container {
+    height: 50px;
+  }
+
+  .content-container {
+    width: 100%;
+    height: calc(100% - 50px);
+  }
+
+  .modal-container {
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  /* Global */
+
+  body {
+    font-family: 'Tahoma', sans-serif;
+  }
+
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
-
-  .main-container {
-    width: 100vw;
-    height: 100vh;
-  }
-
-  .menu {
-    height: 50px;
-  }
-
-  .tab-container {
-    width: 100%;
-    height: calc(100% - 50px);
-  }
-
-  /* Global */
 
   .full-size {
     width: 100%;
@@ -143,9 +134,4 @@ export default {
   .width-1-of-2 {
     width: 50%;
   }
-
-  .modal-container{
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
 </style>

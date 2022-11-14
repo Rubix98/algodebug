@@ -1,7 +1,10 @@
 <template>
   <div class="algo-block">
     <div class="header">{{header}}</div>
-    <slot></slot>
+    <div class="content">
+      <slot></slot>
+    </div>
+    
   </div>
 </template>
 
@@ -32,6 +35,11 @@ export default {
     padding: 2px 15px;
     font-size: 18px;
     border-radius: 10px 10px 0 0;
-    color: #EEE
+    color: #EEE;
+    font-family: Consolas;
+  }
+
+  .algo-block .content {
+    height: calc(100% - 24px);
   }
 </style>

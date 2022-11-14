@@ -16,11 +16,12 @@ export default {
 </script>
 
 <style scoped>
-  i {
-    color: black;
-    font-size: 40px;
-    user-select:none;
-    padding-right: 10px;
+  .download-panel-container {
     padding-top: 5px;
+    padding-right: 10px;
+  }
+
+  i {
+    font-size: 30px;
   }
 </style>

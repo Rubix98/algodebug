@@ -1,5 +1,5 @@
 <template>
-  <div class="navigation-panel-container">
+  <div class="navigation-panel-container flex-vertical-center">
     <i v-for="icon in icons" :key="icon.icon"
       :class="icon.icon"
       @click="icon.action"></i>
@@ -27,10 +27,9 @@ export default {
     ...mapActions('project', ['changeCurrentFrame']),
 
     setFrameId(index) {
-      if (index >= 0 && index < this.numberOfFrames) {
-        this.changeCurrentFrame(index);
-        this.emitter.emit('currentFrameChangedEvent');
-      }
+      if (index < 0 || index >= this.numberOfFrames)
+      this.changeCurrentFrame(index);
+      this.emitter.emit('currentFrameChangedEvent');
     },
   },
 
@@ -42,10 +41,7 @@ export default {
 
 <style scoped>
   i {
-    margin: 0 10px;
-    cursor: pointer;
-    color: black;
     font-size: 40px;
-    user-select:none;
+    margin: 0 10px;
   }
 </style>

@@ -11,14 +11,18 @@ String.prototype.replaceFromIndex = function(from, to, index) {
 }
 
 String.prototype.escapeHTML = function() {
-	let escaped = this.replace(/<\/*algo-[^>]*>/g, tag => {
+	let escaped = this.replace(/<\/*algodebug-[^>]*>/g, tag => {
 		return tag.replace("<", "[").replace(">", "]");
 	})
 
 	escaped = new Option(escaped).innerHTML;
 	
-	escaped = escaped.replace(/\[\/*algo-[^\]]*\]/g, tag => {
+	escaped = escaped.replace(/\[\/*algodebug-[^\]]*\]/g, tag => {
 		return tag.replace("[", "<").replace("]", ">");
 	})
 	return escaped;
+}
+
+String.prototype.numberOfLines = function() {
+	return this.split("\n").length;
 }

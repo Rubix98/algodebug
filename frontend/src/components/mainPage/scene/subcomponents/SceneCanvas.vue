@@ -26,6 +26,7 @@ export default {
     this.emitter.on("startDebuggingEvent", this.prepareStage);
     this.emitter.on("currentFrameChangedEvent", this.drawFrame);
     this.emitter.on("stopDebuggingEvent", this.clearStage);
+    this.emitter.on("downloadStageEvent", this.download);
   },
 
   methods: {
@@ -80,7 +81,6 @@ export default {
       for (let object of this.objects) {
         object.updateLayer(currentFrame);
       }
-      //this.download();
     },
 
     download() {

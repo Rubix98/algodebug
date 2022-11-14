@@ -1,41 +1,42 @@
 <template>
-  <div class="dialog-content">
-    <CodeEditor id="debug-code-editor" :project="data.project" :code="data.code" :editable="false" :clickable="false"/>
-  </div>
+  <AlgoModal title="Kod debugujący">
+    <template #default>
+      <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="true"/>
+    </template>
+
+    <template #buttons>
+      <AlgoButton @click="copy()">Kopiuj</AlgoButton>
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
+import { mapGetters } from "vuex";
 
 export default {
-  components: { CodeEditor },
-  
-  props: ["data"],
-
-  data() {
-    return {
-      title: 'Kod debugujący',
-      extendedCode: ''
-    };
-  },
-
-  mounted() {
-    console.log()
-  },
+  components: { AlgoModal, CodeEditor, AlgoButton },
 
   methods: {
+    copy() {
+      navigator.clipboard.writeText(this.debugCode).then(() => alert("Skopiowano"))
+    }
+  },
 
+  computed: {
+    ...mapGetters('project', ['debugCode'])
   },
 }
 </script>
 
 <style scoped>
-  .dialog-content {
-    width: 60vw;
-    height: 500px;
-    overflow: hidden;
+  .dialog {
+    width: 80vw;
   }
 
-  
-
+  .code-editor-container {
+    height: 70vh;
+  }
 </style>

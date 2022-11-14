@@ -1,28 +1,30 @@
 <template>
-  <div class="dialog-content">
-    <AlgoPickList :options="converters" @selectOptionEvent="selectConverter" />
-  </div>
+  <AlgoModal title="Wybierz konwerter">
+    <template #default>
+      <AlgoPickList :options="converters" @selectOptionEvent="handleSelectOption" />
+    </template>
+
+    <template #buttons>
+      <AlgoButton @click="createConverter()">Utwórz nowy kowerter</AlgoButton>
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import AlgoPickList from '@/components/global/AlgoPickList.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import { popModal, pushModal } from 'jenesius-vue-modal';
+import CreateConverterModal from '@/components/modals/sceneObject/converter/CreateConverterModal.vue';
 
 export default {
-  components: {AlgoPickList},
+  components: { AlgoPickList, AlgoButton, AlgoModal },
 
-  props: ['data', 'callback'],
+  props: ['callback'],
 
   data() {
     return {
-      title: 'Wybierz operator wyjścia',
-      converters: [],
-      buttons: [
-        {class: 'ok', label: 'Utwórz nowy operator', action: () => {
-          this.$root.pushDialog('AddNewConverterModal', this.$props.data, (newConverter) => {
-            this.converters.push(newConverter);
-          });
-        }}
-      ]
+      converters: []
     }
   },
 
@@ -33,22 +35,27 @@ export default {
       });
   },
 
-  mounted() {
-    
-  },
-
   methods: {
-    selectConverter(selectedConverter) {
+    handleSelectOption(selectedConverter) {
       this.$props.callback(selectedConverter);
-      this.$root.popDialog();
+      popModal();
+    },
+
+    createConverter() {
+      pushModal(CreateConverterModal, {
+        callback: (newConverter) => {
+          this.converters.push(newConverter);
+          this.handleSelectOption(newConverter);
+        }
+      });
     }
   },
 }
 </script>
 
 <style scoped>
-  .dialog-content {
-    width: 60vw;
+  .dialog {
+    width: 80vw;
   }
 
 </style>

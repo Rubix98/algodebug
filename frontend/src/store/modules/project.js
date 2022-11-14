@@ -8,7 +8,7 @@ export default {
     code: '#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout << "Hello world" << endl;\n}',
     language: 'cpp',
     breakpoints: new Map(),
-    testData: [{input: 'a'}],
+    testData: [{input: ''}],
     sceneObjects: [],
     isRunning: false,
     selectedTestCaseId: 0,
@@ -131,9 +131,9 @@ export default {
       })
     },
 
-    saveProject({commit, state}, title) {
+    saveProject({commit, state}, {title, override}) {
       sendRequest("BACKEND/project/save", {
-        id: state.id,
+        id: override ? state.id : null,
         title: title,
         language: state.language,
         code: state.code,
@@ -142,7 +142,8 @@ export default {
         sceneObjects: state.sceneObjects
       }).then(response => {
         if (response.status === 200) {
-          commit('set', {key: 'title', value: title});
+          commit('set', {key: 'id', value: response.data.id});
+          commit('set', {key: 'title', value: response.data.title});
         }
       })
     },

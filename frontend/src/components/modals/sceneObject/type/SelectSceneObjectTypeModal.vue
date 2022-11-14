@@ -1,22 +1,24 @@
 <template>
-  <div class="dialog-content">
-    <AlgoPickList :options="options" @selectOptionEvent="addNewObject" />
-  </div>
+  <AlgoModal title="Dodaj nowy obiekt">
+    <template #default>
+      <AlgoPickList :options="types" @selectOptionEvent="handleSelectOption" />
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import AlgoPickList from '@/components/global/AlgoPickList.vue';
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import { popModal } from 'jenesius-vue-modal';
 
 export default {
-  components: {AlgoPickList},
+  components: {AlgoPickList, AlgoModal},
 
-  props: ['data', 'callback'],
+  props: ['callback'],
 
   data() {
     return {
-      title: 'Dodaj nowy obiekt',
-      buttons: [],
-      options: [
+      types: [
         {key: 'variable', label: 'Zmienna'},
         {key: 'graph', label: 'Graf'},
         {key: 'array', label: 'Tablica'},
@@ -27,42 +29,17 @@ export default {
     }
   },
 
-  mounted() {
-  },
-
   methods: {
-    addNewObject(selectedType) {
+    handleSelectOption(selectedType) {
       this.$props.callback(selectedType);
-      this.$root.popDialog();
+      popModal();
     }
   },
 }
 </script>
 
 <style scoped>
-  .dialog-content {
-    width: 70vw;
-  }
-
-  .option {
-    width: 300px;
-    height: 260px;
-    background-color: skyblue;
-    border: 1px solid black;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.5s;
-  }
-
-  .option:hover {
-    background-color: rgb(90, 180, 220);
-  }
-
-  img {
-    width: 200px;
-    height: 200px;
+  .dialog {
+    width: 40vw;
   }
 </style>

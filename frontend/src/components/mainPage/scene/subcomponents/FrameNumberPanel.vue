@@ -1,7 +1,6 @@
 <template>
-  <div class="frame-number-panel-container" v-if="currentFrame">
-    <!-- Cannot read properties of undefined reading id -->
-    {{currentFrame.id+1}}/{{numberOfFrames}}
+  <div class="frame-number-panel-container">
+    {{currentFrameId}}/{{numberOfFrames}}
   </div>
 </template>
 
@@ -11,6 +10,10 @@ import { mapGetters } from 'vuex';
 export default {
   computed: {
     ...mapGetters('project', ['currentFrame', 'numberOfFrames']),
+
+    currentFrameId() {
+      return this.numberOfFrames ? this.currentFrame.id + 1 : 0;
+    }
   }
 }
 </script>
