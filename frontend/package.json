@@ -44,7 +44,7 @@
     },
     "rules": {
         "vue/multi-word-component-names": ["error", {
-          "ignores": ["Menu", "Scene"]
+          "ignores": ["Menu", "Scene", "Codearea"]
         }]
     }
   },
