@@ -2,8 +2,7 @@
 
 For working version check `stable` branch
 
-picking variables and adding new converters not working yet  
-rest should be mostly working
+Apart from dependency bump and general error prevention (not bug fixing) in frontend most of this fork focuses on implementation of node-backend 
 
 Since there is no option to add issues on forks I created project under projects tab where I will be adding issues/feature requests
 
