@@ -1,20 +1,19 @@
 <template>
-  <div class="dialog-content">
-    <AlgoPickList :options="projects" @selectOptionEvent="loadProject" />
-  </div>
+  <AlgoModal title="Wczytaj projekt">
+    <template #default>
+      <AlgoPickList :options="projects" @selectOptionEvent="loadProject" />
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import AlgoPickList from '@/components/global/AlgoPickList.vue';
+import AlgoModal from "@/components/global/AlgoModal.vue";
 
 export default {
-  components: {AlgoPickList},
-
-  props: ['data', 'callback'],
-
+  components: {AlgoPickList, AlgoModal},
   data() {
     return {
-      title: 'Wczytaj projekt',
       projects: []
     }
   },
@@ -35,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-  .dialog-content {
+  .dialog {
     width: 60vw;
   }
 

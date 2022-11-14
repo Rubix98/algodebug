@@ -9,7 +9,7 @@
       </thead>
       <tbody>
 
-        <tr v-for="(row, index) in data" :key="index">
+        <tr v-for="(row, index) in model" :key="index">
           <td style="text-align: center">
             <AlgoIcon type="x" @click="removeRow(index)" />
           </td>
@@ -31,7 +31,7 @@
           </td>
         </tr>
 
-        <tr v-if="!data || data.length === 0">
+        <tr v-if="!model || model.length === 0">
           <td colspan="999" class="no-data-row">Brak danych</td>
         </tr>
       </tbody>
@@ -42,73 +42,80 @@
 <script>
 import AlgoLink from './AlgoLink.vue';
 import AlgoIcon from './AlgoIcon.vue';
+import {pushModal} from "jenesius-vue-modal";
+import PickVariableModal from '@/components/modals/code/PickVariableModal.vue';
+import SelectPropertyTypeModal from '@/components/modals/sceneObject/type/SelectPropertyTypeModal.vue';
+import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
+
 export default {
-    props: ["value", "type", "label", "headers", "emptyRow", "codeData"],
-    components: {AlgoLink, AlgoIcon },
+  props: ["sceneObject", "label", "headers", "emptyRow"],
+  components: {AlgoLink, AlgoIcon },
 
-    data() {
-      return {
-        data: ''
-      }
+  data() {
+    return {
+      model: ''
+    }
+  },
+
+  mounted() {
+    this.model = this.$props.sceneObject.subobjects;
+    
+  },
+
+  methods: {
+    addRow() {
+      this.model.push({...this.$props.emptyRow});
     },
 
-    mounted() {
-      this.data = this.$props.value;
+    removeRow(index) {
+      this.model.splice(index, 1);
     },
 
-    methods: {
-      addRow() {
-        this.data.push({...this.$props.emptyRow});
-      },
+    selectType(row) {
+      pushModal(SelectPropertyTypeModal, {
+        sceneObjectType: this.$props.sceneObject.type,
+        callback: (selectedType) => {
+          row.type = selectedType
+        }
+      });
+    },
 
-      removeRow(index) {
-        this.data.splice(index, 1);
-      },
-
-      selectType(row) {
-        this.$root.pushDialog("SelectSubobjectTypeModal", {type: this.$props.type}, (selectedType) => {
-          row.type = selectedType;
-        });
-      },
-
-      selectVariable(row) {
-        this.$root.pushDialog("PickVariableModal", this.$props.codeData, (selectedVariable) => {
+    selectVariable(row) {
+      pushModal(PickVariableModal, {
+        callback: (selectedVariable) => {
           row.variable = selectedVariable;
-        });
-      },
+        }
+      });
+    },
 
-      selectConverter(row) {
-        this.$root.pushDialog("SelectConverterModal", {...this.$props.codeData, type: row.type}, (selectedConverter) => {
+    selectConverter(row) {
+      pushModal(SelectConverterModal, {
+        callback: (selectedConverter) => {
           row.converter = selectedConverter;
-        });
+        }
+      })
+    }
+  },
+
+  computed: {
+    typeLabel() {
+      return (row) => {
+        return row.type ? row.type.label : null;
       }
     },
 
-    computed: {
-      typeLabel() {
-        return (row) => {
-          return row.type ? row.type.label : null;
-        }
-      },
-
-      variableName() {
-        return (row) => {
-          return row.variable ? row.variable.name : null;
-        }
-      },
-
-      converterTitle() {
-        return (row) => {
-          return row.converter ? row.converter.title : null;
-        }
+    variableName() {
+      return (row) => {
+        return row.variable ? row.variable.name : null;
       }
     },
 
-    watch: {
-      data() {
-        this.$emit('update:value', this.data);
+    converterTitle() {
+      return (row) => {
+        return row.converter ? row.converter.title : null;
       }
     }
+  },
 }
 </script>
 

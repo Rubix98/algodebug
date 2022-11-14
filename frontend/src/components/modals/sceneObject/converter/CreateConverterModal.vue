@@ -1,65 +1,68 @@
 <template>
-  <div class="dialog-content">
-    <AlgoFieldRow label="Nazwa">
-      <AlgoInput v-model:value="converter.title"/>
-    </AlgoFieldRow>
+  <AlgoModal title="Utwórz nowy konwerter">
+    <template #default>
+      <AlgoFieldRow label="Nazwa">
+        <AlgoInput 
+          v-model:value="converter.title"
+          placeholder="Nazwa"/>
+      </AlgoFieldRow>
 
-    <AlgoFieldRow label="Rodzaj zmiennej">
-      {{converter.type}}
-    </AlgoFieldRow>
+      <AlgoFieldRow label="Kod">
+        <AlgoTextarea 
+          v-model:value="converter.code"
+          placeholder="Kod"/>
+      </AlgoFieldRow>
+    </template>
 
-    <AlgoFieldRow label="Język programowania">
-      {{converter.language}}
-    </AlgoFieldRow>
-
-    <AlgoFieldRow label="Kod">
-      <AlgoTextarea v-model:value="converter.code"/>
-    </AlgoFieldRow>
-  </div>
+    <template #buttons>
+      <AlgoButton @click="addConverter()">Ustaw</AlgoButton>
+      <AlgoButton @click="saveConverter()">Zapisz i ustaw</AlgoButton>
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import AlgoFieldRow from '@/components/global/AlgoFieldRow.vue';
 import AlgoInput from '@/components/global/AlgoInput.vue';
 import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
+import AlgoButton from '@/components/global/AlgoButton.vue';
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import { popModal } from 'jenesius-vue-modal';
 
 export default {
-  components: {AlgoFieldRow, AlgoInput, AlgoTextarea},
+  components: {AlgoModal, AlgoFieldRow, AlgoInput, AlgoButton, AlgoTextarea},
 
-  props: ['data', 'callback'],
+  props: ['callback'],
 
   data() {
     return {
-      title: 'Utwórz nowy operator wyjścia',
-      buttons: [
-        {class: 'ok', label: 'Zapisz', action: async () => {
-          let response = await this.$root.sendRequest('BACKEND/converter/save', this.converter);
-          this.converter = response.data;
-          this.$props.callback(this.converter);
-          this.$root.popDialog();
-        }}
-      ],
       converter: {
         title: '',
-        type: '',
-        language: '',
-        code: ''
+        code: 'ostream& operator <<(ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}'
       }
     }
   },
 
-  mounted() {
-    this.converter.type = this.$props.data.type.key;
-    this.converter.language = this.$props.data.language;
-  },
-
   methods: {
+    addConverter() {
+      popModal()
+        .then(() => {
+          this.$props.callback(this.converter);
+        });
+    },
+
+    saveConverter() {
+      this.$root.sendRequest('BACKEND/converter/save', this.converter)
+        .then(() => {
+          this.addConverter()
+        });
+    }
   },
 }
 </script>
 
 <style scoped>
-  .dialog-content {
+  .dialog {
     width: 60vw;
   }
 

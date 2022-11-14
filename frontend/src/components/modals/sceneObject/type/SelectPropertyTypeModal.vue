@@ -1,55 +1,54 @@
 <template>
-  <div class="dialog-content">
-    <AlgoPickList :options="types[data.type.key]" @selectOptionEvent="selectOption" />
-  </div>
+  <AlgoModal title="Wybierz typ obiektu wewnętrznego">
+    <template #default>
+      <AlgoPickList :options="types[sceneObjectType.key]" @selectOptionEvent="handleSelectOption" />
+    </template>
+  </AlgoModal>
 </template>
 
 <script>
 import AlgoPickList from '@/components/global/AlgoPickList.vue';
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import {popModal} from "jenesius-vue-modal";
 
 export default {
-  components: {AlgoPickList},
+  components: {AlgoPickList, AlgoModal},
 
-  props: ['data', 'callback'],
+  props: ['sceneObjectType', 'callback'],
 
   data() {
     return {
-      title: 'Wybierz typ obiektu wewnętrznego',
-      buttons: [],
       types: {
         graph: [
           {label: 'Wyróżnienie krawędzi', key: 'graph_edges'},
-          {label: 'Wyróżnienie wierzchołka/wierzchołków', key: 'graph_vertices'},
+          {label: 'Wyróżnienie wierzchołków', key: 'graph_vertices'},
           {label: 'Ścieżka', key: 'graph_path'},
         ],
         points: [
-          {label: 'Wyróżnienie punktu/punktów', key: 'points_point'},
-          {label: 'Odcinek/Odcinki', key: 'points_stretch'},
+          {label: 'Wyróżnienie punktów', key: 'points_point'},
+          {label: 'Odcinki', key: 'points_stretch'},
           {label: 'Łamana', key: 'points_path'},
         ],
         array: [
-          {label: 'Wyróżnienie elementu/elementów', key: 'array_index'},
+          {label: 'Wyróżnienie komórek', key: 'array_index'},
           {label: 'Przedział', key: 'array_part'},
         ]
       }
     }
   },
 
-  mounted() {
-  },
-
   methods: {
-    selectOption(selectedOption) {
+    handleSelectOption(selectedOption) {
       this.$props.callback(selectedOption);
-      this.$root.popDialog();
+      popModal();
     }
   },
 }
 </script>
 
 <style scoped>
-  .dialog-content {
-    width: 60vw;
+  .dialog {
+    width: 40vw;
   }
 
 </style>
