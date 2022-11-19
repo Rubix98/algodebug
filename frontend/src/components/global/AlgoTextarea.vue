@@ -1,29 +1,44 @@
 <template>
-  <textarea :class="size" 
+  <textarea
     v-model="model" 
     :readonly="readonly"
-    @input="$emit('update:value', $event.target.value)" />
+    @keydown.tab.prevent="insertTabIndent"></textarea>
 </template>
 
 <script>
+
 export default {
-  props: ['value', 'size', 'readonly'],
+  props: ['value', 'readonly'],
+
+  methods: {
+    insertTabIndent(event) {
+      if (this.readonly) return;
+
+      let startText = this.model.slice(0, event.target.selectionStart);
+      let endText = this.model.slice(event.target.selectionStart);
+      this.model = `${startText}    ${endText}`;
+      
+      let selectionStart = event.target.selectionStart;
+      this.$nextTick(() => {
+        event.target.selectionStart = event.target.selectionEnd = selectionStart + 4;
+      });
+      
+    }
+  },
 
   computed: {
     model: {
-      get() {
-        return this.$props.value;
-      },
-      set() {}
+      get() {return this.$props.value;},
+      set(value) {this.$emit('update:value', value)}
     }
-  }
+  },
+  
 }
 </script>
 
 <style scoped>
   textarea {
     width: 100%;
-    height: 250px;
     resize: none;
     border-radius: 0 0 10px 10px;
     font-size: 16px;

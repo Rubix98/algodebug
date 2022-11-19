@@ -7,20 +7,23 @@
       @scroll="emitScrollEvent" 
       @click="handleVariableClick"></pre>
 
-    <textarea 
-      class="codearea full-size" 
+    <AlgoTextarea 
+      class="codearea full-size"
       v-show="editable" 
-      v-model="modelCode" 
+      v-model:value="modelCode" 
       @scroll="emitScrollEvent"
-      spellcheck="false"></textarea>
+      spellcheck="false" />
   </div>
 </template>
 
 <script>
+import AlgoTextarea from '../../../global/AlgoTextarea.vue';
 import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
+  components: {AlgoTextarea},
+
   props: ["id", "code", "editable"],
 
   methods: {
@@ -98,7 +101,6 @@ export default {
 
   .codearea {
     background-color: transparent;
-    resize: none;
   }
 
   .highlights {
