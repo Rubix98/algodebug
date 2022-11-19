@@ -3,7 +3,8 @@ import { Static, Record, String, Unknown, Optional, Null } from 'runtypes';
 
 import { ObjectId } from "mongodb";
 
-const isId = (x: any): x is ObjectId => typeof x === 'string' || typeof x === 'number';
+const isId = (x: any): x is ObjectId => 
+{ if (!x) return false; try { new ObjectId(x); return true } catch (e) { return false } };
 
 export const Converter = Record({
     title: String.withConstraint((s) => s.length > 0),

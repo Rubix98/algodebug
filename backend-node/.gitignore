@@ -1,4 +1,7 @@
 node_modules
 package-lock.json
-dist
 .env
+# Compiled files
+dist
+# Jest
+coverage

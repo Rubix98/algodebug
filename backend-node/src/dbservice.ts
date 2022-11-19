@@ -21,13 +21,14 @@ export const InitializeConnection = async () => {
     }
 }
 
-type validConverterOrError = [ true, Converter ] | [false, unknown ];
-type validProjectOrError = [ true, Project ] | [false, unknown ];
+type validConverterOrError = [ true, Converter ] | [ false, unknown ];
+type validProjectOrError = [ true, Project ] | [ false, unknown ];
+
+// these functions will check if the request body has all the required properties
+// and silently remove any additional properties not defined in the Project/Converter models
 
 export const validateConverter = (req: unknown): validConverterOrError => {
     try {
-        // checks if the request body has all the required fields
-        // and silently removes any additional properties not defined in the Converter type 
         const converter = sanitizeConverter(Converter.check(req));
         if (!converter) throw new Error('Converter cannot be null');
         return [true, converter];
@@ -39,8 +40,6 @@ export const validateConverter = (req: unknown): validConverterOrError => {
 
 export const validateProject = (req: unknown) : validProjectOrError => {
     try {
-        // checks if the request body has all the required fields
-        // and silently removes any additional properties not defined in the Project type 
         return [true, sanitizeProject(Project.check(req))];
     }
     catch (error) {

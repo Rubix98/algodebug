@@ -47,7 +47,7 @@
         "end": 599,
         "name": "s",
         "type": null,
-        "constructor": null
+        "converter": null
       },
       "converter": null,
       "color": null,
@@ -65,7 +65,7 @@
         "end": 637,
         "name": "length",
         "type": null,
-        "constructor": null
+        "converter": null
       },
       "converter": null,
       "color": null,
@@ -83,7 +83,7 @@
         "end": 745,
         "name": "order",
         "type": null,
-        "constructor": null
+        "converter": null
       },
       "converter": null,
       "color": null,
@@ -100,30 +100,5 @@
     "$date": {
       "$numberLong": "1666993869059"
     }
-  },
-  "dialogData": {
-    "label": "DNA II",
-    "properties": [
-      {
-        "label": "Tytuł",
-        "value": "DNA II",
-        "fieldType": null
-      },
-      {
-        "label": "Język programowania",
-        "value": "cpp",
-        "fieldType": null
-      },
-      {
-        "label": "Autor",
-        "value": "AlgoDebug",
-        "fieldType": null
-      },
-      {
-        "label": "Data modyfikacji",
-        "value": "2022-10-22 15:38",
-        "fieldType": null
-      }
-    ]
   }
 }]

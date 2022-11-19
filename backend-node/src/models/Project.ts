@@ -6,7 +6,12 @@ import { Static, Record, String, Array, Null, Unknown, Optional, InstanceOf } fr
 
 import { ObjectId } from 'mongodb';
 
-const isId = (x: any): x is ObjectId => typeof x === 'string' || typeof x === 'number';
+const dateError = 'Date cannot be passed in request. It is set automatically.';
+
+const isId = (x: any): x is ObjectId => 
+{ if (!x) return false; try { new ObjectId(x); return true } catch (e) { return false } };
+
+const isValidDate = (x: any): x is Date => (x instanceof Date && !isNaN(x.getTime()));
 
 export const Project = Record({
     // project description
@@ -21,9 +26,9 @@ export const Project = Record({
     sceneObjects: Array(SceneObject),
 
      // project metadata
-    author: String,
-    creationDate: InstanceOf(Date).Or(String),
-    modificationDate: InstanceOf(Date).Or(String),
+    author: String.withConstraint((s) => s.length > 0),
+    creationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
+    modificationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
 
     _id: Optional(Unknown.withGuard(isId))
 });
@@ -40,8 +45,8 @@ export const sanitizeProject = (p: Project) => {
         testCases: p.testCases.map(sanitizeTestCase),
         sceneObjects: p.sceneObjects.map(sanitizeSceneObject),
         author: p.author,
-        creationDate: new Date(p.creationDate),
-        modificationDate: new Date(p.modificationDate),
+        creationDate: p.creationDate ? p.creationDate : new Date(),
+        modificationDate: p.modificationDate ? p.modificationDate : new Date(),
         _id: p._id ? new ObjectId(p._id) : undefined
     } as Project;
 }

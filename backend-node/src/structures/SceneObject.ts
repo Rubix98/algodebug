@@ -3,6 +3,7 @@ import { Mark, sanitizeMark } from "./Mark";
 import { ObjectType, sanitizeObjectType } from "./ObjectType";
 import { Record, String, Array, Number, Lazy, Runtype, Null } from 'runtypes';
 
+// Lazy because subobject is recursive
 export const SceneObject: Runtype<SceneObject> = Lazy(() => Record({
     id: Number.Or(Null),
     type: ObjectType,
@@ -12,6 +13,7 @@ export const SceneObject: Runtype<SceneObject> = Lazy(() => Record({
     subobjects: Array(SceneObject)
 }));
 
+// for same reason as above type is created manually instead of using Static
 export type SceneObject = { id: number | null, type: ObjectType, variable: Mark, converter: Converter | null, color: string | null, subobjects: SceneObject[] }
 
 export const sanitizeSceneObject = (s: SceneObject): SceneObject => {

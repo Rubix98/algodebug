@@ -2,7 +2,7 @@
 
 For working version check `stable` branch
 
-Apart from dependency bump and general error prevention (not bug fixing) in frontend most of this fork focuses on implementation of node-backend 
+Apart from dependency bump and general error prevention (not bug fixing) in frontend most of this fork focuses on implementation of backend-node
 
 Since there is no option to add issues on forks I created project under projects tab where I will be adding issues/feature requests
 
