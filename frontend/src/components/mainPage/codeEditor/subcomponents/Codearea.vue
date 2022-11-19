@@ -125,7 +125,7 @@ export default {
   }
 
   algodebug-highlight-line {
-    background-color: orange;
+    background-color: #006600;
     width: 100%;
     display: inline-block;
   }

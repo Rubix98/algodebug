@@ -55,20 +55,32 @@ export default {
       return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
     },
 
-    currentTestCase(state) {
-      return state.testData[state.selectedTestCaseId];
+    sceneObjects(state) {
+      return state.sceneObjects.map((element, index) => ({...element, index}));
+    },
+
+    testData(state) {
+      return state.testData.map((element, index) => ({...element, index}));
+    },
+
+    numberOfTestCases(_, getters) {
+      return getters.testData.length;
+    },
+
+    currentTestCase(state, getters) {
+      return getters.testData[state.selectedTestCaseId];
+    },
+
+    currentFrames(_, getters) {
+      return getters.currentTestCase.frames.map((element, index) => ({...element, index}));
     },
   
     currentFrame(state, getters) {
-      return getters.currentTestCase.frames[state.selectedFrameId];
+      return getters.currentFrames[state.selectedFrameId];
     },
 
-    numberOfTestCases(state) {
-      return state.testData.length;
-    },
-
-    numberOfFrames(state, getters) {
-      return getters.currentTestCase.frames.length;
+    numberOfFrames(_, getters) {
+      return getters.currentFrames.length;
     }
 
   },
@@ -122,6 +134,10 @@ export default {
         };
       }
     },
+
+    updateSceneObjectPosition(state, {sceneObject, position}) {
+      state.sceneObjects[sceneObject.id].position = position;
+    }
   },
 
   actions: {
@@ -129,10 +145,11 @@ export default {
     setCode: ({commit}, newValue) => commit('set', {key: 'code', value: newValue}), 
     addTestCase: ({commit}) => commit('addTestCase'), 
     deleteTestCase: ({commit}, index) => commit('deleteTestCase', index), 
-    changeCurrentTestCase: ({commit}, x) => commit('changeCurrentTestCase', x), 
+    changeCurrentTestCase: ({commit}, index) => commit('changeCurrentTestCase', index), 
     changeCurrentFrame: ({commit}, index) => commit('changeCurrentFrame', index),
     updateCurrentTestCaseInput: ({commit}, newValue) => {commit('updateCurrentTestCaseInput', newValue)}, 
     deleteSceneObject: ({commit}, index) => commit('deleteSceneObject', index),
+    updateSceneObjectPosition: ({commit}, payload) => commit('updateSceneObjectPosition', payload),
 
     loadProject({commit}, projectId) {
       sendRequest('BACKEND/project/find/' + projectId).then(response => {

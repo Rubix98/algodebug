@@ -45,13 +45,14 @@ export default {
     runProgram() {
       console.log("compiling")
       this.compile().then(() => {
-        console.log(this.project)
+        this.emitter.emit('startDebuggingEvent');
       });
     },
 
     stopProgram() {
       this.setIsRunning(false);
       this.changeCurrentFrame(0);
+      this.emitter.emit('stopDebuggingEvent');
     },
   },
 

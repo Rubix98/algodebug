@@ -4,6 +4,7 @@ import algoview.models.Converter;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -15,4 +16,5 @@ public class SceneObject {
     Converter converter;
     String color;
     List<SceneObject> subobjects;
+    HashMap<String, PointPojo> position;
 }

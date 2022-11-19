@@ -40,7 +40,7 @@ public class CompilatorUtils {
         Document breakpointDoc = Jsoup.parse(breakpointText);
         int line = Integer.parseInt(breakpointDoc.select("algodebug-breakpoint").get(0).attr("line"));
         Map<String, String> variables = breakpointDoc.select("algodebug-variable").stream()
-                .map(variable -> new AbstractMap.SimpleEntry<>(variable.attr("name"), variable.text()))
+                .map(variable -> new AbstractMap.SimpleEntry<>(variable.attr("name"), variable.wholeOwnText()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (prev, next) -> next, HashMap::new));
         return new FramePojo(line, variables);
     }
