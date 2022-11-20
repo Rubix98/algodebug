@@ -97,6 +97,7 @@ export default {
     white-space: pre;
     color: white;
     font: inherit;
+    tab-size: 4;
   }
 
   .codearea {

@@ -16,11 +16,11 @@ export default {
 
       let startText = this.model.slice(0, event.target.selectionStart);
       let endText = this.model.slice(event.target.selectionStart);
-      this.model = `${startText}    ${endText}`;
+      this.model = `${startText}\t${endText}`;
       
       let selectionStart = event.target.selectionStart;
       this.$nextTick(() => {
-        event.target.selectionStart = event.target.selectionEnd = selectionStart + 4;
+        event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
       });
       
     }
