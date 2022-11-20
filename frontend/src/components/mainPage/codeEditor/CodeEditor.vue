@@ -11,7 +11,8 @@
     <Codearea 
       :id="id" 
       :code="code" 
-      :editable="editable" 
+      :editable="editable"
+      :clickable="clickable"
       @scrollEvent="handleScroll" 
       @pickVariableEvent="handlePickVariable"
     />
@@ -24,7 +25,7 @@ import Codearea from '@/components/mainPage/codeEditor/subcomponents/Codearea.vu
 
 export default {
   components: { CodeLineNumbers, Codearea },
-  props: ["id", "code", "editable"],
+  props: ["id", "code", "editable", "clickable"],
 
   methods: {
     handleScroll(target) {

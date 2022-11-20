@@ -136,7 +136,15 @@ export default {
     },
 
     updateSceneObjectPosition(state, {sceneObject, position}) {
-      state.sceneObjects[sceneObject.id].position = position;
+      state.sceneObjects[sceneObject.index].position = position;
+    },
+
+    updateSceneObject(state, sceneObject) {
+      state.sceneObjects[sceneObject.index] = sceneObject;
+    },
+
+    addNewSceneObject(state, sceneObject) {
+      state.sceneObjects.push(sceneObject)
     }
   },
 
@@ -150,6 +158,10 @@ export default {
     updateCurrentTestCaseInput: ({commit}, newValue) => {commit('updateCurrentTestCaseInput', newValue)}, 
     deleteSceneObject: ({commit}, index) => commit('deleteSceneObject', index),
     updateSceneObjectPosition: ({commit}, payload) => commit('updateSceneObjectPosition', payload),
+
+    saveSceneObject({commit}, sceneObject) {
+      commit(sceneObject.index != null ? 'updateSceneObject' : 'addNewSceneObject', sceneObject);
+    },
 
     loadProject({commit}, projectId) {
       sendRequest('BACKEND/project/find/' + projectId).then(response => {
@@ -175,14 +187,17 @@ export default {
 
     compile({commit, state, getters}) {
       const inputs = state.testData.map(testCase => testCase.input)
+      console.log("compiling");
       return sendRequest('BACKEND/compilator/compile', {
         code:     getters.debugCode,
         language: "cpp",
         inputs:    inputs
       }).then(response => {
-        if (response.status !== 200 || !response.data.success) return;
+        console.log(response);
+        if (response.status !== 200 || !response.data.success) return false;
         commit('addOutputs', response.data.details);
-        commit('set', {key: 'isRunning', value: true})
+        commit('set', {key: 'isRunning', value: true});
+        return true;
       });
     }
   }

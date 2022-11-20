@@ -24,13 +24,14 @@ import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: {AlgoTextarea},
 
-  props: ["id", "code", "editable"],
+  props: ["id", "code", "editable", "clickable"],
 
   methods: {
     ...mapActions('project', ['setCode']),
 
     handleVariableClick(event) {
-      if (!this.$props.clickable || event.target.localName !== 'algo-target') return;
+      if (!this.$props.clickable || event.target.localName !== 'algodebug-highlight-target') return;
+      
       const variable = {
         name: event.target.innerText,
         start: event.target.attributes.start.value,

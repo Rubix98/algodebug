@@ -23,7 +23,7 @@
     </template>
 
     <template #buttons>
-      <AlgoButton @click="save()">Zapisz</AlgoButton>
+      <AlgoButton @click="save">Zapisz</AlgoButton>
     </template>
   </AlgoModal>
 </template>
@@ -34,8 +34,8 @@ import AlgoButton from '@/components/global/AlgoButton.vue';
 import AlgoFieldRow from '@/components/global/AlgoFieldRow.vue';
 import AlgoTable from '@/components/global/AlgoTable.vue';
 import AlgoModal from '@/components/global/AlgoModal.vue';
-import { mapState } from 'vuex';
-import {pushModal} from "jenesius-vue-modal";
+import { mapActions, mapState } from 'vuex';
+import {closeModal, pushModal} from "jenesius-vue-modal";
 import PickVariableModal from '@/components/modals/code/PickVariableModal.vue';
 import SelectSceneObjectTypeModal from '@/components/modals/sceneObject/type/SelectSceneObjectTypeModal.vue';
 import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
@@ -62,8 +62,11 @@ export default {
   },
 
   methods: {
-    save() {
+    ...mapActions('project', ['saveSceneObject']), 
 
+    save() {
+      this.saveSceneObject(this.model);
+      closeModal();
     },
 
     selectType() {
@@ -96,8 +99,12 @@ export default {
   computed: {
     ...mapState(["project"]),
 
+    isNewSceneObject() {
+      return this.model.index == null;
+    },
+
     modalTitle() {
-      return this.$props.sceneObject ? "Konfiguruj obiekt" : "Dodaj nowy obiekt";
+      return this.isNewSceneObject ? "Dodaj nowy obiekt" : "Konfiguruj obiekt";
     },
 
     typeLabel() {
