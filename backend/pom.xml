@@ -8,11 +8,11 @@
 		<version>2.6.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>algoview</groupId>
-	<artifactId>algoview</artifactId>
+	<groupId>algodebug</groupId>
+	<artifactId>algodebug</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Algoview</name>
-	<description>AlgoView backend server</description>
+	<name>AlgoDebug</name>
+	<description>AlgoDebug backend server</description>
 	<properties>
 		<java.version>8</java.version>
 		<maven.compiler.source>1.8</maven.compiler.source>

@@ -1,47 +1,45 @@
 <template>
   <AlgoModal :title="modalTitle">
-    <template #default>
-      <AlgoFieldRow label="Rodzaj obiektu">
-        <AlgoLink :value="typeLabel" @click="selectType()" />
-      </AlgoFieldRow>
+    <AlgoFieldRow label="Rodzaj obiektu">
+      <AlgoLink :value="typeLabel" @click="selectType()" />
+    </AlgoFieldRow>
 
-      <AlgoFieldRow label="Przypisana zmienna">
-        <AlgoLink :value="variableName" @click="selectVariable()" />
-      </AlgoFieldRow>
+    <AlgoFieldRow label="Przypisana zmienna">
+      <AlgoLink :value="variableName" @click="selectVariable()" />
+    </AlgoFieldRow>
 
-      <AlgoFieldRow label="Konwerter">
-        <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" />
-      </AlgoFieldRow><br />
+    <AlgoFieldRow label="Konwerter">
+      <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" />
+    </AlgoFieldRow><br />
 
-      <AlgoTable 
-        v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
-        :sceneObject="model"
-        label="Właściwości"
-        :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-        :emptyRow="{name: '', type: null, variable: null, converter: null}"
-      ></AlgoTable>
-    </template>
+    <AlgoTable 
+      v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
+      :sceneObject="model"
+      label="Właściwości"
+      :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
+      :emptyRow="{name: '', type: null, variable: null, converter: null}"
+    ></AlgoTable>
 
     <template #buttons>
-      <AlgoButton @click="save">Zapisz</AlgoButton>
+      <AlgoButton class="ok" @click="save">Zapisz</AlgoButton>
     </template>
   </AlgoModal>
 </template>
 
 <script>
+import AlgoModal from '@/components/global/AlgoModal.vue';
+import AlgoTable from '@/components/global/AlgoTable.vue';
 import AlgoLink from '@/components/global/AlgoLink.vue';
 import AlgoButton from '@/components/global/AlgoButton.vue';
 import AlgoFieldRow from '@/components/global/AlgoFieldRow.vue';
-import AlgoTable from '@/components/global/AlgoTable.vue';
-import AlgoModal from '@/components/global/AlgoModal.vue';
-import { mapActions, mapState } from 'vuex';
-import {closeModal, pushModal} from "jenesius-vue-modal";
 import PickVariableModal from '@/components/modals/code/PickVariableModal.vue';
-import SelectSceneObjectTypeModal from '@/components/modals/sceneObject/type/SelectSceneObjectTypeModal.vue';
-import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
+import SelectSceneObjectTypeModal from '@/components/modals/type/SelectSceneObjectTypeModal.vue';
+import SelectConverterModal from '@/components/modals/converter/SelectConverterModal.vue';
+import { mapActions, mapState } from 'vuex';
+import { closeModal, pushModal } from "jenesius-vue-modal";
 
 export default {
-  components: { AlgoLink, AlgoFieldRow, AlgoButton, AlgoTable, AlgoModal },
+  components: { AlgoModal, AlgoTable, AlgoLink, AlgoFieldRow, AlgoButton },
   props: ["sceneObject"],
   
   data() {

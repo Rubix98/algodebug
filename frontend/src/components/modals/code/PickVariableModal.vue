@@ -1,21 +1,19 @@
 <template>
   <AlgoModal title="Zaznacz zmienną">
-    <template #default>
-      <CodeEditor 
-        id="pick-variable-editor"
-        :code="project.code"
-        :editable="false"
-        :clickable="true"
-        @pickVariableEvent="handlePickVariable"/>
-    </template>
+    <CodeEditor 
+      id="pick-variable-editor"
+      :code="project.code"
+      :editable="false"
+      :clickable="true"
+      @pickVariableEvent="handlePickVariable"/>
   </AlgoModal>
 </template>
 
 <script>
 import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
 import AlgoModal from "@/components/global/AlgoModal.vue";
-import { popModal } from "jenesius-vue-modal";
 import { mapState } from "vuex";
+import { popModal } from "jenesius-vue-modal";
 
 export default {
   components: { CodeEditor, AlgoModal },

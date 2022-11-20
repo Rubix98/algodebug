@@ -1,24 +1,18 @@
 <template>
-  <button :class="buttonClass">
+  <button :class="bindClass">
     {{label}}
     <slot></slot>
   </button>
 </template>
 
 <script>
-
-
 export default {
   props: ['type'],
 
-  data() {
-    return {
-      buttonClass: ''
+  computed: {
+    bindClass() {
+      return this.type ?? 'default';
     }
-  },
-
-  mounted() {
-    this.buttonClass = this.$props.type || 'default';
   }
 }
 </script>
@@ -53,6 +47,4 @@ export default {
   .cancel:hover {
     background-color: red;
   }
-
-
 </style>

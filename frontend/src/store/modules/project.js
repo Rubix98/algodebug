@@ -164,13 +164,14 @@ export default {
     },
 
     loadProject({commit}, projectId) {
-      sendRequest('BACKEND/project/find/' + projectId).then(response => {
-        commit('setProject', response.data)
-      })
+      sendRequest('/project/find/' + projectId, null, 'GET')
+        .then((responseData) => {
+          commit('setProject', responseData)
+        })
     },
 
     saveProject({commit, state}, {title, override}) {
-      sendRequest("BACKEND/project/save", {
+      sendRequest("/project/save", {
         id: override ? state.id : null,
         title: title,
         language: state.language,
@@ -178,27 +179,26 @@ export default {
         breakpoints: state.breakpoints.toArray(), // TODO: save as map
         testCases: state.testData,
         sceneObjects: state.sceneObjects
-      }).then(response => {
-        if (response.status !== 200) return;
-        commit('set', {key: 'id', value: response.data.id});
-        commit('set', {key: 'title', value: response.data.title});
-      })
+      }, 'PUT')
+        .then((responseData) => {
+          commit('set', {key: 'id', value: responseData.id});
+          commit('set', {key: 'title', value: responseData.title});
+        })
     },
 
     compile({commit, state, getters}) {
       const inputs = state.testData.map(testCase => testCase.input)
-      console.log("compiling");
-      return sendRequest('BACKEND/compilator/compile', {
+      return sendRequest('/compilator/compile', {
         code:     getters.debugCode,
         language: "cpp",
         inputs:    inputs
-      }).then(response => {
-        console.log(response);
-        if (response.status !== 200 || !response.data.success) return false;
-        commit('addOutputs', response.data.details);
-        commit('set', {key: 'isRunning', value: true});
-        return true;
-      });
+      }, 'POST')
+        .then((responseData) => {
+          if (!responseData.success) return false;
+          commit('addOutputs', responseData.details);
+          commit('set', {key: 'isRunning', value: true});
+          return true;
+        });
     }
   }
 }

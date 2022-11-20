@@ -51,6 +51,6 @@ export default {
   }
 
   .small {
-    height: 100px;
+    height: 150px;
   }
 </style>

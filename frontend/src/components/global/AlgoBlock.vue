@@ -27,7 +27,7 @@ export default {
     padding: 0;
   }
 
-  .algo-block .header{
+  .header{
     background: linear-gradient(#427AA1, #05668D);
     height: 24px;
     padding: 2px 15px;
@@ -37,7 +37,7 @@ export default {
     font-family: Consolas;
   }
 
-  .algo-block .content {
+  .content {
     height: calc(100% - 24px);
   }
 </style>

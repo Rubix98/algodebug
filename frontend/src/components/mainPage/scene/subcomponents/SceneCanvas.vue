@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { Stage } from '@/javascript/utils/Stage.js';
+import { Stage } from '@/javascript/stage/Stage';
 import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {

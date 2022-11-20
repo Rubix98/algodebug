@@ -40,12 +40,12 @@
 </template>
 
 <script>
-import AlgoLink from './AlgoLink.vue';
-import AlgoIcon from './AlgoIcon.vue';
-import {pushModal} from "jenesius-vue-modal";
+import AlgoLink from '@/components/global/AlgoLink.vue';
+import AlgoIcon from '@/components/global/AlgoIcon.vue';
 import PickVariableModal from '@/components/modals/code/PickVariableModal.vue';
-import SelectPropertyTypeModal from '@/components/modals/sceneObject/type/SelectPropertyTypeModal.vue';
-import SelectConverterModal from '@/components/modals/sceneObject/converter/SelectConverterModal.vue';
+import SelectPropertyTypeModal from '@/components/modals/type/SelectPropertyTypeModal.vue';
+import SelectConverterModal from '@/components/modals/converter/SelectConverterModal.vue';
+import { pushModal } from "jenesius-vue-modal";
 
 export default {
   props: ["sceneObject", "label", "headers", "emptyRow"],
@@ -58,13 +58,13 @@ export default {
   },
 
   mounted() {
-    this.model = this.$props.sceneObject.subobjects;
+    this.model = this.sceneObject.subobjects;
     
   },
 
   methods: {
     addRow() {
-      this.model.push({...this.$props.emptyRow});
+      this.model.push({...this.emptyRow});
     },
 
     removeRow(index) {

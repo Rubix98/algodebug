@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import { openModal } from "jenesius-vue-modal";
-import { mapState, mapActions, mapGetters } from "vuex";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+import { mapState, mapActions, mapGetters } from "vuex";
+import { openModal } from "jenesius-vue-modal";
 
 export default {
   props: [],
@@ -27,10 +27,6 @@ export default {
     return {
       languages:  [
         {key: "cpp", label: "C++"},
-        {key: "c", label: "C", disabled: true},
-        {key: "java", label: "Java", disabled: true},
-        {key: "csharp", label: "C#", disabled: true},
-        {key: "python", label: "Python", disabled: true},
       ]
     }
   },
@@ -43,8 +39,11 @@ export default {
     },
 
     runProgram() {
-      console.log("compiling")
-      this.compile().then(() => {
+      this.compile().then((success) => {
+        if (!success) {
+          alert("Błąd kompilacji!");
+          return;
+        }
         this.emitter.emit('startDebuggingEvent');
       });
     },

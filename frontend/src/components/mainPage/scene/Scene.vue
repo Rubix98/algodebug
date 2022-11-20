@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import SceneCanvas from './subcomponents/SceneCanvas.vue';
-import CenterPanel from './subcomponents/CenterPanel.vue';
-import SceneObjectsPanel from './subcomponents/SceneObjectsPanel.vue';
-import DownloadPanel from './subcomponents/DownloadPanel.vue';
-import NavigationPanel from './subcomponents/NavigationPanel.vue';
-import FrameNumberPanel from './subcomponents/FrameNumberPanel.vue';
+import SceneCanvas from '@/components/mainPage/scene/subcomponents/SceneCanvas.vue';
+import CenterPanel from '@/components/mainPage/scene/subcomponents/CenterPanel.vue';
+import SceneObjectsPanel from '@/components/mainPage/scene/subcomponents/SceneObjectsPanel.vue';
+import DownloadPanel from '@/components/mainPage/scene/subcomponents/DownloadPanel.vue';
+import NavigationPanel from '@/components/mainPage/scene/subcomponents/NavigationPanel.vue';
+import FrameNumberPanel from '@/components/mainPage/scene/subcomponents/FrameNumberPanel.vue';
 import { mapState } from "vuex";
 
 export default {

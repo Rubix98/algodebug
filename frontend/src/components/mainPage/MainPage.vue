@@ -20,12 +20,12 @@
 <script>
 import CodeEditor from '@/components/mainPage/codeEditor/CodeEditor.vue';
 import CodePanel from '@/components/mainPage/codeEditor/subcomponents/CodePanel.vue';
-import TestData from '@/components/mainPage/testData/TestData.vue';
 import Scene from '@/components/mainPage/scene/Scene.vue';
+import TestData from '@/components/mainPage/testData/TestData.vue';
 import {mapState, mapActions} from "vuex";
 
 export default {
-  components: { CodeEditor, CodePanel, TestData, Scene },
+  components: { CodeEditor, CodePanel, Scene, TestData },
 
   mounted() {
     if (this.projectId) {

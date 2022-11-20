@@ -1,20 +1,18 @@
 <template>
   <AlgoModal title="Zapisz projekt">
-    <template #default>
-      <input type="text" v-model="projectTitle" class="full-size" placeholder="Tytuł projektu"> 
-    </template>
+    <input type="text" v-model="projectTitle" class="full-size" placeholder="Tytuł projektu"> 
 
     <template #buttons>
-      <AlgoButton @click="save(false)">Zapisz jako</AlgoButton>
-      <AlgoButton @click="save(true)" v-if="project.id">Zapisz</AlgoButton>
+      <AlgoButton class="ok" @click="save(false)">Zapisz jako</AlgoButton>
+      <AlgoButton class="ok" @click="save(true)" v-if="project.id">Zapisz</AlgoButton>
     </template>
   </AlgoModal>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
 import AlgoModal from '@/components/global/AlgoModal.vue';
 import AlgoButton from '@/components/global/AlgoButton.vue';
+import { mapState, mapActions } from 'vuex';
 import { closeModal } from 'jenesius-vue-modal';
 
 export default {

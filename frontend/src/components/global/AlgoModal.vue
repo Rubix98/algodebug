@@ -17,8 +17,9 @@
 </template>
 
 <script>
+import AlgoButton from '@/components/global/AlgoButton.vue';
 import { popModal } from 'jenesius-vue-modal';
-import AlgoButton from './AlgoButton.vue';
+
 
 export default {
   components: { AlgoButton },

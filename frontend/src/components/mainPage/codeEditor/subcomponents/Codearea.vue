@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import AlgoTextarea from '../../../global/AlgoTextarea.vue';
-import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
+import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
+import { highlightVariables, highlightLine, highlightTargets } from '@/javascript/utils/highlightUtils';
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
@@ -69,9 +69,9 @@ export default {
 
     extendedCodeForMainEditor() {
       let code = this.modelCode;
-      code = HighlightUtils.highlightVariables(code, this.variables);
+      code = highlightVariables(code, this.variables);
       if (this.project.isRunning) {
-        code = HighlightUtils.highlightLine(code, this.currentFrame?.line);
+        code = highlightLine(code, this.currentFrame?.line);
       }
       return code.escapeHTML();
     },
@@ -83,7 +83,7 @@ export default {
 
     extendedCodeForPickVariableEditor() {
       let code = this.modelCode;
-      code = HighlightUtils.insertTargetTagsIntoCode(code);
+      code = highlightTargets(code);
       return code.escapeHTML();
     }
   },
