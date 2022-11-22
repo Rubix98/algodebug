@@ -20,9 +20,6 @@ import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue"
 import { mapState, mapActions, mapGetters } from "vuex";
 import { openModal } from "jenesius-vue-modal";
 
-// CORS Error: No 'Access-Control-Allow-Origin' header on response
-const COMPILER_API_URL = 'https://codex-api.herokuapp.com/';
-
 export default {
   props: [],
 
