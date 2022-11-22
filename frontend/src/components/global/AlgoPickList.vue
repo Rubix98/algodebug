@@ -2,7 +2,7 @@
   <div>
     <div v-for="(option, index) in options" :key="index" 
       class="option"
-      @click="selectOption(option)">
+      @click="(event) => selectOption(event, option)">
       {{option.label}}
       <div v-if="option.dialogData">
         <div  v-for="(property, index) in option.dialogData.properties" :key="index"
@@ -10,7 +10,7 @@
             <b>{{property.label}}</b>:
             
             <span v-if="property.fieldType === 'textarea'">
-              <AlgoTextarea :value="property.value" size="small" />
+              <AlgoTextarea class="small" :value="property.value" :readonly="true" />
             </span>
             <span v-else>
               {{property.value}}
@@ -26,14 +26,17 @@
 </template>
 
 <script>
-import AlgoTextarea from './AlgoTextarea.vue';
+import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
+
 export default {
     props: ["options"],
     emits: ['selectOptionEvent'],
     components: { AlgoTextarea },
 
     methods: {
-      selectOption(selectedOption) {
+      selectOption(event, selectedOption) {
+        if (event.target.localName === 'textarea') return;
+
         this.$emit('selectOptionEvent', selectedOption);
       }
     }

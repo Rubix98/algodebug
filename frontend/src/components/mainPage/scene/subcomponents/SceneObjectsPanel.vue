@@ -1,7 +1,7 @@
 <template>
   <div class="scene-objects-panel-container">
     <div class="scene-object-tile flex-vertical-space-between"
-      v-for="(sceneObject, index) in project.sceneObjects" :key="index"
+      v-for="(sceneObject, index) in sceneObjects" :key="index"
       @click="configureSceneObject(sceneObject, $event)">
         {{sceneObject.type.label}} {{sceneObject.variable.name}}
         <AlgoIcon type="x" @click="deleteSceneObject(index)"/>
@@ -12,7 +12,7 @@
 <script>
 import AlgoIcon from '@/components/global/AlgoIcon';
 import ConfigureSceneObjectModal from '@/components/modals/sceneObject/ConfigureSceneObjectModal.vue';
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import { openModal } from 'jenesius-vue-modal';
 
 export default {
@@ -28,7 +28,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['project'])
+    ...mapGetters('project', ['sceneObjects'])
   }
 }
 </script>

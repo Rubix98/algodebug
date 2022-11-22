@@ -1,10 +1,13 @@
 <template>
   <div class="algo-block">
-    <div class="header">{{header}}</div>
+    <div class="header flex-vertical-space-between">
+      {{header}} 
+      <div><slot name="checkbox"></slot></div>
+    </div>
+
     <div class="content">
       <slot></slot>
     </div>
-    
   </div>
 </template>
 
@@ -13,11 +16,6 @@
 
 export default {
   props: ['header'],
-
-  data() {
-    return {
-    }
-  },
 }
 </script>
 
@@ -29,7 +27,7 @@ export default {
     padding: 0;
   }
 
-  .algo-block .header{
+  .header{
     background: linear-gradient(#427AA1, #05668D);
     height: 24px;
     padding: 2px 15px;
@@ -39,7 +37,7 @@ export default {
     font-family: Consolas;
   }
 
-  .algo-block .content {
+  .content {
     height: calc(100% - 24px);
   }
 </style>

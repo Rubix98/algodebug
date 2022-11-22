@@ -11,38 +11,18 @@
 </template>
 
 <script>
-import Menu from '@/components/other/Menu.vue';
+import Menu from '@/components/menu/Menu.vue';
 import MainPage from '@/components/mainPage/MainPage.vue';
 import {container} from "jenesius-vue-modal";
-import axios from 'axios';
 
 export default {
   // ERROR: Name "Menu" is reserved in HTML
   // eslint-disable-next-line
   components: {Menu, MainPage, Modal: container},
-
-  methods: {
-    sendRequest(url, data = {}, method = 'post') {
-      if (window.location.origin.includes("localhost")) {
-        url = url.replace("BACKEND", "http://localhost:8080")
-      } else {
-        //url = url.replace("BACKEND", "https://algodebug.herokuapp.com")
-      }
-
-      if (method === 'get') {
-        return axios.get(url, data);
-      }
-      return axios.post(url, data);
-    },
-
-    redirectTo(url) {
-      window.location.href = url;
-    }
-  }
 }
 </script>
 
-<style>
+<style scoped>
   .app-container {
     width: 100vw;
     height: 100vh;
@@ -61,6 +41,9 @@ export default {
     z-index: 10;
     background-color: rgba(0, 0, 0, 0.5);
   }
+</style>
+
+<style>
 
   /* Global */
 

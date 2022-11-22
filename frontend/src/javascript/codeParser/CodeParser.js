@@ -115,7 +115,7 @@ class CodeUtils {
 	static insertBreakpointTags(code, breakpoints) {
 		let lines = code.split('\n');
 		for (let breakpoint of breakpoints.reversed()) {
-			lines[breakpoint.id] += `<algodebug-breakpoint>${breakpoint.id+1}</algodebug-breakpoint>`;
+			lines[breakpoint.id] += `<algodebug-breakpoint>${breakpoint.id}</algodebug-breakpoint>`;
 		}
 		code = lines.join('\n');
 		return code;
@@ -139,7 +139,7 @@ class CodeUtils {
 	}
 
 	static insertAlgodebugMacros(code) {
-		return `#define ALGODEBUG_VARIABLE(x) "\\t<algodebug-variable " << "name=\\"" << #x << "\\">" << x << "</algodebug-variable>\\n"\n`
+		return `#define ALGODEBUG_VARIABLE(x) "<algodebug-variable " << "name=\\"" << #x << "\\">\\n" << x << "\\n</algodebug-variable>\\n"\n`
 			+ `#define ALGODEBUG_BREAKPOINT(line, x) cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n" << x << "</algodebug-breakpoint>\\n"\n`
 			+ `#define ALGODEBUG_EMPTY_BREAKPOINT(line) cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n</algodebug-breakpoint>\\n"\n\n`
 			+ code;

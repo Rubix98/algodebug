@@ -1,17 +1,18 @@
 <template>
   <AlgoModal title="Wczytaj projekt">
-    <template #default>
-      <AlgoPickList :options="projects" @selectOptionEvent="loadProject" />
-    </template>
+    <AlgoPickList :options="projects" @selectOptionEvent="loadProject" />
   </AlgoModal>
 </template>
 
 <script>
-import AlgoPickList from '@/components/global/AlgoPickList.vue';
 import AlgoModal from "@/components/global/AlgoModal.vue";
+import AlgoPickList from '@/components/global/AlgoPickList.vue';
+import { sendRequest } from '@/javascript/utils/axiosUtils';
+import { redirectTo } from '@/javascript/utils/other';
+import { getDialogDataForProject } from '@/javascript/utils/dialogUtils';
 
 export default {
-  components: {AlgoPickList, AlgoModal},
+  components: { AlgoModal, AlgoPickList },
   data() {
     return {
       projects: []
@@ -19,15 +20,18 @@ export default {
   },
 
   created() {
-    this.$root.sendRequest('BACKEND/project/findAll', {}, 'get')
-      .then((response) => {
-        this.projects = response.data;
+    sendRequest('/project/findAll', null, 'GET')
+      .then((responseData) => {
+        this.projects = responseData;
+        this.projects.forEach(project => {
+          project.dialogData = getDialogDataForProject(project);
+        })
       });
   },
 
   methods: {
     loadProject(selectedProject) {
-      this.$root.redirectTo("?projectId=" + selectedProject.id);
+      redirectTo("?projectId=" + selectedProject.id);
     }
   },
 }

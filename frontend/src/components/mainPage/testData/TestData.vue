@@ -12,8 +12,11 @@
       </AlgoBlock>
 
       <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="project.isRunning">
+        <template #checkbox>
+          Dynamiczny output: <input type="checkbox" v-model="isDynamicOutputOn" />
+        </template>
         <AlgoTextarea 
-          :value="currentTestCase.output"
+          :value="output"
           :readonly="true">
         </AlgoTextarea>
       </AlgoBlock>
@@ -30,20 +33,28 @@ import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   components: { TestCasePicker, AlgoTextarea, AlgoBlock },
 
+  data() {
+    return {
+      isDynamicOutputOn: false
+    }
+  },
+
   methods: {
     ...mapActions('project', ['updateCurrentTestCaseInput']),
   },
+
   computed: {
     ...mapState(['project']),
-    ...mapGetters('project', ['currentTestCase', 'currentFrame']),
+    ...mapGetters('project', ['currentTestCase', 'currentFrame', 'numberOfFrames']),
 
     input: {
       get() {return this.currentTestCase.input},
       set(newValue) {this.updateCurrentTestCaseInput(newValue)}
     },
 
-    output: {
-      get() {return this.currentTestCase.output}
+    output() {
+      let endIndex = this.isDynamicOutputOn ? this.currentFrame.id+1 : this.numberOfFrames;
+      return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
     },
   },
   

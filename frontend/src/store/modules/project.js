@@ -16,7 +16,7 @@ export default {
   },
 
   getters: {
-    variables(state) {
+    variables(state) { // TODO: zrefaktoryzować
       let variables = new Map();
       for (let sceneObject of state.sceneObjects) {
         if (sceneObject.variable) {
@@ -35,7 +35,7 @@ export default {
       return variables;
     },
   
-    converters(state) {
+    converters(state) {  // TODO: zrefaktoryzować
       let converters = new Map();
         for (let sceneObject of state.sceneObjects) {
           if (sceneObject.converter) {
@@ -55,20 +55,32 @@ export default {
       return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
     },
 
-    currentTestCase(state) {
-      return state.testData[state.selectedTestCaseId];
+    sceneObjects(state) {
+      return state.sceneObjects.map((element, index) => ({...element, index}));
+    },
+
+    testData(state) {
+      return state.testData.map((element, index) => ({...element, index}));
+    },
+
+    numberOfTestCases(_, getters) {
+      return getters.testData.length;
+    },
+
+    currentTestCase(state, getters) {
+      return getters.testData[state.selectedTestCaseId];
+    },
+
+    currentFrames(_, getters) {
+      return getters.currentTestCase.frames.map((element, index) => ({...element, index}));
     },
   
     currentFrame(state, getters) {
-      return getters.currentTestCase.frames[state.selectedFrameId];
+      return getters.currentFrames[state.selectedFrameId];
     },
 
-    numberOfTestCases(state) {
-      return state.testData.length;
-    },
-
-    numberOfFrames(state, getters) {
-      return getters.currentTestCase.frames.length;
+    numberOfFrames(_, getters) {
+      return getters.currentFrames.length;
     }
 
   },
@@ -79,7 +91,7 @@ export default {
     },
 
     addTestCase(state) {
-      state.testData.push({input: 'b'});
+      state.testData.push({input: ''});
     }, 
 
     deleteTestCase(state, index) {
@@ -112,6 +124,27 @@ export default {
       state.testData = project.testCases;
       state.sceneObjects = project.sceneObjects;
       state.title = project.title;
+    },
+
+    addOutputs(state, outputs) {
+      for (let i in state.testData) {
+        state.testData[i] = {
+          ...state.testData[i],
+          ...outputs[i].output,
+        };
+      }
+    },
+
+    updateSceneObjectPosition(state, {sceneObject, position}) {
+      state.sceneObjects[sceneObject.index].position = position;
+    },
+
+    updateSceneObject(state, sceneObject) {
+      state.sceneObjects[sceneObject.index] = sceneObject;
+    },
+
+    addNewSceneObject(state, sceneObject) {
+      state.sceneObjects.push(sceneObject)
     }
   },
 
@@ -120,19 +153,25 @@ export default {
     setCode: ({commit}, newValue) => commit('set', {key: 'code', value: newValue}), 
     addTestCase: ({commit}) => commit('addTestCase'), 
     deleteTestCase: ({commit}, index) => commit('deleteTestCase', index), 
-    changeCurrentTestCase: ({commit}, x) => commit('changeCurrentTestCase', x), 
+    changeCurrentTestCase: ({commit}, index) => commit('changeCurrentTestCase', index), 
     changeCurrentFrame: ({commit}, index) => commit('changeCurrentFrame', index),
     updateCurrentTestCaseInput: ({commit}, newValue) => {commit('updateCurrentTestCaseInput', newValue)}, 
     deleteSceneObject: ({commit}, index) => commit('deleteSceneObject', index),
+    updateSceneObjectPosition: ({commit}, payload) => commit('updateSceneObjectPosition', payload),
+
+    saveSceneObject({commit}, sceneObject) {
+      commit(sceneObject.index != null ? 'updateSceneObject' : 'addNewSceneObject', sceneObject);
+    },
 
     loadProject({commit}, projectId) {
-      sendRequest('BACKEND/project/find/' + projectId, {}, "get").then(response => {
-        commit('setProject', response.data)
-      })
+      sendRequest('/project/find/' + projectId, null, 'GET')
+        .then((responseData) => {
+          commit('setProject', responseData)
+        })
     },
 
     saveProject({commit, state}, {title, override}) {
-      sendRequest("BACKEND/project/save", {
+      sendRequest("/project/save", {
         id: override ? state.id : null,
         title: title,
         language: state.language,
@@ -140,12 +179,26 @@ export default {
         breakpoints: state.breakpoints.toArray(), // TODO: save as map
         testCases: state.testData,
         sceneObjects: state.sceneObjects
-      }).then(response => {
-        if (response.status === 200) {
-          commit('set', {key: 'id', value: response.data.id});
-          commit('set', {key: 'title', value: response.data.title});
-        }
-      })
+      }, 'PUT')
+        .then((responseData) => {
+          commit('set', {key: 'id', value: responseData.id});
+          commit('set', {key: 'title', value: responseData.title});
+        })
     },
+
+    compile({commit, state, getters}) {
+      const inputs = state.testData.map(testCase => testCase.input)
+      return sendRequest('/compilator/compile', {
+        code:     getters.debugCode,
+        language: "cpp",
+        inputs:    inputs
+      }, 'POST')
+        .then((responseData) => {
+          if (!responseData.success) return false;
+          commit('addOutputs', responseData.details);
+          commit('set', {key: 'isRunning', value: true});
+          return true;
+        });
+    }
   }
 }

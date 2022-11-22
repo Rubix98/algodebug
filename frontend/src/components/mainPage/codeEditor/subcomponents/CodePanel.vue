@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import { openModal } from "jenesius-vue-modal";
-import { mapState, mapActions, mapGetters } from "vuex";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+import { mapState, mapActions, mapGetters } from "vuex";
+import { openModal } from "jenesius-vue-modal";
 
 // CORS Error: No 'Access-Control-Allow-Origin' header on response
 const COMPILER_API_URL = 'https://codex-api.herokuapp.com/';
@@ -30,54 +30,25 @@ export default {
     return {
       languages:  [
         {key: "cpp", label: "C++"},
-        {key: "c", label: "C", disabled: true},
-        {key: "java", label: "Java", disabled: true},
-        {key: "csharp", label: "C#", disabled: true},
-        {key: "python", label: "Python", disabled: true},
       ]
     }
   },
 
   methods: {
-    ...mapActions('project', ['setLanguage', 'setIsRunning', 'changeCurrentFrame']),
+    ...mapActions('project', ['setLanguage', 'setIsRunning', 'changeCurrentFrame', 'compile']),
 
     showExtendedCode() {
       openModal(ShowDebugCodeModal)
     },
 
-    async runProgram() {
-      console.log("compiling")
-      for (let testCase of this.project.testData) {
-        let response = await this.$root.sendRequest(COMPILER_API_URL, {
-          code:     this.debugCode,
-          language: "cpp",
-          input:    testCase.input
-        });
-        console.log(response.data)
-        
-        if (response.data.success) {
-          let output = response.data.output;
-          testCase.output = output;
-
-          const parser = new DOMParser();
-          const parsedOutput = parser.parseFromString(output, "text/html");
-
-          testCase.frames = [];
-          for (let breakpoint of parsedOutput.getElementsByTagName("algodebug-breakpoint")) {
-            testCase.frames.push({
-              id: testCase.frames.length,
-              output: breakpoint.outerHTML,
-              line: Number(breakpoint.getAttribute("line")),
-              variables: breakpoint.getElementsByTagName("algodebug-variable")
-            });
-          }
-
-        } else {
-          testCase.output = response.data.error;
+    runProgram() {
+      this.compile().then((success) => {
+        if (!success) {
+          alert("Błąd kompilacji!");
+          return;
         }
-      }
-      this.setIsRunning(true);
-      this.emitter.emit("startDebuggingEvent");
+        this.emitter.emit('startDebuggingEvent');
+      });
     },
 
     stopProgram() {

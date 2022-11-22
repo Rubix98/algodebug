@@ -13,7 +13,7 @@ export default {
   },
 
   mounted() {
-    this.model = this.$props.value;
+    this.model = this.value;
   },
 
   watch: {

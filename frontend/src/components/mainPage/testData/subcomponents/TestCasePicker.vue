@@ -26,11 +26,13 @@ export default {
   components: { AlgoBlock, AlgoButton, AlgoIcon },
 
   methods: {
-    ...mapActions('project', ['addTestCase', 'deleteTestCase', 'changeCurrentTestCase']),
+    ...mapActions('project', ['addTestCase', 'deleteTestCase', 'changeCurrentTestCase', 'changeCurrentFrame']),
 
     switchTestCase(index, event) {
       if (event.target.localName === 'i') return;
       this.changeCurrentTestCase(index);
+      this.changeCurrentFrame(0);
+      this.emitter.emit('currentFrameChangedEvent');
     }, 
   },
   

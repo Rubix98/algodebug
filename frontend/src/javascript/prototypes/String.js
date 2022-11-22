@@ -20,7 +20,9 @@ String.prototype.escapeHTML = function() {
 	escaped = escaped.replace(/\[\/*algodebug-[^\]]*\]/g, tag => {
 		return tag.replace("[", "<").replace("]", ">");
 	})
-	return escaped;
+
+	//escaped = escaped.replace("\t", "    ");
+	return escaped + "\n";
 }
 
 String.prototype.numberOfLines = function() {

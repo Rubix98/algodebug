@@ -5,8 +5,8 @@ import Vue3Sanitize from "vue-3-sanitize";
 import VueKonva from 'vue-konva';
 import store from '@/store'
 
-import '@/javascript/prototypes/Map.js';
-import '@/javascript/prototypes/String.js';
+import '@/javascript/prototypes/Map';
+import '@/javascript/prototypes/String';
 
 const app = createApp(App);
 app.config.globalProperties.emitter = mitt();

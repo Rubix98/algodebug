@@ -1,8 +1,6 @@
 <template>
   <AlgoModal title="Kod debugujący">
-    <template #default>
-      <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="true"/>
-    </template>
+    <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="true"/>
 
     <template #buttons>
       <AlgoButton @click="copy()">Kopiuj</AlgoButton>

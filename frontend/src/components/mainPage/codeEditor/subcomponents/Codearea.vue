@@ -7,27 +7,31 @@
       @scroll="emitScrollEvent" 
       @click="handleVariableClick"></pre>
 
-    <textarea 
-      class="codearea full-size" 
+    <AlgoTextarea 
+      class="codearea full-size"
       v-show="editable" 
-      v-model="modelCode" 
+      v-model:value="modelCode" 
       @scroll="emitScrollEvent"
-      spellcheck="false"></textarea>
+      spellcheck="false" />
   </div>
 </template>
 
 <script>
-import { HighlightUtils } from '@/javascript/utils/HighlightUtils';
+import AlgoTextarea from '@/components/global/AlgoTextarea.vue';
+import { highlightVariables, highlightLine, highlightTargets } from '@/javascript/utils/highlightUtils';
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
-  props: ["id", "code", "editable"],
+  components: {AlgoTextarea},
+
+  props: ["id", "code", "editable", "clickable"],
 
   methods: {
     ...mapActions('project', ['setCode']),
 
     handleVariableClick(event) {
-      if (!this.$props.clickable || event.target.localName !== 'algo-target') return;
+      if (!this.$props.clickable || event.target.localName !== 'algodebug-highlight-target') return;
+      
       const variable = {
         name: event.target.innerText,
         start: event.target.attributes.start.value,
@@ -65,9 +69,9 @@ export default {
 
     extendedCodeForMainEditor() {
       let code = this.modelCode;
-      code = HighlightUtils.highlightVariables(code, this.variables);
+      code = highlightVariables(code, this.variables);
       if (this.project.isRunning) {
-        code = HighlightUtils.highlightLine(code, this.currentFrame?.line);
+        code = highlightLine(code, this.currentFrame?.line);
       }
       return code.escapeHTML();
     },
@@ -79,7 +83,7 @@ export default {
 
     extendedCodeForPickVariableEditor() {
       let code = this.modelCode;
-      code = HighlightUtils.insertTargetTagsIntoCode(code);
+      code = highlightTargets(code);
       return code.escapeHTML();
     }
   },
@@ -94,11 +98,11 @@ export default {
     white-space: pre;
     color: white;
     font: inherit;
+    tab-size: 4;
   }
 
   .codearea {
     background-color: transparent;
-    resize: none;
   }
 
   .highlights {
@@ -125,7 +129,7 @@ export default {
   }
 
   algodebug-highlight-line {
-    background-color: orange;
+    background-color: #006600;
     width: 100%;
     display: inline-block;
   }

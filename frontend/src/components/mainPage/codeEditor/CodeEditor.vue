@@ -11,7 +11,8 @@
     <Codearea 
       :id="id" 
       :code="code" 
-      :editable="editable" 
+      :editable="editable"
+      :clickable="clickable"
       @scrollEvent="handleScroll" 
       @pickVariableEvent="handlePickVariable"
     />
@@ -23,39 +24,25 @@ import CodeLineNumbers from '@/components/mainPage/codeEditor/subcomponents/Code
 import Codearea from '@/components/mainPage/codeEditor/subcomponents/Codearea.vue';
 
 export default {
-    components: { CodeLineNumbers, Codearea },
-    props: ["id", "code", "editable"],
+  components: { CodeLineNumbers, Codearea },
+  props: ["id", "code", "editable", "clickable"],
 
-    methods: {
-      handleScroll(target) {
-        target = target.localName === 'textarea' ? this.codeareaDOM : this.highlightsDOM;
-        this.linesDOM.scrollTop = this.highlightsDOM.scrollTop = target.scrollTop;
-        this.highlightsDOM.scrollLeft = target.scrollLeft;
-      },
+  methods: {
+    handleScroll(target) {
+      const rootDOM = document.getElementById(this.id);
+      const codeareaDOM = rootDOM.getElementsByClassName('codearea')[0];
+      const highlightsDOM = rootDOM.getElementsByClassName('highlights')[0];
+      const linesDOM = rootDOM.getElementsByClassName('code-line-numbers-container')[0];
 
-      handlePickVariable(variable) {
-        this.$emit('pickVariableEvent', variable);
-      }
+      target = target.localName === 'textarea' ? codeareaDOM : highlightsDOM;
+      linesDOM.scrollTop = highlightsDOM.scrollTop = target.scrollTop;
+      highlightsDOM.scrollLeft = target.scrollLeft;
     },
 
-    computed: {
-      codeareaDOM() {
-        return this.elementDOM('codearea');
-      },
-
-      highlightsDOM() {
-        return this.elementDOM('highlights');
-      },
-
-      linesDOM() {
-        return this.elementDOM('code-line-numbers-container');
-      },
-
-      elementDOM() {
-        return (className) => document.getElementById(this.id).getElementsByClassName(className)[0];
-      },
+    handlePickVariable(variable) {
+      this.$emit('pickVariableEvent', variable);
     }
-    
+  }
 }
 </script>
 

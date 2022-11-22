@@ -27,7 +27,7 @@ export default {
     ...mapActions('project', ['changeCurrentFrame']),
 
     setFrameId(index) {
-      if (index < 0 || index >= this.numberOfFrames)
+      if (index < 0 || index >= this.numberOfFrames) return;
       this.changeCurrentFrame(index);
       this.emitter.emit('currentFrameChangedEvent');
     },
