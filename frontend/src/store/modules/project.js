@@ -115,7 +115,7 @@ export default {
     },
 
     setProject(state, project) { // TODO: Dynamiczne przepisywanie
-      state.id = project.id;
+      state.id = project._id;
       state.code = project.code;
       state.breakpoints = new Map(project.breakpoints.map(breakpoint => {
         return [breakpoint.id, breakpoint];
@@ -124,6 +124,8 @@ export default {
       state.testData = project.testCases;
       state.sceneObjects = project.sceneObjects;
       state.title = project.title;
+      state.author = project.author;
+      state.description = project.description;
     },
 
     addOutputs(state, outputs) {
@@ -172,13 +174,15 @@ export default {
 
     saveProject({commit, state}, {title, override}) {
       sendRequest("/project/save", {
-        id: override ? state.id : null,
+        _id: override ? state.id : null,
         title: title,
         language: state.language,
         code: state.code,
         breakpoints: state.breakpoints.toArray(), // TODO: save as map
         testCases: state.testData,
-        sceneObjects: state.sceneObjects
+        sceneObjects: state.sceneObjects,
+        author: state.author ? state.author : "AlgoDebug",
+        description: state.description ? state.description : null,
       }, 'PUT')
         .then((responseData) => {
           commit('set', {key: 'id', value: responseData.id});
@@ -188,7 +192,7 @@ export default {
 
     compile({commit, state, getters}) {
       const inputs = state.testData.map(testCase => testCase.input)
-      return sendRequest('/compilator/compile', {
+      return sendRequest('/compiler/compile', {
         code:     getters.debugCode,
         language: "cpp",
         inputs:    inputs

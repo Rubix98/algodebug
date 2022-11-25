@@ -1,4 +1,4 @@
-import { validateConverter, validateProject } from '../src/dbservice';
+import { validateConverter, validateProject } from '../src/services/dbservice';
 import { Converter } from '../src/models/Converter';
 import { Project } from '../src/models/Project';
 import { Breakpoint } from '../src/structures/Breakpoint';

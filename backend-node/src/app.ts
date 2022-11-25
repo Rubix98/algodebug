@@ -1,9 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import { ObjectId } from 'mongodb';
 
-import { InitializeConnection, validateConverter, validateProject } from './dbservice';
+import { InitializeConnection } from './services/dbservice';
+import { getProjectById, getAllProjects, saveProject, updateProject } from './endpoints/project';
+import { getAllConverters, getConverterById, saveConverter, updateConverter } from './endpoints/converter';
+import { compileCode } from './endpoints/compiler';
 
 interface ResponseError extends Error {
     status?: number;
@@ -11,14 +13,14 @@ interface ResponseError extends Error {
 
 // test env variables
 dotenv.config();
-["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME"].forEach((variable) => {
+["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER_URL"].forEach((variable) => {
     if (!process.env[variable]) {
         throw new Error(`Environment variable ${variable} is not set`);
     }
 });
 
 // initialize database connection
-const { projects, converters } = await InitializeConnection();
+await InitializeConnection();
 
 // initialize express app
 const app = express();
@@ -48,121 +50,17 @@ app.use((err: ResponseError, _req: Request, res: Response, next: NextFunction ) 
 
 /* API endpoints */
 
-// GET all projects
-app.get('/project/findAll', async (_req, res) => {
-    try {
-        const result = await projects.find({}).toArray();
+// project
+app.get('/project/findAll', getAllProjects);
+app.get('/project/find/:id', getProjectById);
+app.post('/project/save', saveProject);
+app.put('/project/save', updateProject);
 
-        if (!result || result.length === 0) {
-            res.status(204).send();
-        }
-        else {
-            res.status(200).json(result);
-        }
-    }
-    catch (err) {
-        res.status(500).json(err);
-    }
-});
+// converter
+app.get('/converter/findAll', getAllConverters);
+app.get('/converter/find/:id', getConverterById);
+app.post('/converter/save', saveConverter);
+app.put('/converter/save', updateConverter);
 
-// GET project by id
-app.get('/project/find/:id', async (req, res) => {
-    try { 
-        const id = new ObjectId(req.params.id);
-
-        try {
-            const result = await projects.findOne({ _id: id });
-    
-            if (!result) {
-                res.status(404).json({ error: 'No project found with given id' });
-                return;
-            }
-            else {
-                res.status(200).json(result);
-            }
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    } 
-    catch {
-        res.status(400).json({ error: 'Invalid id' });
-    }
-});
-
-// POST new project
-app.post('/project/save', async (req, res) => {
-    const [isOk, data] = validateProject(req.body);
-
-    if (!isOk) {
-        res.status(400).json({ error: 'Invalid request body: ' + data});
-        return;
-    }
-    
-    try {
-        const result = await projects.insertOne(data);
-        res.status(200).json(result);
-    }
-    catch (err) {
-        res.status(500).json(err);
-    }
-});
-
-// GET all converters
-app.get('/converter/findAll', async (_req, res) => {
-    try {
-        const result = await converters.find({}).toArray();
-
-        if (!result || result.length === 0) {
-            res.status(204).send();
-        }
-        else {
-            res.status(200).json(result);
-        }
-    }
-    catch (err) {
-        res.status(500).json(err);
-    }
-});
-
-// GET converter by id
-app.get('/converter/find/:id', async (req, res) => {
-    try {
-        const id = new ObjectId(req.params.id);
-
-        try {
-            const result = await converters.findOne({ _id: id });
-    
-            if (!result) {
-                res.status(404).json({ error: 'No converter found with given id' });
-            }
-            else {
-                res.status(200).json(result);
-            }
-        }
-        catch (err) {
-            res.status(500).json(err);
-        }
-    }
-    catch {
-        res.status(400).json({ error: 'Invalid id' });
-    }
-});
-
-// POST new converter
-app.post('/converter/save', async (req, res) => {
-    const [isOk, data] = validateConverter(req.body);
-
-    if (!isOk) {
-        res.status(400).send({ error: 'Invalid request body: ' + data });
-        return;
-    }
-
-    try {
-        const result = await converters.insertOne(data);
-        res.status(200).json(result);
-    }
-    catch (err) {
-        res.status(500).json(err);
-    }
-});
+// compiler
+app.post('/compiler/compile', compileCode);

@@ -2,10 +2,11 @@ import { Breakpoint, sanitizeBreakpoint } from '../structures/Breakpoint';
 import { TestCase, sanitizeTestCase } from '../structures/TestCase';
 import { SceneObject, sanitizeSceneObject } from '../structures/SceneObject';
 import { Language } from '../structures/Language';
-import { Static, Record, String, Array, Null, Unknown, Optional, InstanceOf } from 'runtypes';
+import { Static, Record, String, Array, Null, Unknown, Optional } from 'runtypes';
 
 import { ObjectId } from 'mongodb';
 
+// this message doesn't really show up in response [TODO: fix]
 const dateError = 'Date cannot be passed in request. It is set automatically.';
 
 const isId = (x: any): x is ObjectId => 

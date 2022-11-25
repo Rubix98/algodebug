@@ -31,7 +31,7 @@ export default {
 
   methods: {
     loadProject(selectedProject) {
-      redirectTo("?projectId=" + selectedProject.id);
+      redirectTo("?projectId=" + selectedProject._id);
     }
   },
 }
