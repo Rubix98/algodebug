@@ -1,6 +1,5 @@
 <template>
   <button :class="bindClass">
-    {{label}}
     <slot></slot>
   </button>
 </template>

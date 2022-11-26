@@ -16,6 +16,8 @@ import MainPage from '@/components/mainPage/MainPage.vue';
 import {container} from "jenesius-vue-modal";
 
 export default {
+  // ERROR: Name "Menu" is reserved in HTML
+  // eslint-disable-next-line
   components: {Menu, MainPage, Modal: container},
 }
 </script>

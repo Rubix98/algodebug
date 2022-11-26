@@ -12,6 +12,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      // Cannot read properties of undefined reading id
       icons: [
         { icon: "fa-solid fa-backward-step", action: () => { this.setFrameId(0); } },
         { icon: "fa-solid fa-backward", action: () => { this.setFrameId(this.currentFrame.id - 1)} },
