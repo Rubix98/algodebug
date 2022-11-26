@@ -14,22 +14,33 @@ Obviously requires node.js: <https://nodejs.org> >= 18
 After consideraton I decided to remove compiled javascript from this repository and as such you should always install this with dev dependencies using:  
 `npm install -d`
 
+As for database you can connect to `MongoDB Atlas` using URI like in [example below](./README.md#L37)
+
+Alternatively you can use local database for development - `MongoDB Community Server`:  
+<https://www.mongodb.com/try/download/community>  
+Then URI will look something like this: `mongodb://127.0.0.1:27017`
+
+In any case you might be intrested in using `MongoDB Compass` to explore the database:
+<https://www.mongodb.com/try/download/compass>
+
 ## Running
 
 Before running the app you will need to create `.env` file in this directory and define env variables:  
 `PORT` - what port to use to set up http server  
-`DATABASE_URI` - URI to your MongoDB service (in node 17+ use 127.0.0.1 instead of localhost)
+`DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
 `ORIGINS` - origins to allow cross-origin requests separated by commas  
-`COMPILER_URL` - URL to compiler API  
+`COMPILER_URL` - URL to compiler API
+
+(in node 17+ use 127.0.0.1 instead of localhost)
 
 Example `.env` file might look like this:
 
 ```env
 PORT=8080
-DATABASE_URI=mongodb://127.0.0.1:27017
+DATABASE_URI=mongodb+srv://AlgoDebug:AlgoDebug@streamchess.jlv3n.mongodb.net/
 DATABASE_NAME=AlgoDebug
-ORIGINS=http://127.0.0.1:8081,https://my-service.com
+ORIGINS=http://127.0.0.1:8081,http://localhost:8081,https://my-service.com
 COMPILER_URL=https://codex-api.herokuapp.com/
 ```
 
