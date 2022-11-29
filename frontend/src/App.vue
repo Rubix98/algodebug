@@ -1,120 +1,119 @@
 <template>
-  <div class="app-container">
-    <Menu />
+    <div class="app-container">
+        <Menu />
 
-    <div class="content-container">
-      <MainPage />
+        <div class="content-container">
+            <MainPage />
+        </div>
+
+        <Modal />
     </div>
-
-    <Modal/>
-  </div>
 </template>
 
 <script>
-import Menu from '@/components/menu/Menu.vue';
-import MainPage from '@/components/mainPage/MainPage.vue';
-import {container} from "jenesius-vue-modal";
+import Menu from "@/components/menu/Menu.vue";
+import MainPage from "@/components/mainPage/MainPage.vue";
+import { container } from "jenesius-vue-modal";
 
 export default {
-  // ERROR: Name "Menu" is reserved in HTML
-  // eslint-disable-next-line
-  components: {Menu, MainPage, Modal: container},
-}
+    // ERROR: Name "Menu" is reserved in HTML
+    // eslint-disable-next-line
+    components: { Menu, MainPage, Modal: container },
+};
 </script>
 
 <style scoped>
-  .app-container {
+.app-container {
     width: 100vw;
     height: 100vh;
-  }
+}
 
-  .menu-container {
+.menu-container {
     height: 50px;
-  }
+}
 
-  .content-container {
+.content-container {
     width: 100%;
     height: calc(100% - 50px);
-  }
+}
 
-  .modal-container {
+.modal-container {
     z-index: 10;
     background-color: rgba(0, 0, 0, 0.5);
-  }
+}
 </style>
 
 <style>
+/* Global */
 
-  /* Global */
+body {
+    font-family: "Tahoma", sans-serif;
+}
 
-  body {
-    font-family: 'Tahoma', sans-serif;
-  }
-
-  * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
+}
 
-  .full-size {
+.full-size {
     width: 100%;
     height: 100%;
-  }
+}
 
-  .flex {
+.flex {
     display: flex;
-  }
+}
 
-  .flex-wrap {
+.flex-wrap {
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
-  }
+}
 
-  .flex-row {
+.flex-row {
     display: flex;
     flex-direction: row;
-  }
+}
 
-  .flex-column {
+.flex-column {
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .flex-center {
+.flex-center {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .flex-vertical-left {
+.flex-vertical-left {
     display: flex;
     justify-content: flex-start;
-  }
+}
 
-  .flex-vertical-center {
+.flex-vertical-center {
     display: flex;
     justify-content: center;
-  }
+}
 
-  .flex-vertical-right {
+.flex-vertical-right {
     display: flex;
     justify-content: flex-end;
-  }
+}
 
-  .flex-vertical-space-between {
+.flex-vertical-space-between {
     display: flex;
     justify-content: space-between;
-  }
+}
 
-  .flex-horizontal-center {
+.flex-horizontal-center {
     display: flex;
 
     align-items: center;
-  }
+}
 
-  .width-1-of-2 {
+.width-1-of-2 {
     width: 50%;
-  }
+}
 </style>

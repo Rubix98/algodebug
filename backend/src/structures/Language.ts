@@ -1,4 +1,4 @@
-import { Union, Literal, Static } from 'runtypes';
+import { Union, Literal, Static } from "runtypes";
 
 export const Language = Union(
     Literal("cpp"),

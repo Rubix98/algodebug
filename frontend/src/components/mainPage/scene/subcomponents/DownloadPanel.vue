@@ -1,27 +1,26 @@
 <template>
-  <div class="download-panel-container">
-    <i class="fa-solid fa-download" @click="download"></i>
-  </div>
+    <div class="download-panel-container">
+        <i class="fa-solid fa-download" @click="download"></i>
+    </div>
 </template>
 
 <script>
-
 export default {
-  methods: {
-    download() {
-      this.emitter.emit('downloadStageEvent');
-    }
-  },
-}
+    methods: {
+        download() {
+            this.emitter.emit("downloadStageEvent");
+        },
+    },
+};
 </script>
 
 <style scoped>
-  .download-panel-container {
+.download-panel-container {
     padding-top: 5px;
     padding-right: 10px;
-  }
+}
 
-  i {
+i {
     font-size: 30px;
-  }
+}
 </style>
