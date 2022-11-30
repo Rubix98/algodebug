@@ -13,9 +13,7 @@ export function sendRequest(url, data = {}, method) {
 }
 
 function getBackendUrl() {
-    return window.location.origin.includes("localhost")
-        ? "http://localhost:8080"
-        : "https://algodebug.herokuapp.com";
+    return window.location.origin.includes("localhost") ? "http://localhost:8080" : "https://algodebug.herokuapp.com";
 }
 
 function validateMethod(method) {

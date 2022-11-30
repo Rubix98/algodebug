@@ -1,9 +1,5 @@
 <template>
-    <textarea
-        v-model="model"
-        :readonly="readonly"
-        @keydown.tab.prevent="insertTabIndent"
-    ></textarea>
+    <textarea v-model="model" :readonly="readonly" @keydown.tab.prevent="insertTabIndent"></textarea>
 </template>
 
 <script>
@@ -20,8 +16,7 @@ export default {
 
             let selectionStart = event.target.selectionStart;
             this.$nextTick(() => {
-                event.target.selectionStart = event.target.selectionEnd =
-                    selectionStart + 1;
+                event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
             });
         },
     },

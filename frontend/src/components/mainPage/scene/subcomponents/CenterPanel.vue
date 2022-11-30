@@ -1,9 +1,6 @@
 <template>
     <div class="center-panel-container flex-center">
-        <AlgoButton @click="addNewSceneObject()"
-            ><i class="fa-solid fa-square-plus"></i> Dodaj nowy
-            obiekt</AlgoButton
-        >
+        <AlgoButton @click="addNewSceneObject()"><i class="fa-solid fa-square-plus"></i> Dodaj nowy obiekt</AlgoButton>
     </div>
 </template>
 

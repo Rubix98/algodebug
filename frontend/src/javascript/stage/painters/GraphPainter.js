@@ -26,11 +26,7 @@ export class GraphPainter extends Painter {
             const vertexId = "vertex-" + vertex;
             const vertexPosition = this.getPosition(
                 vertexId,
-                this.calculateDefaultVertexPosition(
-                    index,
-                    vertices.length,
-                    this.style.graphRadius
-                )
+                this.calculateDefaultVertexPosition(index, vertices.length, this.style.graphRadius)
             );
 
             const vertexGroup = new Konva.Group({
@@ -93,12 +89,7 @@ export class GraphPainter extends Painter {
             const edgeLine = new Konva.Line({
                 id: `edge-line-${edge.a}-${edge.b}`,
                 name: "edge-line",
-                points: [
-                    vertexFrom.x(),
-                    vertexFrom.y(),
-                    vertexTo.x(),
-                    vertexTo.y(),
-                ],
+                points: [vertexFrom.x(), vertexFrom.y(), vertexTo.x(), vertexTo.y()],
                 stroke: "black",
             });
             edgeGroup.add(edgeLine);
@@ -128,9 +119,7 @@ export class GraphPainter extends Painter {
         }
 
         for (let vertex of vertices) {
-            const vertexCircleNode = this.mainGroup.find(
-                `#vertex-circle-${vertex}`
-            )[0];
+            const vertexCircleNode = this.mainGroup.find(`#vertex-circle-${vertex}`)[0];
             if (vertexCircleNode) {
                 vertexCircleNode.fill(subobject.color);
                 vertexCircleNode.strokeWidth(3);
@@ -183,12 +172,7 @@ export class GraphPainter extends Painter {
 
             const edgeLineNode = edgeNode.find(".edge-line")[0];
             if (edgeLineNode) {
-                edgeLineNode.points([
-                    vertexFrom.x(),
-                    vertexFrom.y(),
-                    vertexTo.x(),
-                    vertexTo.y(),
-                ]);
+                edgeLineNode.points([vertexFrom.x(), vertexFrom.y(), vertexTo.x(), vertexTo.y()]);
             }
 
             const edgeLineText = edgeNode.find(".edge-text")[0];

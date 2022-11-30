@@ -27,14 +27,10 @@ export default {
         handleScroll(target) {
             const rootDOM = document.getElementById(this.id);
             const codeareaDOM = rootDOM.getElementsByClassName("codearea")[0];
-            const highlightsDOM =
-                rootDOM.getElementsByClassName("highlights")[0];
-            const linesDOM = rootDOM.getElementsByClassName(
-                "code-line-numbers-container"
-            )[0];
+            const highlightsDOM = rootDOM.getElementsByClassName("highlights")[0];
+            const linesDOM = rootDOM.getElementsByClassName("code-line-numbers-container")[0];
 
-            target =
-                target.localName === "textarea" ? codeareaDOM : highlightsDOM;
+            target = target.localName === "textarea" ? codeareaDOM : highlightsDOM;
             linesDOM.scrollTop = highlightsDOM.scrollTop = target.scrollTop;
             highlightsDOM.scrollLeft = target.scrollLeft;
         },

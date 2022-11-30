@@ -4,9 +4,7 @@
 
         <table>
             <thead>
-                <th style="text-align: center">
-                    <AlgoIcon type="+" @click="addRow" />
-                </th>
+                <th style="text-align: center"><AlgoIcon type="+" @click="addRow" /></th>
                 <th v-for="header in headers" :key="header">{{ header }}</th>
             </thead>
             <tbody>
@@ -16,24 +14,15 @@
                     </td>
 
                     <td>
-                        <AlgoLink
-                            :value="typeLabel(row)"
-                            @click="selectType(row)"
-                        ></AlgoLink>
+                        <AlgoLink :value="typeLabel(row)" @click="selectType(row)"></AlgoLink>
                     </td>
 
                     <td>
-                        <AlgoLink
-                            :value="variableName(row)"
-                            @click="selectVariable(row)"
-                        ></AlgoLink>
+                        <AlgoLink :value="variableName(row)" @click="selectVariable(row)"></AlgoLink>
                     </td>
 
                     <td>
-                        <AlgoLink
-                            :value="converterTitle(row)"
-                            @click="selectConverter(row)"
-                        ></AlgoLink>
+                        <AlgoLink :value="converterTitle(row)" @click="selectConverter(row)"></AlgoLink>
                     </td>
 
                     <td>

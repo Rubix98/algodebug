@@ -9,18 +9,10 @@
                 @click="switchTestCase(index, $event)"
             >
                 Test {{ number }}
-                <AlgoIcon
-                    type="x"
-                    @click="deleteTestCase(index)"
-                    v-if="canRemoveTests"
-                />
+                <AlgoIcon type="x" @click="deleteTestCase(index)" v-if="canRemoveTests" />
             </div>
 
-            <AlgoButton
-                class="add-button"
-                v-if="!project.isRunning"
-                @click="addTestCase()"
-            >
+            <AlgoButton class="add-button" v-if="!project.isRunning" @click="addTestCase()">
                 <i class="fa-solid fa-square-plus"></i> Dodaj nowy test
             </AlgoButton>
         </div>
@@ -37,12 +29,7 @@ export default {
     components: { AlgoBlock, AlgoButton, AlgoIcon },
 
     methods: {
-        ...mapActions("project", [
-            "addTestCase",
-            "deleteTestCase",
-            "changeCurrentTestCase",
-            "changeCurrentFrame",
-        ]),
+        ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
 
         switchTestCase(index, event) {
             if (event.target.localName === "i") return;

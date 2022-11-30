@@ -20,11 +20,7 @@
 
 <script>
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import {
-    highlightVariables,
-    highlightLine,
-    highlightTargets,
-} from "@/javascript/utils/highlightUtils";
+import { highlightVariables, highlightLine, highlightTargets } from "@/javascript/utils/highlightUtils";
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
@@ -36,11 +32,7 @@ export default {
         ...mapActions("project", ["setCode"]),
 
         handleVariableClick(event) {
-            if (
-                !this.$props.clickable ||
-                event.target.localName !== "algodebug-highlight-target"
-            )
-                return;
+            if (!this.$props.clickable || event.target.localName !== "algodebug-highlight-target") return;
 
             const variable = {
                 name: event.target.innerText,

@@ -9,29 +9,15 @@
         </AlgoFieldRow>
 
         <AlgoFieldRow label="Konwerter">
-            <AlgoLink
-                :value="converterTitle"
-                label="Brak"
-                @click="selectConverter()"
-            /> </AlgoFieldRow
+            <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" /> </AlgoFieldRow
         ><br />
 
         <AlgoTable
-            v-if="
-                model.type &&
-                !['variable', 'circle', 'shape', 'line'].includes(
-                    model.type.key
-                )
-            "
+            v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-            :emptyRow="{
-                name: '',
-                type: null,
-                variable: null,
-                converter: null,
-            }"
+            :emptyRow="{ name: '', type: null, variable: null, converter: null }"
         ></AlgoTable>
 
         <template #buttons>
@@ -116,9 +102,7 @@ export default {
         },
 
         modalTitle() {
-            return this.isNewSceneObject
-                ? "Dodaj nowy obiekt"
-                : "Konfiguruj obiekt";
+            return this.isNewSceneObject ? "Dodaj nowy obiekt" : "Konfiguruj obiekt";
         },
 
         typeLabel() {

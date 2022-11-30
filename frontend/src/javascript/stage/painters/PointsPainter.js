@@ -48,9 +48,7 @@ export class PointsPainter extends Painter {
 
     highlightPoints(points, subobject) {
         for (let pointIndex of points) {
-            const pointCircleNode = this.mainGroup.find(
-                `#point-circle-${pointIndex}`
-            )[0];
+            const pointCircleNode = this.mainGroup.find(`#point-circle-${pointIndex}`)[0];
             if (pointCircleNode) {
                 pointCircleNode.fill(subobject.color);
                 pointCircleNode.radius(7);
@@ -69,12 +67,7 @@ export class PointsPainter extends Painter {
                 const pointsLine = new Konva.Line({
                     stroke: subobject.color,
                     strokeWidth: 3,
-                    points: [
-                        pointANode.x(),
-                        pointANode.y(),
-                        pointBNode.x(),
-                        pointBNode.y(),
-                    ],
+                    points: [pointANode.x(), pointANode.y(), pointBNode.x(), pointBNode.y()],
                 });
                 this.mainGroup.add(pointsLine);
                 pointsLine.moveToBottom();

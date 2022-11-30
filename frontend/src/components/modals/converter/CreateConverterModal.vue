@@ -5,18 +5,12 @@
         </AlgoFieldRow>
 
         <AlgoFieldRow label="Kod">
-            <AlgoTextarea
-                class="small"
-                v-model:value="converter.code"
-                placeholder="Kod"
-            />
+            <AlgoTextarea class="small" v-model:value="converter.code" placeholder="Kod" />
         </AlgoFieldRow>
 
         <template #buttons>
             <AlgoButton class="ok" @click="addConverter()">Ustaw</AlgoButton>
-            <AlgoButton class="ok" @click="saveConverter()"
-                >Zapisz i ustaw</AlgoButton
-            >
+            <AlgoButton class="ok" @click="saveConverter()">Zapisz i ustaw</AlgoButton>
         </template>
     </AlgoModal>
 </template>
@@ -31,13 +25,7 @@ import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { popModal } from "jenesius-vue-modal";
 
 export default {
-    components: {
-        AlgoModal,
-        AlgoFieldRow,
-        AlgoInput,
-        AlgoButton,
-        AlgoTextarea,
-    },
+    components: { AlgoModal, AlgoFieldRow, AlgoInput, AlgoButton, AlgoTextarea },
 
     props: ["callback"],
 

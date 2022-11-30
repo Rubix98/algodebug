@@ -27,9 +27,7 @@ export const getProjectById = async (req: Request, res: Response) => {
             const result = await projects.findOne({ _id: id });
 
             if (!result) {
-                res.status(404).json({
-                    error: "No project found with given id",
-                });
+                res.status(404).json({ error: "No project found with given id" });
                 return;
             } else {
                 res.status(200).json(result);
@@ -72,10 +70,7 @@ export const updateProject = async (req: Request, res: Response) => {
         const id = new ObjectId(data._id);
 
         try {
-            const result = await projects.updateOne(
-                { _id: id },
-                { $set: data }
-            );
+            const result = await projects.updateOne({ _id: id }, { $set: data });
             res.status(200).json(result);
         } catch (err) {
             res.status(500).json(err);

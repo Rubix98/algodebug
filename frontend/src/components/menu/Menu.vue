@@ -1,18 +1,12 @@
 <template>
     <div class="menu-container">
-        <div
-            class="menu-content flex-vertical-space-between flex-horizontal-center"
-        >
+        <div class="menu-content flex-vertical-space-between flex-horizontal-center">
             <img src="images/logo.png" @click="redirectToRoot()" />
 
             <div class="buttons-container">
-                <AlgoButton @click="openSaveProjectModal()">
-                    <i class="fa fa-save"></i> Zapisz projekt
-                </AlgoButton>
+                <AlgoButton @click="openSaveProjectModal()"> <i class="fa fa-save"></i> Zapisz projekt </AlgoButton>
 
-                <AlgoButton @click="openLoadProjectModal()">
-                    <i class="fa fa-search"></i> Otwórz projekt
-                </AlgoButton>
+                <AlgoButton @click="openLoadProjectModal()"> <i class="fa fa-search"></i> Otwórz projekt </AlgoButton>
             </div>
         </div>
 

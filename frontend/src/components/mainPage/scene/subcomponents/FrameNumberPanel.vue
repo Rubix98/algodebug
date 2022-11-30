@@ -1,7 +1,5 @@
 <template>
-    <div class="frame-number-panel-container">
-        {{ currentFrameId }}/{{ numberOfFrames }}
-    </div>
+    <div class="frame-number-panel-container">{{ currentFrameId }}/{{ numberOfFrames }}</div>
 </template>
 
 <script>

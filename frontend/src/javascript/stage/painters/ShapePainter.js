@@ -9,12 +9,7 @@ export class ShapePainter extends Painter {
         for (let point of shape) {
             this.mainGroup.add(
                 new Konva.Line({
-                    points: [
-                        point.x,
-                        -point.y,
-                        previousPoint.x,
-                        -previousPoint.y,
-                    ],
+                    points: [point.x, -point.y, previousPoint.x, -previousPoint.y],
                     stroke: "black",
                     strokeWidth: 1,
                 })

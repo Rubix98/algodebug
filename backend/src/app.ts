@@ -3,18 +3,8 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 
 import { InitializeConnection } from "./services/dbservice";
-import {
-    getProjectById,
-    getAllProjects,
-    saveProject,
-    updateProject,
-} from "./endpoints/project";
-import {
-    getAllConverters,
-    getConverterById,
-    saveConverter,
-    updateConverter,
-} from "./endpoints/converter";
+import { getProjectById, getAllProjects, saveProject, updateProject } from "./endpoints/project";
+import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./endpoints/converter";
 import { compileCode } from "./endpoints/compiler";
 
 interface ResponseError extends Error {
@@ -23,13 +13,11 @@ interface ResponseError extends Error {
 
 // test env variables
 dotenv.config();
-["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER_URL"].forEach(
-    (variable) => {
-        if (!process.env[variable]) {
-            throw new Error(`Environment variable ${variable} is not set`);
-        }
+["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER_URL"].forEach((variable) => {
+    if (!process.env[variable]) {
+        throw new Error(`Environment variable ${variable} is not set`);
     }
-);
+});
 
 // initialize database connection
 await InitializeConnection();
@@ -56,14 +44,12 @@ app.use(cors({ origin: (process.env.ORIGINS as string).split(",") }));
 app.use(express.json());
 
 // catch invalid JSONs
-app.use(
-    (err: ResponseError, _req: Request, res: Response, next: NextFunction) => {
-        if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
-            return res.status(400).send({ error: err.message });
-        }
-        next();
+app.use((err: ResponseError, _req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+        return res.status(400).send({ error: err.message });
     }
-);
+    next();
+});
 
 /* API endpoints */
 

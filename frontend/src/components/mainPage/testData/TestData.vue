@@ -12,14 +12,9 @@
                 </AlgoTextarea>
             </AlgoBlock>
 
-            <AlgoBlock
-                class="full-size"
-                header="Dane wyjściowe"
-                v-if="project.isRunning"
-            >
+            <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="project.isRunning">
                 <template #checkbox>
-                    Dynamiczny output:
-                    <input type="checkbox" v-model="isDynamicOutputOn" />
+                    Dynamiczny output: <input type="checkbox" v-model="isDynamicOutputOn" />
                 </template>
                 <AlgoTextarea :value="output" :readonly="true"> </AlgoTextarea>
             </AlgoBlock>
@@ -48,11 +43,7 @@ export default {
 
     computed: {
         ...mapState(["project"]),
-        ...mapGetters("project", [
-            "currentTestCase",
-            "currentFrame",
-            "numberOfFrames",
-        ]),
+        ...mapGetters("project", ["currentTestCase", "currentFrame", "numberOfFrames"]),
 
         input: {
             get() {
@@ -64,12 +55,8 @@ export default {
         },
 
         output() {
-            let endIndex = this.isDynamicOutputOn
-                ? this.currentFrame.id + 1
-                : this.numberOfFrames;
-            return this.currentTestCase.partialOutputs
-                .slice(0, endIndex)
-                .join("");
+            let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : this.numberOfFrames;
+            return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
         },
     },
 };

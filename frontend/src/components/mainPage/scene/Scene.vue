@@ -24,14 +24,7 @@ import FrameNumberPanel from "@/components/mainPage/scene/subcomponents/FrameNum
 import { mapState } from "vuex";
 
 export default {
-    components: {
-        SceneCanvas,
-        CenterPanel,
-        SceneObjectsPanel,
-        DownloadPanel,
-        NavigationPanel,
-        FrameNumberPanel,
-    },
+    components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
     computed: {
         ...mapState(["project"]),
     },

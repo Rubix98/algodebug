@@ -1,9 +1,6 @@
 <template>
     <AlgoModal title="Dodaj nowy obiekt">
-        <AlgoPickList
-            :options="types"
-            @selectOptionEvent="handleSelectOption"
-        />
+        <AlgoPickList :options="types" @selectOptionEvent="handleSelectOption" />
     </AlgoModal>
 </template>
 

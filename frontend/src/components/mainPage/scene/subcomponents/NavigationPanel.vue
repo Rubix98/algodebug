@@ -1,11 +1,6 @@
 <template>
     <div class="navigation-panel-container flex-vertical-center">
-        <i
-            v-for="icon in icons"
-            :key="icon.icon"
-            :class="icon.icon"
-            @click="icon.action"
-        ></i>
+        <i v-for="icon in icons" :key="icon.icon" :class="icon.icon" @click="icon.action"></i>
     </div>
 </template>
 

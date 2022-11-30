@@ -1,14 +1,9 @@
 <template>
     <AlgoModal title="Wybierz konwerter">
-        <AlgoPickList
-            :options="converters"
-            @selectOptionEvent="handleSelectOption"
-        />
+        <AlgoPickList :options="converters" @selectOptionEvent="handleSelectOption" />
 
         <template #buttons>
-            <AlgoButton @click="createConverter()"
-                >Utwórz nowy kowerter</AlgoButton
-            >
+            <AlgoButton @click="createConverter()">Utwórz nowy kowerter</AlgoButton>
         </template>
     </AlgoModal>
 </template>

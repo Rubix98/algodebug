@@ -17,11 +17,7 @@
                     >:
 
                     <span v-if="property.fieldType === 'textarea'">
-                        <AlgoTextarea
-                            class="small"
-                            :value="property.value"
-                            :readonly="true"
-                        />
+                        <AlgoTextarea class="small" :value="property.value" :readonly="true" />
                     </span>
                     <span v-else>
                         {{ property.value }}

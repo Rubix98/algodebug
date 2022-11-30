@@ -2,15 +2,7 @@ import { Breakpoint, sanitizeBreakpoint } from "../structures/Breakpoint";
 import { TestCase, sanitizeTestCase } from "../structures/TestCase";
 import { SceneObject, sanitizeSceneObject } from "../structures/SceneObject";
 import { Language } from "../structures/Language";
-import {
-    Static,
-    Record,
-    String,
-    Array,
-    Null,
-    Unknown,
-    Optional,
-} from "runtypes";
+import { Static, Record, String, Array, Null, Unknown, Optional } from "runtypes";
 
 import { ObjectId } from "mongodb";
 
@@ -27,8 +19,7 @@ const isId = (x: any): x is ObjectId => {
     }
 };
 
-const isValidDate = (x: any): x is Date =>
-    x instanceof Date && !isNaN(x.getTime());
+const isValidDate = (x: any): x is Date => x instanceof Date && !isNaN(x.getTime());
 
 export const Project = Record({
     // project description
@@ -45,9 +36,7 @@ export const Project = Record({
     // project metadata
     author: String.withConstraint((s) => s.length > 0),
     creationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
-    modificationDate: Optional(
-        Unknown.withConstraint(isValidDate || dateError)
-    ),
+    modificationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
 
     _id: Optional(Unknown.withGuard(isId)),
 });

@@ -22,11 +22,7 @@ export default {
         ...mapActions("project", ["updateSceneObjectPosition"]),
 
         draw() {
-            this.stage.draw(
-                this.sceneObjects,
-                this.currentFrame,
-                this.updateSceneObjectPosition
-            );
+            this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
         },
 
         clearStage() {

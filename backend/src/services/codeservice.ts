@@ -1,9 +1,4 @@
-import {
-    CodeBreakpoint,
-    CodexApiResponse,
-    CompilationResult,
-    CompilationResultDetail,
-} from "../types/compiler";
+import { CodeBreakpoint, CodexApiResponse, CompilationResult, CompilationResultDetail } from "../types/compiler";
 
 const BREAKPOINT_BEGIN_TAG = "<algodebug-breakpoint";
 const BREAKPOINT_END_TAG = "</algodebug-breakpoint>\n";
@@ -23,11 +18,7 @@ export const parseOutput = (outputs: CodexApiResponse[]) => {
             let detail: CompilationResultDetail = {
                 success: true,
                 errorMessage: null,
-                output: {
-                    fullOutput: out.output,
-                    partialOutputs: [],
-                    frames: [],
-                },
+                output: { fullOutput: out.output, partialOutputs: [], frames: [] },
             };
 
             // parse output
@@ -36,31 +27,19 @@ export const parseOutput = (outputs: CodexApiResponse[]) => {
             let id = 0;
 
             while (breakpointStart !== -1) {
-                detail.output.partialOutputs.push(
-                    out.output.substring(breakpointEnd, breakpointStart)
-                );
+                detail.output.partialOutputs.push(out.output.substring(breakpointEnd, breakpointStart));
 
-                breakpointEnd =
-                    out.output.indexOf(BREAKPOINT_END_TAG, breakpointStart) +
-                    BREAKPOINT_END_TAG.length;
+                breakpointEnd = out.output.indexOf(BREAKPOINT_END_TAG, breakpointStart) + BREAKPOINT_END_TAG.length;
 
                 // extract the line number and variables from the breakpoint
-                const breakpoint = parseBreakpoint(
-                    out.output.substring(breakpointStart, breakpointEnd),
-                    id
-                );
+                const breakpoint = parseBreakpoint(out.output.substring(breakpointStart, breakpointEnd), id);
                 detail.output.frames.push(breakpoint);
                 id += 1;
 
-                breakpointStart = out.output.indexOf(
-                    BREAKPOINT_BEGIN_TAG,
-                    breakpointEnd
-                );
+                breakpointStart = out.output.indexOf(BREAKPOINT_BEGIN_TAG, breakpointEnd);
             }
             // add the last partial output
-            detail.output.partialOutputs.push(
-                out.output.substring(breakpointEnd)
-            );
+            detail.output.partialOutputs.push(out.output.substring(breakpointEnd));
 
             result.details.push(detail);
         } else {
@@ -88,9 +67,7 @@ const parseBreakpoint = (output: string, id: number): CodeBreakpoint => {
     let variableEnd = 0;
 
     while (variableStart !== -1) {
-        variableEnd =
-            output.indexOf(VARIABLE_END_TAG, variableStart) +
-            VARIABLE_END_TAG.length;
+        variableEnd = output.indexOf(VARIABLE_END_TAG, variableStart) + VARIABLE_END_TAG.length;
 
         const variableTag = output.substring(variableStart, variableEnd);
         const [name, value] = parseVariable(variableTag);
@@ -106,10 +83,7 @@ const parseVariable = (output: string): [string, string] => {
     const variableNameEnd = output.indexOf('"', variableNameStart);
     const variableName = output.substring(variableNameStart, variableNameEnd);
 
-    const variableValue = output.substring(
-        output.indexOf(">") + 1,
-        output.indexOf("<", output.indexOf(">"))
-    );
+    const variableValue = output.substring(output.indexOf(">") + 1, output.indexOf("<", output.indexOf(">")));
 
     return [variableName, variableValue];
 };

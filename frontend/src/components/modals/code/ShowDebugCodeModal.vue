@@ -1,11 +1,6 @@
 <template>
     <AlgoModal title="Kod debugujący">
-        <CodeEditor
-            id="debug-code-editor"
-            :code="debugCode"
-            :editable="false"
-            :clickable="true"
-        />
+        <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="true" />
 
         <template #buttons>
             <AlgoButton @click="copy()">Kopiuj</AlgoButton>
@@ -24,9 +19,7 @@ export default {
 
     methods: {
         copy() {
-            navigator.clipboard
-                .writeText(this.debugCode)
-                .then(() => alert("Skopiowano"));
+            navigator.clipboard.writeText(this.debugCode).then(() => alert("Skopiowano"));
         },
     },
 

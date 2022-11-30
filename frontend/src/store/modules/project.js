@@ -53,26 +53,15 @@ export default {
         },
 
         debugCode(state, getters) {
-            return new CodeParser(
-                state.code,
-                getters.variables,
-                state.breakpoints,
-                getters.converters
-            ).parse();
+            return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
         },
 
         sceneObjects(state) {
-            return state.sceneObjects.map((element, index) => ({
-                ...element,
-                index,
-            }));
+            return state.sceneObjects.map((element, index) => ({ ...element, index }));
         },
 
         testData(state) {
-            return state.testData.map((element, index) => ({
-                ...element,
-                index,
-            }));
+            return state.testData.map((element, index) => ({ ...element, index }));
         },
 
         numberOfTestCases(_, getters) {
@@ -84,10 +73,7 @@ export default {
         },
 
         currentFrames(_, getters) {
-            return getters.currentTestCase.frames.map((element, index) => ({
-                ...element,
-                index,
-            }));
+            return getters.currentTestCase.frames.map((element, index) => ({ ...element, index }));
         },
 
         currentFrame(state, getters) {
@@ -168,39 +154,26 @@ export default {
     },
 
     actions: {
-        setIsRunning: ({ commit }, newValue) =>
-            commit("set", { key: "isRunning", value: newValue }),
-        setCode: ({ commit }, newValue) =>
-            commit("set", { key: "code", value: newValue }),
+        setIsRunning: ({ commit }, newValue) => commit("set", { key: "isRunning", value: newValue }),
+        setCode: ({ commit }, newValue) => commit("set", { key: "code", value: newValue }),
         addTestCase: ({ commit }) => commit("addTestCase"),
         deleteTestCase: ({ commit }, index) => commit("deleteTestCase", index),
-        changeCurrentTestCase: ({ commit }, index) =>
-            commit("changeCurrentTestCase", index),
-        changeCurrentFrame: ({ commit }, index) =>
-            commit("changeCurrentFrame", index),
+        changeCurrentTestCase: ({ commit }, index) => commit("changeCurrentTestCase", index),
+        changeCurrentFrame: ({ commit }, index) => commit("changeCurrentFrame", index),
         updateCurrentTestCaseInput: ({ commit }, newValue) => {
             commit("updateCurrentTestCaseInput", newValue);
         },
-        deleteSceneObject: ({ commit }, index) =>
-            commit("deleteSceneObject", index),
-        updateSceneObjectPosition: ({ commit }, payload) =>
-            commit("updateSceneObjectPosition", payload),
+        deleteSceneObject: ({ commit }, index) => commit("deleteSceneObject", index),
+        updateSceneObjectPosition: ({ commit }, payload) => commit("updateSceneObjectPosition", payload),
 
         saveSceneObject({ commit }, sceneObject) {
-            commit(
-                sceneObject.index != null
-                    ? "updateSceneObject"
-                    : "addNewSceneObject",
-                sceneObject
-            );
+            commit(sceneObject.index != null ? "updateSceneObject" : "addNewSceneObject", sceneObject);
         },
 
         loadProject({ commit }, projectId) {
-            sendRequest("/project/find/" + projectId, null, "GET").then(
-                (responseData) => {
-                    commit("setProject", responseData);
-                }
-            );
+            sendRequest("/project/find/" + projectId, null, "GET").then((responseData) => {
+                commit("setProject", responseData);
+            });
         },
 
         saveProject({ commit, state }, { title, override }) {

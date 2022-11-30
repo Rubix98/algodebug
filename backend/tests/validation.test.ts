@@ -51,47 +51,20 @@ let validProject = {
 
 let validNestedProject = {
     ...validProject,
-    breakpoints: [
-        { id: 1 } as Breakpoint,
-        { id: 2 } as Breakpoint,
-        { id: 3 } as Breakpoint,
-    ],
-    testCases: [
-        { input: "some\ninput" } as TestCase,
-        { input: "some other input" } as TestCase,
-    ],
+    breakpoints: [{ id: 1 } as Breakpoint, { id: 2 } as Breakpoint, { id: 3 } as Breakpoint],
+    testCases: [{ input: "some\ninput" } as TestCase, { input: "some other input" } as TestCase],
     sceneObjects: [
         {
             id: 1,
-            type: {
-                key: "somekey",
-                label: "somelabel",
-                image: null,
-            } as ObjectType,
-            variable: {
-                start: 0,
-                end: 1,
-                name: "",
-                type: null,
-                converter: validConverter,
-            } as Mark,
+            type: { key: "somekey", label: "somelabel", image: null } as ObjectType,
+            variable: { start: 0, end: 1, name: "", type: null, converter: validConverter } as Mark,
             converter: validConverter,
             color: "#000000",
             subobjects: [
                 {
                     id: 1,
-                    type: {
-                        key: "somekey",
-                        label: "somelabel",
-                        image: null,
-                    } as ObjectType,
-                    variable: {
-                        start: 0,
-                        end: 1,
-                        name: "",
-                        type: null,
-                        converter: validConverter,
-                    } as Mark,
+                    type: { key: "somekey", label: "somelabel", image: null } as ObjectType,
+                    variable: { start: 0, end: 1, name: "", type: null, converter: validConverter } as Mark,
                     converter: validConverter,
                     color: "#000000",
                     subobjects: [],
@@ -110,10 +83,7 @@ describe("Project validation", () => {
 
     test("Additional property", () => {
         // expect object to pass check and equal validProject
-        const checked = checkProject({
-            ...validProject,
-            additional: "property",
-        });
+        const checked = checkProject({ ...validProject, additional: "property" });
         expect(checked.ok).toBe(true);
         // ignore the difference in creation and modification date
         expect(checked.value).toEqual({
@@ -125,15 +95,11 @@ describe("Project validation", () => {
 
     test('Addtional property named "constructor" (edge case)', () => {
         // TODO more descriptive error message OR fix edge case
-        expect(() =>
-            checkProject({ ...validProject, constructor: "property" })
-        ).toThrow();
+        expect(() => checkProject({ ...validProject, constructor: "property" })).toThrow();
     });
 
     test("Missing property", () => {
-        expect(() =>
-            checkProject({ ...validProject, title: undefined })
-        ).toThrow();
+        expect(() => checkProject({ ...validProject, title: undefined })).toThrow();
     });
 
     test("Empty title", () => {
@@ -148,51 +114,25 @@ describe("Project validation", () => {
         // we expect check to throw an error
         // because we don't want to allow users to set creationDate and modificationDate
         // and there is no way to pass Date object through json (only primitive types)
-        expect(() =>
-            checkProject({ ...validProject, creationDate: "01.01.2022" })
-        ).toThrow();
-        expect(() =>
-            checkProject({
-                ...validProject,
-                modificationDate: new Date().toString(),
-            })
-        ).toThrow();
-        expect(() =>
-            checkProject({ ...validProject, creationDate: 1234 })
-        ).toThrow();
-        expect(() =>
-            checkProject({ ...validProject, modificationDate: null })
-        ).toThrow();
+        expect(() => checkProject({ ...validProject, creationDate: "01.01.2022" })).toThrow();
+        expect(() => checkProject({ ...validProject, modificationDate: new Date().toString() })).toThrow();
+        expect(() => checkProject({ ...validProject, creationDate: 1234 })).toThrow();
+        expect(() => checkProject({ ...validProject, modificationDate: null })).toThrow();
 
         // this should pass
-        expect(() =>
-            checkProject({
-                ...validProject,
-                creationDate: new Date("01.01.2022"),
-            })
-        ).not.toThrow();
-        expect(() =>
-            checkProject({ ...validProject, modificationDate: new Date() })
-        ).not.toThrow();
+        expect(() => checkProject({ ...validProject, creationDate: new Date("01.01.2022") })).not.toThrow();
+        expect(() => checkProject({ ...validProject, modificationDate: new Date() })).not.toThrow();
     });
 
     test("Adding date", () => {
         // check if date is added and is of type Date
-        let checked = checkProject({
-            ...validProject,
-            creationDate: undefined,
-        });
+        let checked = checkProject({ ...validProject, creationDate: undefined });
         expect(checked.ok).toBe(true);
-        if (checked.value)
-            expect(checked.value.creationDate).toBeInstanceOf(Date);
+        if (checked.value) expect(checked.value.creationDate).toBeInstanceOf(Date);
 
-        checked = checkProject({
-            ...validProject,
-            modificationDate: undefined,
-        });
+        checked = checkProject({ ...validProject, modificationDate: undefined });
         expect(checked.ok).toBe(true);
-        if (checked.value)
-            expect(checked.value.modificationDate).toBeInstanceOf(Date);
+        if (checked.value) expect(checked.value.modificationDate).toBeInstanceOf(Date);
     });
 
     test("Valid project with nested objects", () => {
@@ -203,9 +143,7 @@ describe("Project validation", () => {
         expect(() =>
             checkProject({
                 ...validNestedProject,
-                sceneObjects: [
-                    { ...validNestedProject.sceneObjects[0], type: "invalid" },
-                ],
+                sceneObjects: [{ ...validNestedProject.sceneObjects[0], type: "invalid" }],
             })
         ).toThrow();
     });
@@ -238,13 +176,8 @@ describe("Project validation", () => {
         // expect to pass check
         expect(() => checkProject({ ...validProject, _id: 1 })).not.toThrow();
         expect(checkProject({ ...validProject, _id: 1 }).ok).toBe(true);
-        expect(() =>
-            checkProject({ ...validProject, _id: "0123456789abcdef01234567" })
-        ).not.toThrow();
-        expect(
-            checkProject({ ...validProject, _id: "0123456789abcdef01234567" })
-                .ok
-        ).toBe(true);
+        expect(() => checkProject({ ...validProject, _id: "0123456789abcdef01234567" })).not.toThrow();
+        expect(checkProject({ ...validProject, _id: "0123456789abcdef01234567" }).ok).toBe(true);
     });
 });
 
@@ -256,18 +189,13 @@ describe("Converter validation", () => {
 
     test("Additional property", () => {
         // expect object to pass check and equal validConverter
-        const checked = checkConverter({
-            ...validConverter,
-            additional: "property",
-        });
+        const checked = checkConverter({ ...validConverter, additional: "property" });
         expect(checked.ok).toBe(true);
         expect(checked.value).toEqual(validConverter);
     });
 
     test("Missing property", () => {
-        expect(() =>
-            checkConverter({ ...validConverter, title: undefined })
-        ).toThrow();
+        expect(() => checkConverter({ ...validConverter, title: undefined })).toThrow();
     });
 
     test("Empty object", () => {
@@ -283,29 +211,13 @@ describe("Converter validation", () => {
     // in POST id is only hint but will not override existing object
     // but specifiying id will be required in PUT to update existing object
     test("Id present", () => {
-        expect(() =>
-            checkConverter({ ...validConverter, _id: null })
-        ).toThrow();
-        expect(() =>
-            checkConverter({ ...validConverter, _id: "1234" })
-        ).toThrow();
+        expect(() => checkConverter({ ...validConverter, _id: null })).toThrow();
+        expect(() => checkConverter({ ...validConverter, _id: "1234" })).toThrow();
 
         // expect to pass check
-        expect(() =>
-            checkConverter({ ...validConverter, _id: 1 })
-        ).not.toThrow();
+        expect(() => checkConverter({ ...validConverter, _id: 1 })).not.toThrow();
         expect(checkConverter({ ...validConverter, _id: 1 }).ok).toBe(true);
-        expect(() =>
-            checkConverter({
-                ...validConverter,
-                _id: "0123456789abcdef01234567",
-            })
-        ).not.toThrow();
-        expect(
-            checkConverter({
-                ...validConverter,
-                _id: "0123456789abcdef01234567",
-            }).ok
-        ).toBe(true);
+        expect(() => checkConverter({ ...validConverter, _id: "0123456789abcdef01234567" })).not.toThrow();
+        expect(checkConverter({ ...validConverter, _id: "0123456789abcdef01234567" }).ok).toBe(true);
     });
 });

@@ -5,10 +5,7 @@ export function getDialogDataForProject(project) {
         properties: [
             { label: "Tytuł", value: project.title },
             { label: "Autor", value: project.author },
-            {
-                label: "Data modyfikacji",
-                value: formatDate(project.modificationDate),
-            },
+            { label: "Data modyfikacji", value: formatDate(project.modificationDate) },
         ],
     };
 }

@@ -21,11 +21,7 @@ export class Painter {
         for (let subobject of this.sceneObject.subobjects) {
             let variable = this.getVariable(subobject);
             if (!variable) continue;
-            this.subobjectFunctionMap[subobject.type.key].call(
-                this,
-                variable,
-                subobject
-            );
+            this.subobjectFunctionMap[subobject.type.key].call(this, variable, subobject);
         }
 
         this.getLayer().add(this.mainGroup);

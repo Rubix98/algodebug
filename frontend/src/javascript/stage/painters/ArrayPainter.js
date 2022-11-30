@@ -16,9 +16,7 @@ export class ArrayPainter extends Painter {
     };
 
     drawModel(array) {
-        const rowCapacity = Math.floor(
-            this.stageSize.width / this.style.cellSize
-        );
+        const rowCapacity = Math.floor(this.stageSize.width / this.style.cellSize);
         const numberOfColumns = Math.min(array.length, rowCapacity);
         const numberOfRows = Math.ceil(array.length / rowCapacity);
         const startX = (-numberOfColumns * this.style.cellSize) / 2;
@@ -30,9 +28,7 @@ export class ArrayPainter extends Painter {
                 id: `element-${index}`,
                 name: "element",
                 x: startX + (index % rowCapacity) * this.style.cellSize,
-                y:
-                    startY +
-                    Math.floor(index / rowCapacity) * this.style.rowHeight,
+                y: startY + Math.floor(index / rowCapacity) * this.style.rowHeight,
             });
             this.mainGroup.add(elementGroup);
 
@@ -77,14 +73,10 @@ export class ArrayPainter extends Painter {
 
     highlightElements(elements, subobject) {
         for (let elementIndex of elements) {
-            const elementGroupNode = this.mainGroup.find(
-                `#element-${elementIndex}`
-            )[0];
+            const elementGroupNode = this.mainGroup.find(`#element-${elementIndex}`)[0];
             if (elementGroupNode) {
-                const elementRectNode =
-                    elementGroupNode.find(".element-rect")[0];
-                const elementIndexNode =
-                    elementGroupNode.find(".element-index")[0];
+                const elementRectNode = elementGroupNode.find(".element-rect")[0];
+                const elementIndexNode = elementGroupNode.find(".element-index")[0];
                 if (elementRectNode && elementIndexNode) {
                     elementGroupNode.moveToTop();
                     elementRectNode.stroke(subobject.color);

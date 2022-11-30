@@ -36,9 +36,7 @@ export function highlightTargets(code) {
         );
 
         codeIndex = end;
-        resultIndex =
-            result.lastIndexOf("</algodebug-highlight-target>") +
-            "</algodebug-highlight-target>".length;
+        resultIndex = result.lastIndexOf("</algodebug-highlight-target>") + "</algodebug-highlight-target>".length;
     }
     return result;
 }

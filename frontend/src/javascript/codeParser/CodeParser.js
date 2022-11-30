@@ -2,39 +2,23 @@ export class CodeParser {
     actions = {
         "<algodebug-variable>": function (parent, tag) {
             let beginIndex = tag.position + tag.key.length;
-            let endIndex = parent.code.indexOf(
-                "</algodebug-variable>",
-                beginIndex
-            );
+            let endIndex = parent.code.indexOf("</algodebug-variable>", beginIndex);
             let variableName = parent.code.slice(beginIndex, endIndex);
-            let variableLevel =
-                parent.curlyBracketsLevel + (parent.roundBracketsLevel ? 1 : 0);
+            let variableLevel = parent.curlyBracketsLevel + (parent.roundBracketsLevel ? 1 : 0);
             let variableType = parent.variables.get(variableName).type;
-            parent.stack.push({
-                name: variableName,
-                level: variableLevel,
-                type: variableType,
-            });
+            parent.stack.push({ name: variableName, level: variableLevel, type: variableType });
         },
         "<algodebug-breakpoint>": function (parent, tag) {
             let beginIndex = tag.position + tag.key.length;
-            let endIndex = parent.code.indexOf(
-                "</algodebug-breakpoint>",
-                beginIndex
-            );
+            let endIndex = parent.code.indexOf("</algodebug-breakpoint>", beginIndex);
             let line = parent.code.slice(beginIndex, endIndex);
-            parent.parsedBreakpoints.push({
-                line: line,
-                variables: [...parent.stack],
-            });
+            parent.parsedBreakpoints.push({ line: line, variables: [...parent.stack] });
         },
         "{": function (parent) {
             parent.curlyBracketsLevel++;
         },
         "}": function (parent) {
-            parent.stack = parent.stack.filter(
-                (variable) => variable.level < parent.curlyBracketsLevel
-            );
+            parent.stack = parent.stack.filter((variable) => variable.level < parent.curlyBracketsLevel);
             parent.curlyBracketsLevel--;
         },
         "(": function (parent) {
@@ -99,10 +83,7 @@ export class CodeParser {
     findNextTag() {
         let result = null;
         for (let tag of this.tags) {
-            if (
-                tag.position !== this.inf &&
-                (result == null || tag.position < result.position)
-            ) {
+            if (tag.position !== this.inf && (result == null || tag.position < result.position)) {
                 result = tag;
             }
         }
@@ -116,18 +97,9 @@ export class CodeParser {
 
     parseCode() {
         this.code = CodeUtils.removeVariableTags(this.code);
-        this.code = CodeUtils.replaceBreakpointTags(
-            this.code,
-            this.parsedBreakpoints
-        );
-        this.code = CodeUtils.insertConvertersAfterIncludes(
-            this.code,
-            this.converters
-        );
-        this.code = CodeUtils.insertConvertersAtTheEnd(
-            this.code,
-            this.converters
-        );
+        this.code = CodeUtils.replaceBreakpointTags(this.code, this.parsedBreakpoints);
+        this.code = CodeUtils.insertConvertersAfterIncludes(this.code, this.converters);
+        this.code = CodeUtils.insertConvertersAtTheEnd(this.code, this.converters);
         this.code = CodeUtils.insertAlgodebugMacros(this.code);
     }
 }
@@ -148,26 +120,20 @@ class CodeUtils {
     static insertBreakpointTags(code, breakpoints) {
         let lines = code.split("\n");
         for (let breakpoint of breakpoints.reversed()) {
-            lines[
-                breakpoint.id
-            ] += `<algodebug-breakpoint>${breakpoint.id}</algodebug-breakpoint>`;
+            lines[breakpoint.id] += `<algodebug-breakpoint>${breakpoint.id}</algodebug-breakpoint>`;
         }
         code = lines.join("\n");
         return code;
     }
 
     static removeVariableTags(code) {
-        code = code
-            .replaceAll("<algodebug-variable>", "")
-            .replaceAll("</algodebug-variable>", "");
+        code = code.replaceAll("<algodebug-variable>", "").replaceAll("</algodebug-variable>", "");
         return code;
     }
 
     static replaceBreakpointTags(code, parsedBreakpoints) {
         for (let breakpoint of parsedBreakpoints) {
-            let variables = breakpoint.variables
-                .map((variable) => `ALGODEBUG_VARIABLE(${variable.name})`)
-                .join(" << ");
+            let variables = breakpoint.variables.map((variable) => `ALGODEBUG_VARIABLE(${variable.name})`).join(" << ");
             code = code.replace(
                 `<algodebug-breakpoint>${breakpoint.line}</algodebug-breakpoint>`,
                 variables.length !== 0
@@ -190,29 +156,16 @@ class CodeUtils {
     static insertConvertersAfterIncludes(code, converters) {
         converters = converters
             .toArray()
-            .map(
-                (converter) =>
-                    converter.code
-                        .slice(0, converter.code.indexOf("{"))
-                        .trim() + ";"
-            )
+            .map((converter) => converter.code.slice(0, converter.code.indexOf("{")).trim() + ";")
             .join("\n");
 
         let includeStartPosition = code.lastIndexOf("#include");
         let includeEndPosition = code.indexOf(">", includeStartPosition);
         let usingNamespaceStartPosition = code.lastIndexOf("using namespace");
-        let usingNamespaceEndPosition = code.indexOf(
-            ";",
-            usingNamespaceStartPosition
-        );
+        let usingNamespaceEndPosition = code.indexOf(";", usingNamespaceStartPosition);
 
-        let position =
-            Math.max(includeEndPosition, usingNamespaceEndPosition) + 1;
-        code =
-            code.slice(0, position) +
-            "\n\n" +
-            converters +
-            code.slice(position);
+        let position = Math.max(includeEndPosition, usingNamespaceEndPosition) + 1;
+        code = code.slice(0, position) + "\n\n" + converters + code.slice(position);
         return code;
     }
 

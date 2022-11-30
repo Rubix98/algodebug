@@ -1,9 +1,6 @@
 <template>
     <AlgoModal title="Wybierz typ obiektu wewnętrznego">
-        <AlgoPickList
-            :options="types[sceneObjectType.key]"
-            @selectOptionEvent="handleSelectOption"
-        />
+        <AlgoPickList :options="types[sceneObjectType.key]" @selectOptionEvent="handleSelectOption" />
     </AlgoModal>
 </template>
 
@@ -22,10 +19,7 @@ export default {
             types: {
                 graph: [
                     { label: "Wyróżnienie krawędzi", key: "graph_edges" },
-                    {
-                        label: "Wyróżnienie wierzchołków",
-                        key: "graph_vertices",
-                    },
+                    { label: "Wyróżnienie wierzchołków", key: "graph_vertices" },
                     { label: "Ścieżka", key: "graph_path" },
                 ],
                 points: [
