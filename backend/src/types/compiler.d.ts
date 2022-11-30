@@ -1,5 +1,5 @@
-export type CodexApiResponse =
-    | {
+//prettier-ignore
+export type CodexApiResponse = {
           language: string;
           success: false;
           error: string;
@@ -19,8 +19,8 @@ export type CompilationResult = {
     details: CompilationResultDetail[];
 };
 
-export type CompilationResultDetail =
-    | {
+//prettier-ignore
+export type CompilationResultDetail = {
           success: true;
           errorMessage: null;
           output: CodeOutput;
