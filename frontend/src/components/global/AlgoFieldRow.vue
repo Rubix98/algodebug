@@ -1,30 +1,29 @@
 <template>
-  <div class="field-row-container flex-row">
-    <div class="label-container">{{label}}:</div>
-    <div class="value-container">
-      <slot></slot>
+    <div class="field-row-container flex-row">
+        <div class="label-container">{{ label }}:</div>
+        <div class="value-container">
+            <slot></slot>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  props: ['label'],
-  mounted() {
-  }
-}
+    props: ["label"],
+    mounted() {},
+};
 </script>
 
 <style scoped>
-  .field-row-container {
+.field-row-container {
     margin-bottom: 5px;
-  }
+}
 
-  .label-container {
+.label-container {
     width: 25%;
-  }
+}
 
-  .value-container {
+.value-container {
     width: 75%;
-  }
+}
 </style>

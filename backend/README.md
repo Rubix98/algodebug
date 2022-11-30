@@ -46,10 +46,10 @@ COMPILER_URL=https://codex-api.herokuapp.com/
 
 then you have two options:
 
-- You can run this with `npm run dev` which  will use `ts-node` to autocompile and run  
-OR
-- Compile to javascript yourself with `npm run build` and then you can use `npm start`  
-(note: you will need to recompile after introducing changes)
+-   You can run this with `npm run dev` which will use `ts-node` to autocompile and run  
+    OR
+-   Compile to javascript yourself with `npm run build` and then you can use `npm start`  
+    (note: you will need to recompile after introducing changes)
 
 ### Testing
 
@@ -59,12 +59,12 @@ This should cover most common API request mistakes.
 
 ### Project Overview
 
-- `src` - source code
-  - `endpoints` - implement endpoints logic
-  - `models` - schema for database (mongo bson document templates)
-  - `structures` - smaller classes which compose models
-  - `services` - logic that is not directly related to API
-  - `app.ts` - main file with all API endpoints and middleware
-  - `types` - typescript type declaration files (.d.ts)
-- `tests` - Jest unit tests
-  - `validation.test.ts` - tests API validation functions (not API itself)
+-   `src` - source code
+    -   `endpoints` - implement endpoints logic
+    -   `models` - schema for database (mongo bson document templates)
+    -   `structures` - smaller classes which compose models
+    -   `services` - logic that is not directly related to API
+    -   `app.ts` - main file with all API endpoints and middleware
+    -   `types` - typescript type declaration files (.d.ts)
+-   `tests` - Jest unit tests
+    -   `validation.test.ts` - tests API validation functions (not API itself)

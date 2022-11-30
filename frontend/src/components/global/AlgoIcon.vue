@@ -1,26 +1,22 @@
 <template>
-  <span>
-    <i class="close-icon fa-solid fa-xmark" v-if="type === 'x'"></i>
-    <i class="plus-icon fa-solid fa-square-plus" v-if="type === '+'"></i>
-  </span>
+    <span>
+        <i class="close-icon fa-solid fa-xmark" v-if="type === 'x'"></i>
+        <i class="plus-icon fa-solid fa-square-plus" v-if="type === '+'"></i>
+    </span>
 </template>
 
 <script>
-
-
 export default {
-  props: ['type']
-}
+    props: ["type"],
+};
 </script>
 
 <style scoped>
-  .close-icon {
+.close-icon {
     color: red;
-  }
+}
 
-  .plus-icon {
+.plus-icon {
     color: green;
-  }
-
-
+}
 </style>
