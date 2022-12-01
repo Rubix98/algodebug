@@ -31,25 +31,17 @@ export function compareCode(oldText, newText, event, selection) {
     return ret;
 }
 
-/*
-function findFirstDifferentChar(oldText, newText) {
-    let differenceStart = 0;
-
-    for (let i = 0; i < Math.min(newText.length, oldText.length); i++) {
-        if (newText[i] == oldText[i]) differenceStart = i + 1;
-        else break;
-    }
-
-    return differenceStart;
-}
-*/
-
 export function moveTrackedVariables(project, changes) {
     const handleVarTrackerMove = (ch, varObj) => {
         if (varObj == null) return;
 
         if (ch.end > varObj.start && ch.start < varObj.end) {
-            return "Delete"; //TODO: Allow changing variable name
+            if (ch.start >= varObj.start && ch.end <= varObj.end) {
+                varObj.end += ch.size;
+                if (varObj.end - varObj.start <= 0) return "Delete";
+                return;
+            }
+            return "Delete";
         }
 
         if (ch.end <= varObj.start) {
