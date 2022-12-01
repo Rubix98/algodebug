@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { compareCode } from "@/javascript/utils/codeUtils";
+
 export default {
     props: ["value", "readonly"],
 
@@ -34,31 +36,21 @@ export default {
         },
 
         handleBeforeinput(event) {
+            if (["historyUndo", "historyRedo"].includes(event.inputType)) {
+                event.preventDefault();
+                return;
+            }
+
             this.oldText = event.target.value;
+            this.selection = {
+                start: event.target.selectionStart,
+                end: event.target.selectionEnd,
+            };
         },
 
         handleInput(event) {
-            let newText = event.target.value;
-
-            let oldLen = this.oldText.length;
-            let newLen = newText.length;
-
-            let lengthDifference = newLen - oldLen;
-            let differenceStart = 0;
-
-            for (let i = 0; i < Math.min(newLen, oldLen); i++) {
-                if (newText[i] == this.oldText[i]) differenceStart = i + 1;
-                else break;
-            }
-
-            let oldLineCount = (this.oldText.match(/\n/g) || []).length;
-            let newLineCount = (newText.match(/\n/g) || []).length;
-            this.$emit("code-change", {
-                start: differenceStart,
-                end: differenceStart + Math.abs(lengthDifference),
-                size: lengthDifference,
-                deltaLineCount: newLineCount - oldLineCount,
-            });
+            let result = compareCode(this.oldText, event.target.value, event, this.selection);
+            this.$emit("code-change", result);
         },
     },
 
