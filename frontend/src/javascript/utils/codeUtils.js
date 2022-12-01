@@ -1,3 +1,5 @@
+import store from "@/store";
+
 export function compareCode(oldText, newText, event, selection) {
     let oldLen = oldText.length;
     let newLen = newText.length;
@@ -31,7 +33,7 @@ export function compareCode(oldText, newText, event, selection) {
     return ret;
 }
 
-export function moveTrackedVariables(project, changes) {
+export function moveTrackedVariables(changes) {
     const handleVarTrackerMove = (ch, varObj) => {
         if (varObj == null) return;
 
@@ -50,7 +52,7 @@ export function moveTrackedVariables(project, changes) {
         }
     };
 
-    project.sceneObjects = project.sceneObjects.filter((sceneObj) => {
+    store.dispatch("project/filterSceneObjects", (sceneObj) => {
         let mainVar = sceneObj.variable;
         if (handleVarTrackerMove(changes, mainVar) == "Delete") {
             return false;

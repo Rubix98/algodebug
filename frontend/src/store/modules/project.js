@@ -151,6 +151,10 @@ export default {
         addNewSceneObject(state, sceneObject) {
             state.sceneObjects.push(sceneObject);
         },
+
+        filterSceneObjects(state, filterFunction) {
+            state.sceneObjects = state.sceneObjects.filter(filterFunction);
+        },
     },
 
     actions: {
@@ -214,5 +218,7 @@ export default {
                 return true;
             });
         },
+
+        filterSceneObjects: ({ commit }, filterFunction) => commit("filterSceneObjects", filterFunction),
     },
 };
