@@ -1,65 +1,66 @@
 <template>
-  <div class="main-page-container flex-column full-size">
-    <div class="flex-row">
-      <CodeEditor 
-        id="main-editor"
-        class="width-1-of-2"
-        :code="project.code"
-        :editable="!project.isRunning"
-        :clickable="false">
-          <CodePanel />
-      </CodeEditor>
+    <div class="main-page-container flex-column full-size">
+        <div class="flex-row">
+            <CodeEditor
+                id="main-editor"
+                class="width-1-of-2"
+                :code="project.code"
+                :editable="!project.isRunning"
+                :clickable="false"
+            >
+                <CodePanel />
+            </CodeEditor>
 
-      <Scene class="width-1-of-2"/>
+            <Scene class="width-1-of-2" />
+        </div>
+
+        <TestData />
     </div>
-
-    <TestData/>
-  </div>
 </template>
 
 <script>
-import CodeEditor from '@/components/mainPage/codeEditor/CodeEditor.vue';
-import CodePanel from '@/components/mainPage/codeEditor/subcomponents/CodePanel.vue';
-import Scene from '@/components/mainPage/scene/Scene.vue';
-import TestData from '@/components/mainPage/testData/TestData.vue';
-import {mapState, mapActions} from "vuex";
+import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+import CodePanel from "@/components/mainPage/codeEditor/subcomponents/CodePanel.vue";
+import Scene from "@/components/mainPage/scene/Scene.vue";
+import TestData from "@/components/mainPage/testData/TestData.vue";
+import { mapState, mapActions } from "vuex";
 
 export default {
-  components: { CodeEditor, CodePanel, Scene, TestData },
+    components: { CodeEditor, CodePanel, Scene, TestData },
 
-  mounted() {
-    if (this.projectId) {
-      this.loadProject(this.projectId);
-    }
-  },
+    mounted() {
+        if (this.projectId) {
+            this.loadProject(this.projectId);
+        }
+    },
 
-  methods: {
-    ...mapActions('project', ['loadProject']),
-  },
+    methods: {
+        ...mapActions("project", ["loadProject"]),
+    },
 
-  computed: {
-    ...mapState(['project']),
+    computed: {
+        ...mapState(["project"]),
 
-    projectId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get("projectId");
-    }
-  }
-}
+        projectId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("projectId");
+        },
+    },
+};
 </script>
 
 <style scoped>
-  .main-page-container {
+.main-page-container {
     padding: 10px;
     gap: 10px;
-  }
+}
 
-  .main-page-container > :first-child {
+.main-page-container > :first-child {
     height: 70%;
     gap: 10px;
-  }
+}
 
-  .main-page-container > :last-child {
+.main-page-container > :last-child {
     height: calc(30% - 10px);
-  }
+}
 </style>

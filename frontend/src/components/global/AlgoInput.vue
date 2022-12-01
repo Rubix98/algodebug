@@ -1,28 +1,27 @@
 <template>
-  <input type="text" v-model="model" />
+    <input type="text" v-model="model" />
 </template>
 
 <script>
 export default {
-  props: ['value'],
+    props: ["value"],
 
-  data() {
-    return {
-      model: ''
-    }
-  },
+    data() {
+        return {
+            model: "",
+        };
+    },
 
-  mounted() {
-    this.model = this.value;
-  },
+    mounted() {
+        this.model = this.value;
+    },
 
-  watch: {
-    model() {
-      this.$emit('update:value', this.model)
-    }
-  }
-}
+    watch: {
+        model() {
+            this.$emit("update:value", this.model);
+        },
+    },
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

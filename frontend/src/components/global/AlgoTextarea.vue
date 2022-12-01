@@ -24,8 +24,7 @@ export default {
 
             let selectionStart = event.target.selectionStart;
             this.$nextTick(() => {
-                event.target.selectionStart = event.target.selectionEnd =
-                    selectionStart + 1;
+                event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
             });
 
             this.$emit("change-specific", {

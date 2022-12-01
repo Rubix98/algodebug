@@ -1,4 +1,4 @@
-import { Static, Record, String, Null } from 'runtypes';
+import { Static, Record, String, Null } from "runtypes";
 
 export const ObjectType = Record({
     key: String,
@@ -12,6 +12,6 @@ export const sanitizeObjectType = (o: ObjectType) => {
     return {
         key: o.key,
         label: o.label,
-        image: o.image
+        image: o.image,
     } as ObjectType;
-}
+};

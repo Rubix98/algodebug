@@ -1,12 +1,13 @@
 <template>
-  <AlgoModal title="Zaznacz zmienną">
-    <CodeEditor 
-      id="pick-variable-editor"
-      :code="project.code"
-      :editable="false"
-      :clickable="true"
-      @pickVariableEvent="handlePickVariable"/>
-  </AlgoModal>
+    <AlgoModal title="Zaznacz zmienną">
+        <CodeEditor
+            id="pick-variable-editor"
+            :code="project.code"
+            :editable="false"
+            :clickable="true"
+            @pickVariableEvent="handlePickVariable"
+        />
+    </AlgoModal>
 </template>
 
 <script>
@@ -16,25 +17,25 @@ import { mapState } from "vuex";
 import { popModal } from "jenesius-vue-modal";
 
 export default {
-  components: { CodeEditor, AlgoModal },
+    components: { CodeEditor, AlgoModal },
 
-  props: ['callback'],
+    props: ["callback"],
 
-  methods: {
-    handlePickVariable(variable) {
-      this.$props.callback(variable);
-      popModal();
-    }
-  },
+    methods: {
+        handlePickVariable(variable) {
+            this.$props.callback(variable);
+            popModal();
+        },
+    },
 
-  computed: {
-    ...mapState(['project'])
-  }
-}
+    computed: {
+        ...mapState(["project"]),
+    },
+};
 </script>
 
 <style scoped>
-  .dialog {
+.dialog {
     width: 80vw;
-  }
+}
 </style>

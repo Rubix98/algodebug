@@ -21,11 +21,7 @@
 
 <script>
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import {
-    highlightVariables,
-    highlightLine,
-    highlightTargets,
-} from "@/javascript/utils/highlightUtils";
+import { highlightVariables, highlightLine, highlightTargets } from "@/javascript/utils/highlightUtils";
 
 import { mapState, mapActions, mapGetters } from "vuex";
 
@@ -38,11 +34,7 @@ export default {
         ...mapActions("project", ["setCode"]),
 
         handleVariableClick(event) {
-            if (
-                !this.$props.clickable ||
-                event.target.localName !== "algodebug-highlight-target"
-            )
-                return;
+            if (!this.$props.clickable || event.target.localName !== "algodebug-highlight-target") return;
 
             const variable = {
                 name: event.target.innerText,
@@ -64,41 +56,34 @@ export default {
                 }
             };
 
-            this.project.sceneObjects = this.project.sceneObjects.filter(
-                (sceneObj) => {
-                    let mainVar = sceneObj.variable;
-                    if (handleVarTrackerMove(changes, mainVar) == "Delete") {
+            this.project.sceneObjects = this.project.sceneObjects.filter((sceneObj) => {
+                let mainVar = sceneObj.variable;
+                if (handleVarTrackerMove(changes, mainVar) == "Delete") {
+                    return false;
+                }
+
+                for (let subobjId in sceneObj.subobjects) {
+                    let subobj = sceneObj.subobjects[subobjId];
+                    let subVar = subobj.variable;
+                    if (handleVarTrackerMove(changes, subVar) == "Delete") {
                         return false;
                     }
-
-                    for (let subobjId in sceneObj.subobjects) {
-                        let subobj = sceneObj.subobjects[subobjId];
-                        let subVar = subobj.variable;
-                        if (handleVarTrackerMove(changes, subVar) == "Delete") {
-                            return false;
-                        }
-                    }
-
-                    return true;
                 }
-            );
+
+                return true;
+            });
         },
 
         moveBreakpoints(changes) {
             console.log(changes);
             if (changes.deltaLineCount == 0) return;
 
-            let firstChangedLine = (
-                this.$props.code.substr(0, changes.start - 1).match(/\n/g) || []
-            ).length;
+            let firstChangedLine = (this.$props.code.substr(0, changes.start - 1).match(/\n/g) || []).length;
 
             let affectedBreakpoints = [];
             for (let bp of this.project.breakpoints) {
                 if (bp[0] < firstChangedLine) continue;
-                if (
-                    bp[0] > firstChangedLine &&
-                    bp[0] < firstChangedLine - changes.deltaLineCount
-                ) {
+                if (bp[0] > firstChangedLine && bp[0] < firstChangedLine - changes.deltaLineCount) {
                     this.project.breakpoints.addOrDelete({
                         id: bp[0],
                     });
