@@ -9,8 +9,6 @@
 </template>
 
 <script>
-let oldText = "";
-
 export default {
     props: ["value", "readonly"],
 
@@ -27,7 +25,7 @@ export default {
                 event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
             });
 
-            this.$emit("change-specific", {
+            this.$emit("code-change", {
                 start: event.target.selectionStart,
                 end: event.target.selectionStart + 1,
                 size: 1,
@@ -36,26 +34,26 @@ export default {
         },
 
         handleBeforeinput(event) {
-            oldText = event.target.value;
+            this.oldText = event.target.value;
         },
 
         handleInput(event) {
             let newText = event.target.value;
 
-            let oldLen = oldText.length;
+            let oldLen = this.oldText.length;
             let newLen = newText.length;
 
             let lengthDifference = newLen - oldLen;
             let differenceStart = 0;
 
             for (let i = 0; i < Math.min(newLen, oldLen); i++) {
-                if (newText[i] == oldText[i]) differenceStart = i + 1;
+                if (newText[i] == this.oldText[i]) differenceStart = i + 1;
                 else break;
             }
 
-            let oldLineCount = (oldText.match(/\n/g) || []).length;
+            let oldLineCount = (this.oldText.match(/\n/g) || []).length;
             let newLineCount = (newText.match(/\n/g) || []).length;
-            this.$emit("change-specific", {
+            this.$emit("code-change", {
                 start: differenceStart,
                 end: differenceStart + Math.abs(lengthDifference),
                 size: lengthDifference,

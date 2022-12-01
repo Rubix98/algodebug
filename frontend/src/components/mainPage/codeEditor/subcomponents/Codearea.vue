@@ -13,7 +13,7 @@
             v-show="editable"
             v-model:value="modelCode"
             @scroll="emitScrollEvent"
-            @change-specific="handleCodeChange"
+            @code-change="handleCodeChange"
             spellcheck="false"
         />
     </div>
