@@ -37,6 +37,7 @@ import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObje
 import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
 import { mapActions, mapState } from "vuex";
 import { closeModal, pushModal } from "jenesius-vue-modal";
+import { validateSceneObject } from "@/javascript/utils/validationUtils";
 
 export default {
     components: { AlgoModal, AlgoTable, AlgoLink, AlgoFieldRow, AlgoButton },
@@ -63,6 +64,8 @@ export default {
         ...mapActions("project", ["saveSceneObject"]),
 
         save() {
+            if (!validateSceneObject(this.model)) return;
+
             this.saveSceneObject(this.model);
             closeModal();
         },
