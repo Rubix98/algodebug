@@ -37,6 +37,7 @@ import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObje
 import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
 import { mapActions, mapState } from "vuex";
 import { closeModal, pushModal } from "jenesius-vue-modal";
+import { validateSceneObject } from "@/javascript/utils/validationUtils";
 
 export default {
     components: { AlgoModal, AlgoTable, AlgoLink, AlgoFieldRow, AlgoButton },
@@ -63,22 +64,7 @@ export default {
         ...mapActions("project", ["saveSceneObject"]),
 
         save() {
-            const assert = (assertion, warning) => {
-                if (!assertion) {
-                    alert(warning); //TODO: Toast zamiast alerta
-                    return false;
-                }
-                return true;
-            };
-
-            if (!assert(this.model.type != null, "Podaj rodzaj obiektu")) return;
-            if (!assert(this.model.variable != null, "Przypisz zmienną")) return;
-            let ok = true;
-            this.model.subobjects.forEach((subObj) => {
-                if (!assert(subObj.type != null, "Podaj rodzaj właściwości")) return (ok = false);
-                if (!assert(subObj.variable != null, "Przypisz zmienną do właściwości")) return (ok = false);
-            });
-            if (!ok) return;
+            if (!validateSceneObject(this.model)) return;
 
             this.saveSceneObject(this.model);
             closeModal();
