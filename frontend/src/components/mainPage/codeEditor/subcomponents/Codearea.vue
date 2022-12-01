@@ -22,7 +22,6 @@
 <script>
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
 import { highlightVariables, highlightLine, highlightTargets } from "@/javascript/utils/highlightUtils";
-
 import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
@@ -81,7 +80,6 @@ export default {
         },
 
         moveBreakpoints(changes) {
-            console.log(changes);
             if (changes.deltaLineCount == 0) return;
 
             let firstChangedLine = (this.$props.code.substr(0, changes.start - 1).match(/\n/g) || []).length;

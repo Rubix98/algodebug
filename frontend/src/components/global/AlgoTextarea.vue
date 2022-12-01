@@ -40,7 +40,6 @@ export default {
         },
 
         handleInput(event) {
-            console.log(event);
             let newText = event.target.value;
 
             let oldLen = oldText.length;
