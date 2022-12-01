@@ -46,13 +46,19 @@ export default {
 
         moveTrackedVariables(changes) {
             const handleVarTrackerMove = (ch, varObj) => {
-                if (ch.start <= varObj.start) {
-                    // Move variable
-                    varObj.start += ch.size;
-                    varObj.end += ch.size;
-                } else if (ch.start < varObj.end) {
-                    // Selection overlaps with the variable
-                    return "Delete";
+                if (ch.size > 0) {
+                    if (ch.start > varObj.start && ch.start < varObj.end) return "Delete";
+                    if (ch.start <= varObj.start) {
+                        varObj.start += ch.size;
+                        varObj.end += ch.size;
+                    }
+                } else {
+                    if (ch.start >= varObj.start && ch.start < varObj.end) return "Delete";
+                    if (ch.end > varObj.start && ch.end < varObj.end) return "Delete";
+                    if (ch.start <= varObj.start) {
+                        varObj.start += ch.size;
+                        varObj.end += ch.size;
+                    }
                 }
             };
 
