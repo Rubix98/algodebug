@@ -1,4 +1,5 @@
 import { CodeBreakpoint, CodeOutput } from "../types/compiler";
+import { parse } from 'node-html-parser';
 
 const BREAKPOINT_TAG = "algodebug-breakpoint";
 const VARIABLE_TAG = "algodebug-variable";
@@ -31,10 +32,11 @@ export class OutputParser {
             var [found, breakpoint] = this.findNextBreakpoint();
             if (found && breakpoint) {
                 result.partialOutputs.push(this.output.substring(this.position, breakpoint.start));
-                result.frames.push(this.parseBreakpoint(breakpoint));
+                result.frames.push(this.parseBreakpoint(breakpoint, result.frames.length));
                 this.position = breakpoint.end;
             }
         } while (found);
+        result.partialOutputs.push(this.output.substring(this.position));
 
         return result;
     }
@@ -56,12 +58,8 @@ export class OutputParser {
         return [true, breakpoint];
     }
 
-    parseBreakpoint(breakpoint: Breakpoint): CodeBreakpoint {
-        const parser = new DOMParser();
-        const parsedBreakpoint = parser
-            .parseFromString(breakpoint.tag, "text/html")
-            .getElementsByTagName(BREAKPOINT_TAG)[0];
-
+    parseBreakpoint(breakpoint: Breakpoint, id: number): CodeBreakpoint {
+        const parsedBreakpoint = parse(breakpoint.tag).getElementsByTagName(BREAKPOINT_TAG)[0];
         let line = Number(parsedBreakpoint.getAttribute("line"));
 
         let variables: Record<string, string> = {};
@@ -73,7 +71,7 @@ export class OutputParser {
             }
         }
 
-        return { id: 0, line, variables };
+        return { id, line, variables };
     }
 
     parseVariable(variable: Element) {
