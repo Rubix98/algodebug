@@ -1,20 +1,20 @@
 import { CompilerRequest, CompilerResponse } from "../../types/compiler";
-import { CodeXCompiler } from "./CodeXCompiler"
-import { JDoodleCompiler } from "./JDoodleCompiler";
+import { CodeXCompilerImpl } from "./CodeXCompilerImpl"
+import { JDoodleCompilerImpl } from "./JDoodleCompilerImpl";
 
 export enum CompilerTypes {
   CODEX = "CODEX",
   JDOODLE = "JDOODLE",
 }
 
-export interface ICompiler {
+export interface Compiler {
   compile(request: CompilerRequest): Promise<CompilerResponse>
 }
 
-export function getCompiler():ICompiler {
-  const compilerMap: Record<CompilerTypes, ICompiler> = {
-    [CompilerTypes.CODEX]: new CodeXCompiler(),
-    [CompilerTypes.JDOODLE]: new JDoodleCompiler()
+export function getCompiler():Compiler {
+  const compilerMap: Record<CompilerTypes, Compiler> = {
+    [CompilerTypes.CODEX]: new CodeXCompilerImpl(),
+    [CompilerTypes.JDOODLE]: new JDoodleCompilerImpl()
   }
   return compilerMap[process.env.COMPILER as CompilerTypes];
 }

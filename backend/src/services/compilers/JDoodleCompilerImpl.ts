@@ -1,13 +1,13 @@
 import { CompilerRequest, CompilerResponse } from "../../types/compiler";
 import { OutputParser } from "../../utils/OutputParser";
-import { ICompiler } from "./compilerFactory";
+import { Compiler } from "./compilerFactory";
 
 // https://www.jdoodle.com/compiler-api/
-export class JDoodleCompiler implements ICompiler {
+export class JDoodleCompilerImpl implements Compiler {
     static API_URL: string = "https://api.jdoodle.com/v1/execute"
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
-        const apiResponse = await fetch(JDoodleCompiler.API_URL, {
+        const apiResponse = await fetch(JDoodleCompilerImpl.API_URL, {
             method: "POST",
             body: JSON.stringify({
                 script: request.code,

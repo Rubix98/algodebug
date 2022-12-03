@@ -1,13 +1,13 @@
 import { CompilerRequest, CompilerResponse } from "../../types/compiler";
 import { OutputParser } from "../../utils/OutputParser";
-import { ICompiler } from "./compilerFactory";
+import { Compiler } from "./compilerFactory";
 
 // https://github.com/Jaagrav/CodeX-API
-export class CodeXCompiler implements ICompiler {
+export class CodeXCompilerImpl implements Compiler {
     static API_URL: string = "https://codex-api.herokuapp.com/"
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
-        const apiResponse = await fetch(CodeXCompiler.API_URL, {
+        const apiResponse = await fetch(CodeXCompilerImpl.API_URL, {
             method: "POST",
             body: JSON.stringify({
                 code: request.code,
