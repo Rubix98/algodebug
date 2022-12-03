@@ -116,18 +116,18 @@ export default {
 
         setProject(state, project) {
             // TODO: Zmienić strukturę tych obiektów w bazie danych
-            project.breakpoints.forEach(breakpoint => breakpoint.id = breakpoint._id);
+            project.breakpoints.forEach((breakpoint) => (breakpoint.id = breakpoint._id));
             project.sceneObjects.forEach((sceneObject) => {
                 if (sceneObject.converter) {
-                    sceneObject.converter = {...sceneObject.converter, id: sceneObject.converter._id};
+                    sceneObject.converter = { ...sceneObject.converter, id: sceneObject.converter._id };
                 }
 
-                sceneObject.subobjects.forEach(subobject => {
+                sceneObject.subobjects.forEach((subobject) => {
                     if (subobject.converter) {
-                        subobject.converter = {...subobject.converter, id: subobject.converter._id};
+                        subobject.converter = { ...subobject.converter, id: subobject.converter._id };
                     }
-                })
-            })
+                });
+            });
 
             // TODO: Dynamiczne przepisywanie
             state.id = project._id;
