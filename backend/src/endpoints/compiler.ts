@@ -11,7 +11,6 @@ export const compileCode = async (req: Request, res: Response) => {
     }
     try {
         let response = await sendRequestsToCompilerAPI(req.body);
-        response[1].success = false;
         let numberOfErrors = response.filter(response => !response.success).length;
         if (numberOfErrors === 0) {
             res.status(200).json(response);
