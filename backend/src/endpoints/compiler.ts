@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { validateCode } from "../services/dbservice";
-import { parseOutput } from "../services/codeservice";
-import { CodexApiResponse } from "../types/compiler";
+import { sendRequestsToCompilerAPI } from "../services/compilerservice";
 
 export const compileCode = async (req: Request, res: Response) => {
     const [isOk, data] = validateCode(req.body);
@@ -11,23 +10,16 @@ export const compileCode = async (req: Request, res: Response) => {
         return;
     }
     try {
-        // for each input send new request
-        let results: CodexApiResponse[] = [];
-
-        for (const input of data.inputs) {
-            const body = { code: data.code, input, language: data.language };
-
-            const result = await fetch(process.env.COMPILER_URL as string, {
-                method: "POST",
-                body: JSON.stringify(body),
-                headers: { "Content-Type": "application/json" },
-            });
-
-            results.push(await result.json());
+        let response = await sendRequestsToCompilerAPI(req.body);
+        response[1].success = false;
+        let numberOfErrors = response.filter(response => !response.success).length;
+        if (numberOfErrors === 0) {
+            res.status(200).json(response);
+        } else if (numberOfErrors < response.length) {
+            res.status(206).json(response);
+        } else {
+            res.status(400).json({error: response[0].errorMessage});
         }
-        // process results
-        const output = parseOutput(results);
-        res.status(200).json(output);
     } catch (err) {
         console.log(err);
         res.status(500).json(err);
