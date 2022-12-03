@@ -11,13 +11,13 @@ export const compileCode = async (req: Request, res: Response) => {
     }
     try {
         let response = await sendRequestsToCompilerAPI(req.body);
-        let numberOfErrors = response.filter(response => !response.success).length;
+        let numberOfErrors = response.filter((response) => !response.success).length;
         if (numberOfErrors === 0) {
             res.status(200).json(response);
         } else if (numberOfErrors < response.length) {
             res.status(206).json(response);
         } else {
-            res.status(400).json({error: response[0].errorMessage});
+            res.status(400).json({ error: response[0].errorMessage });
         }
     } catch (err) {
         console.log(err);

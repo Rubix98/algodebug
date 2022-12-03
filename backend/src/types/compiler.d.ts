@@ -1,14 +1,14 @@
-export type CompilerMultiTestsRequest =  {
+export type CompilerMultiTestsRequest = {
     code: string;
     inputs: string[];
     language: string;
-}
+};
 
 export type CompilerRequest = {
     code: string;
     input: string;
     language: string;
-}
+};
 
 //prettier-ignore
 export type CompilerResponse = {

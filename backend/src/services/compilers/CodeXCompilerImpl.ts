@@ -4,7 +4,7 @@ import { Compiler } from "./compilerFactory";
 
 // https://github.com/Jaagrav/CodeX-API
 export class CodeXCompilerImpl implements Compiler {
-    static API_URL: string = "https://codex-api.herokuapp.com/"
+    static API_URL: string = "https://codex-api.herokuapp.com/";
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
         const apiResponse = await fetch(CodeXCompilerImpl.API_URL, {
@@ -23,7 +23,6 @@ export class CodeXCompilerImpl implements Compiler {
                 success: true,
                 output: new OutputParser(response.output).parse(),
                 errorMessage: null,
-                
             };
         } else {
             return {
@@ -35,17 +34,18 @@ export class CodeXCompilerImpl implements Compiler {
     }
 }
 
-type CodexApiResponse = {
-    success: true;
-    output: string;
-    language: string;
-    timestamp: string;
-    version: string;
-} | {
-    success: false;
-    error: string;
-    language: string;
-    timestamp: string;
-    version: string;
-};
-
+type CodexApiResponse =
+    | {
+          success: true;
+          output: string;
+          language: string;
+          timestamp: string;
+          version: string;
+      }
+    | {
+          success: false;
+          error: string;
+          language: string;
+          timestamp: string;
+          version: string;
+      };

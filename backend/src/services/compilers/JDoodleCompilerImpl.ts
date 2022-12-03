@@ -4,7 +4,7 @@ import { Compiler } from "./compilerFactory";
 
 // https://www.jdoodle.com/compiler-api/
 export class JDoodleCompilerImpl implements Compiler {
-    static API_URL: string = "https://api.jdoodle.com/v1/execute"
+    static API_URL: string = "https://api.jdoodle.com/v1/execute";
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
         const apiResponse = await fetch(JDoodleCompilerImpl.API_URL, {
@@ -12,9 +12,9 @@ export class JDoodleCompilerImpl implements Compiler {
             body: JSON.stringify({
                 script: request.code,
                 stdin: request.input,
-                language: 'cpp17',
+                language: "cpp17",
                 clientId: process.env.COMPILER_CLIENT_ID,
-                clientSecret: process.env.COMPILER_CLIENT_SECRET
+                clientSecret: process.env.COMPILER_CLIENT_SECRET,
             }),
             headers: { "Content-Type": "application/json" },
         });
@@ -41,6 +41,5 @@ type JDoodleAPIResponse = {
     output: string;
     memory: number;
     cpuTime: number;
-    error: string,
+    error: string;
 };
-

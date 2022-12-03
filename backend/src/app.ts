@@ -21,7 +21,9 @@ dotenv.config();
 });
 
 if (process.env.COMPILER && !Object.keys(CompilerTypes).includes(process.env.COMPILER)) {
-    throw new Error(`Environment variable COMPILER should be set to one of the following values: ${Object.keys(CompilerTypes)}`);
+    throw new Error(
+        `Environment variable COMPILER should be set to one of the following values: ${Object.keys(CompilerTypes)}`
+    );
 }
 
 if (process.env.COMPILER == CompilerTypes.JDOODLE) {
@@ -31,8 +33,6 @@ if (process.env.COMPILER == CompilerTypes.JDOODLE) {
         }
     });
 }
-
-
 
 // initialize database connection
 await InitializeConnection();

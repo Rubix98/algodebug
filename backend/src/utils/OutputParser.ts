@@ -1,5 +1,5 @@
 import { CodeBreakpoint, CodeOutput } from "../types/compiler";
-import { parse } from 'node-html-parser';
+import { parse } from "node-html-parser";
 
 const BREAKPOINT_TAG = "algodebug-breakpoint";
 const VARIABLE_TAG = "algodebug-variable";
