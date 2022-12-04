@@ -41,7 +41,7 @@ function handleVarTrackerMove(change, varObj) {
         if (isSubinterval(varObj.start, varObj.end, change.start, change.end)) {
             varObj.end += change.size;
             if (varObj.end - varObj.start <= 0) return "Delete";
-            return;
+            return "Rename";
         }
         return "Delete";
     }
@@ -54,14 +54,26 @@ function handleVarTrackerMove(change, varObj) {
 
 export function moveTrackedVariables(change) {
     store.dispatch("project/removeOutdatedVariables", (sceneObj) => {
-        if (handleVarTrackerMove(change, sceneObj.variable) == "Delete") {
+        let wasAnyVariableRenamed = false;
+
+        let result = handleVarTrackerMove(change, sceneObj.variable);
+        if (result == "Delete") {
             sceneObj.variable = null;
+        } else if (result == "Rename") {
+            wasAnyVariableRenamed = true;
         }
 
         for (let subobj of sceneObj.subobjects) {
-            if (handleVarTrackerMove(change, subobj.variable) == "Delete") {
+            result = handleVarTrackerMove(change, subobj.variable);
+            if (result == "Delete") {
                 subobj.variable = null;
+            } else if (result == "Rename") {
+                wasAnyVariableRenamed = true;
             }
+        }
+
+        if (wasAnyVariableRenamed) {
+            store.dispatch("project/renameVariables", sceneObj);
         }
     });
 }

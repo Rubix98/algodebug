@@ -181,6 +181,20 @@ export default {
         addOrDeleteBreakpoint(state, id) {
             state.breakpoints.addOrDelete({ id: id });
         },
+
+        renameVariables(state, sceneObject) {
+            sceneObject.variable.id = sceneObject.variable.name = state.code.substr(
+                sceneObject.variable.start,
+                sceneObject.variable.end - sceneObject.variable.start
+            );
+
+            sceneObject.subobjects.forEach((subObj) => {
+                subObj.variable.id = subObj.variable.name = state.code.substr(
+                    subObj.variable.start,
+                    subObj.variable.end - subObj.variable.start
+                );
+            });
+        },
     },
 
     actions: {
@@ -248,5 +262,6 @@ export default {
         addBreakpoint: ({ commit }, id) => commit("addBreakpoint", id),
         deleteBreakpoint: ({ commit }, id) => commit("deleteBreakpoint", id),
         addOrDeleteBreakpoint: ({ commit }, id) => commit("addOrDeleteBreakpoint", id),
+        renameVariables: ({ commit }, sceneObject) => commit("renameVariables", sceneObject),
     },
 };
