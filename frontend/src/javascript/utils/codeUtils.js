@@ -10,10 +10,9 @@ export function compareCode(oldText, newText, event, selection) {
         end: selection.end,
         size: lengthDifference,
         deltaLineCount: lineCountDifference,
+        firstChangedLine: oldText.substr(0, selection.start).numberOfLines(),
+        lastChangedLine: oldText.substr(0, selection.end).numberOfLines(),
     };
-
-    result.firstChangedLine = oldText.substr(0, result.start).numberOfLines();
-    result.lastChangedLine = oldText.substr(0, result.end).numberOfLines();
 
     if (selection.start != selection.end) return result;
     if (lengthDifference >= 0) return result;
