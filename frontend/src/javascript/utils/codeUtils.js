@@ -1,70 +1,68 @@
 import store from "@/store";
+import { areIntervalsIntersect, isSubinterval } from "./intervalsUtils";
 
 export function compareCode(oldText, newText, event, selection) {
-    let oldLen = oldText.length;
-    let newLen = newText.length;
-    let lengthDifference = newLen - oldLen;
+    let lengthDifference = newText.length - oldText.length;
+    let lineCountDifference = newText.numberOfLines() - oldText.numberOfLines();
 
-    let oldLineCount = oldText.numberOfLines();
-    let newLineCount = newText.numberOfLines();
-    let lineCountDifference = newLineCount - oldLineCount;
-
-    let ret = {
+    let result = {
         start: selection.start,
         end: selection.end,
         size: lengthDifference,
         deltaLineCount: lineCountDifference,
     };
 
-    if (selection.start != selection.end) return ret;
-    if (lengthDifference >= 0) return ret;
+    result.firstChangedLine = oldText.substr(0, result.start).numberOfLines();
+    result.lastChangedLine = oldText.substr(0, result.end).numberOfLines();
+
+    if (selection.start != selection.end) return result;
+    if (lengthDifference >= 0) return result;
 
     if (!event.inputType.includes("Backward") && !event.inputType.includes("Forward")) {
         console.error("Unhandled input type: ", event.inputType);
-        return ret;
+        return result;
     }
 
     if (event.inputType.includes("Backward")) {
-        ret.start -= Math.abs(lengthDifference);
+        result.start -= Math.abs(lengthDifference);
+        result.firstChangedLine = oldText.substr(0, result.start).numberOfLines();
     } else {
-        ret.end += Math.abs(lengthDifference);
+        result.end += Math.abs(lengthDifference);
+        result.lastChangedLine = oldText.substr(0, result.end).numberOfLines();
     }
 
-    return ret;
+    return result;
 }
 
-export function moveTrackedVariables(changes) {
-    const handleVarTrackerMove = (ch, varObj) => {
-        if (varObj == null) return;
+function handleVarTrackerMove(change, varObj) {
+    if (varObj == null) return;
 
-        if (ch.end > varObj.start && ch.start < varObj.end) {
-            if (ch.start >= varObj.start && ch.end <= varObj.end) {
-                varObj.end += ch.size;
-                if (varObj.end - varObj.start <= 0) return "Delete";
-                return;
-            }
-            return "Delete";
+    if (areIntervalsIntersect(varObj.start, varObj.end, change.start, change.end)) {
+        if (isSubinterval(varObj.start, varObj.end, change.start, change.end)) {
+            varObj.end += change.size;
+            if (varObj.end - varObj.start <= 0) return "Delete";
+            return;
         }
+        return "Delete";
+    }
 
-        if (ch.end <= varObj.start) {
-            varObj.start += ch.size;
-            varObj.end += ch.size;
-        }
-    };
+    if (change.end <= varObj.start) {
+        varObj.start += change.size;
+        varObj.end += change.size;
+    }
+}
 
-    store.dispatch("project/filterSceneObjects", (sceneObj) => {
-        let mainVar = sceneObj.variable;
-        if (handleVarTrackerMove(changes, mainVar) == "Delete") {
-            return false;
+export function moveTrackedVariables(change) {
+    store.dispatch("project/removeOutdatedVariables", (sceneObj) => {
+        if (handleVarTrackerMove(change, sceneObj.variable) == "Delete") {
+            sceneObj.variable = null;
         }
 
         for (let subobj of sceneObj.subobjects) {
-            if (handleVarTrackerMove(changes, subobj.variable) == "Delete") {
+            if (handleVarTrackerMove(change, subobj.variable) == "Delete") {
                 subobj.variable = null;
             }
         }
-
-        return true;
     });
 }
 
@@ -77,19 +75,14 @@ export function moveBreakpoints(project, change) {
     for (let bp of project.breakpoints) {
         if (bp[0] < firstChangedLine) continue;
         if (bp[0] > firstChangedLine && bp[0] < firstChangedLine - change.deltaLineCount) {
-            project.breakpoints.addOrDelete({
-                id: bp[0],
-            });
+            store.dispatch("project/deleteBreakpoint", bp[0]);
         } else if (bp[0] > firstChangedLine) {
             affectedBreakpoints.push(bp[0]);
         }
     }
+
     for (let affectedBreakpoint of affectedBreakpoints) {
-        project.breakpoints.addOrDelete({
-            id: affectedBreakpoint,
-        });
-        project.breakpoints.addOrDelete({
-            id: affectedBreakpoint + change.deltaLineCount,
-        });
+        store.dispatch("project/addOrDeleteBreakpoint", affectedBreakpoint);
+        store.dispatch("project/addOrDeleteBreakpoint", affectedBreakpoint + change.deltaLineCount);
     }
 }

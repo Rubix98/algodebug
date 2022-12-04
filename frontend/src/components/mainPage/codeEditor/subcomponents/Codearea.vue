@@ -46,11 +46,9 @@ export default {
 
         handleCodeChange(change) {
             moveTrackedVariables(change);
-            moveBreakpoints(this.project, {
-                ...change,
-                firstChangedLine: this.$props.code.substr(0, change.start - 1).numberOfLines(),
-            });
+            moveBreakpoints(this.project, change);
         },
+
         emitScrollEvent(event) {
             this.$emit("scrollEvent", event.target);
         },

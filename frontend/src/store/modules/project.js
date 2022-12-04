@@ -152,8 +152,20 @@ export default {
             state.sceneObjects.push(sceneObject);
         },
 
-        filterSceneObjects(state, filterFunction) {
-            state.sceneObjects = state.sceneObjects.filter(filterFunction);
+        removeOutdatedVariables(state, handlerFunction) {
+            state.sceneObjects.forEach(handlerFunction);
+        },
+
+        addBreakpoint(state, id) {
+            state.breakpoints.addElement({ id: id });
+        },
+
+        deleteBreakpoint(state, id) {
+            state.breakpoints.delete(id);
+        },
+
+        addOrDeleteBreakpoint(state, id) {
+            state.breakpoints.addOrDelete({ id: id });
         },
     },
 
@@ -219,6 +231,9 @@ export default {
             });
         },
 
-        filterSceneObjects: ({ commit }, filterFunction) => commit("filterSceneObjects", filterFunction),
+        removeOutdatedVariables: ({ commit }, handlerFunction) => commit("removeOutdatedVariables", handlerFunction),
+        addBreakpoint: ({ commit }, id) => commit("addBreakpoint", id),
+        deleteBreakpoint: ({ commit }, id) => commit("deleteBreakpoint", id),
+        addOrDeleteBreakpoint: ({ commit }, id) => commit("addOrDeleteBreakpoint", id),
     },
 };
