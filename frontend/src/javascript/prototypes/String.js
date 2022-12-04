@@ -26,5 +26,5 @@ String.prototype.escapeHTML = function () {
 };
 
 String.prototype.numberOfLines = function () {
-    return (this.match(/\n/g) || []).length;
+    return this.split("\n").length;
 };

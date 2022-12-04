@@ -80,7 +80,7 @@ export function moveTrackedVariables(change) {
 export function moveBreakpoints(project, change) {
     if (change.deltaLineCount == 0) return;
 
-    let firstChangedLine = change.firstChangedLine;
+    let firstChangedLine = change.firstChangedLine - 1;
 
     let affectedBreakpoints = [];
     for (let bp of project.breakpoints) {
