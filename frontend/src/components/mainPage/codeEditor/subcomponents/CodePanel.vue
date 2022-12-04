@@ -40,10 +40,7 @@ export default {
 
         runProgram() {
             this.compile().then((success) => {
-                if (!success) {
-                    alert("Błąd kompilacji!");
-                    return;
-                }
+                if (!success) return;
                 this.emitter.emit("startDebuggingEvent");
             });
         },

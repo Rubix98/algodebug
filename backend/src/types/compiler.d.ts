@@ -1,35 +1,25 @@
-//prettier-ignore
-export type CodexApiResponse = {
-          language: string;
-          success: false;
-          error: string;
-          timestamp: string;
-          version: string;
-      }
-    | {
-          language: string;
-          success: true;
-          output: string;
-          timestamp: string;
-          version: string;
-      };
+export type CompilerMultiTestsRequest = {
+    code: string;
+    inputs: string[];
+    language: string;
+};
 
-export type CompilationResult = {
-    success: boolean;
-    details: CompilationResultDetail[];
+export type CompilerRequest = {
+    code: string;
+    input: string;
+    language: string;
 };
 
 //prettier-ignore
-export type CompilationResultDetail = {
-          success: true;
-          errorMessage: null;
-          output: CodeOutput;
-      }
-    | {
-          success: false;
-          errorMessage: string;
-          output: null;
-      };
+export type CompilerResponse = {
+    success: true;
+    errorMessage: null;
+    output: CodeOutput;
+} | {
+    success: false;
+    errorMessage: string;
+    output: null;
+}
 
 export type CodeOutput = {
     fullOutput: string;

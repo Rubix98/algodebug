@@ -6,6 +6,7 @@ import { InitializeConnection } from "./services/dbservice";
 import { getProjectById, getAllProjects, saveProject, updateProject } from "./endpoints/project";
 import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./endpoints/converter";
 import { compileCode } from "./endpoints/compiler";
+import { CompilerTypes } from "./services/compilers/compilerFactory";
 
 interface ResponseError extends Error {
     status?: number;
@@ -13,11 +14,25 @@ interface ResponseError extends Error {
 
 // test env variables
 dotenv.config();
-["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER_URL"].forEach((variable) => {
+["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER"].forEach((variable) => {
     if (!process.env[variable]) {
         throw new Error(`Environment variable ${variable} is not set`);
     }
 });
+
+if (process.env.COMPILER && !Object.keys(CompilerTypes).includes(process.env.COMPILER)) {
+    throw new Error(
+        `Environment variable COMPILER should be set to one of the following values: ${Object.keys(CompilerTypes)}`
+    );
+}
+
+if (process.env.COMPILER == CompilerTypes.JDOODLE) {
+    ["COMPILER_CLIENT_ID", "COMPILER_CLIENT_SECRET"].forEach((variable) => {
+        if (!process.env[variable]) {
+            throw new Error(`Environment variable ${variable} is not set`);
+        }
+    });
+}
 
 // initialize database connection
 await InitializeConnection();

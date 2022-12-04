@@ -6,10 +6,17 @@ export function sendRequest(url, data = {}, method) {
     method = method.toLowerCase();
     url = getBackendUrl() + url;
     console.log(method, url);
-    return axios[method](url, data).then((response) => {
-        console.log(response);
-        return response.data;
-    });
+    return axios[method](url, data)
+        .then((response) => {
+            console.log(response);
+            return response.data;
+        })
+        .catch((error) => {
+            console.error(error);
+            let errorMessage =
+                error.message + (error.response.data.error ? "\nDetails: " + error.response.data.error : "");
+            alert(errorMessage);
+        });
 }
 
 function getBackendUrl() {

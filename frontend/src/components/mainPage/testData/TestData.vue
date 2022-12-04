@@ -55,7 +55,7 @@ export default {
         },
 
         output() {
-            let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : this.numberOfFrames;
+            let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
             return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
         },
     },

@@ -30,8 +30,9 @@ Before running the app you will need to create `.env` file in this directory and
 `DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
 `ORIGINS` - origins to allow cross-origin requests separated by commas  
-`COMPILER_URL` - URL to compiler API
-
+`COMPILER` - id of chosen compiler's API. Possible values: CODEX, JDOODLE
+`COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)
+`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)
 (in node 17+ use 127.0.0.1 instead of localhost)
 
 Example `.env` file might look like this:
@@ -41,7 +42,7 @@ PORT=8080
 DATABASE_URI=mongodb+srv://AlgoDebug:AlgoDebug@streamchess.jlv3n.mongodb.net/
 DATABASE_NAME=AlgoDebug
 ORIGINS=http://127.0.0.1:8081,http://localhost:8081,https://my-service.com
-COMPILER_URL=https://codex-api.herokuapp.com/
+COMPILER=CODEX
 ```
 
 then you have two options:
