@@ -38,8 +38,8 @@ export default {
 
             const variable = {
                 name: event.target.innerText,
-                start: event.target.attributes.start.value,
-                end: event.target.attributes.end.value,
+                start: Number(event.target.attributes.start.value),
+                end: Number(event.target.attributes.end.value),
             };
             this.$emit("pickVariableEvent", variable);
         },
