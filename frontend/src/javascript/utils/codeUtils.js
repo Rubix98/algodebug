@@ -92,7 +92,7 @@ export function moveBreakpoints(project, change) {
         }
     }
     affectedBreakpoints.sort((a, b) => {
-        return a - b;
+        return change.deltaLineCount < 0 ? a - b : b - a;
     });
 
     for (let affectedBreakpoint of affectedBreakpoints) {
