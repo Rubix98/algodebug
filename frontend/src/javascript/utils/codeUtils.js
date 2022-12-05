@@ -10,8 +10,8 @@ export function compareCode(oldText, newText, event, selection) {
         end: selection.end,
         size: lengthDifference,
         deltaLineCount: lineCountDifference,
-        firstChangedLine: oldText.substr(0, selection.start).numberOfLines(),
-        lastChangedLine: oldText.substr(0, selection.end).numberOfLines(),
+        firstChangedLine: oldText.substring(0, selection.start).numberOfLines(),
+        lastChangedLine: oldText.substring(0, selection.end).numberOfLines(),
     };
 
     if (selection.start != selection.end) return result;
@@ -24,10 +24,10 @@ export function compareCode(oldText, newText, event, selection) {
 
     if (event.inputType.includes("Backward")) {
         result.start -= Math.abs(lengthDifference);
-        result.firstChangedLine = oldText.substr(0, result.start).numberOfLines();
+        result.firstChangedLine = oldText.substring(0, result.start).numberOfLines();
     } else {
         result.end += Math.abs(lengthDifference);
-        result.lastChangedLine = oldText.substr(0, result.end).numberOfLines();
+        result.lastChangedLine = oldText.substring(0, result.end).numberOfLines();
     }
 
     return result;
@@ -91,6 +91,9 @@ export function moveBreakpoints(project, change) {
             affectedBreakpoints.push(bp[0]);
         }
     }
+    affectedBreakpoints.sort((a, b) => {
+        return b - a;
+    });
 
     for (let affectedBreakpoint of affectedBreakpoints) {
         store.dispatch("project/addOrDeleteBreakpoint", affectedBreakpoint);

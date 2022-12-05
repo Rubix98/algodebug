@@ -7,7 +7,7 @@ String.prototype.replaceFromIndex = function (from, to, index) {
     if (index < 0) {
         index = 0;
     }
-    return this.substr(0, index) + this.substr(index).replace(from, to);
+    return this.substring(0, index) + this.substring(index).replace(from, to);
 };
 
 String.prototype.escapeHTML = function () {

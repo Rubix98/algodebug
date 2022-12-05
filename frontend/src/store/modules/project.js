@@ -183,15 +183,15 @@ export default {
         },
 
         renameVariables(state, sceneObject) {
-            sceneObject.variable.id = sceneObject.variable.name = state.code.substr(
+            sceneObject.variable.id = sceneObject.variable.name = state.code.substring(
                 sceneObject.variable.start,
-                sceneObject.variable.end - sceneObject.variable.start
+                sceneObject.variable.end
             );
 
             sceneObject.subobjects.forEach((subObj) => {
-                subObj.variable.id = subObj.variable.name = state.code.substr(
+                subObj.variable.id = subObj.variable.name = state.code.substring(
                     subObj.variable.start,
-                    subObj.variable.end - subObj.variable.start
+                    subObj.variable.end
                 );
             });
         },
