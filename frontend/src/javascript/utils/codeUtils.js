@@ -92,11 +92,11 @@ export function moveBreakpoints(project, change) {
         }
     }
     affectedBreakpoints.sort((a, b) => {
-        return b - a;
+        return a - b;
     });
 
     for (let affectedBreakpoint of affectedBreakpoints) {
-        store.dispatch("project/addOrDeleteBreakpoint", affectedBreakpoint);
-        store.dispatch("project/addOrDeleteBreakpoint", affectedBreakpoint + change.deltaLineCount);
+        store.dispatch("project/deleteBreakpoint", affectedBreakpoint);
+        store.dispatch("project/addBreakpoint", affectedBreakpoint + change.deltaLineCount);
     }
 }
