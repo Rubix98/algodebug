@@ -1,8 +1,16 @@
 <template>
-    <textarea v-model="model" :readonly="readonly" @keydown.tab.prevent="insertTabIndent"></textarea>
+    <textarea
+        v-model="model"
+        :readonly="readonly"
+        @keydown.tab.prevent="insertTabIndent"
+        @beforeinput="handleBeforeinput"
+        @input="handleInput"
+    ></textarea>
 </template>
 
 <script>
+import { compareCode } from "@/javascript/utils/codeUtils";
+
 export default {
     props: ["value", "readonly"],
 
@@ -18,6 +26,31 @@ export default {
             this.$nextTick(() => {
                 event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
             });
+
+            this.$emit("code-change", {
+                start: event.target.selectionStart,
+                end: event.target.selectionStart + 1,
+                size: 1,
+                deltaLineCount: 0,
+            });
+        },
+
+        handleBeforeinput(event) {
+            if (["historyUndo", "historyRedo"].includes(event.inputType)) {
+                event.preventDefault();
+                return;
+            }
+
+            this.oldText = event.target.value;
+            this.selection = {
+                start: event.target.selectionStart,
+                end: event.target.selectionEnd,
+            };
+        },
+
+        handleInput(event) {
+            let result = compareCode(this.oldText, event.target.value, event, this.selection);
+            this.$emit("code-change", result);
         },
     },
 

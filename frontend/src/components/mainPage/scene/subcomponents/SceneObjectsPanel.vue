@@ -6,7 +6,7 @@
             :key="index"
             @click="configureSceneObject(sceneObject, $event)"
         >
-            {{ sceneObject.type.label }} {{ sceneObject.variable.name }}
+            {{ sceneObject.type.label }} {{ sceneObject.variable ? sceneObject.variable.name : "null" }}
             <AlgoIcon type="x" @click="deleteSceneObject(index)" />
         </div>
     </div>

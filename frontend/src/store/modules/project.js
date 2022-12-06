@@ -165,6 +165,36 @@ export default {
         addNewSceneObject(state, sceneObject) {
             state.sceneObjects.push(sceneObject);
         },
+
+        removeOutdatedVariables(state, handlerFunction) {
+            state.sceneObjects.forEach(handlerFunction);
+        },
+
+        addBreakpoint(state, id) {
+            state.breakpoints.addElement({ id: id });
+        },
+
+        deleteBreakpoint(state, id) {
+            state.breakpoints.delete(id);
+        },
+
+        addOrDeleteBreakpoint(state, id) {
+            state.breakpoints.addOrDelete({ id: id });
+        },
+
+        renameVariables(state, sceneObject) {
+            sceneObject.variable.id = sceneObject.variable.name = state.code.substring(
+                sceneObject.variable.start,
+                sceneObject.variable.end
+            );
+
+            sceneObject.subobjects.forEach((subObj) => {
+                subObj.variable.id = subObj.variable.name = state.code.substring(
+                    subObj.variable.start,
+                    subObj.variable.end
+                );
+            });
+        },
     },
 
     actions: {
@@ -227,5 +257,11 @@ export default {
                 return true;
             });
         },
+
+        removeOutdatedVariables: ({ commit }, handlerFunction) => commit("removeOutdatedVariables", handlerFunction),
+        addBreakpoint: ({ commit }, id) => commit("addBreakpoint", id),
+        deleteBreakpoint: ({ commit }, id) => commit("deleteBreakpoint", id),
+        addOrDeleteBreakpoint: ({ commit }, id) => commit("addOrDeleteBreakpoint", id),
+        renameVariables: ({ commit }, sceneObject) => commit("renameVariables", sceneObject),
     },
 };

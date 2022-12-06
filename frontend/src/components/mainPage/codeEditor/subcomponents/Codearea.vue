@@ -13,6 +13,7 @@
             v-show="editable"
             v-model:value="modelCode"
             @scroll="emitScrollEvent"
+            @code-change="handleCodeChange"
             spellcheck="false"
         />
     </div>
@@ -22,6 +23,7 @@
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
 import { highlightVariables, highlightLine, highlightTargets } from "@/javascript/utils/highlightUtils";
 import { mapState, mapActions, mapGetters } from "vuex";
+import { moveBreakpoints, moveTrackedVariables } from "@/javascript/utils/codeUtils";
 
 export default {
     components: { AlgoTextarea },
@@ -36,10 +38,15 @@ export default {
 
             const variable = {
                 name: event.target.innerText,
-                start: event.target.attributes.start.value,
-                end: event.target.attributes.end.value,
+                start: Number(event.target.attributes.start.value),
+                end: Number(event.target.attributes.end.value),
             };
             this.$emit("pickVariableEvent", variable);
+        },
+
+        handleCodeChange(change) {
+            moveTrackedVariables(change);
+            moveBreakpoints(this.project, change);
         },
 
         emitScrollEvent(event) {
