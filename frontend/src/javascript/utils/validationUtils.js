@@ -1,6 +1,4 @@
-import { useToast } from "vue-toastification";
-
-const toast = useToast();
+import toast from "@/javascript/utils/toastUtils";
 
 export function validateSceneObject(model) {
     if (!assert(model.type != null, "Podaj rodzaj obiektu")) return false;
