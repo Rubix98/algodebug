@@ -1,12 +1,11 @@
 import axios from "axios";
-import { useToast } from "vue-toastification";
-
-const toast = useToast();
+import toast from "@/javascript/utils/toastUtils";
 
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
 
-    const loadingToast = toast.info("Trwa wysyłanie żądania do serwera...", { timeout: false });
+    const toastStrings = getEndpointRelatedToast(method, url);
+    const loadingToast = toastStrings.loading ? toast.info(toastStrings.loading, { timeout: false }) : undefined;
 
     method = method.toLowerCase();
     url = getBackendUrl() + url;
@@ -14,16 +13,17 @@ export function sendRequest(url, data = {}, method) {
     return axios[method](url, data)
         .then((response) => {
             console.log(response);
-            toast.success("Żądanie zakończone sukcesem!\n" + method + " " + url);
+            if (toastStrings.success) toast.success(toastStrings.success);
             return response.data;
         })
         .catch((error) => {
             console.error(error);
             let errorMessage = error.message + (error.response ? "\nDetails: " + error.response.data.error : "");
-            toast.error("Żądanie nie powiodło się:\n" + method + " " + url + "\n" + errorMessage);
+            console.error(errorMessage);
+            toast.error(toastStrings.error ? toastStrings.error : "Wystąpił błąd! Spróbuj ponownie później.");
         })
         .finally(() => {
-            toast.dismiss(loadingToast);
+            if (loadingToast != undefined) toast.dismiss(loadingToast);
         });
 }
 
@@ -33,4 +33,22 @@ function getBackendUrl() {
 
 function validateMethod(method) {
     return method && ["get", "post", "put"].includes(method.toLowerCase());
+}
+
+function getEndpointRelatedToast(method, url) {
+    if (url.startsWith("/project/find")) return { error: "Nie można pobrać projektu" };
+    if (url.startsWith("/project/findAll")) return { error: "Nie można pobrać listy projektów" };
+    if (url.startsWith("/converter/findAll")) return { error: "Nie można pobrać listy konwerterów" };
+
+    if (url.startsWith("/project/save")) return { success: "Zapisano projekt w bazie danych" };
+    if (url.startsWith("/compiler/compile"))
+        return {
+            success: "Pomyślnie skompilowano kod",
+            loading: "Trwa kompilacja...",
+            error: "Wystąpił błąd kompilacji",
+        };
+    if (url.startsWith("/converter/save")) return { success: "Zapisano konwerter w bazie danych" };
+
+    if (method.toLowerCase() == "get") return {};
+    return { success: "Pomyślnie zapisano" };
 }
