@@ -21,6 +21,7 @@
         "vue-konva": "^3.0.1",
         "vue-modaltor": "^1.5.4",
         "vue-universal-modal": "^1.1.4",
+        "vuetify": "^3.0.4",
         "vuex": "^4.1.0"
     },
     "devDependencies": {
