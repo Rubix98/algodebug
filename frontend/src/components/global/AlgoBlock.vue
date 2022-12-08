@@ -32,7 +32,7 @@ export default {
     font-size: 18px;
     border-radius: 10px 10px 0 0;
     color: #eee;
-    font-family: Consolas;
+    font-family: "SourceCodePro";
 }
 
 .content {
