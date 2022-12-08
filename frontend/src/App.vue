@@ -1,47 +1,25 @@
 <template>
-    <div class="app-container">
-        <Menu />
-
-        <div class="content-container">
+    <v-app>
+        <AppBar />
+        <v-main>
             <MainPage />
-        </div>
-
+        </v-main>
         <Modal />
-    </div>
+    </v-app>
 </template>
 
 <script>
-import Menu from "@/components/menu/Menu.vue";
+import { defineComponent } from "vue";
+import AppBar from "@/components/appBar/AppBar.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
 
-export default {
-    // ERROR: Name "Menu" is reserved in HTML
-    // eslint-disable-next-line
-    components: { Menu, MainPage, Modal: container },
-};
+export default defineComponent({
+    name: "App",
+
+    components: { AppBar, MainPage, Modal: container },
+});
 </script>
-
-<style scoped>
-.app-container {
-    width: 100vw;
-    height: 100vh;
-}
-
-.menu-container {
-    height: 50px;
-}
-
-.content-container {
-    width: 100%;
-    height: calc(100% - 50px);
-}
-
-.modal-container {
-    z-index: 10;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-</style>
 
 <style>
 /* Global */
