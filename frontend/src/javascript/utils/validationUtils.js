@@ -1,3 +1,5 @@
+import toast from "@/javascript/utils/toastUtils";
+
 export function validateSceneObject(model) {
     if (!assert(model.type != null, "Podaj rodzaj obiektu")) return false;
     if (!assert(model.variable != null, "Przypisz zmienną")) return false;
@@ -10,7 +12,7 @@ export function validateSceneObject(model) {
 
 function assert(assertion, warning) {
     if (!assertion) {
-        alert(warning); //TODO: Toast zamiast alerta
+        toast.error(warning);
         return false;
     }
     return true;

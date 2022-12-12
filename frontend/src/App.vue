@@ -124,4 +124,8 @@ body {
 .width-1-of-2 {
     width: 50%;
 }
+
+.Vue-Toastification__container {
+    margin-top: 55px;
+}
 </style>
