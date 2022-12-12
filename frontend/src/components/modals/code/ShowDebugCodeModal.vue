@@ -3,7 +3,7 @@
         <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="true" />
 
         <template #buttons>
-            <AlgoButton @click="copy()">Kopiuj</AlgoButton>
+            <AlgoButton @click="copy()" type="ok">Kopiuj</AlgoButton>
         </template>
     </AlgoModal>
 </template>

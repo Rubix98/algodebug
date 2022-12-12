@@ -9,8 +9,8 @@
         </AlgoFieldRow>
 
         <template #buttons>
-            <AlgoButton class="ok" @click="addConverter()">Ustaw</AlgoButton>
-            <AlgoButton class="ok" @click="saveConverter()">Zapisz i ustaw</AlgoButton>
+            <AlgoButton type="ok" @click="addConverter()">Ustaw</AlgoButton>
+            <AlgoButton type="ok" @click="saveConverter()">Zapisz i ustaw</AlgoButton>
         </template>
     </AlgoModal>
 </template>

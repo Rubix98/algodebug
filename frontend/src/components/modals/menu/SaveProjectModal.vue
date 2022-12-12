@@ -3,8 +3,8 @@
         <input type="text" v-model="projectTitle" class="full-size" placeholder="Tytuł projektu" />
 
         <template #buttons>
-            <AlgoButton class="ok" @click="save(false)">Zapisz jako</AlgoButton>
-            <AlgoButton class="ok" @click="save(true)" v-if="project.id">Zapisz</AlgoButton>
+            <AlgoButton type="ok" @click="save(false)">Zapisz jako</AlgoButton>
+            <AlgoButton type="ok" @click="save(true)" v-if="project.id">Zapisz</AlgoButton>
         </template>
     </AlgoModal>
 </template>

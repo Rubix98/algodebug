@@ -21,7 +21,7 @@
         ></AlgoTable>
 
         <template #buttons>
-            <AlgoButton class="ok" @click="save">Zapisz</AlgoButton>
+            <AlgoButton type="ok" @click="save">Zapisz</AlgoButton>
         </template>
     </AlgoModal>
 </template>

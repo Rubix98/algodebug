@@ -12,7 +12,7 @@
                 <AlgoIcon type="x" @click="deleteTestCase(index)" v-if="canRemoveTests" />
             </div>
 
-            <AlgoButton class="add-button" v-if="!project.isRunning" @click="addTestCase()">
+            <AlgoButton type="ok" v-if="!project.isRunning" @click="addTestCase()">
                 <i class="fa-solid fa-square-plus"></i> Dodaj nowy test
             </AlgoButton>
         </div>
