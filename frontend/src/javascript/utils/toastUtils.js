@@ -53,5 +53,6 @@ export function getEndpointRelatedToast(url) {
             error: "Wystąpił błąd kompilacji",
         };
 
+    console.warn(`Toasty dla endpointu ${url} nie zostały określone`);
     return {};
 }
