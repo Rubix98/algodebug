@@ -46,6 +46,14 @@ export default {
 <style>
 /* Global */
 
+@font-face {
+    font-family: "SourceCodePro";
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+    src: local("SourceCodePro"), url("/public/fonts/SourceCodePro-Regular.ttf");
+}
+
 body {
     font-family: "Tahoma", sans-serif;
 }
