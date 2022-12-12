@@ -6,7 +6,7 @@ export const TestCase = Record({
 
 export type TestCase = Static<typeof TestCase>;
 
-export const sanitizeTestCase = (t: TestCase) => {
+export const sanitize = (t: TestCase) => {
     return {
         input: t.input,
     } as TestCase;

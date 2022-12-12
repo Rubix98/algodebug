@@ -1,6 +1,6 @@
-import { Breakpoint, sanitizeBreakpoint } from "../structures/Breakpoint";
-import { TestCase, sanitizeTestCase } from "../structures/TestCase";
-import { SceneObject, sanitizeSceneObject } from "../structures/SceneObject";
+import { Breakpoint, sanitize as sanitizeBreakpoint } from "../structures/Breakpoint";
+import { TestCase, sanitize as sanitizeTestCase } from "../structures/TestCase";
+import { SceneObject, sanitize as sanitizeSceneObject } from "../structures/SceneObject";
 import { Language } from "../structures/Language";
 import { Static, Record, String, Array, Null, Unknown, Optional } from "runtypes";
 
@@ -43,7 +43,7 @@ export const Project = Record({
 
 export type Project = Static<typeof Project>;
 
-export const sanitizeProject = (p: Project) => {
+export const sanitize = (p: Project) => {
     return {
         title: p.title,
         description: p.description,

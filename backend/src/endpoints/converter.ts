@@ -1,9 +1,11 @@
-import { getCollections, validateConverter } from "../services/dbservice";
+import { getCollection, validate } from "../services/dbservice";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 
+import { Converter } from "../models/Converter";
+
 export const getAllConverters = async (_req: Request, res: Response) => {
-    const { converters } = getCollections();
+    const converters = getCollection("converters");
     try {
         const result = await converters.find({}).toArray();
 
@@ -18,7 +20,7 @@ export const getAllConverters = async (_req: Request, res: Response) => {
 };
 
 export const getConverterById = async (req: Request, res: Response) => {
-    const { converters } = getCollections();
+    const converters = getCollection("converters");
     try {
         const id = new ObjectId(req.params.id);
 
@@ -38,28 +40,14 @@ export const getConverterById = async (req: Request, res: Response) => {
     }
 };
 
-export const saveConverter = async (req: Request, res: Response) => {
-    const { converters } = getCollections();
-    const [isOk, data] = validateConverter(req.body);
-
-    if (!isOk) {
-        res.status(400).send({ error: "Invalid request body: " + data });
-        return;
-    }
-
-    try {
-        const result = await converters.insertOne(data);
-        res.status(200).json(result);
-    } catch (err) {
-        res.status(500).json(err);
-    }
-};
-
+/**
+ * Can be used to create a new converter or to update an existing one
+ */
 export const updateConverter = async (req: Request, res: Response) => {
-    const { converters } = getCollections();
-    const [isOk, data] = validateConverter(req.body);
+    const converters = getCollection("converters");
+    const [isOk, data] = await validate(req.body, Converter, "Converter");
 
-    if (!isOk) {
+    if (!isOk || !data) {
         res.status(400).send({ error: "Invalid request body: " + data });
         return;
     }

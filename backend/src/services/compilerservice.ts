@@ -1,7 +1,8 @@
-import { CompilerMultiTestsRequest, CompilerResponse } from "../types/compiler";
+import { CompilerResponse } from "../types/compiler";
 import { getCompiler } from "./compilers/compilerFactory";
+import { CompilerMultiTestsRequest } from "../models/CompilerMultiTestsRequest";
 
-export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsRequest): Promise<CompilerResponse[]> {
+export const sendRequestsToCompilerAPI = async (request: CompilerMultiTestsRequest): Promise<CompilerResponse[]> => {
     let results: CompilerResponse[] = [];
     const compiler = getCompiler();
     for (const input of request.inputs) {
@@ -13,4 +14,4 @@ export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsReque
         results.push(result);
     }
     return results;
-}
+};

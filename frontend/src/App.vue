@@ -15,10 +15,31 @@ import Menu from "@/components/menu/Menu.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
 
+import { handleGoogleLogin, handleGoogleLogout, checkLogin } from "@/javascript/utils/googleLoginUtils";
+
+// temporary config file
+import config from "../config.json";
+
 export default {
     // ERROR: Name "Menu" is reserved in HTML
     // eslint-disable-next-line
     components: { Menu, MainPage, Modal: container },
+
+    mounted() {
+        /* global google */
+        google.accounts.id.initialize({
+            client_id: config.client_id,
+            callback: handleGoogleLogin,
+        });
+
+        google.accounts.id.renderButton(document.getElementById("google-login-button"), {
+            theme: "outline",
+            size: "large",
+        });
+
+        checkLogin();
+        this.emitter.on("GoogleLogout", handleGoogleLogout);
+    },
 };
 </script>
 

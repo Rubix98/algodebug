@@ -1,12 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 
-import { InitializeConnection } from "./services/dbservice";
-import { getProjectById, getAllProjects, saveProject, updateProject } from "./endpoints/project";
-import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./endpoints/converter";
+import { initializeConnection } from "./services/dbservice";
+import { getProjectById, getAllProjects, updateProject } from "./endpoints/project";
+import { getAllConverters, getConverterById, updateConverter } from "./endpoints/converter";
 import { compileCode } from "./endpoints/compiler";
 import { CompilerTypes } from "./services/compilers/compilerFactory";
+import { loginGoogle, logoutGoogle, verifyGoogle } from "./endpoints/user";
 
 interface ResponseError extends Error {
     status?: number;
@@ -14,11 +16,13 @@ interface ResponseError extends Error {
 
 // test env variables
 dotenv.config();
-["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER"].forEach((variable) => {
-    if (!process.env[variable]) {
-        throw new Error(`Environment variable ${variable} is not set`);
+["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER", "GOOGLE_CLIENT_ID", "ALGO_SECRET"].forEach(
+    (variable) => {
+        if (!process.env[variable]) {
+            throw new Error(`Environment variable ${variable} is not set`);
+        }
     }
-});
+);
 
 if (process.env.COMPILER && !Object.keys(CompilerTypes).includes(process.env.COMPILER)) {
     throw new Error(
@@ -34,11 +38,11 @@ if (process.env.COMPILER == CompilerTypes.JDOODLE) {
     });
 }
 
-// initialize database connection
-await InitializeConnection();
-
 // initialize express app
 const app = express();
+
+// initialize database connection
+await initializeConnection();
 
 /* Middleware */
 
@@ -46,9 +50,12 @@ app.listen(process.env.PORT, () => {
     console.log(`Server is running on: http://localhost:${process.env.PORT}`);
 });
 
+app.use(cookieParser());
+
 // attach application/json header to all responses
 app.use((_req, res, next) => {
     res.setHeader("Content-Type", "application/json");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
 
@@ -71,14 +78,17 @@ app.use((err: ResponseError, _req: Request, res: Response, next: NextFunction) =
 // project
 app.get("/project/findAll", getAllProjects);
 app.get("/project/find/:id", getProjectById);
-app.post("/project/save", saveProject);
 app.put("/project/save", updateProject);
 
 // converter
 app.get("/converter/findAll", getAllConverters);
 app.get("/converter/find/:id", getConverterById);
-app.post("/converter/save", saveConverter);
 app.put("/converter/save", updateConverter);
 
 // compiler
 app.post("/compiler/compile", compileCode);
+
+// account
+app.get("/user/google/login/:token", loginGoogle);
+app.get("/user/google/logout", logoutGoogle);
+app.get("/user/google/verify", verifyGoogle);

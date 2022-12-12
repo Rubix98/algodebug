@@ -1,18 +1,18 @@
 import { Language } from "../structures/Language";
 import { Static, Record, String, Array } from "runtypes";
 
-export const Code = Record({
+export const CompilerMultiTestsRequest = Record({
     code: String,
-    language: Language,
     inputs: Array(String),
+    language: Language,
 });
 
-export type Code = Static<typeof Code>;
+export type CompilerMultiTestsRequest = Static<typeof CompilerMultiTestsRequest>;
 
-export const sanitizeCode = (c: Code) => {
+export const sanitize = (c: CompilerMultiTestsRequest) => {
     return {
         code: c.code,
         language: c.language,
         inputs: c.inputs,
-    } as Code;
+    } as CompilerMultiTestsRequest;
 };

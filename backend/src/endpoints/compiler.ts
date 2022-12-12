@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
-import { validateCode } from "../services/dbservice";
+import { validate } from "../services/dbservice";
 import { sendRequestsToCompilerAPI } from "../services/compilerservice";
+import { CompilerMultiTestsRequest } from "../models/CompilerMultiTestsRequest";
 
 export const compileCode = async (req: Request, res: Response) => {
-    const [isOk, data] = validateCode(req.body);
+    const [isOk, data] = await validate(req.body, CompilerMultiTestsRequest, "CompilerMultiTestsRequest");
 
     if (!isOk) {
         res.status(400).json({ error: "Invalid request body: " + data });
         return;
     }
     try {
-        let response = await sendRequestsToCompilerAPI(req.body);
+        let response = await sendRequestsToCompilerAPI(data);
         let numberOfErrors = response.filter((response) => !response.success).length;
         if (numberOfErrors === 0) {
             res.status(200).json(response);

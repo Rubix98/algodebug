@@ -1,4 +1,4 @@
-import { Converter, sanitizeConverter } from "../models/Converter";
+import { Converter, sanitize as sanitizeConverter } from "../models/Converter";
 import { Static, Record, String, Number, Null } from "runtypes";
 
 export const Mark = Record({
@@ -11,7 +11,7 @@ export const Mark = Record({
 
 export type Mark = Static<typeof Mark>;
 
-export const sanitizeMark = (m: Mark) => {
+export const sanitize = (m: Mark) => {
     return {
         start: m.start,
         end: m.end,

@@ -24,7 +24,7 @@ export const Converter = Record({
 
 export type Converter = Static<typeof Converter>;
 
-export const sanitizeConverter = (c: Converter | null) => {
+export const sanitize = (c: Converter | null) => {
     if (c === null) {
         return null;
     }

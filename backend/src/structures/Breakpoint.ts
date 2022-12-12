@@ -6,7 +6,7 @@ export const Breakpoint = Record({
 
 export type Breakpoint = Static<typeof Breakpoint>;
 
-export const sanitizeBreakpoint = (b: Breakpoint) => {
+export const sanitize = (b: Breakpoint) => {
     return {
         id: b.id,
     } as Breakpoint;

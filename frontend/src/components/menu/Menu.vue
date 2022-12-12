@@ -3,6 +3,10 @@
         <div class="menu-content flex-vertical-space-between flex-horizontal-center">
             <img src="images/logo.png" @click="redirectToRoot()" />
 
+            <!-- TODO: move this-->
+            <div id="google-login-button"></div>
+            <button id="logout-button" class="hidden" @click="sendLogout">Wyloguj</button>
+
             <div class="buttons-container">
                 <AlgoButton @click="openSaveProjectModal()"> <i class="fa fa-save"></i> Zapisz projekt </AlgoButton>
 
@@ -36,6 +40,10 @@ export default {
         openSaveProjectModal() {
             openModal(SaveProjectModal);
         },
+
+        sendLogout() {
+            this.emitter.emit("GoogleLogout");
+        },
     },
 };
 </script>
@@ -52,6 +60,10 @@ export default {
 .menu-placeholder {
     width: 100%;
     height: inherit;
+}
+
+.hidden {
+    display: none;
 }
 
 img {

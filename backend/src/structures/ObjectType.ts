@@ -8,7 +8,7 @@ export const ObjectType = Record({
 
 export type ObjectType = Static<typeof ObjectType>;
 
-export const sanitizeObjectType = (o: ObjectType) => {
+export const sanitize = (o: ObjectType) => {
     return {
         key: o.key,
         label: o.label,
