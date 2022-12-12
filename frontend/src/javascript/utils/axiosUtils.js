@@ -1,10 +1,10 @@
 import axios from "axios";
-import toast from "@/javascript/utils/toastUtils";
+import toast, { getEndpointRelatedToast } from "@/javascript/utils/toastUtils";
 
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
 
-    const toastStrings = getEndpointRelatedToast(method, url);
+    const toastStrings = getEndpointRelatedToast(url);
     const loadingToast = toastStrings.loading ? toast.info(toastStrings.loading, { timeout: false }) : undefined;
 
     method = method.toLowerCase();
@@ -33,22 +33,4 @@ function getBackendUrl() {
 
 function validateMethod(method) {
     return method && ["get", "post", "put"].includes(method.toLowerCase());
-}
-
-function getEndpointRelatedToast(method, url) {
-    if (url.startsWith("/project/find")) return { error: "Nie można pobrać projektu" };
-    if (url.startsWith("/project/findAll")) return { error: "Nie można pobrać listy projektów" };
-    if (url.startsWith("/converter/findAll")) return { error: "Nie można pobrać listy konwerterów" };
-
-    if (url.startsWith("/project/save")) return { success: "Zapisano projekt w bazie danych" };
-    if (url.startsWith("/compiler/compile"))
-        return {
-            success: "Pomyślnie skompilowano kod",
-            loading: "Trwa kompilacja...",
-            error: "Wystąpił błąd kompilacji",
-        };
-    if (url.startsWith("/converter/save")) return { success: "Zapisano konwerter w bazie danych" };
-
-    if (method.toLowerCase() == "get") return {};
-    return { success: "Pomyślnie zapisano" };
 }

@@ -30,3 +30,28 @@ export default {
         toast.dismiss(toastID);
     },
 };
+
+export function getEndpointRelatedToast(url) {
+    if (url.startsWith("/project/find")) return { error: "Nie można pobrać projektu" };
+    if (url.startsWith("/project/findAll")) return { error: "Nie można pobrać listy projektów" };
+    if (url.startsWith("/converter/findAll")) return { error: "Nie można pobrać listy konwerterów" };
+
+    if (url.startsWith("/project/save"))
+        return {
+            success: "Zapisano projekt w bazie danych",
+            error: "Nie można zapisać projektu w bazie danych",
+        };
+    if (url.startsWith("/converter/save"))
+        return {
+            success: "Zapisano konwerter w bazie danych",
+            error: "Nie można zapisać konwertera w bazie danych",
+        };
+    if (url.startsWith("/compiler/compile"))
+        return {
+            success: "Pomyślnie skompilowano kod",
+            loading: "Trwa kompilacja...",
+            error: "Wystąpił błąd kompilacji",
+        };
+
+    return {};
+}
