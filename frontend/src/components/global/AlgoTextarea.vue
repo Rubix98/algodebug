@@ -5,7 +5,8 @@
         :readonly="readonly"
         @keydown.tab.prevent="insertTabIndent"
         @beforeinput="handleBeforeinput"
-        @input="handleInput">
+        @input="handleInput"
+    >
     </textarea>
     <v-textarea
         v-else

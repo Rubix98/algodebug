@@ -44,7 +44,7 @@ export default {
     z-index: 100;
 
     &__content {
-      padding: 1rem 2rem;
+        padding: 1rem 2rem;
     }
 
     &__title {

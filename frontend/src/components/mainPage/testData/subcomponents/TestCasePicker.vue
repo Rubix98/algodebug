@@ -11,7 +11,9 @@
                     @click="switchTestCase(index)"
                     active-color="primary"
                 >
-                    <v-icon class="test-close" v-if="canRemoveTests" @click="this.deleteTestCasePressed(index)"> mdi-close </v-icon>
+                    <v-icon class="test-close" v-if="canRemoveTests" @click="this.deleteTestCasePressed(index)">
+                        mdi-close
+                    </v-icon>
                 </v-list-item>
             </v-list>
             <AlgoButton v-if="!project.isRunning" @click="this.addTestCase()" icon="mdi-plus-circle">
@@ -29,13 +31,13 @@ import { mapActions, mapGetters, mapState } from "vuex";
 export default {
     components: { AlgoBlock, AlgoButton },
 
-  data() {
-    return {
-      lastIndex: 0
-    }
-  },
+    data() {
+        return {
+            lastIndex: 0,
+        };
+    },
 
-  methods: {
+    methods: {
         ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
 
         switchTestCase(index) {
@@ -46,9 +48,9 @@ export default {
         },
 
         deleteTestCasePressed(index) {
-          this.deleteTestCase(index);
-          if (index !== this.lastIndex) this.switchTestCase(this.lastIndex);
-        }
+            this.deleteTestCase(index);
+            if (index !== this.lastIndex) this.switchTestCase(this.lastIndex);
+        },
     },
 
     computed: {

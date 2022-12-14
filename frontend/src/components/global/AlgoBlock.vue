@@ -1,20 +1,20 @@
 <template>
     <div class="algo-block">
-      <v-card>
-        <v-card-title>
-            {{ header }}
-        </v-card-title>
-        <v-divider />
-        <v-card-text class="content">
-          <slot></slot>
-        </v-card-text>
-      </v-card>
-<!--        <div class="header flex-vertical-space-between">-->
-<!--            <div><slot name="checkbox"></slot></div>-->
-<!--        </div>-->
+        <v-card>
+            <v-card-title>
+                {{ header }}
+            </v-card-title>
+            <v-divider />
+            <v-card-text class="content">
+                <slot></slot>
+            </v-card-text>
+        </v-card>
+        <!--        <div class="header flex-vertical-space-between">-->
+        <!--            <div><slot name="checkbox"></slot></div>-->
+        <!--        </div>-->
 
-<!--        <div class="content">-->
-<!--        </div>-->
+        <!--        <div class="content">-->
+        <!--        </div>-->
     </div>
 </template>
 
@@ -29,5 +29,4 @@ export default {
     margin: 5px;
     padding: 0;
 }
-
 </style>

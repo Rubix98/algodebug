@@ -1,17 +1,19 @@
 <template>
-    <div class="scene-container full-size">
-        <SceneCanvas
-            class="full-size"
-            :sceneObjects="project.sceneObjects"
-            :isRunning="project.isRunning"
-        ></SceneCanvas>
+    <v-card>
+        <div class="scene-container full-size">
+            <SceneCanvas
+                class="full-size"
+                :sceneObjects="project.sceneObjects"
+                :isRunning="project.isRunning"
+            ></SceneCanvas>
 
-        <CenterPanel v-if="!project.isRunning" />
-        <SceneObjectsPanel v-if="!project.isRunning" />
-        <DownloadPanel v-if="project.isRunning" />
-        <NavigationPanel v-if="project.isRunning" />
-        <FrameNumberPanel v-if="project.isRunning" />
-    </div>
+            <CenterPanel v-if="!project.isRunning" />
+            <SceneObjectsPanel v-if="!project.isRunning" />
+            <DownloadPanel v-if="project.isRunning" />
+            <NavigationPanel v-if="project.isRunning" />
+            <FrameNumberPanel v-if="project.isRunning" />
+        </div>
+    </v-card>
 </template>
 
 <script>

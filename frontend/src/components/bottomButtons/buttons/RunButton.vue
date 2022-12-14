@@ -1,5 +1,14 @@
 <template>
-    <v-btn :icon="runButtonIcon" :disabled="waitingForCompile" fab large :color="runButtonColor" size="large" floating @click="runButtonPressed">
+    <v-btn
+        :icon="runButtonIcon"
+        :disabled="waitingForCompile"
+        fab
+        large
+        :color="runButtonColor"
+        size="large"
+        floating
+        @click="runButtonPressed"
+    >
     </v-btn>
 </template>
 

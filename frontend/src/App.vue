@@ -6,7 +6,7 @@
         </v-main>
         <BottomButtons />
     </v-app>
-  <Modal />
+    <Modal />
 </template>
 
 <script>

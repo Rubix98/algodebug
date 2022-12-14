@@ -1,18 +1,20 @@
 <template>
-    <div :id="id" class="code-editor-container full-size flex-row">
-        <slot></slot>
+    <v-card>
+        <div :id="id" class="code-editor-container full-size flex-row">
+            <slot></slot>
 
-        <CodeLineNumbers :id="id" :code="code" :editable="editable" />
+            <CodeLineNumbers :id="id" :code="code" :editable="editable" />
 
-        <Codearea
-            :id="id"
-            :code="code"
-            :editable="editable"
-            :clickable="clickable"
-            @scrollEvent="handleScroll"
-            @pickVariableEvent="handlePickVariable"
-        />
-    </div>
+            <Codearea
+                :id="id"
+                :code="code"
+                :editable="editable"
+                :clickable="clickable"
+                @scrollEvent="handleScroll"
+                @pickVariableEvent="handlePickVariable"
+            />
+        </div>
+    </v-card>
 </template>
 
 <script>

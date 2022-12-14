@@ -42,7 +42,7 @@ export default defineComponent({
         display: flex;
         justify-content: center;
         align-items: center;
-      cursor: pointer;
+        cursor: pointer;
 
         &__image {
             height: 100%;
