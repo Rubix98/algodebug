@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div
+    <v-list>
+        <v-list-item
             v-for="(option, index) in options"
             :key="index"
             class="option"
@@ -24,8 +24,8 @@
                     </span>
                 </div>
             </div>
-        </div>
-    </div>
+        </v-list-item>
+    </v-list>
 
     <div v-if="options == null || options.length === 0">Brak danych</div>
 </template>
@@ -47,18 +47,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.option {
-    width: 100%;
-    border: 1px solid black;
-    border-radius: 5px;
-    margin: 5px 0;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-.option:hover {
-    background-color: #eee;
-}
-</style>

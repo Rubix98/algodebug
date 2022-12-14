@@ -1,19 +1,22 @@
 <template>
-    <div class="dialog">
-        <div class="dialog-header flex-vertical-space-between">
-            <h1>{{ title }}</h1>
-            <i class="fa fa-close" title="Zamknij okno" @click="popModal()"></i>
-        </div>
-
-        <div class="dialog-content">
+    <v-card class="dialog">
+        <v-card-title class="dialog__title">
+            <h2>{{ title }}</h2>
+            <v-spacer />
+            <i class="dialog__title__close fa fa-close" title="Zamknij okno" @click="popModal()"></i>
+        </v-card-title>
+        <v-spacer />
+        <v-card-text>
             <slot></slot>
-        </div>
+        </v-card-text>
 
-        <div class="buttons flex-vertical-right">
+        <v-divider />
+        <v-card-actions>
+            <v-spacer />
             <AlgoButton @click="popModal()">Anuluj</AlgoButton>
             <slot name="buttons"></slot>
-        </div>
-    </div>
+        </v-card-actions>
+    </v-card>
 </template>
 
 <script>
@@ -33,32 +36,23 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 .dialog {
-    width: 60vw;
-    padding: 30px 50px;
-    background-color: #fff;
-    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.5);
+    min-width: max(40vw, 35rem);
+    max-width: 98vw;
+
     z-index: 100;
-    border-radius: 20px;
-    font-size: 20px;
-}
+    padding: 1rem;
 
-.dialog-header {
-    font-size: 20px;
-}
-
-.dialog-content {
-    max-height: 70vh;
-    margin: 15px 0;
-    overflow: auto;
-}
-
-.buttons {
-    gap: 20px;
-}
-
-i {
-    cursor: pointer;
+    &__title {
+        display: flex;
+        align-items: center;
+        h2 {
+            font-weight: 400;
+        }
+        &__close {
+            cursor: pointer;
+        }
+    }
 }
 </style>

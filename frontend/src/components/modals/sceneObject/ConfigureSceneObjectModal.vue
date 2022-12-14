@@ -1,16 +1,14 @@
 <template>
     <AlgoModal :title="modalTitle">
-        <AlgoFieldRow label="Rodzaj obiektu">
-            <AlgoLink :value="typeLabel" @click="selectType()" />
-        </AlgoFieldRow>
+        <v-combobox label="Rodzaj obiektu" :items="sceneObjectTypesForComboBox" v-model="this.model.type"> </v-combobox>
 
-        <AlgoFieldRow label="Przypisana zmienna">
-            <AlgoLink :value="variableName" @click="selectVariable()" />
-        </AlgoFieldRow>
+        <span @click="selectVariable">
+            <v-combobox label="Przypisana zmienna" :model-value="variableName" />
+        </span>
 
-        <AlgoFieldRow label="Konwerter">
-            <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" /> </AlgoFieldRow
-        ><br />
+        <span @click="selectConverter">
+            <v-combobox label="Konwerter" :model-value="converterTitle" />
+        </span>
 
         <AlgoTable
             v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
@@ -29,9 +27,7 @@
 <script>
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoTable from "@/components/global/AlgoTable.vue";
-import AlgoLink from "@/components/global/AlgoLink.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
-import AlgoFieldRow from "@/components/global/AlgoFieldRow.vue";
 import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
 import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
 import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
@@ -40,7 +36,7 @@ import { closeModal, pushModal } from "jenesius-vue-modal";
 import { validateSceneObject } from "@/javascript/utils/validationUtils";
 
 export default {
-    components: { AlgoModal, AlgoTable, AlgoLink, AlgoFieldRow, AlgoButton },
+    components: { AlgoModal, AlgoTable, AlgoButton },
     props: ["sceneObject"],
 
     data() {
@@ -51,6 +47,14 @@ export default {
                 converter: null,
                 subobjects: [],
             },
+            sceneObjectTypes: [
+                { key: "variable", label: "Zmienna" },
+                { key: "graph", label: "Graf" },
+                { key: "array", label: "Tablica" },
+                { key: "points", label: "Zbiór punktów" },
+                { key: "circle", label: "Okrąg" },
+                { key: "shape", label: "Wielokąt" },
+            ],
         };
     },
 
@@ -119,12 +123,12 @@ export default {
         converterTitle() {
             return this.model.converter ? this.model.converter.title : null;
         },
+
+        sceneObjectTypesForComboBox() {
+            return this.sceneObjectTypes.map((e) => {
+                return e.label;
+            });
+        },
     },
 };
 </script>
-
-<style scoped>
-.dialog {
-    width: 80vw;
-}
-</style>

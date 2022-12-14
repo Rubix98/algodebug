@@ -54,9 +54,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.dialog {
-    width: 80vw;
-}
-</style>

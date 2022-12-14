@@ -1,7 +1,7 @@
 <template>
-    <div class="field-row-container flex-row">
-        <div class="label-container">{{ label }}:</div>
-        <div class="value-container">
+    <div class="algo-field-row">
+        <label class="algo-field-row__label gray">{{ label }}</label>
+        <div class="algo-field-row__value-container">
             <slot></slot>
         </div>
     </div>
@@ -14,16 +14,12 @@ export default {
 };
 </script>
 
-<style scoped>
-.field-row-container {
-    margin-bottom: 5px;
-}
+<style lang="scss" scoped>
+.algo-field-row {
+    margin-bottom: 0.5rem;
 
-.label-container {
-    width: 25%;
-}
-
-.value-container {
-    width: 75%;
+    &__label {
+        color: #313131;
+    }
 }
 </style>

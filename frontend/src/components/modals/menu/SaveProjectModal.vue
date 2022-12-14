@@ -47,10 +47,6 @@ export default {
 </script>
 
 <style scoped>
-.dialog {
-    width: 40vw;
-}
-
 input {
     padding: 5px 10px;
 }
