@@ -1,5 +1,9 @@
 # AlgoDebug
 
+Algodebug is a tool for debugging source code provided by user by visualizing its operation. This is a tool designed primarily for people working with algorithmics or students. 
+
+Current version of application: http://srv16.mikr.us:20232 (work in progress)
+
 ## Frontend
 
 To run frontend:  
@@ -9,7 +13,6 @@ then
 
 ## Backend
 
-To connect database create `.env` file in backend directory and specify database URI.  
 More information about it [here](backend/README.md#running).  
 
 To run backend:  

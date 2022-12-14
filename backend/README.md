@@ -23,29 +23,21 @@ Then URI will look something like this: `mongodb://127.0.0.1:27017`
 In any case you might be intrested in using `MongoDB Compass` to explore the database:
 <https://www.mongodb.com/try/download/compass>
 
-## Running
-
-Before running the app you will need to create `.env` file in this directory and define env variables:  
+## Environment variables
+  
 `PORT` - what port to use to set up http server  
+`ORIGINS` - origins to allow cross-origin requests separated by commas (in node 17+ use 127.0.0.1 instead of localhost)  
 `DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
-`ORIGINS` - origins to allow cross-origin requests separated by commas  
-`COMPILER` - id of chosen compiler's API. Possible values: CODEX, JDOODLE
-`COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)
-`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)
-(in node 17+ use 127.0.0.1 instead of localhost)
+`COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
+`COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)  
+`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)  
 
-Example `.env` file might look like this:
+If you want change locally these values, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
 
-```env
-PORT=8080
-DATABASE_URI=mongodb+srv://AlgoDebug:AlgoDebug@streamchess.jlv3n.mongodb.net/
-DATABASE_NAME=AlgoDebug
-ORIGINS=http://127.0.0.1:8081,http://localhost:8081,https://my-service.com
-COMPILER=CODEX
-```
+## Running
 
-then you have two options:
+You have two options:
 
 -   You can run this with `npm run dev` which will use `ts-node` to autocompile and run  
     OR
