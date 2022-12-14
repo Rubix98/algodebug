@@ -1,5 +1,5 @@
 <template>
-    <v-btn :icon="runButtonIcon" fab large :color="runButtonColor" size="large" floating @click="runButtonPressed">
+    <v-btn :icon="runButtonIcon" :disabled="waitingForCompile" fab large :color="runButtonColor" size="large" floating @click="runButtonPressed">
     </v-btn>
 </template>
 
@@ -45,18 +45,12 @@ export default defineComponent({
             return this.project.waitingForCompile;
         },
         runButtonIcon() {
-            if (this.waitingForCompile) {
-                return "mdi-timer-sand-empty";
-            }
             if (this.projectRunning) {
                 return "mdi-stop";
             }
             return "mdi-play";
         },
         runButtonColor() {
-            if (this.waitingForCompile) {
-                return "white";
-            }
             if (this.projectRunning) {
                 return "error";
             }

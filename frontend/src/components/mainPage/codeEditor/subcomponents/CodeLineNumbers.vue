@@ -41,7 +41,6 @@ export default {
 <style scoped>
 .code-line-numbers-container {
     overflow: hidden;
-    border-radius: 10px 0 0 10px;
     min-width: 60px;
     background-color: #aaa;
 }

@@ -4,9 +4,9 @@
         <v-main>
             <MainPage />
         </v-main>
-        <Modal />
         <BottomButtons />
     </v-app>
+  <Modal />
 </template>
 
 <script>

@@ -15,6 +15,7 @@
             @scroll="emitScrollEvent"
             @code-change="handleCodeChange"
             spellcheck="false"
+            :dont-use-vuetify="true"
         />
     </div>
 </template>

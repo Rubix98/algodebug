@@ -1,18 +1,38 @@
 <template>
     <textarea
+        v-if="dontUseVuetify"
+        v-model="model"
+        :readonly="readonly"
+        @keydown.tab.prevent="insertTabIndent"
+        @beforeinput="handleBeforeinput"
+        @input="handleInput">
+    </textarea>
+    <v-textarea
+        v-else
         v-model="model"
         :readonly="readonly"
         @keydown.tab.prevent="insertTabIndent"
         @beforeinput="handleBeforeinput"
         @input="handleInput"
-    ></textarea>
+    ></v-textarea>
 </template>
 
 <script>
 import { compareCode } from "@/javascript/utils/codeUtils";
 
 export default {
-    props: ["value", "readonly"],
+    props: {
+        value: {
+            type: String,
+        },
+        readonly: {
+            type: Boolean,
+        },
+        dontUseVuetify: {
+            type: Boolean,
+            defaultValue: false,
+        },
+    },
 
     methods: {
         insertTabIndent(event) {

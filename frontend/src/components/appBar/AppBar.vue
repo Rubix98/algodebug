@@ -1,7 +1,7 @@
 <template>
     <v-app-bar>
         <div class="app-bar__logo">
-            <img class="app-bar__logo__image" src="images/logo.png" @click="redirectToRoot()" alt="AlgoDebug logo" />
+            <img class="app-bar__logo__image" src="@/img/logo.png" @click="redirectToRoot()" alt="AlgoDebug logo" />
         </div>
 
         <div class="app-bar__buttons"></div>
@@ -37,10 +37,12 @@ export default defineComponent({
 <style lang="scss">
 .app-bar {
     &__logo {
-        height: 80%;
+        margin-left: 0.7rem;
+        height: 65%;
         display: flex;
         justify-content: center;
         align-items: center;
+      cursor: pointer;
 
         &__image {
             height: 100%;

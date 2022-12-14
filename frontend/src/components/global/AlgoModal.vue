@@ -5,8 +5,8 @@
             <v-spacer />
             <i class="dialog__title__close fa fa-close" title="Zamknij okno" @click="popModal()"></i>
         </v-card-title>
-        <v-spacer />
-        <v-card-text>
+        <v-divider />
+        <v-card-text class="dialog__content">
             <slot></slot>
         </v-card-text>
 
@@ -42,9 +42,13 @@ export default {
     max-width: 98vw;
 
     z-index: 100;
-    padding: 1rem;
+
+    &__content {
+      padding: 1rem 2rem;
+    }
 
     &__title {
+        padding: 1rem 2rem;
         display: flex;
         align-items: center;
         h2 {

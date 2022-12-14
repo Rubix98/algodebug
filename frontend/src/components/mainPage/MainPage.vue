@@ -54,6 +54,7 @@ export default {
 
 <style scoped>
 .main-page-container {
+    max-height: calc(100vh - 65px);
     padding: 10px;
     gap: 10px;
 }
