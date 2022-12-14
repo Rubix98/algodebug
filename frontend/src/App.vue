@@ -46,6 +46,14 @@ export default {
 <style>
 /* Global */
 
+@font-face {
+    font-family: "SourceCodePro";
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+    src: local("SourceCodePro"), url("/public/fonts/SourceCodePro-Regular.ttf");
+}
+
 body {
     font-family: "Tahoma", sans-serif;
 }
@@ -115,5 +123,9 @@ body {
 
 .width-1-of-2 {
     width: 50%;
+}
+
+.Vue-Toastification__container {
+    margin-top: 55px;
 }
 </style>

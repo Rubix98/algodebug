@@ -45,7 +45,7 @@ export default {
 <style scoped>
 .code-editor-container {
     transform: translateZ(0);
-    font: 16px Consolas;
+    font: 16px "SourceCodePro";
     border-radius: 10px;
     background-color: black;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
