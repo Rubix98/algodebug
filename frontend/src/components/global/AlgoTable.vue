@@ -5,7 +5,7 @@
             <thead>
                 <tr>
                     <th style="text-align: center" />
-                    <th v-for="header in headers" :key="header">{{ header }}</th>
+                    <th v-for="header in headers" class="text-left" :key="header">{{ header }}</th>
                 </tr>
             </thead>
             <tbody>
