@@ -9,11 +9,6 @@ import { mapActions, mapState } from "vuex";
 
 export default defineComponent({
     name: "RunButton",
-    data() {
-        return {
-            waitingForCompile: false,
-        };
-    },
     methods: {
         ...mapActions("project", ["setLanguage", "setIsRunning", "changeCurrentFrame", "compile"]),
 
@@ -45,6 +40,9 @@ export default defineComponent({
 
         projectRunning() {
             return this.project.isRunning;
+        },
+        waitingForCompile() {
+            return this.project.waitingForCompile;
         },
         runButtonIcon() {
             if (this.waitingForCompile) {

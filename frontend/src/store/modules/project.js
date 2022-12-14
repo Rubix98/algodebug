@@ -11,6 +11,7 @@ export default {
         testData: [{ input: "" }],
         sceneObjects: [],
         isRunning: false,
+        waitingForCompile: false,
         selectedTestCaseId: 0,
         selectedFrameId: 0,
     },
@@ -242,6 +243,7 @@ export default {
         },
 
         compile({ commit, state, getters }) {
+            commit("set", { key: "waitingForCompile", value: true });
             const inputs = state.testData.map((testCase) => testCase.input);
             return sendRequest(
                 "/compiler/compile",
@@ -254,6 +256,7 @@ export default {
             ).then((responseData) => {
                 commit("addOutputs", responseData);
                 commit("set", { key: "isRunning", value: true });
+                commit("set", { key: "waitingForCompile", value: false });
                 return true;
             });
         },

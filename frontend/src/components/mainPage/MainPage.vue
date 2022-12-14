@@ -1,4 +1,6 @@
 <template>
+    <CompilingIndicator />
+
     <div class="main-page-container flex-column full-size">
         <div class="flex-row">
             <CodeEditor
@@ -24,9 +26,10 @@ import CodePanel from "@/components/mainPage/codeEditor/subcomponents/CodePanel.
 import Scene from "@/components/mainPage/scene/Scene.vue";
 import TestData from "@/components/mainPage/testData/TestData.vue";
 import { mapState, mapActions } from "vuex";
+import CompilingIndicator from "@/components/mainPage/compilingIndicator/CompilingIndicator.vue";
 
 export default {
-    components: { CodeEditor, CodePanel, Scene, TestData },
+    components: { CompilingIndicator, CodeEditor, CodePanel, Scene, TestData },
 
     mounted() {
         if (this.projectId) {
