@@ -10,7 +10,7 @@ services:
     - ./frontend/src/:/app/src
     environment:
       - PORT=${FRONTEND_PORT}
-      - BACKEND_PORT=${BACKEND_PORT}
+      - VUE_APP_BACKEND_URL=${BACKEND_URL}
 
   backend:
     image: backend:latest
@@ -19,4 +19,4 @@ services:
     - ${BACKEND_PORT}:${BACKEND_PORT}
     environment:
       - PORT=${BACKEND_PORT}
-      - FRONTEND_PORT=${FRONTEND_PORT}
+      - ORIGINS=${ORIGINS}
