@@ -24,14 +24,14 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 <https://www.mongodb.com/try/download/compass>
 
 ## Environment variables
-  
+
 `PORT` - what port to use to set up http server  
 `ORIGINS` - origins to allow cross-origin requests separated by commas (in node 17+ use 127.0.0.1 instead of localhost)  
 `DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
 `COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
 `COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)  
-`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)  
+`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)
 
 If you want change locally these values, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
 
