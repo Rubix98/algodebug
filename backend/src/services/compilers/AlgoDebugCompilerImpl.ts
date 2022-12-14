@@ -3,7 +3,7 @@ import { OutputParser } from "../../utils/OutputParser";
 import { Compiler } from "./compilerFactory";
 
 export class AlgoDebugCompilerImpl implements Compiler {
-    static API_URL: string = "http://srv16.mikr.us:40042/compile";
+    static API_URL: string = "http://192.168.2.132:40042/compile";
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
         const apiResponse = await fetch(AlgoDebugCompilerImpl.API_URL, {
