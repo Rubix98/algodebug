@@ -35,10 +35,7 @@
                 </tr>
             </tbody>
         </v-table>
-        <v-btn block @click="addRow" class="algo-table__add-row">
-            <v-icon> mdi-plus-circle</v-icon>
-            Dodaj
-        </v-btn>
+        <v-btn block @click="addRow" class="algo-table__add-row" prepend-icon="mdi-plus-circle"> Dodaj </v-btn>
     </div>
 </template>
 

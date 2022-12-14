@@ -5,6 +5,7 @@
             <MainPage />
         </v-main>
         <Modal />
+        <BottomButtons />
     </v-app>
 </template>
 
@@ -13,11 +14,12 @@ import { defineComponent } from "vue";
 import AppBar from "@/components/appBar/AppBar.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
+import BottomButtons from "@/components/bottomButtons/BottomButtons.vue";
 
 export default defineComponent({
     name: "App",
 
-    components: { AppBar, MainPage, Modal: container },
+    components: { BottomButtons, AppBar, MainPage, Modal: container },
 });
 </script>
 

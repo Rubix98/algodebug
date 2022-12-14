@@ -1,12 +1,12 @@
 <template>
-    <v-btn :color="color">
+    <v-btn :color="color" :prepend-icon="icon" :size="size">
         <slot></slot>
     </v-btn>
 </template>
 
 <script>
 export default {
-    props: ["type"],
+    props: ["type", "icon", "size"],
     computed: {
         color() {
             switch (this.type) {

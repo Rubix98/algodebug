@@ -1,7 +1,5 @@
 <template>
     <div class="code-editor-header flex-horizontal-center">
-        <i class="fa fa-play" title="Uruchom program" v-show="!project.isRunning" @click="runProgram()" />
-        <i class="fa fa-stop" title="Zatrzymaj program" v-show="project.isRunning" @click="stopProgram()" />
         <i class="fa fa-eye" title="Pokaż program debugujący" @click="showExtendedCode()" />
 
         <select :value="language" :disabled="project.isRunning">
@@ -36,19 +34,6 @@ export default {
 
         showExtendedCode() {
             openModal(ShowDebugCodeModal);
-        },
-
-        runProgram() {
-            this.compile().then((success) => {
-                if (!success) return;
-                this.emitter.emit("startDebuggingEvent");
-            });
-        },
-
-        stopProgram() {
-            this.setIsRunning(false);
-            this.changeCurrentFrame(0);
-            this.emitter.emit("stopDebuggingEvent");
         },
     },
 

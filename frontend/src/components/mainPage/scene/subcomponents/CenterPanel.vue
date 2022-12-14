@@ -1,6 +1,6 @@
 <template>
     <div class="center-panel-container flex-center">
-        <AlgoButton @click="addNewSceneObject()"><i class="fa-solid fa-square-plus"></i> Dodaj nowy obiekt</AlgoButton>
+        <AlgoButton @click="addNewSceneObject()" icon="mdi-plus-circle" size="x-large"> Dodaj nowy obiekt </AlgoButton>
     </div>
 </template>
 
@@ -19,9 +19,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-button {
-    font-size: 30px;
-}
-</style>
