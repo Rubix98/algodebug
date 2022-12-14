@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  frontend: 
+    image: frontend:latest
+    build: ./frontend
+    ports:
+    - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    volumes:
+    - ./frontend/src/:/app/src
+    environment:
+      - PORT=${FRONTEND_PORT}
+      - BACKEND_PORT=${BACKEND_PORT}
+
+  backend:
+    image: backend:latest
+    build: ./backend
+    ports:
+    - ${BACKEND_PORT}:${BACKEND_PORT}
+    environment:
+      - PORT=${BACKEND_PORT}
+      - FRONTEND_PORT=${FRONTEND_PORT}
