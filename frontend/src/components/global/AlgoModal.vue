@@ -40,11 +40,14 @@ export default {
 .dialog {
     min-width: max(40vw, 35rem);
     max-width: 98vw;
+    max-height: 80vh;
 
     z-index: 100;
 
     &__content {
         padding: 1rem 2rem;
+        max-height: 65vh;
+        overflow-y: scroll;
     }
 
     &__title {

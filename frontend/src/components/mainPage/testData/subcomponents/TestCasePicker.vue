@@ -1,7 +1,7 @@
 <template>
     <AlgoBlock header="Wybór testów">
         <div class="test-case-picker-container full-size">
-            <v-list density="compact">
+            <v-list density="compact" class="test-case-picker-container__tests">
                 <v-list-item
                     v-for="(number, index) in numberOfTestCases"
                     :key="index"
@@ -68,23 +68,28 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .test-case-picker-container {
+    overflow-y: scroll;
     background-color: white;
     border-radius: 0 0 10px 10px;
     overflow: scroll;
     text-align: center;
-}
 
-button {
-    margin: 10px;
-}
+    &__tests {
+        overflow-y: scroll;
+    }
 
-.test-close {
-    position: absolute;
-    top: 0;
-    right: 10px;
-    transform: translateY(50%);
-    cursor: pointer;
+    button {
+        margin: 10px;
+    }
+
+    .test-close {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        transform: translateY(50%);
+        cursor: pointer;
+    }
 }
 </style>

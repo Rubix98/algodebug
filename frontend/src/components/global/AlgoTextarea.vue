@@ -12,6 +12,7 @@
         v-else
         v-model="model"
         :readonly="readonly"
+        :label="label"
         @keydown.tab.prevent="insertTabIndent"
         @beforeinput="handleBeforeinput"
         @input="handleInput"
@@ -28,6 +29,10 @@ export default {
         },
         readonly: {
             type: Boolean,
+        },
+        label: {
+            type: String,
+            required: false,
         },
         dontUseVuetify: {
             type: Boolean,

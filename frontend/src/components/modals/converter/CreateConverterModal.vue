@@ -1,12 +1,8 @@
 <template>
     <AlgoModal title="Utwórz nowy konwerter">
-        <AlgoFieldRow label="Nazwa">
-            <AlgoInput v-model:value="converter.title" placeholder="Nazwa" />
-        </AlgoFieldRow>
+        <AlgoInput v-model:value="converter.title" label="Nazwa" />
 
-        <AlgoFieldRow label="Kod">
-            <AlgoTextarea class="small" v-model:value="converter.code" placeholder="Kod" />
-        </AlgoFieldRow>
+        <AlgoTextarea label="Kod" v-model:value="converter.code" placeholder="Kod" />
 
         <template #buttons>
             <AlgoButton type="ok" @click="addConverter()">Ustaw</AlgoButton>
@@ -17,7 +13,6 @@
 
 <script>
 import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoFieldRow from "@/components/global/AlgoFieldRow.vue";
 import AlgoInput from "@/components/global/AlgoInput.vue";
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
@@ -25,7 +20,7 @@ import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { popModal } from "jenesius-vue-modal";
 
 export default {
-    components: { AlgoModal, AlgoFieldRow, AlgoInput, AlgoButton, AlgoTextarea },
+    components: { AlgoModal, AlgoInput, AlgoButton, AlgoTextarea },
 
     props: ["callback"],
 

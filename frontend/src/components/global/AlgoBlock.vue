@@ -1,11 +1,11 @@
 <template>
     <div class="algo-block">
-        <v-card>
-            <v-card-title>
+        <v-card class="algo-block__card">
+            <v-card-title class="algo-block__card__title">
                 {{ header }}
             </v-card-title>
             <v-divider />
-            <v-card-text class="content">
+            <v-card-text class="algo-block__card__content">
                 <slot></slot>
             </v-card-text>
         </v-card>
@@ -24,9 +24,17 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .algo-block {
     margin: 5px;
     padding: 0;
+
+    &__card {
+        height: 100%;
+        &__content {
+            height: 85%;
+            overflow-y: scroll;
+        }
+    }
 }
 </style>

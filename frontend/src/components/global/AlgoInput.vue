@@ -1,10 +1,10 @@
 <template>
-    <input type="text" v-model="model" />
+    <v-text-field :model="model" :label="label" />
 </template>
 
 <script>
 export default {
-    props: ["value"],
+    props: ["value", "label"],
 
     data() {
         return {
