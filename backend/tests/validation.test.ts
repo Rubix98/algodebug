@@ -100,29 +100,31 @@ describe("Project validation", () => {
     });
 
     test("Missing property", () => {
-        expect(async () => (await checkProject({ ...validProject, title: undefined }))).rejects.toThrow();
+        expect(async () => await checkProject({ ...validProject, title: undefined })).rejects.toThrow();
     });
 
     test("Empty title", () => {
-        expect(async () => (await checkProject({ ...validProject, title: "" }))).rejects.toThrow();
+        expect(async () => await checkProject({ ...validProject, title: "" })).rejects.toThrow();
     });
 
     test("Empty object", () => {
-        expect(async () => (await checkProject({}))).rejects.toThrow();
+        expect(async () => await checkProject({})).rejects.toThrow();
     });
 
     test("Date in request", () => {
         // we expect check to throw an error
         // because we don't want to allow users to set creationDate and modificationDate
         // and there is no way to pass Date object through json (only primitive types)
-        expect(async () => (await checkProject({ ...validProject, creationDate: "01.01.2022" }))).rejects.toThrow();
-        expect(async () => (await checkProject({ ...validProject, modificationDate: new Date().toString() }))).rejects.toThrow();
-        expect(async () => (await checkProject({ ...validProject, creationDate: 1234 }))).rejects.toThrow();
-        expect(async () => (await checkProject({ ...validProject, modificationDate: null }))).rejects.toThrow();
+        expect(async () => await checkProject({ ...validProject, creationDate: "01.01.2022" })).rejects.toThrow();
+        expect(
+            async () => await checkProject({ ...validProject, modificationDate: new Date().toString() })
+        ).rejects.toThrow();
+        expect(async () => await checkProject({ ...validProject, creationDate: 1234 })).rejects.toThrow();
+        expect(async () => await checkProject({ ...validProject, modificationDate: null })).rejects.toThrow();
 
         // this should pass
-        expect(async () => (await checkProject({ ...validProject, creationDate: new Date("01.01.2022") }))).not.toThrow();
-        expect(async () => (await checkProject({ ...validProject, modificationDate: new Date() }))).not.toThrow();
+        expect(async () => await checkProject({ ...validProject, creationDate: new Date("01.01.2022") })).not.toThrow();
+        expect(async () => await checkProject({ ...validProject, modificationDate: new Date() })).not.toThrow();
     });
 
     test("Adding date", async () => {
