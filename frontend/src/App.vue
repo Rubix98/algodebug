@@ -17,9 +17,6 @@ import { container } from "jenesius-vue-modal";
 
 import { handleGoogleLogin, handleGoogleLogout, checkGoogleLogin } from "@/javascript/utils/googleLoginUtils";
 
-// temporary config file
-import config from "../config.json";
-
 export default {
     // ERROR: Name "Menu" is reserved in HTML
     // eslint-disable-next-line
@@ -28,7 +25,7 @@ export default {
     mounted() {
         /* global google */
         google.accounts.id.initialize({
-            client_id: config.google_client_id,
+            client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
             callback: handleGoogleLogin,
         });
 

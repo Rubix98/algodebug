@@ -27,8 +27,7 @@ Prerequisites:
 1. Select Web application
 1. Add autorized JavaScript origins (URL of frontend)
 1. Add autorized redirect URIs (URL of backend endpoint)
-1. Copy Client ID into .env file in backend directory (GOOGLE_CLIENT_ID)
-1. Copy Client ID into config.json in frontend directory (google_client_id), later will be replaced with .env
+1. Copy Client ID into .env file in backend and frontend directory (GOOGLE_CLIENT_ID and VUE_APP_GOOGLE_CLIENT_ID)
 1. Set ALGO_SECRET in .env file in backend directory to whatever you like (it's used to sign JWT tokens)
 
 You can also follow [this guide](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid)
