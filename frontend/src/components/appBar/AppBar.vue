@@ -1,5 +1,6 @@
 <template>
     <v-app-bar>
+        <v-app-bar-nav-icon @click="this.$emit('toggleDrawer')" />
         <div class="app-bar__logo">
             <img class="app-bar__logo__image" src="@/img/logo.png" @click="redirectToRoot()" alt="AlgoDebug logo" />
         </div>
@@ -17,6 +18,7 @@ import { openModal } from "jenesius-vue-modal";
 
 export default defineComponent({
     name: "AppBar",
+    emits: ["toggleDrawer"],
 
     methods: {
         redirectToRoot() {

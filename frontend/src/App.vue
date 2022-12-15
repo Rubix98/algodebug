@@ -1,6 +1,7 @@
 <template>
     <v-app>
-        <AppBar />
+        <v-navigation-drawer v-model="showDrawer" />
+        <AppBar @toggleDrawer="toggleDrawer" />
         <v-main>
             <MainPage />
         </v-main>
@@ -20,6 +21,18 @@ export default defineComponent({
     name: "App",
 
     components: { BottomButtons, AppBar, MainPage, Modal: container },
+
+    data() {
+        return {
+            showDrawer: false,
+        };
+    },
+
+    methods: {
+        toggleDrawer() {
+            this.showDrawer = !this.showDrawer;
+        },
+    },
 });
 </script>
 
