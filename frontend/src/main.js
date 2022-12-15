@@ -4,6 +4,9 @@ import mitt from "mitt";
 import Vue3Sanitize from "vue-3-sanitize";
 import VueKonva from "vue-konva";
 import store from "@/store";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+import { getDefaultToastSettings } from "@/javascript/utils/toastUtils";
 
 import "@/javascript/prototypes/Map";
 import "@/javascript/prototypes/String";
@@ -14,4 +17,5 @@ app.config.globalProperties.emitter = mitt();
 app.use(Vue3Sanitize);
 app.use(VueKonva);
 app.use(store);
+app.use(Toast, getDefaultToastSettings());
 app.mount("#app");
