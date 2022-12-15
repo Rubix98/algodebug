@@ -1,13 +1,25 @@
 import { Request, Response } from "express";
-import { processUser, verifyGoogleToken, updateAlgoToken, verifyAlgoToken } from "../services/authservice";
+import {
+    handleGoogleLoginRequest,
+    verifyGoogleToken,
+    updateAlgoToken,
+    verifyAlgoToken,
+} from "../../services/authservice";
 
-export const loginGoogle = async (req: Request, res: Response) => {
+export const googleLogin = async (req: Request, res: Response) => {
     // get google token, verify it, create AlgoToken for user
     const token = req.params.token;
-    const payload = await verifyGoogleToken(token);
-    const AlgoToken = await processUser(payload);
+    const nickname = req.body.nickname;
 
-    // TODO: handle error
+    const payload = await verifyGoogleToken(token);
+
+    if (!payload) {
+        res.status(400).send("Invalid Google token");
+        return;
+    }
+
+    const AlgoToken = await handleGoogleLoginRequest(payload, nickname);
+
     if (!AlgoToken) {
         res.status(500).send();
         return;
@@ -17,21 +29,28 @@ export const loginGoogle = async (req: Request, res: Response) => {
     res.status(200).json({ logedIn: true });
 };
 
-export const logoutGoogle = async (req: Request, res: Response) => {
+export const googleLogout = async (req: Request, res: Response) => {
+    // get AlgoToken, verify it, then remove it from db and set cookie to expire
     const token = req.cookies.AlgoToken;
+
     if (!token) {
-        res.status(400).send();
+        res.status(400).send("No AlgoToken");
         return;
     }
 
     const [isOk, data] = await verifyAlgoToken(token);
 
     if (!isOk) {
-        res.status(400).send();
+        res.status(400).send(data);
         return;
     }
 
     const [method, id] = data.split("-");
+
+    if (method !== "google") {
+        res.status(400).send("Invalid method");
+        return;
+    }
 
     // will expire immediately
     updateAlgoToken(method, id, "");
@@ -39,8 +58,9 @@ export const logoutGoogle = async (req: Request, res: Response) => {
     res.status(200).json({ logedIn: false });
 };
 
-export const verifyGoogle = async (req: Request, res: Response) => {
+export const googleVerify = async (req: Request, res: Response) => {
     const token = req.cookies.AlgoToken;
+
     if (!token) {
         res.status(200).json({ logedIn: false });
         return;

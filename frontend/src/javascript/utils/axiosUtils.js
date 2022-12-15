@@ -1,8 +1,5 @@
 import axios from "axios";
 
-// maybe do this smarter
-axios.defaults.withCredentials = true;
-
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
 

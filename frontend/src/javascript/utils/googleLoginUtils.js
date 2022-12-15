@@ -1,29 +1,34 @@
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 
+const toggleLoginButton = (show) => {
+    document.getElementById("google-login-button").classList.toggle("hidden", show);
+    document.getElementById("logout-button").classList.toggle("hidden", !show);
+};
+
 export const handleGoogleLogin = (res) => {
-    sendRequest("/user/google/login/" + res.credential, {}, "GET").then((res) => {
+    // attach withCredentials to the request
+    sendRequest("/user/google/login/" + res.credential, { withCredentials: true }, "GET").then((res) => {
         if (!res.logedIn) return;
+
         // hide login button and show logout button
-        document.getElementById("google-login-button").classList.add("hidden");
-        document.getElementById("logout-button").classList.remove("hidden");
+        toggleLoginButton(true);
     });
 };
 
 export const handleGoogleLogout = () => {
-    sendRequest("/user/google/logout", {}, "GET").then((res) => {
+    sendRequest("/user/google/logout", { withCredentials: true }, "GET").then((res) => {
         if (res.logedIn) return;
+
         // hide logout button and show login button
-        document.getElementById("google-login-button").classList.remove("hidden");
-        document.getElementById("logout-button").classList.add("hidden");
+        toggleLoginButton(false);
     });
 };
 
-export const checkLogin = () => {
-    sendRequest("/user/google/verify", {}, "GET").then((res) => {
+export const checkGoogleLogin = () => {
+    sendRequest("/user/google/verify", { withCredentials: true }, "GET").then((res) => {
         if (!res.logedIn) return;
 
         // hide login button and show logout button
-        document.getElementById("google-login-button").classList.add("hidden");
-        document.getElementById("logout-button").classList.remove("hidden");
+        toggleLoginButton(true);
     });
 };

@@ -15,7 +15,7 @@ import Menu from "@/components/menu/Menu.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
 
-import { handleGoogleLogin, handleGoogleLogout, checkLogin } from "@/javascript/utils/googleLoginUtils";
+import { handleGoogleLogin, handleGoogleLogout, checkGoogleLogin } from "@/javascript/utils/googleLoginUtils";
 
 // temporary config file
 import config from "../config.json";
@@ -37,7 +37,7 @@ export default {
             size: "large",
         });
 
-        checkLogin();
+        checkGoogleLogin();
         this.emitter.on("GoogleLogout", handleGoogleLogout);
     },
 };

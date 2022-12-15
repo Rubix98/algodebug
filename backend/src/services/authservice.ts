@@ -1,14 +1,11 @@
-import { getCollection } from "./dbservice";
+import { getCollection, getUser, createNewUser } from "./dbservice";
 import { User } from "../models/User";
 import { validate } from "./dbservice";
-import { OAuth2Client } from "google-auth-library";
+import { OAuth2Client, TokenPayload } from "google-auth-library";
 import jwt from "jsonwebtoken";
+import { LoginMethod } from "../structures/LoginMethod";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-export const createAlgoToken = (id: string) => {
-    return jwt.sign({ id: id }, process.env.ALGO_SECRET as string, { expiresIn: "1d" });
-};
 
 export const verifyGoogleToken = async (token: string) => {
     const ticket = await client.verifyIdToken({
@@ -19,60 +16,41 @@ export const verifyGoogleToken = async (token: string) => {
     return payload;
 };
 
-// returns user object if successful, null otherwise, will create new user if not found
-export const processUser = async (userInfo: any) => {
-    let user: any = await getUser("google", userInfo.sub).catch((err) => {
-        console.log(err);
-        return null;
-    });
-
-    if (!user) {
-        const [isOk, newUser] = await validate(
-            {
-                method: "google",
-                id: userInfo.sub,
-                username: userInfo.name, // TODO: nickname support
-                token: null,
-            },
-            User,
-            "User"
-        );
-
-        if (!isOk) return null;
-
-        user = await createNewUser(newUser);
-    }
-
-    // update token in db
-    const id = "google-" + userInfo.sub;
-    const token = createAlgoToken(id);
-    const result = await updateAlgoToken("google", userInfo.sub, token);
-
-    if (!result) return null;
-    return token;
+/**
+ * encrypts provided string (user id) into a JWT
+ * @param expiresIn time until token expires (default 1 day)
+ */
+export const createAlgoToken = (id: string, expiresIn = "1d") => {
+    return jwt.sign({ id: id }, process.env.ALGO_SECRET as string, { expiresIn });
 };
 
-const createNewUser = async (user: User) => {
-    const users = getCollection("users");
+/**
+ * Verifies AlgoToken (checks with secret, expiration time, and database match)
+ * @param token AlgoToken to verify
+ * @returns [true, user id] if token is valid, [false, error message] otherwise
+ */
+export const verifyAlgoToken = async (token: string): Promise<[boolean, string]> => {
     try {
-        const result = await users.insertOne(user, { forceServerObjectId: false });
-        return result;
-    } catch (err) {
-        return null;
+        const decoded = jwt.verify(token, process.env.ALGO_SECRET as string);
+
+        if (!decoded) return [false, "Invalid token"];
+        if (typeof decoded === "string") return [false, decoded]; // decoded is error message
+        // else decoded is jwt payload
+
+        const [method, id] = decoded.id.split("-");
+        const user = await getUser(method, id);
+
+        if (!user) return [false, "User not found, please login again"];
+        if (user.token !== token) return [false, "Invalid token"];
+        // else token is valid
+
+        return [true, decoded.id];
+    } catch (err: any) {
+        return [false, err.message];
     }
 };
 
-export const getUser = async (method: string, id: string) => {
-    const users = getCollection("users");
-    try {
-        const result = await users.findOne({ method: method, id: id });
-        return result;
-    } catch (err) {
-        return null;
-    }
-};
-
-export const updateAlgoToken = async (method: string, id: string, token: string | null) => {
+export const updateAlgoToken = async (method: LoginMethod, id: string, token: string | null) => {
     const users = getCollection("users");
     try {
         const result = await users.updateOne({ method: method, id: id }, { $set: { token: token } });
@@ -82,17 +60,40 @@ export const updateAlgoToken = async (method: string, id: string, token: string 
     }
 };
 
-// this requires better error handling
-export const verifyAlgoToken = async (token: string): Promise<[false, unknown] | [true, string]> => {
-    try {
-        const decoded = jwt.verify(token, process.env.ALGO_SECRET as string);
+/**
+ * Creates a new user if the user does not exist, otherwise returns the existing user
+ * Will also create a new AlgoToken for the user and update it in the database
+ * @param userInfo Google token payload
+ * @returns AlgoToken if successful, null otherwise
+ */
+export const handleGoogleLoginRequest = async (userInfo: TokenPayload, nickname?: string) => {
+    let user: User | null = await getUser("google", userInfo.sub).catch((err) => {
+        console.log(err);
+        return null;
+    });
 
-        if (!decoded || typeof decoded === "string") return [false, "Invalid token"];
-        const [method, id] = decoded.id.split("-");
-        const user = await getUser(method, id);
-        if (!user || user.token != token) return [false, "Invalid token"];
-        return [true, decoded.id];
-    } catch (err) {
-        return [false, err];
+    if (!user) {
+        const [isOk, newUser] = await validate(
+            {
+                method: "google",
+                id: userInfo.sub,
+                username: nickname ? nickname : userInfo.name,
+                token: null,
+            },
+            User,
+            "User"
+        );
+
+        if (!isOk) return null;
+
+        await createNewUser(newUser);
     }
+
+    // update token in db
+    const id = "google-" + userInfo.sub;
+    const token = createAlgoToken(id);
+    const result = await updateAlgoToken("google", userInfo.sub, token);
+
+    if (!result) return null;
+    return token;
 };

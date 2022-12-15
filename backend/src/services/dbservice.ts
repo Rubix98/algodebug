@@ -4,34 +4,51 @@ import { Project } from "../models/Project";
 import { Converter } from "../models/Converter";
 import { CompilerMultiTestsRequest } from "../models/CompilerMultiTestsRequest";
 import { User } from "../models/User";
+import { LoginMethod } from "../structures/LoginMethod";
 
-export enum Collections {
-    projects = "projects",
-    converters = "converters",
-    users = "users",
-}
+let collections = {
+    projects: {} as Collection<Project>,
+    converters: {} as Collection<Converter>,
+    users: {} as Collection<User>,
+};
 
-type CollectionNames = keyof typeof Collections;
+type CollectionNames = keyof typeof collections;
 
-const collections = new Map<CollectionNames, Collection>();
-
-export const getCollection = (name: CollectionNames) => {
-    const collection = collections.get(name);
+export const getCollection = <N extends CollectionNames>(name: N): typeof collections[N] => {
+    const collection = collections[name];
     if (!collection) throw new Error(`Collection ${name} not found`);
     return collection;
+};
+
+export const getUser = async (method: LoginMethod, id: string) => {
+    const users = getCollection("users");
+    try {
+        const result = await users.findOne({ method: method, id: id });
+        return result;
+    } catch (err) {
+        return null;
+    }
+};
+
+export const createNewUser = async (user: User) => {
+    const users = getCollection("users");
+    try {
+        const result = await users.insertOne(user, { forceServerObjectId: false });
+        return result;
+    } catch (err) {
+        return null;
+    }
 };
 
 export const initializeConnection = async () => {
     try {
         const client = new MongoClient(process.env.DATABASE_URI as string);
-
         await client.connect();
-
         const database = client.db(process.env.DATABASE_NAME);
 
-        for (const collectionName of Object.values(Collections)) {
-            collections.set(collectionName, database.collection(collectionName));
-        }
+        collections.projects = database.collection<Project>("projects");
+        collections.converters = database.collection<Converter>("converters");
+        collections.users = database.collection<User>("users");
 
         // mathod + id is unique
         getCollection("users").createIndex({ method: 1, id: 1 }, { unique: true });
@@ -52,15 +69,16 @@ type Template = typeof Project | typeof Converter | typeof CompilerMultiTestsReq
 // and silently remove any additional properties not defined in the template
 
 export const validate = async <K extends Template>(
-    req: unknown,
+    toValidate: unknown,
     T: K,
-    name: string
+    name: string // I don't think there's a way to get the name of a template or to somehow import it without using name
+    // TODO: for people who wish to waste a lot of time on impossible task
 ): Promise<validTypeOrError<Static<typeof T>>> => {
     try {
         // import the sanitize function from the same file as the template
         const sanitizeFunction = (await import(`../models/${name}`)).sanitize;
         if (!sanitizeFunction) return [false, "Sanitize function not found"];
-        return [true, sanitizeFunction(T.check(req))];
+        return [true, sanitizeFunction(T.check(toValidate))];
     } catch (error) {
         return [false, error];
     }

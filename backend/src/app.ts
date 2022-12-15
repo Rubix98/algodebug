@@ -8,7 +8,7 @@ import { getProjectById, getAllProjects, updateProject } from "./endpoints/proje
 import { getAllConverters, getConverterById, updateConverter } from "./endpoints/converter";
 import { compileCode } from "./endpoints/compiler";
 import { CompilerTypes } from "./services/compilers/compilerFactory";
-import { loginGoogle, logoutGoogle, verifyGoogle } from "./endpoints/user";
+import { googleLogin, googleLogout, googleVerify } from "./endpoints/user/google";
 
 interface ResponseError extends Error {
     status?: number;
@@ -46,6 +46,11 @@ await initializeConnection();
 
 /* Middleware */
 
+const allowCredentials = (_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    next();
+};
+
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on: http://localhost:${process.env.PORT}`);
 });
@@ -55,7 +60,6 @@ app.use(cookieParser());
 // attach application/json header to all responses
 app.use((_req, res, next) => {
     res.setHeader("Content-Type", "application/json");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
     next();
 });
 
@@ -89,6 +93,6 @@ app.put("/converter/save", updateConverter);
 app.post("/compiler/compile", compileCode);
 
 // account
-app.get("/user/google/login/:token", loginGoogle);
-app.get("/user/google/logout", logoutGoogle);
-app.get("/user/google/verify", verifyGoogle);
+app.get("/user/google/login/:token", allowCredentials, googleLogin);
+app.get("/user/google/logout", allowCredentials, googleLogout);
+app.get("/user/google/verify", allowCredentials, googleVerify);
