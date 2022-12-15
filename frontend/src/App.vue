@@ -28,7 +28,7 @@ export default {
     mounted() {
         /* global google */
         google.accounts.id.initialize({
-            client_id: config.client_id,
+            client_id: config.google_client_id,
             callback: handleGoogleLogin,
         });
 
