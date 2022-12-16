@@ -5,7 +5,7 @@
 
             <!-- TODO: move this-->
             <div id="google-login-button"></div>
-            <button id="logout-button" class="hidden" @click="sendLogout">Wyloguj</button>
+            <button id="logout-button" class="hidden" @click="logout">Wyloguj</button>
 
             <div class="buttons-container">
                 <AlgoButton @click="openSaveProjectModal()"> <i class="fa fa-save"></i> Zapisz projekt </AlgoButton>
@@ -24,6 +24,7 @@ import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import { redirectTo } from "@/javascript/utils/other";
 import { openModal } from "jenesius-vue-modal";
+import { handleLogout } from "../../javascript/utils/loginUtils";
 
 export default {
     components: { AlgoButton },
@@ -41,8 +42,8 @@ export default {
             openModal(SaveProjectModal);
         },
 
-        sendLogout() {
-            this.emitter.emit("GoogleLogout");
+        logout() {
+            handleLogout();
         },
     },
 };

@@ -8,7 +8,8 @@ import { getProjectById, getAllProjects, updateProject } from "./endpoints/proje
 import { getAllConverters, getConverterById, updateConverter } from "./endpoints/converter";
 import { compileCode } from "./endpoints/compiler";
 import { CompilerTypes } from "./services/compilers/compilerFactory";
-import { googleLogin, googleLogout, googleVerify } from "./endpoints/user/google";
+import { googleLogin } from "./endpoints/user/google";
+import { verify, logout } from "./endpoints/user/general";
 
 interface ResponseError extends Error {
     status?: number;
@@ -94,5 +95,5 @@ app.post("/compiler/compile", compileCode);
 
 // account
 app.get("/user/google/login/:token", allowCredentials, googleLogin);
-app.get("/user/google/logout", allowCredentials, googleLogout);
-app.get("/user/google/verify", allowCredentials, googleVerify);
+app.get("/user/logout", allowCredentials, logout);
+app.get("/user/verify", allowCredentials, verify);

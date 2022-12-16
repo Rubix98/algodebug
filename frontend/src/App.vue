@@ -15,7 +15,7 @@ import Menu from "@/components/menu/Menu.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
 
-import { handleGoogleLogin, handleGoogleLogout, checkGoogleLogin } from "@/javascript/utils/googleLoginUtils";
+import { initializeGoogle, checkLogin } from "@/javascript/utils/loginUtils";
 
 export default {
     // ERROR: Name "Menu" is reserved in HTML
@@ -23,19 +23,8 @@ export default {
     components: { Menu, MainPage, Modal: container },
 
     mounted() {
-        /* global google */
-        google.accounts.id.initialize({
-            client_id: process.env.VUE_APP_GOOGLE_CLIENT_ID,
-            callback: handleGoogleLogin,
-        });
-
-        google.accounts.id.renderButton(document.getElementById("google-login-button"), {
-            theme: "outline",
-            size: "large",
-        });
-
-        checkGoogleLogin();
-        this.emitter.on("GoogleLogout", handleGoogleLogout);
+        initializeGoogle();
+        checkLogin();
     },
 };
 </script>
