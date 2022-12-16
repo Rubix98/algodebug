@@ -12,10 +12,13 @@ import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import "@/javascript/prototypes/Map";
+import "@/javascript/prototypes/String";
 
 const vuetify = createVuetify({
     components,
     directives,
+
     icons: {
         defaultSet: "mdi",
         aliases,
@@ -24,9 +27,6 @@ const vuetify = createVuetify({
         },
     },
 });
-
-import "@/javascript/prototypes/Map";
-import "@/javascript/prototypes/String";
 
 const app = createApp(App);
 app.config.globalProperties.emitter = mitt();

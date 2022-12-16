@@ -11,7 +11,7 @@
             <tbody>
                 <tr v-for="(row, index) in model" :key="index">
                     <td class="algo-table__remove-row text-center">
-                        <v-icon @click="removeRow(index)"> mdi-close-circle </v-icon>
+                        <v-icon @click="removeRow(index)"> mdi-close-circle</v-icon>
                     </td>
 
                     <td>
@@ -35,7 +35,7 @@
                 </tr>
             </tbody>
         </v-table>
-        <v-btn block @click="addRow" class="algo-table__add-row" prepend-icon="mdi-plus-circle"> Dodaj </v-btn>
+        <v-btn block @click="addRow" class="algo-table__add-row" prepend-icon="mdi-plus-circle"> Dodaj</v-btn>
     </div>
 </template>
 
@@ -122,15 +122,10 @@ export default {
     &__add-row {
         margin-top: 1rem;
     }
+
     &__remove-row {
         cursor: pointer;
         color: orangered;
-    }
-}
-
-tbody {
-    tr:nth-child(odd) {
-        background-color: #f2f2f2;
     }
 }
 </style>

@@ -70,8 +70,6 @@ export default {
 
 <style lang="scss" scoped>
 .test-case-picker-container {
-    overflow-y: scroll;
-    background-color: white;
     border-radius: 0 0 10px 10px;
     overflow: scroll;
     text-align: center;
