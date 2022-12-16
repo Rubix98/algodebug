@@ -23,7 +23,7 @@ Then URI will look something like this: `mongodb://127.0.0.1:27017`
 In any case you might be intrested in using `MongoDB Compass` to explore the database:
 <https://www.mongodb.com/try/download/compass>
 
-## Environment variables
+## Environmental variables
 
 `PORT` - what port to use to set up http server  
 `ORIGINS` - origins to allow cross-origin requests separated by commas (in node 17+ use 127.0.0.1 instead of localhost)  
@@ -32,8 +32,9 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 `COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
 `COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)  
 `COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)
+`COMPILER_API_URL` - alternative url to compiler's API (only for AlgoDebug compiler)
 
-If you want change locally these values, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
+If you want to change these values locally, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
 
 ## Running
 

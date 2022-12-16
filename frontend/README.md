@@ -2,12 +2,12 @@
 
 Frontend is written in VueJs using VueX. Drawing graphic objects on the stage is done using the KonvaJS library (https://konvajs.org/)
 
-## Environment variables
+## Environmental variables
 
 `PORT` - what port to use to set up application  
 `VUE_APP_BACKEND_URL` - url to backend server
 
-If you want change locally these values, you can override them in `.env.local` file.
+If you want to change these values locally, you can override them in `.env.local` file.
 
 ## Running
 
