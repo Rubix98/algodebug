@@ -12,6 +12,7 @@
                     :key="button.title"
                     :prepend-icon="button.icon"
                     :title="button.title"
+                    @click="button.onClick"
                 />
             </v-list>
             <v-divider v-if="index < Object.keys(buttons).length - 1" />
@@ -21,7 +22,11 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
+import {openModal} from "jenesius-vue-modal";
+import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
+import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
+import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
 
 export default defineComponent({
     name: "NavigationDrawer",
@@ -37,13 +42,13 @@ export default defineComponent({
             shouldShowRailVersion: true,
             buttons: {
                 project: [
-                    { title: "Zapisz projekt", icon: "mdi-content-save" },
-                    { title: "Otwórz projekt", icon: "mdi-folder-open" },
-                    { title: "Pokaż program debugujący", icon: "mdi-code-braces" },
+                    { title: "Zapisz projekt", icon: "mdi-content-save", onClick: this.openSaveProjectModal },
+                    { title: "Otwórz projekt", icon: "mdi-folder-open", onClick: this.openLoadProjectModal },
+                    { title: "Pokaż program debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
                 ],
                 settings: [
-                    { title: "Tryb nocny", icon: "mdi-theme-light-dark" },
-                    { title: "Github", icon: "mdi-github" },
+                    { title: "Przełącz tryb nocny", icon: "mdi-theme-light-dark", onClick: this.toggleDarkMode },
+                    { title: "Github", icon: "mdi-github", onClick: this.openGithub },
                 ],
             },
         };
@@ -58,6 +63,27 @@ export default defineComponent({
                 this.$emit("toggledToNormalVersion");
             }
         },
+      openLoadProjectModal() {
+        openModal(LoadProjectModal);
+      },
+
+      openSaveProjectModal() {
+        openModal(SaveProjectModal);
+      },
+      showExtendedCode() {
+        openModal(ShowDebugCodeModal);
+      },
+      openGithub() {
+          window.open("https://github.com/Rubix98/algodebug", "_blank").focus()
+      },
+      toggleDarkMode() {
+          // TODO: Save theme in localStorage
+          if (this.$vuetify.theme.global.name === "light") {
+            this.$vuetify.theme.global.name = "dark"
+          }else {
+            this.$vuetify.theme.global.name = "light"
+          }
+        }
     },
     mounted() {
         this.updateDrawerVersion();

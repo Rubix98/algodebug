@@ -1,6 +1,5 @@
 <template>
     <div class="code-editor-header flex-horizontal-center">
-        <i class="fa fa-eye" title="Pokaż program debugujący" @click="showExtendedCode()" />
 
         <select :value="language" :disabled="project.isRunning">
             <option
@@ -16,9 +15,7 @@
 </template>
 
 <script>
-import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
-import { mapState, mapActions, mapGetters } from "vuex";
-import { openModal } from "jenesius-vue-modal";
+import {mapActions, mapGetters, mapState} from "vuex";
 
 export default {
     props: [],
@@ -31,10 +28,6 @@ export default {
 
     methods: {
         ...mapActions("project", ["setLanguage", "setIsRunning", "changeCurrentFrame", "compile"]),
-
-        showExtendedCode() {
-            openModal(ShowDebugCodeModal);
-        },
     },
 
     computed: {

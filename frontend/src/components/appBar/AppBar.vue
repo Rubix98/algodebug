@@ -11,10 +11,7 @@
 
 <script>
 import {defineComponent} from "vue";
-import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
-import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import {redirectTo} from "@/javascript/utils/other";
-import {openModal} from "jenesius-vue-modal";
 
 export default defineComponent({
     name: "AppBar",
@@ -29,13 +26,7 @@ export default defineComponent({
             redirectTo(window.location.origin + window.location.pathname);
         },
 
-        openLoadProjectModal() {
-            openModal(LoadProjectModal);
-        },
 
-        openSaveProjectModal() {
-            openModal(SaveProjectModal);
-        },
     },
 });
 </script>
