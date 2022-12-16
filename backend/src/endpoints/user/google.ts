@@ -21,7 +21,7 @@ export const googleLogin = async (req: Request, res: Response) => {
     }
 
     res.cookie("AlgoToken", AlgoToken, { httpOnly: true }); // TODO secure: true for https
-    res.status(200).json({ logedIn: true });
+    res.status(200).json({ loggedIn: true });
 };
 
 export const googleVerify = async (req: Request, res: Response) => {

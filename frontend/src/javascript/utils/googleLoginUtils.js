@@ -8,7 +8,7 @@ const toggleLoginButton = (show) => {
 export const handleGoogleLogin = (res) => {
     // attach withCredentials to the request
     sendRequest("/user/google/login/" + res.credential, { withCredentials: true }, "GET").then((res) => {
-        if (!res.logedIn) return;
+        if (!res.loggedIn) return;
 
         // hide login button and show logout button
         toggleLoginButton(true);
