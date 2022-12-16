@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 import AppBar from "@/components/appBar/AppBar.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
-import {container} from "jenesius-vue-modal";
+import { container } from "jenesius-vue-modal";
 import BottomButtons from "@/components/bottomButtons/BottomButtons.vue";
 import NavigationDrawer from "@/components/drawer/NavigationDrawer.vue";
 
@@ -40,8 +40,8 @@ export default defineComponent({
             this.showDrawer = !this.showDrawer;
         },
         changeDrawerRailMode(mode) {
-          this.drawerRailMode = mode;
-          this.showDrawer = mode;
+            this.drawerRailMode = mode;
+            this.showDrawer = mode;
         },
         changeDrawerValueTo(value) {
             this.showDrawer = value;

@@ -6,31 +6,27 @@
         </div>
         <v-spacer />
         <div class="app-bar__buttons">
-          <v-btn color="primary">
-            Zaloguj się
-          </v-btn>
+            <v-btn color="primary"> Zaloguj się </v-btn>
         </div>
     </v-app-bar>
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import {redirectTo} from "@/javascript/utils/other";
+import { defineComponent } from "vue";
+import { redirectTo } from "@/javascript/utils/other";
 
 export default defineComponent({
     name: "AppBar",
     emits: ["toggleDrawer"],
     props: {
-      showDrawerButton: {
-        type: Boolean,
-      }
+        showDrawerButton: {
+            type: Boolean,
+        },
     },
     methods: {
         redirectToRoot() {
             redirectTo(window.location.origin + window.location.pathname);
         },
-
-
     },
 });
 </script>
@@ -51,7 +47,7 @@ export default defineComponent({
     }
 
     &__buttons {
-      margin-right: 2rem;
+        margin-right: 2rem;
     }
 }
 </style>

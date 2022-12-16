@@ -1,6 +1,12 @@
 <template>
     <AlgoModal :title="modalTitle">
-        <v-combobox label="Rodzaj obiektu" :items="sceneObjectTypesForComboBox" v-model="this.model.type"> </v-combobox>
+        <v-combobox
+            label="Rodzaj obiektu"
+            :model-value="typeLabel"
+            :items="sceneObjectTypesForComboBox"
+            @update:modelValue="changeSelectedObject"
+        >
+        </v-combobox>
 
         <span @click="selectVariable">
             <v-combobox label="Przypisana zmienna" :model-value="variableName" />
@@ -98,6 +104,10 @@ export default {
                     this.model.converter = selectedConverter;
                 },
             });
+        },
+
+        changeSelectedObject(selected) {
+            this.model.type = this.sceneObjectTypes.find((e) => e.label === selected);
         },
     },
 

@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import {openModal} from "jenesius-vue-modal";
+import { defineComponent } from "vue";
+import { openModal } from "jenesius-vue-modal";
 import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
@@ -63,27 +63,27 @@ export default defineComponent({
                 this.$emit("toggledToNormalVersion");
             }
         },
-      openLoadProjectModal() {
-        openModal(LoadProjectModal);
-      },
+        openLoadProjectModal() {
+            openModal(LoadProjectModal);
+        },
 
-      openSaveProjectModal() {
-        openModal(SaveProjectModal);
-      },
-      showExtendedCode() {
-        openModal(ShowDebugCodeModal);
-      },
-      openGithub() {
-          window.open("https://github.com/Rubix98/algodebug", "_blank").focus()
-      },
-      toggleDarkMode() {
-          // TODO: Save theme in localStorage
-          if (this.$vuetify.theme.global.name === "light") {
-            this.$vuetify.theme.global.name = "dark"
-          }else {
-            this.$vuetify.theme.global.name = "light"
-          }
-        }
+        openSaveProjectModal() {
+            openModal(SaveProjectModal);
+        },
+        showExtendedCode() {
+            openModal(ShowDebugCodeModal);
+        },
+        openGithub() {
+            window.open("https://github.com/Rubix98/algodebug", "_blank").focus();
+        },
+        toggleDarkMode() {
+            // TODO: Save theme in localStorage
+            if (this.$vuetify.theme.global.name === "light") {
+                this.$vuetify.theme.global.name = "dark";
+            } else {
+                this.$vuetify.theme.global.name = "light";
+            }
+        },
     },
     mounted() {
         this.updateDrawerVersion();

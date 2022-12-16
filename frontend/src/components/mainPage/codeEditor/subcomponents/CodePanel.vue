@@ -1,6 +1,5 @@
 <template>
     <div class="code-editor-header flex-horizontal-center">
-
         <select :value="language" :disabled="project.isRunning">
             <option
                 v-for="language in languages"
@@ -15,7 +14,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
     props: [],
