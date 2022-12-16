@@ -94,8 +94,8 @@ export const logoutUser = async (req: Request, res: Response) => {
     }
 
     // will expire immediately
-    updateAlgoToken(method, id, "");
-    res.cookie("AlgoToken", "", { maxAge: 1, httpOnly: true });
+    updateAlgoToken(method, id, null);
+    res.cookie("AlgoToken", null, { maxAge: 1, httpOnly: true });
     res.status(200).json({ loggedIn: false });
 };
 
