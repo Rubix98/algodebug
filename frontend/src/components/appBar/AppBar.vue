@@ -4,8 +4,12 @@
         <div class="app-bar__logo">
             <img class="app-bar__logo__image" src="@/img/logo.png" @click="redirectToRoot()" alt="AlgoDebug logo" />
         </div>
-
-        <div class="app-bar__buttons"></div>
+        <v-spacer />
+        <div class="app-bar__buttons">
+          <v-btn color="primary">
+            Zaloguj się
+          </v-btn>
+        </div>
     </v-app-bar>
 </template>
 
@@ -47,6 +51,7 @@ export default defineComponent({
     }
 
     &__buttons {
+      margin-right: 2rem;
     }
 }
 </style>

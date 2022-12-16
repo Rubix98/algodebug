@@ -20,6 +20,20 @@ const vuetify = createVuetify({
     directives,
     theme: {
         defaultTheme: "light",
+        themes: {
+            light: {
+                dark: false,
+                colors: {
+                    primary: "#1a73e8",
+                },
+            },
+            dark: {
+                dark: true,
+                colors: {
+                    primary: "#1a73e8",
+                },
+            },
+        },
     },
     icons: {
         defaultSet: "mdi",
