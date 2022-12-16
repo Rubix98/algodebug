@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Wybierz konwerter">
-        <AlgoPickList :options="convertersList" @selectOptionEvent="handleSelectOption" />
+        <AlgoPickList :options="converters" @selectOptionEvent="handleSelectOption" />
 
         <template #buttons>
             <AlgoButton @click="createConverter()">Utwórz nowy kowerter</AlgoButton>
@@ -22,11 +22,11 @@ export default {
     props: ["callback"],
 
     created() {
-        this.updateConvertersList();
+        this.updateConverters();
     },
 
     methods: {
-        ...mapActions("cachedLists", ["updateConvertersList"]),
+        ...mapActions("cachedLists", ["updateConverters"]),
 
         handleSelectOption(selectedConverter) {
             this.$props.callback(selectedConverter);
@@ -43,7 +43,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters("cachedLists", ["convertersList"]),
+        ...mapGetters("cachedLists", ["converters"]),
     },
 };
 </script>

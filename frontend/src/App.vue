@@ -22,8 +22,8 @@ export default {
     components: { Menu, MainPage, Modal: container },
 
     mounted() {
-        store.dispatch("cachedLists/updateProjectsList");
-        store.dispatch("cachedLists/updateConvertersList");
+        store.dispatch("cachedLists/updateProjects");
+        store.dispatch("cachedLists/updateConverters");
     },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Wczytaj projekt">
-        <AlgoPickList :options="projectsList" @selectOptionEvent="loadProject" />
+        <AlgoPickList :options="projects" @selectOptionEvent="loadProject" />
     </AlgoModal>
 </template>
 
@@ -14,11 +14,11 @@ export default {
     components: { AlgoModal, AlgoPickList },
 
     created() {
-        this.updateProjectsList();
+        this.updateProjects();
     },
 
     methods: {
-        ...mapActions("cachedLists", ["updateProjectsList"]),
+        ...mapActions("cachedLists", ["updateProjects"]),
 
         loadProject(selectedProject) {
             redirectTo("?projectId=" + selectedProject._id);
@@ -26,7 +26,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters("cachedLists", ["projectsList"]),
+        ...mapGetters("cachedLists", ["projects"]),
     },
 };
 </script>

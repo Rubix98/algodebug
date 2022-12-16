@@ -4,46 +4,46 @@ import { getDialogDataForProject, getDialogDataForConverter } from "@/javascript
 export default {
     namespaced: true,
     state: {
-        projectsList: [],
-        convertersList: [],
+        projects: [],
+        converters: [],
     },
 
     getters: {
-        projectsList(state) {
-            return state.projectsList;
+        projects(state) {
+            return state.projects;
         },
 
-        convertersList(state) {
-            return state.convertersList;
+        converters(state) {
+            return state.converters;
         },
     },
 
     mutations: {
-        setProjectsList(state, projectsList) {
-            state.projectsList = projectsList;
+        setProjects(state, projects) {
+            state.projects = projects;
         },
 
-        setConvertersList(state, convertersList) {
-            state.convertersList = convertersList;
+        setConverters(state, converters) {
+            state.converters = converters;
         },
     },
 
     actions: {
-        updateProjectsList({ commit }) {
+        updateProjects({ commit }) {
             sendRequest("/project/findAll", null, "GET").then((responseData) => {
                 responseData.forEach((project) => {
                     project.dialogData = getDialogDataForProject(project);
                 });
-                commit("setProjectsList", responseData);
+                commit("setProjects", responseData);
             });
         },
 
-        updateConvertersList({ commit }) {
+        updateConverters({ commit }) {
             sendRequest("/converter/findAll", null, "GET").then((responseData) => {
                 responseData.forEach((converter) => {
                     converter.dialogData = getDialogDataForConverter(converter);
                 });
-                commit("setConvertersList", responseData);
+                commit("setConverters", responseData);
             });
         },
     },
