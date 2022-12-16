@@ -6,7 +6,9 @@ export class AlgoDebugCompilerImpl implements Compiler {
     static API_URL: string = "http://srv16.mikr.us:40042/compile";
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
-        const apiResponse = await fetch(AlgoDebugCompilerImpl.API_URL, {
+        const url = process.env.COMPILER_API_URL ?? AlgoDebugCompilerImpl.API_URL;
+
+        const apiResponse = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
                 code: request.code,
