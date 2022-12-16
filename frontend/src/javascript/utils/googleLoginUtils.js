@@ -17,7 +17,7 @@ export const handleGoogleLogin = (res) => {
 
 export const handleGoogleLogout = () => {
     sendRequest("/user/google/logout", { withCredentials: true }, "GET").then((res) => {
-        if (res.logedIn) return;
+        if (res.loggedIn) return;
 
         // hide logout button and show login button
         toggleLoginButton(false);
@@ -26,7 +26,7 @@ export const handleGoogleLogout = () => {
 
 export const checkGoogleLogin = () => {
     sendRequest("/user/google/verify", { withCredentials: true }, "GET").then((res) => {
-        if (!res.logedIn) return;
+        if (!res.loggedIn) return;
 
         // hide login button and show logout button
         toggleLoginButton(true);

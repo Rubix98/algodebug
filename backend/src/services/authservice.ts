@@ -1,4 +1,5 @@
 import { getCollection, getUser, createNewUser } from "./dbservice";
+import { Request, Response } from "express";
 import { User } from "../models/User";
 import { validate } from "./dbservice";
 import { OAuth2Client, TokenPayload } from "google-auth-library";
@@ -6,6 +7,15 @@ import jwt from "jsonwebtoken";
 import { LoginMethod } from "../structures/LoginMethod";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const isValidMethod = (method: string): method is LoginMethod => {
+    try {
+        LoginMethod.check(method);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
 
 export const verifyGoogleToken = async (token: string) => {
     const ticket = await client.verifyIdToken({
@@ -58,6 +68,53 @@ export const updateAlgoToken = async (method: LoginMethod, id: string, token: st
     } catch (err) {
         return null;
     }
+};
+
+export const logoutUser = async (req: Request, res: Response) => {
+    // get AlgoToken, verify it, then remove it from db and set cookie to expire
+    const token = req.cookies.AlgoToken;
+
+    if (!token) {
+        res.status(400).send("No AlgoToken");
+        return;
+    }
+
+    const [isOk, data] = await verifyAlgoToken(token);
+
+    if (!isOk) {
+        res.status(400).send(data);
+        return;
+    }
+
+    const [method, id] = data.split("-");
+
+    if (!isValidMethod(method)) {
+        res.status(400).send("Invalid login method");
+        return;
+    }
+
+    // will expire immediately
+    updateAlgoToken(method, id, "");
+    res.cookie("AlgoToken", "", { maxAge: 1, httpOnly: true });
+    res.status(200).json({ loggedIn: false });
+};
+
+export const verifyUser = async (req: Request, res: Response) => {
+    const token = req.cookies.AlgoToken;
+
+    if (!token) {
+        res.status(200).json({ loggedIn: false });
+        return;
+    }
+
+    const [isOk, data] = await verifyAlgoToken(token);
+
+    if (!isOk) {
+        res.status(200).json({ loggedIn: false });
+        return;
+    }
+
+    res.status(200).json({ loggedIn: true });
 };
 
 /**

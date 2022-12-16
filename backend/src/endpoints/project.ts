@@ -4,7 +4,8 @@ import { ObjectId } from "mongodb";
 import { Project } from "../models/Project";
 
 export const getAllProjects = async (req: Request, res: Response) => {
-    console.log(req.cookies.AlgoToken); // if set user can be obtained from this token and used to filter projects
+    // if set user can be obtained from this token and used to filter projects
+    // console.log(req.cookies.AlgoToken);
 
     const projects = getCollection("projects");
     try {
