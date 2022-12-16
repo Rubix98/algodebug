@@ -1,7 +1,12 @@
 <template>
     <v-app>
-        <v-navigation-drawer v-model="showDrawer" />
-        <AppBar @toggleDrawer="toggleDrawer" />
+        <NavigationDrawer
+            :show-drawer="showDrawer"
+            @toggledToNormalVersion="changeDrawerRailMode(false)"
+            @toggledToRailVersion="changeDrawerRailMode(true)"
+            @hideDrawer="changeDrawerValueTo(false)"
+        />
+        <AppBar @toggleDrawer="toggleDrawer" :show-drawer-button="!drawerRailMode" />
         <v-main>
             <MainPage />
         </v-main>
@@ -11,19 +16,21 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import AppBar from "@/components/appBar/AppBar.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
-import { container } from "jenesius-vue-modal";
+import {container} from "jenesius-vue-modal";
 import BottomButtons from "@/components/bottomButtons/BottomButtons.vue";
+import NavigationDrawer from "@/components/drawer/NavigationDrawer.vue";
 
 export default defineComponent({
     name: "App",
 
-    components: { BottomButtons, AppBar, MainPage, Modal: container },
+    components: { NavigationDrawer, BottomButtons, AppBar, MainPage, Modal: container },
 
     data() {
         return {
+            drawerRailMode: false,
             showDrawer: false,
         };
     },
@@ -31,6 +38,13 @@ export default defineComponent({
     methods: {
         toggleDrawer() {
             this.showDrawer = !this.showDrawer;
+        },
+        changeDrawerRailMode(mode) {
+          this.drawerRailMode = mode;
+          this.showDrawer = mode;
+        },
+        changeDrawerValueTo(value) {
+            this.showDrawer = value;
         },
     },
 });

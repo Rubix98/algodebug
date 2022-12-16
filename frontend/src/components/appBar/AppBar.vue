@@ -1,6 +1,6 @@
 <template>
     <v-app-bar>
-        <v-app-bar-nav-icon @click="this.$emit('toggleDrawer')" />
+        <v-app-bar-nav-icon @click="this.$emit('toggleDrawer')" v-if="showDrawerButton" />
         <div class="app-bar__logo">
             <img class="app-bar__logo__image" src="@/img/logo.png" @click="redirectToRoot()" alt="AlgoDebug logo" />
         </div>
@@ -10,16 +10,20 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
-import { redirectTo } from "@/javascript/utils/other";
-import { openModal } from "jenesius-vue-modal";
+import {redirectTo} from "@/javascript/utils/other";
+import {openModal} from "jenesius-vue-modal";
 
 export default defineComponent({
     name: "AppBar",
     emits: ["toggleDrawer"],
-
+    props: {
+      showDrawerButton: {
+        type: Boolean,
+      }
+    },
     methods: {
         redirectToRoot() {
             redirectTo(window.location.origin + window.location.pathname);
