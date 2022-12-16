@@ -19,6 +19,3 @@ app.use(VueKonva);
 app.use(store);
 app.use(Toast, getDefaultToastSettings());
 app.mount("#app");
-
-store.dispatch("cachedLists/updateProjectsList"); //TODO: Nie wiem gdzie to powinno się znaleźć, na razie jest tu bo działa.
-store.dispatch("cachedLists/updateConvertersList"); //TODO: Nie wiem gdzie to powinno się znaleźć, na razie jest tu bo działa.
