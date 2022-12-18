@@ -4,6 +4,8 @@ Algodebug is a tool designed for debugging user provided source code through vis
 
 Current version of application: http://srv16.mikr.us:20232 (work in progress)
 
+AlgoDebug compiler repository: https://github.com/Rubix98/algodebug_compiler
+
 ## Frontend
 
 To run frontend:  
