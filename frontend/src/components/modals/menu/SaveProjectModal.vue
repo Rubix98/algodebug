@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <input type="text" v-model="projectTitle" class="full-size" placeholder="Tytuł projektu" />
+        <v-text-field label="Tytuł projektu" v-model="projectTitle" />
 
         <template #buttons>
             <AlgoButton type="ok" @click="save(false)">Zapisz jako</AlgoButton>
@@ -12,7 +12,7 @@
 <script>
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { closeModal } from "jenesius-vue-modal";
 
 export default {
