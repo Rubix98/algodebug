@@ -5,8 +5,9 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
+import {defineComponent} from "vue";
+import {mapState} from "vuex";
+
 export default defineComponent({
     name: "CompilingIndicator",
     computed: {
@@ -20,7 +21,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 div.compiling-indicator {
-    width: 100vw;
+    width: 100%;
     position: absolute;
 }
 </style>
