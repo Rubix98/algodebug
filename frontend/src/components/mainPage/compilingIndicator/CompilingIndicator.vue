@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import {mapState} from "vuex";
+import { defineComponent } from "vue";
+import { mapState } from "vuex";
 
 export default defineComponent({
     name: "CompilingIndicator",

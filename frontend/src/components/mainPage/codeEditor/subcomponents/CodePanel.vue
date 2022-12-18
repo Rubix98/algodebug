@@ -1,15 +1,12 @@
 <template>
     <div class="code-editor-header flex-horizontal-center">
-        <select :value="language" :disabled="project.isRunning">
-            <option
-                v-for="language in languages"
-                :key="language.key"
-                :value="language.key"
-                :disabled="language.disabled"
-            >
-                {{ language.label }}
-            </option>
-        </select>
+        <v-select
+            :items="languages"
+            item-title="label"
+            item-value="key"
+            v-model="language"
+            :disabled="project.isRunning"
+        />
     </div>
 </template>
 
