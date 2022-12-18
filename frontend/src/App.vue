@@ -14,11 +14,21 @@
 import Menu from "@/components/menu/Menu.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
+import { mapActions } from "vuex";
 
 export default {
     // ERROR: Name "Menu" is reserved in HTML
     // eslint-disable-next-line
     components: { Menu, MainPage, Modal: container },
+
+    mounted() {
+        this.updateProjects();
+        this.updateConverters();
+    },
+
+    methods: {
+        ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
+    },
 };
 </script>
 

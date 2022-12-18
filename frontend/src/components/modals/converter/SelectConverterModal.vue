@@ -13,31 +13,21 @@ import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoPickList from "@/components/global/AlgoPickList.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import CreateConverterModal from "@/components/modals/converter/CreateConverterModal.vue";
-import { sendRequest } from "@/javascript/utils/axiosUtils";
-import { getDialogDataForConverter } from "@/javascript/utils/dialogUtils";
 import { popModal, pushModal } from "jenesius-vue-modal";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
     components: { AlgoModal, AlgoPickList, AlgoButton },
 
     props: ["callback"],
 
-    data() {
-        return {
-            converters: [],
-        };
-    },
-
     created() {
-        sendRequest("/converter/findAll", null, "GET").then((responseData) => {
-            this.converters = responseData;
-            this.converters.forEach((converter) => {
-                converter.dialogData = getDialogDataForConverter(converter);
-            });
-        });
+        this.updateConverters();
     },
 
     methods: {
+        ...mapActions("cachedLists", ["updateConverters"]),
+
         handleSelectOption(selectedConverter) {
             this.$props.callback(selectedConverter);
             popModal();
@@ -46,11 +36,14 @@ export default {
         createConverter() {
             pushModal(CreateConverterModal, {
                 callback: (newConverter) => {
-                    this.converters.push(newConverter);
                     this.handleSelectOption(newConverter);
                 },
             });
         },
+    },
+
+    computed: {
+        ...mapGetters("cachedLists", ["converters"]),
     },
 };
 </script>
