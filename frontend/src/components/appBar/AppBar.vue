@@ -2,7 +2,7 @@
     <v-app-bar>
         <v-app-bar-nav-icon @click="this.$emit('toggleDrawer')" v-if="showDrawerButton" />
         <div class="app-bar__logo">
-            <img class="app-bar__logo__image" src="@/img/logo.png" @click="redirectToRoot()" alt="AlgoDebug logo" />
+            <img class="app-bar__logo__image" :src="logoUrl" @click="redirectToRoot()" alt="AlgoDebug logo" />
         </div>
         <v-spacer />
         <div class="app-bar__buttons">
@@ -14,6 +14,8 @@
 <script>
 import { defineComponent } from "vue";
 import { redirectTo } from "@/javascript/utils/other";
+import logoDark from "@/img/logo-dark.png";
+import logo from "@/img/logo.png";
 
 export default defineComponent({
     name: "AppBar",
@@ -26,6 +28,11 @@ export default defineComponent({
     methods: {
         redirectToRoot() {
             redirectTo(window.location.origin + window.location.pathname);
+        },
+    },
+    computed: {
+        logoUrl() {
+            return this.$vuetify.theme.global.name === "dark" ? logoDark : logo;
         },
     },
 });
