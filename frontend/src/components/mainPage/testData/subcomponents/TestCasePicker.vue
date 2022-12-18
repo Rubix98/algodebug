@@ -26,7 +26,7 @@
 <script>
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
-import {mapActions, mapGetters, mapState} from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
     components: { AlgoBlock, AlgoButton },

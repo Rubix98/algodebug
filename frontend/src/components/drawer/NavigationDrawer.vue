@@ -5,6 +5,10 @@
         :model-value="showDrawer"
         @update:modelValue="this.$emit('hideDrawer')"
     >
+        <v-list>
+            <v-list-item :prepend-avatar="getUserAvatarImg" title="Użytkownik" subtitle="user@example.com" />
+        </v-list>
+        <v-divider />
         <div class="buttons-list" v-for="(buttonsKeys, index) in Object.keys(buttons)" :key="buttonsKeys">
             <v-list density="compact">
                 <v-list-item
@@ -22,12 +26,13 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import {openModal} from "jenesius-vue-modal";
+import { defineComponent } from "vue";
+import { openModal } from "jenesius-vue-modal";
 import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
-import {setCurrentThemeInStorage} from "@/javascript/storage/themeStorage";
+import { setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
+import user from "@/img/user.png";
 
 export default defineComponent({
     name: "NavigationDrawer",
@@ -83,7 +88,7 @@ export default defineComponent({
             } else {
                 this.$vuetify.theme.global.name = "light";
             }
-            setCurrentThemeInStorage(this.$vuetify.theme.global.name)
+            setCurrentThemeInStorage(this.$vuetify.theme.global.name);
         },
     },
     mounted() {
@@ -91,6 +96,11 @@ export default defineComponent({
         addEventListener("resize", () => {
             this.updateDrawerVersion();
         });
+    },
+    computed: {
+        getUserAvatarImg() {
+            return user;
+        },
     },
 });
 </script>

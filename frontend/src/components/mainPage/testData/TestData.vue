@@ -26,7 +26,7 @@
 import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import {mapActions, mapGetters, mapState} from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 export default {
     components: { TestCasePicker, AlgoTextarea, AlgoBlock },
@@ -61,5 +61,3 @@ export default {
     },
 };
 </script>
-
-
