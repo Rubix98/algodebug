@@ -14,7 +14,7 @@
 import Menu from "@/components/menu/Menu.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
-import store from "@/store";
+import { mapActions } from "vuex";
 
 export default {
     // ERROR: Name "Menu" is reserved in HTML
@@ -22,8 +22,12 @@ export default {
     components: { Menu, MainPage, Modal: container },
 
     mounted() {
-        store.dispatch("cachedLists/updateProjects");
-        store.dispatch("cachedLists/updateConverters");
+        this.updateProjects();
+        this.updateConverters();
+    },
+
+    methods: {
+        ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
     },
 };
 </script>
