@@ -16,6 +16,7 @@ export function sendRequest(url, data = {}, method) {
             let errorMessage =
                 error.message + (error.response.data.error ? "\nDetails: " + error.response.data.error : "");
             alert(errorMessage);
+            throw error;
         });
 }
 

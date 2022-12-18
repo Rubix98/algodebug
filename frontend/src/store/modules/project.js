@@ -253,12 +253,16 @@ export default {
                     inputs: inputs,
                 },
                 "POST"
-            ).then((responseData) => {
-                commit("addOutputs", responseData);
-                commit("set", { key: "isRunning", value: true });
-                commit("set", { key: "waitingForCompile", value: false });
-                return true;
-            });
+            )
+                .then((responseData) => {
+                    commit("addOutputs", responseData);
+                    commit("set", { key: "isRunning", value: true });
+                    commit("set", { key: "waitingForCompile", value: false });
+                    return true;
+                })
+                .catch(() => {
+                    commit("set", { key: "waitingForCompile", value: false });
+                });
         },
 
         removeOutdatedVariables: ({ commit }, handlerFunction) => commit("removeOutdatedVariables", handlerFunction),
