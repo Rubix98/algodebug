@@ -22,13 +22,11 @@ export class CodeXCompilerImpl implements Compiler {
             return {
                 success: true,
                 output: new OutputParser(response.output).parse(),
-                errorMessage: null,
             };
         } else {
             return {
                 success: false,
-                output: null,
-                errorMessage: response.error,
+                error: response.error,
             };
         }
     }

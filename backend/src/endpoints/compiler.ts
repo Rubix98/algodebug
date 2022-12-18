@@ -17,7 +17,8 @@ export const compileCode = async (req: Request, res: Response) => {
         } else if (numberOfErrors < response.length) {
             res.status(206).json(response);
         } else {
-            res.status(400).json({ error: response[0].errorMessage });
+            let errorMessage = response.map((response) => (!response.success ? response.error : "")).join("\n");
+            res.status(400).json(errorMessage);
         }
     } catch (err) {
         console.log(err);

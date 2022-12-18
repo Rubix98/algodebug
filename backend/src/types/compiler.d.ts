@@ -13,12 +13,10 @@ export type CompilerRequest = {
 //prettier-ignore
 export type CompilerResponse = {
     success: true;
-    errorMessage: null;
     output: CodeOutput;
 } | {
     success: false;
-    errorMessage: string;
-    output: null;
+    error: string;
 }
 
 export type CodeOutput = {
