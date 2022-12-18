@@ -26,7 +26,7 @@
 <script>
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 
 export default {
     components: { AlgoBlock, AlgoButton },
@@ -71,12 +71,7 @@ export default {
 <style lang="scss" scoped>
 .test-case-picker-container {
     border-radius: 0 0 10px 10px;
-    overflow: scroll;
     text-align: center;
-
-    &__tests {
-        overflow-y: scroll;
-    }
 
     button {
         margin: 10px;

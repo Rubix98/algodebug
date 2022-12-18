@@ -26,7 +26,7 @@
 import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 
 export default {
     components: { TestCasePicker, AlgoTextarea, AlgoBlock },
@@ -62,16 +62,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.test-data-container > :first-child {
-    width: 20%;
-    min-width: 200px;
-    max-width: 300px;
-    height: 100%;
-}
 
-textarea {
-    height: 100%;
-    padding: 5px;
-}
-</style>

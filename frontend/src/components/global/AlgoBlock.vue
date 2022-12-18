@@ -33,7 +33,7 @@ export default {
         height: 100%;
         &__content {
             height: 85%;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
     }
 }
