@@ -4,6 +4,7 @@ import mitt from "mitt";
 import Vue3Sanitize from "vue-3-sanitize";
 import VueKonva from "vue-konva";
 import store from "@/store";
+import { getCurrentThemeFromStorage } from "@/javascript/storage/themeStorage";
 
 // Vuetify
 import "vuetify/styles";
@@ -19,7 +20,7 @@ const vuetify = createVuetify({
     components,
     directives,
     theme: {
-        defaultTheme: "light",
+        defaultTheme: getCurrentThemeFromStorage(),
         themes: {
             light: {
                 dark: false,

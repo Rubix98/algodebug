@@ -22,11 +22,12 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { openModal } from "jenesius-vue-modal";
+import {defineComponent} from "vue";
+import {openModal} from "jenesius-vue-modal";
 import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+import {setCurrentThemeInStorage} from "@/javascript/storage/themeStorage";
 
 export default defineComponent({
     name: "NavigationDrawer",
@@ -77,12 +78,12 @@ export default defineComponent({
             window.open("https://github.com/Rubix98/algodebug", "_blank").focus();
         },
         toggleDarkMode() {
-            // TODO: Save theme in localStorage
             if (this.$vuetify.theme.global.name === "light") {
                 this.$vuetify.theme.global.name = "dark";
             } else {
                 this.$vuetify.theme.global.name = "light";
             }
+            setCurrentThemeInStorage(this.$vuetify.theme.global.name)
         },
     },
     mounted() {
