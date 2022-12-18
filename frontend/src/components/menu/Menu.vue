@@ -3,6 +3,9 @@
         <div class="menu-content flex-vertical-space-between flex-horizontal-center">
             <img src="images/logo.png" @click="redirectToRoot()" />
 
+            <button @click="login" v-if="!loggedIn">Login with Google</button>
+            <button @click="logout" v-if="loggedIn">Logout</button>
+
             <div class="buttons-container">
                 <AlgoButton @click="openSaveProjectModal()"> <i class="fa fa-save"></i> Zapisz projekt </AlgoButton>
 
@@ -20,9 +23,20 @@ import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import { redirectTo } from "@/javascript/utils/other";
 import { openModal } from "jenesius-vue-modal";
+import { sendRequest } from "@/javascript/utils/axiosUtils";
 
 export default {
     components: { AlgoButton },
+
+    data() {
+        return {
+            loggedIn: false
+        }
+    },
+
+    mounted() {
+        this.verify();
+    },
 
     methods: {
         redirectToRoot() {
@@ -36,6 +50,29 @@ export default {
         openSaveProjectModal() {
             openModal(SaveProjectModal);
         },
+
+        login() {
+            window.open("http://localhost:8080/auth/google", '_blank', 'height=570,width=520');
+            
+            window.addEventListener("message", (event) => {
+                if (event.origin !== 'http://localhost:8080' || event.data !== "auth success") return;
+                this.loggedIn = true;
+            }, false);
+        },
+
+        verify() {
+            sendRequest("/auth/verify", {}, "GET")
+            .then((responseData) => {
+                this.loggedIn = responseData.loggedIn;
+            });
+        },
+
+        logout() {
+            sendRequest("/logout", {}, "GET")
+            .then((responseData) => {
+                this.loggedIn = responseData.loggedIn;
+            });
+        }
     },
 };
 </script>
