@@ -8,8 +8,9 @@ export function sendRequest(url, data = {}, method) {
     const loadingToast = toastStrings.loading ? toast.info(toastStrings.loading, { timeout: false }) : undefined;
 
     method = method.toLowerCase();
-    url = getBackendUrl() + url;
+    url = process.env.VUE_APP_BACKEND_URL + url;
     console.log(method, url);
+
     return axios[method](url, data)
         .then((response) => {
             console.log(response);
@@ -25,10 +26,6 @@ export function sendRequest(url, data = {}, method) {
         .finally(() => {
             if (loadingToast != undefined) toast.dismiss(loadingToast);
         });
-}
-
-function getBackendUrl() {
-    return window.location.origin.includes("localhost") ? "http://localhost:8080" : "https://algodebug.herokuapp.com";
 }
 
 function validateMethod(method) {

@@ -13,8 +13,10 @@ interface ResponseError extends Error {
 }
 
 // test env variables
-dotenv.config();
-["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "COMPILER"].forEach((variable) => {
+dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env" });
+
+["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME"].forEach((variable) => {
     if (!process.env[variable]) {
         throw new Error(`Environment variable ${variable} is not set`);
     }
@@ -43,7 +45,7 @@ const app = express();
 /* Middleware */
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server is running on: http://localhost:${process.env.PORT}`);
+    console.log(`Backend server is running on port: ${process.env.PORT}`);
 });
 
 // attach application/json header to all responses
