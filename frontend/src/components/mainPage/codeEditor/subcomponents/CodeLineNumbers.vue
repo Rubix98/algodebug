@@ -12,6 +12,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/no-unused-components */
 import { mapState } from "vuex";
 
 export default {

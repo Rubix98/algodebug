@@ -20,6 +20,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/no-unused-components */
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
 import { highlightVariables, highlightLine, highlightTargets } from "@/javascript/utils/highlightUtils";
 import { mapState, mapActions, mapGetters } from "vuex";

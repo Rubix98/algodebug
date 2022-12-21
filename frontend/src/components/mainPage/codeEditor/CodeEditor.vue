@@ -1,27 +1,36 @@
 <template>
-    <div :id="id" class="code-editor-container full-size flex-row">
-        <slot></slot>
-
-        <CodeLineNumbers :id="id" :code="code" :editable="editable" />
-
-        <Codearea
-            :id="id"
-            :code="code"
-            :editable="editable"
-            :clickable="clickable"
-            @scrollEvent="handleScroll"
-            @pickVariableEvent="handlePickVariable"
-        />
-    </div>
+    <div
+        :id="id"
+        :value="code"
+        :editable="editable"
+        :clickable="clickable"
+        @pickVariableEvent="handlePickVariable"
+        class="full-size"
+    ></div>
 </template>
 
 <script>
-import CodeLineNumbers from "@/components/mainPage/codeEditor/subcomponents/CodeLineNumbers.vue";
-import Codearea from "@/components/mainPage/codeEditor/subcomponents/Codearea.vue";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.main";
 
 export default {
-    components: { CodeLineNumbers, Codearea },
     props: ["id", "code", "editable", "clickable"],
+
+    mounted() {
+        let editor = monaco.editor.create(document.getElementById(this.$props.id), {
+            language: "cpp",
+            theme: "vs-dark",
+            automaticLayout: true,
+            minimap: {
+                enabled: false,
+            },
+            readOnly: !this.$props.editable,
+        });
+
+        let model = editor.getModel();
+        model.onDidChangeContent((e) => {
+            console.log(e);
+        });
+    },
 
     methods: {
         handleScroll(target) {
@@ -42,12 +51,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.code-editor-container {
-    transform: translateZ(0);
-    font: 16px "SourceCodePro";
-    border-radius: 10px;
-    background-color: black;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-}
-</style>
+<style scoped></style>

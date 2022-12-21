@@ -38,4 +38,8 @@ export default {
 .dialog {
     width: 80vw;
 }
+
+#pick-variable-editor {
+    height: 8rem;
+}
 </style>
