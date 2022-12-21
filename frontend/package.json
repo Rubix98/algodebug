@@ -16,6 +16,7 @@
         "jenesius-vue-modal": "^1.8.2",
         "konva": "^8.3.13",
         "mitt": "^3.0.0",
+        "monaco-editor": "^0.34.1",
         "vue": "^3.2.41",
         "vue-3-sanitize": "^0.1.4",
         "vue-konva": "^3.0.1",
