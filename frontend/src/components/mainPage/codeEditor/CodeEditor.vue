@@ -1,54 +1,96 @@
 <template>
-    <div
-        :id="id"
-        :value="code"
-        :editable="editable"
-        :clickable="clickable"
-        @pickVariableEvent="handlePickVariable"
-        class="full-size"
-    ></div>
+    <div :id="id" class="code-editor-container">
+        <slot></slot>
+        <MonacoEditor
+            :id="id"
+            v-model:value="modelCode"
+            :options="options"
+            @editorDidMount="editorDidMount"
+        ></MonacoEditor>
+    </div>
 </template>
 
 <script>
+import MonacoEditor from "monaco-editor-vue3";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
-    props: ["id", "code", "editable", "clickable"],
-
-    mounted() {
-        let editor = monaco.editor.create(document.getElementById(this.$props.id), {
-            language: "cpp",
-            theme: "vs-dark",
-            automaticLayout: true,
-            minimap: {
-                enabled: false,
-            },
-            readOnly: !this.$props.editable,
-        });
-
-        let model = editor.getModel();
-        model.onDidChangeContent((e) => {
-            console.log(e);
-        });
-    },
+    components: { MonacoEditor },
+    props: ["id", "code", "editable", "clickable", "language"],
 
     methods: {
-        handleScroll(target) {
-            const rootDOM = document.getElementById(this.id);
-            const codeareaDOM = rootDOM.getElementsByClassName("codearea")[0];
-            const highlightsDOM = rootDOM.getElementsByClassName("highlights")[0];
-            const linesDOM = rootDOM.getElementsByClassName("code-line-numbers-container")[0];
-
-            target = target.localName === "textarea" ? codeareaDOM : highlightsDOM;
-            linesDOM.scrollTop = highlightsDOM.scrollTop = target.scrollTop;
-            highlightsDOM.scrollLeft = target.scrollLeft;
-        },
+        ...mapActions("project", ["setCode"]),
 
         handlePickVariable(variable) {
+            console.log(variable);
             this.$emit("pickVariableEvent", variable);
         },
+
+        editorDidMount(editor) {
+            editor.onMouseDown((e) => {
+                console.log(e); // TODO: handlePickVariable
+            });
+
+            this.decorations = editor.deltaDecorations(
+                [],
+                [
+                    {
+                        range: new monaco.Range(1, 1, 1, 5),
+                        options: { inlineClassName: "highlightVariable" },
+                    },
+                ]
+            );
+        },
+
+        // TODO: move variables & breakpoints
+        // TODO: highlight lines
+    },
+
+    computed: {
+        ...mapState(["project"]),
+        ...mapGetters("project", ["variables", "currentFrame"]),
+
+        modelCode: {
+            get() {
+                return this.$props.code;
+            },
+            set(newValue) {
+                this.setCode(newValue);
+            },
+        },
+    },
+
+    data() {
+        return {
+            options: {
+                language: this.$props.language ?? "cpp",
+                theme: "vs-dark",
+                automaticLayout: "true",
+                readOnly: !this.$props.editable,
+                minimap: { enabled: false },
+                colorDecorators: true,
+                glyphMargins: true,
+            },
+        };
     },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.code-editor-container {
+    transform: translateZ(0);
+}
+</style>
+
+<style>
+.myGlyphMarginClass {
+    background: red;
+}
+
+.highlightVariable {
+    color: white !important;
+    border-radius: 2px;
+    background: purple;
+}
+</style>

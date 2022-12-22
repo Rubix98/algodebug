@@ -40,6 +40,6 @@ export default {
 }
 
 #pick-variable-editor {
-    height: 8rem;
+    height: 20rem;
 }
 </style>
