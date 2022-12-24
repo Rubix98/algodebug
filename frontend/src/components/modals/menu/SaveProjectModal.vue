@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <v-text-field label="Tytuł projektu" v-model="projectTitle" />
+        <v-text-field label="Tytuł projektu" v-model="projectTitle" clearable />
 
         <template #buttons>
             <AlgoButton type="ok" @click="save(false)">Zapisz jako</AlgoButton>
