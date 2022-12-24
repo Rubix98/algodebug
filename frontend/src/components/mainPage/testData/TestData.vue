@@ -1,13 +1,13 @@
 <template>
     <div class="test-data-container flex-row">
-        <TestCasePicker />
+        <TestCasePicker class="full-height" />
 
         <div class="full-size flex-row">
             <AlgoBlock class="full-size" header="Dane wejściowe">
                 <AlgoTextarea
                     v-model:value="input"
                     placeholder="Wprowadź dane wejściowe do programu"
-                    :readonly="project.isRunning"
+                    :readonly="this.project.isRunning"
                 >
                 </AlgoTextarea>
             </AlgoBlock>
@@ -26,9 +26,10 @@
 import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+import { defineComponent } from "vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 
-export default {
+export default defineComponent({
     components: { TestCasePicker, AlgoTextarea, AlgoBlock },
 
     data() {
@@ -59,5 +60,5 @@ export default {
             return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
         },
     },
-};
+});
 </script>

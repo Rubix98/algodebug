@@ -26,12 +26,12 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
-import {openModal} from "jenesius-vue-modal";
+import { defineComponent } from "vue";
+import { openModal } from "jenesius-vue-modal";
 import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
-import {setCurrentThemeInStorage} from "@/javascript/storage/themeStorage";
+import { setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
 import user from "@/img/user.png";
 
 export default defineComponent({

@@ -9,12 +9,6 @@
                 <slot></slot>
             </v-card-text>
         </v-card>
-        <!--        <div class="header flex-vertical-space-between">-->
-        <!--            <div><slot name="checkbox"></slot></div>-->
-        <!--        </div>-->
-
-        <!--        <div class="content">-->
-        <!--        </div>-->
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
     <AlgoBlock header="Wybór testów">
-        <div class="test-case-picker-container full-size">
+        <div class="test-case-picker-container">
             <v-list density="compact" class="test-case-picker-container__tests">
                 <v-list-item
                     v-for="(number, index) in numberOfTestCases"
@@ -70,7 +70,6 @@ export default {
 
 <style lang="scss" scoped>
 .test-case-picker-container {
-    border-radius: 0 0 10px 10px;
     text-align: center;
 
     button {
