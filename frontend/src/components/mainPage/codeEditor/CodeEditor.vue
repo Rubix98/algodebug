@@ -24,7 +24,7 @@ import lineColumn from "line-column";
 
 export default {
     components: { MonacoEditor },
-    props: ["id", "code", "editable", "clickable", "language", "showHighlightedVariables", "showBreakpoints"],
+    props: ["id", "code", "editable", "clickable", "showHighlightedVariables", "showBreakpoints"],
     watch: {
         editable: function (newVal) {
             this.editor.updateOptions({ readOnly: !newVal });
@@ -145,14 +145,12 @@ export default {
         },
 
         variablesDecorations() {
-            let result = [];
-
             if (this.$props.showHighlightedVariables != true) return [];
 
-            for (let variable of this.variables.toArray()) {
+            return this.variables.toArray().map((variable) => {
                 let startLineColumn = lineColumn(this.$props.code, variable.start);
                 let endLineColumn = lineColumn(this.$props.code, variable.end);
-                result.push({
+                return {
                     range: new monaco.Range(
                         startLineColumn.line,
                         startLineColumn.col,
@@ -160,26 +158,21 @@ export default {
                         endLineColumn.col
                     ),
                     options: { inlineClassName: "highlightVariable" },
-                });
-            }
-
-            return result;
+                };
+            });
         },
 
         breakpointsDecorations() {
-            let result = [];
-
             if (this.$props.showBreakpoints != true) return [];
 
-            for (let i = 0; i < this.$props.code.numberOfLines(); i++) {
-                result.push({
+            return this.$props.code.split("\n").map((_, i) => {
+                return {
                     range: new monaco.Range(i + 1, 1, i + 1, 1),
                     options: {
                         glyphMarginClassName: this.getBreakpointClass(i),
                     },
-                });
-            }
-            return result;
+                };
+            });
         },
 
         lineDecorations() {
@@ -195,25 +188,21 @@ export default {
         },
 
         targetDecorations() {
-            let result = [];
-
             if (this.$props.clickable != true) return [];
 
-            for (let word of getVariablesArray(this.$props.language, this.$props.code)) {
-                result.push({
+            return getVariablesArray(this.project.language, this.$props.code).map((word) => {
+                return {
                     range: new monaco.Range(word.startLineNumber, word.startColumn, word.endLineNumber, word.endColumn),
                     options: { inlineClassName: "target" },
-                });
-            }
-
-            return result;
+                };
+            });
         },
     },
 
     data() {
         return {
             options: {
-                language: this.$props.language ?? "cpp",
+                language: "cpp",
                 theme: "vs-dark",
                 automaticLayout: "true",
                 readOnly: !this.$props.editable,
