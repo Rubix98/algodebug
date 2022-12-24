@@ -14,37 +14,121 @@
 import MonacoEditor from "monaco-editor-vue3";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main";
 import { mapState, mapActions, mapGetters } from "vuex";
+import {
+    getVariablesArray,
+    monacoChangeToLegacyFormat,
+    moveBreakpoints,
+    moveTrackedVariables,
+} from "@/javascript/utils/codeUtils";
+import lineColumn from "line-column";
 
 export default {
     components: { MonacoEditor },
-    props: ["id", "code", "editable", "clickable", "language"],
+    props: ["id", "code", "editable", "clickable", "language", "showHighlightedVariables", "showBreakpoints"],
+    watch: {
+        editable: function (newVal) {
+            this.editor.updateOptions({ readOnly: !newVal });
+        },
+
+        variablesDecorations: function (dec) {
+            this.updateVariablesDecorations(dec);
+        },
+        breakpointsDecorations: function (dec) {
+            this.updateBreakpointsDecorations(dec);
+        },
+        lineDecorations: function (dec) {
+            this.updateLineDecorations(dec);
+        },
+    },
+
+    mounted() {
+        this.updateAllDecorations();
+    },
 
     methods: {
         ...mapActions("project", ["setCode"]),
 
-        handlePickVariable(variable) {
-            console.log(variable);
+        updateAllDecorations() {
+            this.updateVariablesDecorations(this.variablesDecorations);
+            this.updateBreakpointsDecorations(this.breakpointsDecorations);
+            this.updateLineDecorations(this.lineDecorations);
+            this.updateTargetDecorations(this.targetDecorations);
+        },
+
+        handlePickVariable(event) {
+            const word = this.editor.getModel().getWordAtPosition(event.target.position);
+            const variable = {
+                name: event.target.element.innerText,
+                start: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.startColumn),
+                end: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.endColumn),
+            };
             this.$emit("pickVariableEvent", variable);
         },
 
-        editorDidMount(editor) {
-            editor.onMouseDown((e) => {
-                console.log(e); // TODO: handlePickVariable
-            });
+        handleChangeContent(event) {
+            for (let change of event.changes) {
+                // change.forceMoveMarkers is undefined when text is changed by code.
+                // We must update decorations manually, because otherwise it doesn't show up on startup
+                if (change.forceMoveMarkers == undefined) {
+                    this.updateAllDecorations();
+                    continue;
+                }
 
-            this.decorations = editor.deltaDecorations(
-                [],
-                [
-                    {
-                        range: new monaco.Range(1, 1, 1, 5),
-                        options: { inlineClassName: "highlightVariable" },
-                    },
-                ]
-            );
+                let legacyChange = monacoChangeToLegacyFormat(this.$props.code, change);
+                moveTrackedVariables(legacyChange);
+                moveBreakpoints(this.project, legacyChange);
+            }
         },
 
-        // TODO: move variables & breakpoints
-        // TODO: highlight lines
+        handleClick(event) {
+            if (event.target.element.classList.contains("breakpoint")) {
+                if (!this.$props.editable) return;
+                this.project.breakpoints.addOrDelete({ id: event.target.position.lineNumber - 1 });
+                return;
+            }
+
+            if (event.target.element.classList.contains("target")) {
+                this.handlePickVariable(event);
+                return;
+            }
+        },
+
+        editorDidMount(editor) {
+            this.editor = editor;
+
+            editor.getModel().onDidChangeContent((event) => {
+                this.handleChangeContent(event);
+            });
+
+            editor.onMouseDown((event) => {
+                this.handleClick(event);
+            });
+        },
+
+        updateVariablesDecorations(dec) {
+            this.currentVariablesDecorations = this.editor.deltaDecorations(this.currentVariablesDecorations, dec);
+        },
+
+        updateBreakpointsDecorations(dec) {
+            this.currentBreakpointsDecorations = this.editor.deltaDecorations(this.currentBreakpointsDecorations, dec);
+        },
+
+        updateLineDecorations(dec) {
+            this.currentLineDecorations = this.editor.deltaDecorations(this.currentLineDecorations, dec);
+        },
+
+        updateTargetDecorations(dec) {
+            this.currentTargetDecorations = this.editor.deltaDecorations(this.currentTargetDecorations, dec);
+        },
+
+        getBreakpointClass(i) {
+            let result = "";
+            if (this.project.breakpoints.has(i)) return "breakpoint breakpointActive";
+            if (!this.project.isRunning && this.$props.editable) {
+                result += "breakpoint";
+            }
+            return result;
+        },
     },
 
     computed: {
@@ -59,6 +143,71 @@ export default {
                 this.setCode(newValue);
             },
         },
+
+        variablesDecorations() {
+            let result = [];
+
+            if (this.$props.showHighlightedVariables != true) return [];
+
+            for (let variable of this.variables.toArray()) {
+                let startLineColumn = lineColumn(this.$props.code, variable.start);
+                let endLineColumn = lineColumn(this.$props.code, variable.end);
+                result.push({
+                    range: new monaco.Range(
+                        startLineColumn.line,
+                        startLineColumn.col,
+                        endLineColumn.line,
+                        endLineColumn.col
+                    ),
+                    options: { inlineClassName: "highlightVariable" },
+                });
+            }
+
+            return result;
+        },
+
+        breakpointsDecorations() {
+            let result = [];
+
+            if (this.$props.showBreakpoints != true) return [];
+
+            for (let i = 0; i < this.$props.code.numberOfLines(); i++) {
+                result.push({
+                    range: new monaco.Range(i + 1, 1, i + 1, 1),
+                    options: {
+                        glyphMarginClassName: this.getBreakpointClass(i),
+                    },
+                });
+            }
+            return result;
+        },
+
+        lineDecorations() {
+            if (this.$props.showHighlightedVariables != true) return [];
+            if (!this.project.isRunning) return [];
+
+            return [
+                {
+                    range: new monaco.Range(this.currentFrame?.line + 1, 1, this.currentFrame?.line + 1, 1),
+                    options: { isWholeLine: true, className: "highlightLine" },
+                },
+            ];
+        },
+
+        targetDecorations() {
+            let result = [];
+
+            if (this.$props.clickable != true) return [];
+
+            for (let word of getVariablesArray(this.$props.language, this.$props.code)) {
+                result.push({
+                    range: new monaco.Range(word.startLineNumber, word.startColumn, word.endLineNumber, word.endColumn),
+                    options: { inlineClassName: "target" },
+                });
+            }
+
+            return result;
+        },
     },
 
     data() {
@@ -70,8 +219,13 @@ export default {
                 readOnly: !this.$props.editable,
                 minimap: { enabled: false },
                 colorDecorators: true,
-                glyphMargins: true,
+                glyphMargin: true,
             },
+
+            currentVariablesDecorations: [],
+            currentBreakpointsDecorations: [],
+            currentLineDecorations: [],
+            currentTargetDecorations: [],
         };
     },
 };
@@ -90,7 +244,34 @@ export default {
 
 .highlightVariable {
     color: white !important;
-    border-radius: 2px;
+    border-radius: 5px;
     background: purple;
+}
+
+.highlightLine {
+    background: #006600;
+}
+
+.breakpointActive {
+    background: red;
+    border: none !important;
+}
+
+.breakpoint {
+    transform: scale(0.8);
+    border: 1px solid gray;
+    border-radius: 50%;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.target {
+    cursor: pointer;
+    transition: 0.2s background-color;
+    border-radius: 5px;
+}
+
+.target:hover {
+    background: orange;
 }
 </style>

@@ -6,6 +6,8 @@
             :editable="false"
             :clickable="true"
             @pickVariableEvent="handlePickVariable"
+            :showHighlightedVariables="true"
+            :showBreakpoints="true"
         />
     </AlgoModal>
 </template>

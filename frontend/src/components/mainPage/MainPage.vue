@@ -7,6 +7,8 @@
                 :code="project.code"
                 :editable="!project.isRunning"
                 :clickable="false"
+                :showHighlightedVariables="true"
+                :showBreakpoints="true"
             >
                 <CodePanel />
             </CodeEditor>
