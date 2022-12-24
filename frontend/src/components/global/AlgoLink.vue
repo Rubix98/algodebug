@@ -1,5 +1,5 @@
 <template>
-    <a>{{ value ? value : label ? label : "Wybierz..." }}</a>
+    <a class="text-primary">{{ value ? value : label ? label : "Wybierz..." }}</a>
 </template>
 
 <script>
@@ -10,7 +10,6 @@ export default {
 
 <style scoped>
 a {
-    color: blue;
     cursor: pointer;
 }
 

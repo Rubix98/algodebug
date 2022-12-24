@@ -11,7 +11,7 @@
             <tbody>
                 <tr v-for="(row, index) in model" :key="index">
                     <td class="algo-table__remove-row text-center">
-                        <v-icon @click="removeRow(index)"> mdi-close-circle</v-icon>
+                        <v-icon class="primary" @click="removeRow(index)"> mdi-close</v-icon>
                     </td>
 
                     <td>
@@ -29,9 +29,6 @@
                     <td>
                         <input type="color" v-model="row.color" />
                     </td>
-                </tr>
-                <tr v-if="!model || model.length === 0">
-                    <td colspan="999" class="no-data-row">Brak danych</td>
                 </tr>
             </tbody>
         </v-table>
@@ -125,7 +122,6 @@ export default {
 
     &__remove-row {
         cursor: pointer;
-        color: orangered;
     }
 }
 </style>
