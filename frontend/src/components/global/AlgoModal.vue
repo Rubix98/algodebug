@@ -3,9 +3,9 @@
         <v-card-title class="dialog__title">
             <h2>{{ title }}</h2>
             <v-spacer />
-            <i class="dialog__title__close" title="Zamknij okno" @click="popModal()">
+            <v-btn class="dialog__title__close" elevation="0" icon>
                 <v-icon size="24"> mdi-close </v-icon>
-            </i>
+            </v-btn>
         </v-card-title>
         <v-divider />
         <v-card-text class="dialog__content">
