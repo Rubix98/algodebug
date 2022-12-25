@@ -6,8 +6,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     data() {
         return {
             // Cannot read properties of undefined reading id
@@ -54,7 +55,7 @@ export default {
     computed: {
         ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
     },
-};
+});
 </script>
 
 <style scoped>

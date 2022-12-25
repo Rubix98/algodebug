@@ -17,8 +17,9 @@
 import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
 import { mapActions, mapGetters } from "vuex";
 import { openModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     methods: {
         ...mapActions("project", ["deleteSceneObject"]),
 
@@ -31,7 +32,7 @@ export default {
     computed: {
         ...mapGetters("project", ["sceneObjects"]),
     },
-};
+});
 </script>
 
 <style scoped>

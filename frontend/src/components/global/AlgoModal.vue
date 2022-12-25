@@ -22,8 +22,9 @@
 <script>
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import { popModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoButton },
 
     props: ["title"],
@@ -33,7 +34,7 @@ export default {
             popModal();
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>

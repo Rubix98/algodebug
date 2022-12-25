@@ -8,10 +8,12 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
     props: ["label"],
     mounted() {},
-};
+});
 </script>
 
 <style lang="scss" scoped>

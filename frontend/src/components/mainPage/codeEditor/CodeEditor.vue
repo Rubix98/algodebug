@@ -20,8 +20,9 @@
 <script>
 import CodeLineNumbers from "@/components/mainPage/codeEditor/subcomponents/CodeLineNumbers.vue";
 import Codearea from "@/components/mainPage/codeEditor/subcomponents/Codearea.vue";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { CodeLineNumbers, Codearea },
     props: ["id", "code", "editable", "clickable"],
 
@@ -41,7 +42,7 @@ export default {
             this.$emit("pickVariableEvent", variable);
         },
     },
-};
+});
 </script>
 
 <style scoped>

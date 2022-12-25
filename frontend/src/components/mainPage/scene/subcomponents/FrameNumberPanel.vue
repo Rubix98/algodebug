@@ -4,8 +4,9 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     computed: {
         ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
 
@@ -13,7 +14,7 @@ export default {
             return this.numberOfFrames ? this.currentFrame.id + 1 : 0;
         },
     },
-};
+});
 </script>
 
 <style scoped>

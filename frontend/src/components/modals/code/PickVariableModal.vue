@@ -13,10 +13,11 @@
 <script>
 import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
 import AlgoModal from "@/components/global/AlgoModal.vue";
+import { defineComponent } from "vue";
 import { mapState } from "vuex";
 import { popModal } from "jenesius-vue-modal";
 
-export default {
+export default defineComponent({
     components: { CodeEditor, AlgoModal },
 
     props: ["callback"],
@@ -31,5 +32,5 @@ export default {
     computed: {
         ...mapState(["project"]),
     },
-};
+});
 </script>

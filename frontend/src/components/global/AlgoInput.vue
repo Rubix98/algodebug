@@ -3,7 +3,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
     props: ["value", "label"],
 
     data() {
@@ -21,7 +23,5 @@ export default {
             this.$emit("update:value", this.model);
         },
     },
-};
+});
 </script>
-
-<style scoped></style>

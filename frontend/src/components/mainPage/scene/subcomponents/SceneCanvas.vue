@@ -7,8 +7,9 @@
 <script>
 import { Stage } from "@/javascript/stage/Stage";
 import { mapActions, mapGetters, mapState } from "vuex";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     mounted() {
         this.stage = new Stage("canvas");
 
@@ -38,7 +39,7 @@ export default {
         ...mapState(["project"]),
         ...mapGetters("project", ["sceneObjects", "currentFrame"]),
     },
-};
+});
 </script>
 
 <style scoped>

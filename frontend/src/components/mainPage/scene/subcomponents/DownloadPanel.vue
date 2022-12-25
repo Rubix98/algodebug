@@ -5,13 +5,15 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
     methods: {
         download() {
             this.emitter.emit("downloadStageEvent");
         },
     },
-};
+});
 </script>
 
 <style scoped>

@@ -10,8 +10,9 @@ import AlgoPickList from "@/components/global/AlgoPickList.vue";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { redirectTo } from "@/javascript/utils/other";
 import { getDialogDataForProject } from "@/javascript/utils/dialogUtils";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, AlgoPickList },
     data() {
         return {
@@ -33,5 +34,5 @@ export default {
             redirectTo("?projectId=" + selectedProject._id);
         },
     },
-};
+});
 </script>

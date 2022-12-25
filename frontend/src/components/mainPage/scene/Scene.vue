@@ -24,13 +24,14 @@ import DownloadPanel from "@/components/mainPage/scene/subcomponents/DownloadPan
 import NavigationPanel from "@/components/mainPage/scene/subcomponents/NavigationPanel.vue";
 import FrameNumberPanel from "@/components/mainPage/scene/subcomponents/FrameNumberPanel.vue";
 import { mapState } from "vuex";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
     computed: {
         ...mapState(["project"]),
     },
-};
+});
 </script>
 
 <style scoped>

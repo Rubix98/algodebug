@@ -21,8 +21,9 @@
 
 <script>
 import { compareCode } from "@/javascript/utils/codeUtils";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     props: {
         value: {
             type: String,
@@ -90,7 +91,7 @@ export default {
             },
         },
     },
-};
+});
 </script>
 
 <style scoped>

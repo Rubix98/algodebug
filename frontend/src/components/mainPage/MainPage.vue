@@ -26,9 +26,10 @@ import CodePanel from "@/components/mainPage/codeEditor/subcomponents/CodePanel.
 import Scene from "@/components/mainPage/scene/Scene.vue";
 import TestData from "@/components/mainPage/testData/TestData.vue";
 import { mapState, mapActions } from "vuex";
+import { defineComponent } from "vue";
 import CompilingIndicator from "@/components/mainPage/compilingIndicator/CompilingIndicator.vue";
 
-export default {
+export default defineComponent({
     components: { CompilingIndicator, CodeEditor, CodePanel, Scene, TestData },
 
     mounted() {
@@ -49,7 +50,7 @@ export default {
             return urlParams.get("projectId");
         },
     },
-};
+});
 </script>
 
 <style scoped>

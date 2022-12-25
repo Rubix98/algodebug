@@ -8,8 +8,9 @@
 import AlgoButton from "@/components/global/AlgoButton";
 import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
 import { openModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoButton },
 
     methods: {
@@ -17,5 +18,5 @@ export default {
             openModal(ConfigureSceneObjectModal);
         },
     },
-};
+});
 </script>

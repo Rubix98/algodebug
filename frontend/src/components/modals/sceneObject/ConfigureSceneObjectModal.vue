@@ -40,8 +40,9 @@ import SelectConverterModal from "@/components/modals/converter/SelectConverterM
 import { mapActions, mapState } from "vuex";
 import { closeModal, pushModal } from "jenesius-vue-modal";
 import { validateSceneObject } from "@/javascript/utils/validationUtils";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, AlgoTable, AlgoButton },
     props: ["sceneObject"],
 
@@ -140,5 +141,5 @@ export default {
             });
         },
     },
-};
+});
 </script>

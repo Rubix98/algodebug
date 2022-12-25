@@ -13,8 +13,9 @@ import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import { mapGetters } from "vuex";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, CodeEditor, AlgoButton },
 
     methods: {
@@ -26,7 +27,7 @@ export default {
     computed: {
         ...mapGetters("project", ["debugCode"]),
     },
-};
+});
 </script>
 
 <style scoped>

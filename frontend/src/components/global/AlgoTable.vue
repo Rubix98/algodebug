@@ -42,8 +42,9 @@ import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
 import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
 import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
 import { pushModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     props: ["sceneObject", "label", "headers", "emptyRow"],
     components: { AlgoLink },
 
@@ -111,7 +112,7 @@ export default {
             };
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>

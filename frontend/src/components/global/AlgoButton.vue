@@ -5,7 +5,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
     props: ["type", "icon", "size"],
     computed: {
         color() {
@@ -17,5 +19,5 @@ export default {
             }
         },
     },
-};
+});
 </script>

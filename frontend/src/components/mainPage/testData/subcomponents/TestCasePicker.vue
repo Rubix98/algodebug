@@ -27,8 +27,9 @@
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoBlock, AlgoButton },
 
     data() {
@@ -65,7 +66,7 @@ export default {
             return !this.project.isRunning && this.project.testData.length > 1;
         },
     },
-};
+});
 </script>
 
 <style lang="scss" scoped>

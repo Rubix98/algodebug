@@ -16,8 +16,9 @@ import CreateConverterModal from "@/components/modals/converter/CreateConverterM
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { getDialogDataForConverter } from "@/javascript/utils/dialogUtils";
 import { popModal, pushModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, AlgoPickList, AlgoButton },
 
     props: ["callback"],
@@ -52,5 +53,5 @@ export default {
             });
         },
     },
-};
+});
 </script>

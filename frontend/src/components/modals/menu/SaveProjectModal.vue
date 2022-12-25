@@ -14,8 +14,9 @@ import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import { mapActions, mapState } from "vuex";
 import { closeModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, AlgoButton },
 
     data() {
@@ -43,7 +44,7 @@ export default {
     computed: {
         ...mapState(["project"]),
     },
-};
+});
 </script>
 
 <style scoped>

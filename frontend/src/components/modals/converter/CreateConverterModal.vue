@@ -18,8 +18,9 @@ import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { popModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, AlgoInput, AlgoButton, AlgoTextarea },
 
     props: ["callback"],
@@ -46,5 +47,5 @@ export default {
             });
         },
     },
-};
+});
 </script>

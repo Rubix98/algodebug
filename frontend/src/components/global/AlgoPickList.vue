@@ -32,8 +32,9 @@
 
 <script>
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     props: ["options"],
     emits: ["selectOptionEvent"],
     components: { AlgoTextarea },
@@ -45,5 +46,5 @@ export default {
             this.$emit("selectOptionEvent", selectedOption);
         },
     },
-};
+});
 </script>

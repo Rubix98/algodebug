@@ -8,8 +8,9 @@
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoPickList from "@/components/global/AlgoPickList.vue";
 import { popModal } from "jenesius-vue-modal";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     components: { AlgoModal, AlgoPickList },
 
     props: ["sceneObjectType", "callback"],
@@ -41,5 +42,5 @@ export default {
             popModal();
         },
     },
-};
+});
 </script>
