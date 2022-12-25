@@ -1,6 +1,8 @@
 <template>
     <div class="download-panel-container">
-        <i class="fa-solid fa-download" @click="download"></i>
+        <v-btn icon elevation="0" @click="download">
+            <v-icon> mdi-download </v-icon>
+        </v-btn>
     </div>
 </template>
 

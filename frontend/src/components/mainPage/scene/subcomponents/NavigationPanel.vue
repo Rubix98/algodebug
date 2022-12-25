@@ -1,6 +1,10 @@
 <template>
     <div class="navigation-panel-container flex-vertical-center">
-        <i v-for="icon in icons" :key="icon.icon" :class="icon.icon" @click="icon.action"></i>
+        <v-btn v-for="icon in icons" :key="icon.icon" :prepend-icon="icon.icon" icon elevation="0" @click="icon.action">
+            <v-icon>
+                {{ icon.icon }}
+            </v-icon>
+        </v-btn>
     </div>
 </template>
 
@@ -14,26 +18,26 @@ export default defineComponent({
             // Cannot read properties of undefined reading id
             icons: [
                 {
-                    icon: "fa-solid fa-backward-step",
+                    icon: "mdi-skip-backward",
                     action: () => {
                         this.setFrameId(0);
                     },
                 },
                 {
-                    icon: "fa-solid fa-backward",
+                    icon: "mdi-step-backward",
                     action: () => {
                         this.setFrameId(this.currentFrame.id - 1);
                     },
                 },
-                { icon: "fa-solid fa-play", action: () => {} },
+                { icon: "mdi-play", action: () => {} },
                 {
-                    icon: "fa-solid fa-forward",
+                    icon: "mdi-step-forward",
                     action: () => {
                         this.setFrameId(this.currentFrame.id + 1);
                     },
                 },
                 {
-                    icon: "fa-solid fa-forward-step",
+                    icon: "mdi-skip-forward",
                     action: () => {
                         this.setFrameId(this.numberOfFrames - 1);
                     },
