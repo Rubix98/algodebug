@@ -1,4 +1,4 @@
-export const reservedKeywords = [
+export const reservedKeywords = new Set([
     "alignas",
     "alignof",
     "and",
@@ -98,4 +98,4 @@ export const reservedKeywords = [
     "xor_eq",
     "include",
     "define",
-];
+]);

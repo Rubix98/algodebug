@@ -11,7 +11,7 @@ function getReservedKeywords(language = "cpp") {
 export function getVariablesArray(language, code) {
     const reservedKeywords = getReservedKeywords(language);
     let variables = code.getWordsArray();
-    variables = variables.filter((word) => reservedKeywords.indexOf(word) < 0);
+    variables = variables.filter((word) => !reservedKeywords.has(word));
     variables = variables.filter((word) => word[0] < "0" || word[0] > "9");
 
     let codeIndex = 0;
