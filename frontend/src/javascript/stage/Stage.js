@@ -41,7 +41,6 @@ export class Stage {
         this.clearStage();
         let currentTheme = getCurrentThemeFromStorage();
         let color = currentTheme === "light" ? "black" : "white";
-        let backgroundColor = currentTheme === "light" ? "white" : "#212121";
         for (let sceneObject of sceneObjects) {
             let painter = PainterFactory(sceneObject.type.key, {
                 sceneObject: sceneObject,
@@ -50,7 +49,6 @@ export class Stage {
                 updateSceneObjectPosition: updateSceneObjectPosition,
                 layers: this.layers,
                 color,
-                backgroundColor,
             });
 
             painter.draw();

@@ -44,8 +44,8 @@ export class GraphPainter extends Painter {
                 id: `vertex-circle-${vertex}`,
                 name: "vertex-circle",
                 radius: this.style.vertexRadius,
-                fill: this.backgroundColor,
-                stroke: this.color,
+                fill: "white",
+                stroke: "black",
                 strokeWidth: 2,
             });
             vertexGroup.add(vertexCircle);
@@ -61,7 +61,7 @@ export class GraphPainter extends Painter {
                 fontSize: this.style.fontSize,
                 align: "center",
                 verticalAlign: "middle",
-                fill: this.color,
+                fill: "black",
             });
             vertexGroup.add(vertexText);
 
