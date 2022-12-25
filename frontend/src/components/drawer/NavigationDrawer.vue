@@ -3,7 +3,7 @@
         :rail="shouldShowRailVersion"
         :expand-on-hover="shouldShowRailVersion"
         :model-value="showDrawer"
-        @update:modelValue="this.$emit('hideDrawer')"
+        @update:modelValue="this.$emit('hideDrawerEvent')"
     >
         <v-list>
             <v-list-item :prepend-avatar="getUserAvatarImg" title="Użytkownik" subtitle="user@example.com" />
@@ -36,7 +36,7 @@ import user from "@/img/user.png";
 
 export default defineComponent({
     name: "NavigationDrawer",
-    emits: ["toggledToRailVersion", "toggledToNormalVersion", "hideDrawer"],
+    emits: ["toggledToRailVersionEvent", "toggledToNormalVersionEvent", "hideDrawerEvent", "themeChangeEvent"],
     props: {
         showDrawer: {
             type: Boolean,
@@ -63,10 +63,10 @@ export default defineComponent({
         updateDrawerVersion() {
             if (window.innerWidth >= 1280) {
                 this.$data.shouldShowRailVersion = true;
-                this.$emit("toggledToRailVersion");
+                this.$emit("toggledToRailVersionEvent");
             } else {
                 this.$data.shouldShowRailVersion = false;
-                this.$emit("toggledToNormalVersion");
+                this.$emit("toggledToNormalVersionEvent");
             }
         },
         openLoadProjectModal() {
@@ -89,6 +89,7 @@ export default defineComponent({
                 this.$vuetify.theme.global.name = "light";
             }
             setCurrentThemeInStorage(this.$vuetify.theme.global.name);
+            this.emitter.emit("themeChangeEvent");
         },
     },
     mounted() {

@@ -2,9 +2,9 @@
     <v-app>
         <NavigationDrawer
             :show-drawer="showDrawer"
-            @toggledToNormalVersion="changeDrawerRailMode(false)"
-            @toggledToRailVersion="changeDrawerRailMode(true)"
-            @hideDrawer="changeDrawerValueTo(false)"
+            @toggledToNormalVersionEvent="changeDrawerRailMode(false)"
+            @toggledToRailVersionEvent="changeDrawerRailMode(true)"
+            @hideDrawerEvent="changeDrawerValueTo(false)"
         />
         <AppBar @toggleDrawer="toggleDrawer" :show-drawer-button="!drawerRailMode" />
         <v-main>

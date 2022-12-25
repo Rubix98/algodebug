@@ -17,6 +17,7 @@ export default defineComponent({
         this.emitter.on("currentFrameChangedEvent", this.draw);
         this.emitter.on("stopDebuggingEvent", this.clearStage);
         this.emitter.on("downloadStageEvent", this.download);
+        this.emitter.on("themeChangeEvent", this.draw);
     },
 
     methods: {
