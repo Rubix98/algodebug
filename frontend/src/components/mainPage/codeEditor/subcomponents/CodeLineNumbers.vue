@@ -5,7 +5,12 @@
             v-for="(line, index) in code.numberOfLines()"
             :key="index"
         >
-            <v-icon size="20" @click="handleBreakpointClick(index)" :class="isBreakpoint(index) ? 'breakpoint' : ''">
+            <v-icon
+                v-if="editable"
+                size="20"
+                @click="handleBreakpointClick(index)"
+                :class="isBreakpoint(index) ? 'breakpoint' : ''"
+            >
                 {{ returnIconName(index) }}
             </v-icon>
             {{ line }}
