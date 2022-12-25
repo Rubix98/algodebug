@@ -30,7 +30,7 @@ export class PointsPainter extends Painter {
                 id: `point-circle-${index}`,
                 name: "point-circle",
                 radius: this.style.pointRadius,
-                fill: "black",
+                fill: this.color,
             });
             pointGroup.add(pointCircle);
 
@@ -40,6 +40,7 @@ export class PointsPainter extends Painter {
                 text: String(index),
                 x: this.style.pointRadius,
                 y: this.style.pointRadius,
+                fill: this.color,
                 fontSize: this.style.fontSize,
             });
             pointGroup.add(pointText);

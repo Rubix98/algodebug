@@ -15,6 +15,7 @@ export class VariablePainter extends Painter {
             name: "variable",
             text: this.sceneObject.variable.name + ": " + variable,
             fontSize: this.style.fontSize,
+            fill: this.color,
             y: variableNumber * this.style.fontSize,
         });
         this.mainGroup.add(variableText);
