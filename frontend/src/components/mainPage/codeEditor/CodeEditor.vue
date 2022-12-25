@@ -244,12 +244,13 @@ export default {
 .breakpointActive {
     background: red;
     border: none !important;
+    border-radius: 50% !important;
 }
 
 .breakpoint {
     transform: scale(0.8);
     border: 1px solid gray;
-    border-radius: 50%;
+    border-radius: 15%;
     margin-left: 5px;
     cursor: pointer;
 }
