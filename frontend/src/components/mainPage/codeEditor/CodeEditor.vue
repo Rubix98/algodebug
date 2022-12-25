@@ -122,12 +122,9 @@ export default {
         },
 
         getBreakpointClass(i) {
-            let result = "";
             if (this.project.breakpoints.has(i)) return "breakpoint breakpointActive";
-            if (!this.project.isRunning && this.$props.editable) {
-                result += "breakpoint";
-            }
-            return result;
+            if (!this.project.isRunning && this.$props.editable) return "breakpoint";
+            return "";
         },
     },
 
@@ -145,7 +142,7 @@ export default {
         },
 
         variablesDecorations() {
-            if (this.$props.showHighlightedVariables != true) return [];
+            if (!this.$props.showHighlightedVariables) return [];
 
             return this.variables.toArray().map((variable) => {
                 let startLineColumn = lineColumn(this.$props.code, variable.start);
@@ -163,7 +160,7 @@ export default {
         },
 
         breakpointsDecorations() {
-            if (this.$props.showBreakpoints != true) return [];
+            if (!this.$props.showBreakpoints) return [];
 
             return this.$props.code.split("\n").map((_, i) => {
                 return {
@@ -176,7 +173,7 @@ export default {
         },
 
         lineDecorations() {
-            if (this.$props.showHighlightedVariables != true) return [];
+            if (!this.$props.showHighlightedVariables) return [];
             if (!this.project.isRunning) return [];
 
             return [
@@ -188,7 +185,7 @@ export default {
         },
 
         targetDecorations() {
-            if (this.$props.clickable != true) return [];
+            if (!this.$props.clickable) return [];
 
             return getVariablesArray(this.project.language, this.$props.code).map((word) => {
                 return {
