@@ -14,7 +14,14 @@
 
             <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="project.isRunning">
                 <template #checkbox>
-                    Dynamiczny output: <input type="checkbox" v-model="isDynamicOutputOn" />
+                    <v-checkbox-btn
+                        v-model="isDynamicOutputOn"
+                        color="primary"
+                        label="Dynamiczny output"
+                        hide-details
+                        style="height: 2rem"
+                        class="shrink ma-0"
+                    />
                 </template>
                 <AlgoTextarea :value="output" :readonly="true"> </AlgoTextarea>
             </AlgoBlock>

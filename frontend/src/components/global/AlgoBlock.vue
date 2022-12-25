@@ -3,6 +3,7 @@
         <v-card class="algo-block__card">
             <v-card-title class="algo-block__card__title">
                 {{ header }}
+                <slot name="checkbox"></slot>
             </v-card-title>
             <v-divider />
             <v-card-text class="algo-block__card__content">
@@ -27,6 +28,17 @@ export default defineComponent({
 
     &__card {
         height: 100%;
+        &__title {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+
+            &:last-child {
+                width: min-content;
+            }
+        }
         &__content {
             height: 85%;
             overflow-y: auto;
