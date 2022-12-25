@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "serve": "vue-cli-service serve --port 8081",
+        "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "format": "prettier --write --list-different .",
@@ -20,6 +20,7 @@
         "vue-3-sanitize": "^0.1.4",
         "vue-konva": "^3.0.1",
         "vue-modaltor": "^1.5.4",
+        "vue-toastification": "^2.0.0-rc.5",
         "vue-universal-modal": "^1.1.4",
         "vuetify": "^3.0.4",
         "vuex": "^4.1.0"

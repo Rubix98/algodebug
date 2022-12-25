@@ -7,32 +7,27 @@
 <script>
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoPickList from "@/components/global/AlgoPickList.vue";
-import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { redirectTo } from "@/javascript/utils/other";
-import { getDialogDataForProject } from "@/javascript/utils/dialogUtils";
 import { defineComponent } from "vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
     components: { AlgoModal, AlgoPickList },
-    data() {
-        return {
-            projects: [],
-        };
-    },
 
     created() {
-        sendRequest("/project/findAll", null, "GET").then((responseData) => {
-            this.projects = responseData;
-            this.projects.forEach((project) => {
-                project.dialogData = getDialogDataForProject(project);
-            });
-        });
+        this.updateProjects();
     },
 
     methods: {
+        ...mapActions("cachedLists", ["updateProjects"]),
+
         loadProject(selectedProject) {
             redirectTo("?projectId=" + selectedProject._id);
         },
+    },
+
+    computed: {
+        ...mapGetters("cachedLists", ["projects"]),
     },
 });
 </script>

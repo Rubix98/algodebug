@@ -14,13 +14,14 @@ import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoButton from "@/components/global/AlgoButton.vue";
 import { mapGetters } from "vuex";
 import { defineComponent } from "vue";
+import toast from "@/javascript/utils/toastUtils";
 
 export default defineComponent({
     components: { AlgoModal, CodeEditor, AlgoButton },
 
     methods: {
         copy() {
-            navigator.clipboard.writeText(this.debugCode).then(() => alert("Skopiowano"));
+            navigator.clipboard.writeText(this.debugCode).then(() => toast.info("Skopiowano"));
         },
     },
 

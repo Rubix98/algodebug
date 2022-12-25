@@ -48,7 +48,7 @@ export default defineComponent({
 <style scoped>
 .code-editor-container {
     transform: translateZ(0);
-    font: 16px Consolas;
+    font: 16px "SourceCodePro";
     background-color: black;
 }
 </style>

@@ -2,12 +2,13 @@ import { CompilerRequest, CompilerResponse } from "../../types/compiler";
 import { OutputParser } from "../../utils/OutputParser";
 import { Compiler } from "./compilerFactory";
 
-// https://github.com/Jaagrav/CodeX-API
-export class CodeXCompilerImpl implements Compiler {
-    static API_URL: string = "https://codex-api.herokuapp.com/";
+export class AlgoDebugCompilerImpl implements Compiler {
+    static API_URL: string = "http://srv16.mikr.us:40042/compile";
 
     async compile(request: CompilerRequest): Promise<CompilerResponse> {
-        const apiResponse = await fetch(CodeXCompilerImpl.API_URL, {
+        const url = process.env.COMPILER_API_URL ?? AlgoDebugCompilerImpl.API_URL;
+
+        const apiResponse = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
                 code: request.code,
@@ -16,7 +17,7 @@ export class CodeXCompilerImpl implements Compiler {
             }),
             headers: { "Content-Type": "application/json" },
         });
-        const response: CodexApiResponse = await apiResponse.json();
+        const response: AlgoDebugCompilerApiResponse = await apiResponse.json();
 
         if (response.success) {
             return {
@@ -32,18 +33,11 @@ export class CodeXCompilerImpl implements Compiler {
     }
 }
 
-type CodexApiResponse =
-    | {
-          success: true;
-          output: string;
-          language: string;
-          timestamp: string;
-          version: string;
-      }
-    | {
-          success: false;
-          error: string;
-          language: string;
-          timestamp: string;
-          version: string;
-      };
+//prettier-ignore
+type AlgoDebugCompilerApiResponse = {
+    success: true;
+    output: string;
+} | {
+    success: false;
+    error: string;
+};

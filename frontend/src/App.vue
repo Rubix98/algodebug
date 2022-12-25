@@ -22,12 +22,16 @@ import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
 import BottomButtons from "@/components/bottomButtons/BottomButtons.vue";
 import NavigationDrawer from "@/components/drawer/NavigationDrawer.vue";
+import { mapActions } from "vuex";
 
 export default defineComponent({
     name: "App",
-
     components: { NavigationDrawer, BottomButtons, AppBar, MainPage, Modal: container },
 
+    mounted() {
+        this.updateProjects();
+        this.updateConverters();
+    },
     data() {
         return {
             drawerRailMode: false,
@@ -36,6 +40,8 @@ export default defineComponent({
     },
 
     methods: {
+        ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
+
         toggleDrawer() {
             this.showDrawer = !this.showDrawer;
         },
