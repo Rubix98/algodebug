@@ -5,7 +5,10 @@
             v-for="(line, index) in code.numberOfLines()"
             :key="index"
         >
-            <i :class="bindIconClass(index)" @click="handleBreakpointClick(index)"></i> {{ line }}
+            <v-icon size="20" @click="handleBreakpointClick(index)" :class="isBreakpoint(index) ? 'breakpoint' : ''">
+                {{ returnIconName(index) }}
+            </v-icon>
+            {{ line }}
         </li>
         <br />
     </ul>
@@ -27,11 +30,18 @@ export default {
     computed: {
         ...mapState(["project"]),
 
-        bindIconClass() {
+        isBreakpoint() {
+            return (lineIndex) => {
+                if (this.project.breakpoints.has(lineIndex)) return 1;
+                return 0;
+            };
+        },
+
+        returnIconName() {
             return (lineIndex) => {
                 if (this.$props.id === "debug-code-editor") return "";
-                if (this.project.breakpoints.has(lineIndex)) return "fa fa-circle breakpoint";
-                if (this.$props.editable) return "fa-regular fa-square";
+                if (this.project.breakpoints.has(lineIndex)) return "mdi-circle";
+                if (this.$props.editable) return "mdi-crop-square";
             };
         },
     },
