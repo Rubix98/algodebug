@@ -3,7 +3,7 @@
         <v-card-title class="dialog__title">
             <h2>{{ title }}</h2>
             <v-spacer />
-            <v-btn class="dialog__title__close" elevation="0" icon>
+            <v-btn class="dialog__title__close" elevation="0" icon @click="popModal">
                 <v-icon size="24"> mdi-close </v-icon>
             </v-btn>
         </v-card-title>
@@ -15,7 +15,7 @@
         <v-divider />
         <v-card-actions>
             <v-spacer />
-            <AlgoButton @click="popModal()">Anuluj</AlgoButton>
+            <AlgoButton @click="popModal">Anuluj</AlgoButton>
             <slot name="buttons"></slot>
         </v-card-actions>
     </v-card>
