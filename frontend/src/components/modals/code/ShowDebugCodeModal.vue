@@ -32,7 +32,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.debug-code-editor {
+#debug-code-editor {
     height: 70vh;
     min-width: 90rem;
 }
