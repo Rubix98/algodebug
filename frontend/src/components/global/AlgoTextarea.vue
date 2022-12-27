@@ -1,12 +1,5 @@
 <template>
-    <textarea
-        v-if="dontUseVuetify"
-        v-model="model"
-        :readonly="readonly"
-        @keydown.tab.prevent="insertTabIndent"
-        @beforeinput="handleBeforeinput"
-        @input="handleInput"
-    >
+    <textarea v-if="dontUseVuetify" v-model="model" :readonly="readonly" @keydown.tab.prevent="insertTabIndent">
     </textarea>
     <v-textarea
         v-else
@@ -14,13 +7,10 @@
         :readonly="readonly"
         :label="label"
         @keydown.tab.prevent="insertTabIndent"
-        @beforeinput="handleBeforeinput"
-        @input="handleInput"
     ></v-textarea>
 </template>
 
 <script>
-import { compareCode } from "@/javascript/utils/codeUtils";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -53,31 +43,6 @@ export default defineComponent({
             this.$nextTick(() => {
                 event.target.selectionStart = event.target.selectionEnd = selectionStart + 1;
             });
-
-            this.$emit("code-change", {
-                start: event.target.selectionStart,
-                end: event.target.selectionStart + 1,
-                size: 1,
-                deltaLineCount: 0,
-            });
-        },
-
-        handleBeforeinput(event) {
-            if (["historyUndo", "historyRedo"].includes(event.inputType)) {
-                event.preventDefault();
-                return;
-            }
-
-            this.oldText = event.target.value;
-            this.selection = {
-                start: event.target.selectionStart,
-                end: event.target.selectionEnd,
-            };
-        },
-
-        handleInput(event) {
-            let result = compareCode(this.oldText, event.target.value, event, this.selection);
-            this.$emit("code-change", result);
         },
     },
 

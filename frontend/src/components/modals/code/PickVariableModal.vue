@@ -6,6 +6,8 @@
             :editable="false"
             :clickable="true"
             @pickVariableEvent="handlePickVariable"
+            :showHighlightedVariables="true"
+            :showBreakpoints="true"
         />
     </AlgoModal>
 </template>
@@ -34,3 +36,13 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+.dialog {
+    width: 80vw;
+}
+
+#pick-variable-editor {
+    height: 20rem;
+}
+</style>
