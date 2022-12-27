@@ -52,7 +52,7 @@ export default defineComponent({
     &__content {
         padding: 1rem 2rem;
         max-height: 65vh;
-        overflow-y: scroll;
+        overflow-y: auto;
     }
 
     &__title {
