@@ -17,7 +17,9 @@ export default defineComponent({
         this.emitter.on("currentFrameChangedEvent", this.draw);
         this.emitter.on("stopDebuggingEvent", this.clearStage);
         this.emitter.on("downloadStageEvent", this.download);
-        this.emitter.on("themeChangeEvent", this.draw);
+        this.emitter.on("themeChangeEvent", () => {
+            if (this.projectIsRunning) this.draw();
+        });
     },
 
     methods: {
@@ -38,7 +40,7 @@ export default defineComponent({
 
     computed: {
         ...mapState(["project"]),
-        ...mapGetters("project", ["sceneObjects", "currentFrame"]),
+        ...mapGetters("project", ["sceneObjects", "currentFrame", "projectIsRunning"]),
     },
 });
 </script>

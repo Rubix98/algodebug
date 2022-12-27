@@ -213,8 +213,8 @@ export default defineComponent({
     },
 
     watch: {
-        editable: function (newVal) {
-            this.editor.updateOptions({ readOnly: !newVal });
+        editable: function (newVal, oldVal) {
+            if (oldVal !== newVal) this.editor.updateOptions({ readOnly: !newVal });
         },
 
         variablesDecorations: function (dec) {

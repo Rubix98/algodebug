@@ -65,6 +65,10 @@ export default {
             return state.testData.map((element, index) => ({ ...element, index }));
         },
 
+        projectIsRunning(state) {
+            return state.isRunning;
+        },
+
         numberOfTestCases(_, getters) {
             return getters.testData.length;
         },
