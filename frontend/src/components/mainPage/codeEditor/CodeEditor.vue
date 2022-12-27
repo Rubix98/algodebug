@@ -25,20 +25,24 @@ import lineColumn from "line-column";
 export default {
     components: { MonacoEditor },
     props: ["id", "code", "editable", "clickable", "showHighlightedVariables", "showBreakpoints"],
-    watch: {
-        editable: function (newVal) {
-            this.editor.updateOptions({ readOnly: !newVal });
-        },
 
-        variablesDecorations: function (dec) {
-            this.updateVariablesDecorations(dec);
-        },
-        breakpointsDecorations: function (dec) {
-            this.updateBreakpointsDecorations(dec);
-        },
-        lineDecorations: function (dec) {
-            this.updateLineDecorations(dec);
-        },
+    data() {
+        return {
+            options: {
+                language: "cpp",
+                theme: "vs-dark",
+                automaticLayout: "true",
+                readOnly: !this.$props.editable,
+                minimap: { enabled: false },
+                colorDecorators: true,
+                glyphMargin: true,
+            },
+
+            currentVariablesDecorations: [],
+            currentBreakpointsDecorations: [],
+            currentLineDecorations: [],
+            currentTargetDecorations: [],
+        };
     },
 
     mounted() {
@@ -48,11 +52,16 @@ export default {
     methods: {
         ...mapActions("project", ["setCode"]),
 
-        updateAllDecorations() {
-            this.updateVariablesDecorations(this.variablesDecorations);
-            this.updateBreakpointsDecorations(this.breakpointsDecorations);
-            this.updateLineDecorations(this.lineDecorations);
-            this.updateTargetDecorations(this.targetDecorations);
+        editorDidMount(editor) {
+            this.editor = editor;
+
+            editor.getModel().onDidChangeContent((event) => {
+                this.handleChangeContent(event);
+            });
+
+            editor.onMouseDown((event) => {
+                this.handleClick(event);
+            });
         },
 
         handlePickVariable(event) {
@@ -93,16 +102,11 @@ export default {
             }
         },
 
-        editorDidMount(editor) {
-            this.editor = editor;
-
-            editor.getModel().onDidChangeContent((event) => {
-                this.handleChangeContent(event);
-            });
-
-            editor.onMouseDown((event) => {
-                this.handleClick(event);
-            });
+        updateAllDecorations() {
+            this.updateVariablesDecorations(this.variablesDecorations);
+            this.updateBreakpointsDecorations(this.breakpointsDecorations);
+            this.updateLineDecorations(this.lineDecorations);
+            this.updateTargetDecorations(this.targetDecorations);
         },
 
         updateVariablesDecorations(dec) {
@@ -122,7 +126,7 @@ export default {
         },
 
         getBreakpointClass(i) {
-            if (this.project.breakpoints.has(i)) return "breakpoint breakpointActive";
+            if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
             if (!this.project.isRunning && this.$props.editable) return "breakpoint";
             return "";
         },
@@ -154,7 +158,7 @@ export default {
                         endLineColumn.line,
                         endLineColumn.col
                     ),
-                    options: { inlineClassName: "highlightVariable" },
+                    options: { inlineClassName: "highlight-variable" },
                 };
             });
         },
@@ -179,7 +183,7 @@ export default {
             return [
                 {
                     range: new monaco.Range(this.currentFrame?.line + 1, 1, this.currentFrame?.line + 1, 1),
-                    options: { isWholeLine: true, className: "highlightLine" },
+                    options: { isWholeLine: true, className: "highlight-line" },
                 },
             ];
         },
@@ -196,23 +200,20 @@ export default {
         },
     },
 
-    data() {
-        return {
-            options: {
-                language: "cpp",
-                theme: "vs-dark",
-                automaticLayout: "true",
-                readOnly: !this.$props.editable,
-                minimap: { enabled: false },
-                colorDecorators: true,
-                glyphMargin: true,
-            },
+    watch: {
+        editable: function (newVal) {
+            this.editor.updateOptions({ readOnly: !newVal });
+        },
 
-            currentVariablesDecorations: [],
-            currentBreakpointsDecorations: [],
-            currentLineDecorations: [],
-            currentTargetDecorations: [],
-        };
+        variablesDecorations: function (dec) {
+            this.updateVariablesDecorations(dec);
+        },
+        breakpointsDecorations: function (dec) {
+            this.updateBreakpointsDecorations(dec);
+        },
+        lineDecorations: function (dec) {
+            this.updateLineDecorations(dec);
+        },
     },
 };
 </script>
@@ -224,21 +225,17 @@ export default {
 </style>
 
 <style>
-.myGlyphMarginClass {
-    background: red;
-}
-
-.highlightVariable {
+.highlight-variable {
     color: white !important;
     border-radius: 5px;
     background: purple;
 }
 
-.highlightLine {
+.highlight-line {
     background: #006600;
 }
 
-.breakpointActive {
+.breakpoint-active {
     background: red;
     border: none !important;
     border-radius: 50% !important;
