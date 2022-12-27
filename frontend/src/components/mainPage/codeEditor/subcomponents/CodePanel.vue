@@ -5,7 +5,7 @@
             item-title="label"
             item-value="key"
             v-model="language"
-            :disabled="project.isRunning"
+            :disabled="this.project.isRunning"
         />
     </div>
 </template>
@@ -49,7 +49,6 @@ export default {
     z-index: 1;
     padding: 5px 15px;
     font: initial;
-    color: white;
     right: 0;
 }
 
