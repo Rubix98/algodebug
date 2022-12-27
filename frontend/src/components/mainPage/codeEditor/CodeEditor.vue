@@ -22,6 +22,7 @@ import {
 } from "@/javascript/utils/codeUtils";
 import lineColumn from "line-column";
 import { defineComponent } from "vue";
+import { getCurrentThemeFromStorage } from "@/javascript/storage/themeStorage";
 
 export default defineComponent({
     components: { MonacoEditor },
@@ -31,7 +32,7 @@ export default defineComponent({
         return {
             options: {
                 language: "cpp",
-                theme: "vs-dark",
+                theme: this.getEditorTheme(),
                 automaticLayout: "true",
                 readOnly: !this.$props.editable,
                 minimap: { enabled: false },
@@ -48,6 +49,9 @@ export default defineComponent({
 
     mounted() {
         this.updateAllDecorations();
+        this.emitter.on("themeChangeEvent", () => {
+            this.options.theme = this.getEditorTheme();
+        });
     },
 
     methods: {
@@ -63,6 +67,11 @@ export default defineComponent({
             editor.onMouseDown((event) => {
                 this.handleClick(event);
             });
+        },
+
+        getEditorTheme() {
+            if (getCurrentThemeFromStorage() === "light") return "vs-light";
+            return "vs-dark";
         },
 
         handlePickVariable(event) {
