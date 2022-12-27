@@ -5,7 +5,7 @@
         <div class="flex-row">
             <CodeEditor
                 id="main-editor"
-                class="width-1-of-2"
+                class="width-1-of-2 v-card--variant-elevated"
                 :code="this.project.code"
                 :editable="!this.project.isRunning"
                 :clickable="false"
@@ -55,7 +55,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .main-page-container {
     max-height: calc(100vh - 65px);
     padding: 10px;
