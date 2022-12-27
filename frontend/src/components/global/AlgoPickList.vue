@@ -6,24 +6,30 @@
             class="option"
             @click="(event) => selectOption(event, option)"
         >
-            {{ option.label }}
             <div v-if="option.dialogData">
                 <div
                     v-for="(property, index) in option.dialogData.properties"
                     :key="index"
                     v-show="property.value != null"
                 >
-                    <b>{{ property.label }}</b
-                    >:
-
-                    <span v-if="property.fieldType === 'textarea'">
-                        <AlgoTextarea class="small" :value="property.value" :readonly="true" />
-                    </span>
-                    <span v-else>
+                    <v-list-item-title v-if="index === 0">
                         {{ property.value }}
-                    </span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-else>
+                        {{ property.label }}:
+
+                        <span v-if="property.fieldType === 'textarea'">
+                            <AlgoTextarea class="small" :value="property.value" :readonly="true" />
+                        </span>
+                        <span v-else>
+                            {{ property.value }}
+                        </span>
+                    </v-list-item-subtitle>
                 </div>
             </div>
+            <v-list-item-title v-else>
+                {{ option.label }}
+            </v-list-item-title>
         </v-list-item>
     </v-list>
 
