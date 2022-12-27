@@ -1,13 +1,5 @@
 <template>
-    <textarea v-if="dontUseVuetify" v-model="model" :readonly="readonly" @keydown.tab.prevent="insertTabIndent">
-    </textarea>
-    <v-textarea
-        v-else
-        v-model="model"
-        :readonly="readonly"
-        :label="label"
-        @keydown.tab.prevent="insertTabIndent"
-    ></v-textarea>
+    <v-textarea v-model="model" :readonly="readonly" :label="label" @keydown.tab.prevent="insertTabIndent" />
 </template>
 
 <script>
@@ -24,10 +16,6 @@ export default defineComponent({
         label: {
             type: String,
             required: false,
-        },
-        dontUseVuetify: {
-            type: Boolean,
-            defaultValue: false,
         },
     },
 

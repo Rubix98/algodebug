@@ -8,8 +8,7 @@
                     v-model:value="input"
                     placeholder="Wprowadź dane wejściowe do programu"
                     :readonly="this.project.isRunning"
-                >
-                </AlgoTextarea>
+                />
             </AlgoBlock>
 
             <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="this.project.isRunning">
@@ -23,7 +22,7 @@
                         class="shrink ma-0"
                     />
                 </template>
-                <AlgoTextarea :value="output" :readonly="true"> </AlgoTextarea>
+                <AlgoTextarea :value="output" :readonly="true" />
             </AlgoBlock>
         </div>
     </div>
