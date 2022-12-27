@@ -124,12 +124,6 @@ export default {
         updateTargetDecorations(dec) {
             this.currentTargetDecorations = this.editor.deltaDecorations(this.currentTargetDecorations, dec);
         },
-
-        getBreakpointClass(i) {
-            if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
-            if (!this.project.isRunning && this.$props.editable) return "breakpoint";
-            return "";
-        },
     },
 
     computed: {
@@ -197,6 +191,14 @@ export default {
                     options: { inlineClassName: "target" },
                 };
             });
+        },
+
+        getBreakpointClass() {
+            return (i) => {
+                if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
+                if (!this.project.isRunning && this.$props.editable) return "breakpoint";
+                return "";
+            };
         },
     },
 
