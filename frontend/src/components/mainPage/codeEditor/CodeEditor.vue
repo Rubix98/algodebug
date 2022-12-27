@@ -234,6 +234,8 @@ export default defineComponent({
 <style scoped lang="scss">
 .code-editor-container {
     transform: translateZ(0);
+    position: relative;
+    z-index: 40;
 }
 </style>
 
