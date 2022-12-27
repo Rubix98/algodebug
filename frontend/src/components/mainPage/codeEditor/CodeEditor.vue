@@ -230,13 +230,13 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .code-editor-container {
     transform: translateZ(0);
 }
 </style>
 
-<style>
+<style lang="scss">
 .highlight-variable {
     color: white !important;
     border-radius: 5px;
@@ -244,7 +244,7 @@ export default defineComponent({
 }
 
 .highlight-line {
-    background: #006600;
+    background: transparentize(#1a73e8, 0.7);
 }
 
 .breakpoint-active {
