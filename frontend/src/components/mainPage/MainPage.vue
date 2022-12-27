@@ -6,8 +6,8 @@
             <CodeEditor
                 id="main-editor"
                 class="width-1-of-2"
-                :code="project.code"
-                :editable="!project.isRunning"
+                :code="this.project.code"
+                :editable="!this.project.isRunning"
                 :clickable="false"
                 :showHighlightedVariables="true"
                 :showBreakpoints="true"

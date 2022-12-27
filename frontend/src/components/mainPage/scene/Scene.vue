@@ -3,15 +3,15 @@
         <div class="scene-container full-size">
             <SceneCanvas
                 class="full-size"
-                :sceneObjects="project.sceneObjects"
-                :isRunning="project.isRunning"
+                :sceneObjects="this.project.sceneObjects"
+                :isRunning="this.project.isRunning"
             ></SceneCanvas>
 
-            <CenterPanel v-if="!project.isRunning" />
-            <SceneObjectsPanel v-if="!project.isRunning" />
-            <DownloadPanel v-if="project.isRunning" />
-            <NavigationPanel v-if="project.isRunning" />
-            <FrameNumberPanel v-if="project.isRunning" />
+            <CenterPanel v-if="!this.project.isRunning" />
+            <SceneObjectsPanel v-if="!this.project.isRunning" />
+            <DownloadPanel v-if="this.project.isRunning" />
+            <NavigationPanel v-if="this.project.isRunning" />
+            <FrameNumberPanel v-if="this.project.isRunning" />
         </div>
     </v-card>
 </template>
@@ -55,19 +55,19 @@ export default defineComponent({
 
 .download-panel-container {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
 }
 
 .navigation-panel-container {
     position: absolute;
     width: 100%;
-    bottom: 0px;
+    bottom: 0;
 }
 
 .frame-number-panel-container {
     position: absolute;
-    bottom: 0px;
-    right: 0px;
+    bottom: 0;
+    right: 0;
 }
 </style>

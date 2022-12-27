@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Kod debugujący">
-        <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="false" />
+        <CodeEditor id="debug-code-editor" :code="this.debugCode" :editable="false" :clickable="false" />
 
         <template #buttons>
             <AlgoButton @click="copy()" type="ok">Kopiuj</AlgoButton>
@@ -33,7 +33,7 @@ export default defineComponent({
 
 <style scoped>
 #debug-code-editor {
-    height: 70vh;
+    height: 50vh;
     min-width: 90rem;
 }
 </style>

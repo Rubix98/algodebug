@@ -2,7 +2,7 @@
     <AlgoModal title="Zaznacz zmienną">
         <CodeEditor
             id="pick-variable-editor"
-            :code="project.code"
+            :code="this.project.code"
             :editable="false"
             :clickable="true"
             @pickVariableEvent="handlePickVariable"

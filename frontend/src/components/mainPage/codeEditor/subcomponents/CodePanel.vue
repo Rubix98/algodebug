@@ -42,7 +42,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .code-editor-header {
     position: absolute;
     justify-content: flex-end;
@@ -75,10 +75,10 @@ i {
     font-size: 30px;
     cursor: pointer;
     color: #ccc;
-}
 
-i:hover {
-    color: white;
+    &:hover {
+        color: white;
+    }
 }
 
 select {

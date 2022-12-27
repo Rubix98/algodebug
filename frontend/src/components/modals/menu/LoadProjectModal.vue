@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Wczytaj projekt">
-        <AlgoPickList :options="projects" @selectOptionEvent="loadProject" />
+        <AlgoPickList :options="this.projects" @selectOptionEvent="loadProject" />
     </AlgoModal>
 </template>
 

@@ -3,7 +3,7 @@
         <div class="test-case-picker-container">
             <v-list density="compact" class="test-case-picker-container__tests">
                 <v-list-item
-                    v-for="(number, index) in numberOfTestCases"
+                    v-for="(number, index) in this.numberOfTestCases"
                     :key="index"
                     :value="index"
                     :title="`Test ${number}`"

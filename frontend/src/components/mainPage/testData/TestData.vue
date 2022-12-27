@@ -12,7 +12,7 @@
                 </AlgoTextarea>
             </AlgoBlock>
 
-            <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="project.isRunning">
+            <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="this.project.isRunning">
                 <template #checkbox>
                     <v-checkbox-btn
                         v-model="isDynamicOutputOn"

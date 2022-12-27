@@ -34,15 +34,3 @@ export default defineComponent({
     },
 });
 </script>
-
-<style scoped>
-.scene-object-tile {
-    margin: 5px;
-    padding: 5px 10px;
-    border-radius: 10px;
-    gap: 10px;
-    background: linear-gradient(#427aa1, #05668d);
-    color: white;
-    cursor: pointer;
-}
-</style>
