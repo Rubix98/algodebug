@@ -5,6 +5,7 @@
         <div class="full-size flex-row">
             <AlgoBlock class="full-size" header="Dane wejściowe">
                 <AlgoTextarea
+                    :auto-grow="true"
                     v-model:value="input"
                     placeholder="Wprowadź dane wejściowe do programu"
                     :readonly="this.project.isRunning"
@@ -22,7 +23,7 @@
                         class="shrink ma-0"
                     />
                 </template>
-                <AlgoTextarea :value="output" :readonly="true" />
+                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
         </div>
     </div>

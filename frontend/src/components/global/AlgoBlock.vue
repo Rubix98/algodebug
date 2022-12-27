@@ -29,6 +29,8 @@ export default defineComponent({
     &__card {
         height: 100%;
         &__title {
+            max-height: 3rem;
+            height: 3rem;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -40,7 +42,7 @@ export default defineComponent({
             }
         }
         &__content {
-            height: 85%;
+            height: calc(100% - 3rem);
             overflow-y: auto;
         }
     }

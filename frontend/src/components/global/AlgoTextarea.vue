@@ -1,5 +1,11 @@
 <template>
-    <v-textarea v-model="model" :readonly="readonly" :label="label" @keydown.tab.prevent="insertTabIndent" />
+    <v-textarea
+        :auto-grow="autoGrow"
+        v-model="model"
+        :readonly="readonly"
+        :label="label"
+        @keydown.tab.prevent="insertTabIndent"
+    />
 </template>
 
 <script>
@@ -16,6 +22,10 @@ export default defineComponent({
         label: {
             type: String,
             required: false,
+        },
+        autoGrow: {
+            type: Boolean,
+            default: false,
         },
     },
 
@@ -48,14 +58,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-textarea {
-    width: 100%;
-    resize: none;
-    border-radius: 0 0 10px 10px;
-    font-size: 16px;
-    tab-size: 4;
-}
-
 .without-outline {
     outline: none;
     border: none;
