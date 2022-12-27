@@ -42,8 +42,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .dialog {
     min-width: max(40vw, 35rem);
-    max-width: 98vw;
-    max-height: 80vh;
+    max-width: 90vw;
+    max-height: 90vh;
+
+    overflow-y: auto;
 
     z-index: 100;
 
