@@ -17,11 +17,11 @@
 
 <script>
 import { defineComponent } from "vue";
-import AppBar from "@/components/appBar/AppBar.vue";
+import AppBar from "@/components/interface/appBar/AppBar.vue";
 import MainPage from "@/components/mainPage/MainPage.vue";
 import { container } from "jenesius-vue-modal";
-import BottomButtons from "@/components/bottomButtons/BottomButtons.vue";
-import NavigationDrawer from "@/components/drawer/NavigationDrawer.vue";
+import BottomButtons from "@/components/interface/bottomButtons/BottomButtons.vue";
+import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
 import { mapActions } from "vuex";
 
 export default defineComponent({

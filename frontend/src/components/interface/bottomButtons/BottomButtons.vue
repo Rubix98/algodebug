@@ -8,7 +8,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import RunButton from "@/components/bottomButtons/buttons/RunButton.vue";
+import RunButton from "@/components/interface/bottomButtons/buttons/RunButton.vue";
 
 export default defineComponent({
     name: "BottomButtons",

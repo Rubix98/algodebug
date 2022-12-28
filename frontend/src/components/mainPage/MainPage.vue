@@ -29,7 +29,7 @@ import Scene from "@/components/mainPage/scene/Scene.vue";
 import TestData from "@/components/mainPage/testData/TestData.vue";
 import { mapState, mapActions } from "vuex";
 import { defineComponent } from "vue";
-import CompilingIndicator from "@/components/mainPage/compilingIndicator/CompilingIndicator.vue";
+import CompilingIndicator from "@/components/interface/compilingIndicator/CompilingIndicator.vue";
 
 export default defineComponent({
     components: { CompilingIndicator, CodeEditor, CodePanel, Scene, TestData },
