@@ -6,6 +6,10 @@
     src: local("SourceCodePro"), url("/public/fonts/SourceCodePro-Regular.ttf");
 }
 
+html {
+    overflow: hidden !important;
+}
+
 body {
     font-family: "Tahoma", sans-serif;
 }
