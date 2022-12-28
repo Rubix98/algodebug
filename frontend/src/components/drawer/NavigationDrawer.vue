@@ -32,17 +32,20 @@ import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
 import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
 import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
 import { setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
-import user from "@/img/user.png";
+import userImage from "@/img/user.png";
 
 export default defineComponent({
     name: "NavigationDrawer",
+
     emits: ["toggledToRailVersionEvent", "toggledToNormalVersionEvent", "hideDrawerEvent", "themeChangeEvent"],
+
     props: {
         showDrawer: {
             type: Boolean,
             default: false,
         },
     },
+
     data() {
         return {
             shouldShowRailVersion: true,
@@ -59,6 +62,7 @@ export default defineComponent({
             },
         };
     },
+
     methods: {
         updateDrawerVersion() {
             if (window.innerWidth >= 1280) {
@@ -69,6 +73,7 @@ export default defineComponent({
                 this.$emit("toggledToNormalVersionEvent");
             }
         },
+
         openLoadProjectModal() {
             openModal(LoadProjectModal);
         },
@@ -76,12 +81,15 @@ export default defineComponent({
         openSaveProjectModal() {
             openModal(SaveProjectModal);
         },
+
         showExtendedCode() {
             openModal(ShowDebugCodeModal);
         },
+
         openGithub() {
             window.open("https://github.com/Rubix98/algodebug", "_blank").focus();
         },
+
         toggleDarkMode() {
             if (this.$vuetify.theme.global.name === "light") {
                 this.$vuetify.theme.global.name = "dark";
@@ -92,15 +100,17 @@ export default defineComponent({
             this.emitter.emit("themeChangeEvent");
         },
     },
+
     mounted() {
         this.updateDrawerVersion();
         addEventListener("resize", () => {
             this.updateDrawerVersion();
         });
     },
+
     computed: {
         getUserAvatarImg() {
-            return user;
+            return userImage;
         },
     },
 });
