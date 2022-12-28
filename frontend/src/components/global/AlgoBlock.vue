@@ -44,6 +44,7 @@
             &__content {
                 height: calc(100% - 3rem);
                 overflow-y: auto;
+                overflow-x: hidden;
             }
         }
     }
