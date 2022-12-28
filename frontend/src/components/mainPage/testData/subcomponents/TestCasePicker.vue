@@ -24,65 +24,65 @@
 </template>
 
 <script>
-import AlgoBlock from "@/components/global/AlgoBlock.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
-import { defineComponent } from "vue";
+    import AlgoBlock from "@/components/global/AlgoBlock.vue";
+    import { mapActions, mapGetters, mapState } from "vuex";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    components: { AlgoBlock },
+    export default defineComponent({
+        components: { AlgoBlock },
 
-    data() {
-        return {
-            lastIndex: 0,
-        };
-    },
-
-    methods: {
-        ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
-
-        switchTestCase(index) {
-            this.changeCurrentTestCase(index);
-            this.changeCurrentFrame(0);
-            this.emitter.emit("currentFrameChangedEvent");
-            this.lastIndex = index;
+        data() {
+            return {
+                lastIndex: 0,
+            };
         },
 
-        deleteTestCasePressed(index) {
-            this.deleteTestCase(index);
-            if (index !== this.lastIndex) this.switchTestCase(this.lastIndex);
-        },
-    },
+        methods: {
+            ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
 
-    computed: {
-        ...mapState(["project"]),
-        ...mapGetters("project", ["numberOfTestCases"]),
+            switchTestCase(index) {
+                this.changeCurrentTestCase(index);
+                this.changeCurrentFrame(0);
+                this.emitter.emit("currentFrameChangedEvent");
+                this.lastIndex = index;
+            },
 
-        isTestCaseSelected() {
-            return (index) => index === this.project.selectedTestCaseId;
+            deleteTestCasePressed(index) {
+                this.deleteTestCase(index);
+                if (index !== this.lastIndex) this.switchTestCase(this.lastIndex);
+            },
         },
 
-        canRemoveTests() {
-            return !this.project.isRunning && this.project.testData.length > 1;
+        computed: {
+            ...mapState(["project"]),
+            ...mapGetters("project", ["numberOfTestCases"]),
+
+            isTestCaseSelected() {
+                return (index) => index === this.project.selectedTestCaseId;
+            },
+
+            canRemoveTests() {
+                return !this.project.isRunning && this.project.testData.length > 1;
+            },
         },
-    },
-});
+    });
 </script>
 
 <style lang="scss" scoped>
-.test-case-picker-container {
-    text-align: center;
-    min-width: 12rem;
+    .test-case-picker-container {
+        text-align: center;
+        min-width: 12rem;
 
-    button {
-        margin: 10px;
-    }
+        button {
+            margin: 10px;
+        }
 
-    .test-close {
-        position: absolute;
-        top: 0;
-        right: 10px;
-        transform: translateY(50%);
-        cursor: pointer;
+        .test-close {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            transform: translateY(50%);
+            cursor: pointer;
+        }
     }
-}
 </style>

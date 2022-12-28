@@ -13,36 +13,36 @@
 </template>
 
 <script>
-import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import { defineComponent } from "vue";
-import { mapState } from "vuex";
-import { popModal } from "jenesius-vue-modal";
+    import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import { defineComponent } from "vue";
+    import { mapState } from "vuex";
+    import { popModal } from "jenesius-vue-modal";
 
-export default defineComponent({
-    components: { CodeEditor, AlgoModal },
+    export default defineComponent({
+        components: { CodeEditor, AlgoModal },
 
-    props: ["callback"],
+        props: ["callback"],
 
-    methods: {
-        handlePickVariable(variable) {
-            this.$props.callback(variable);
-            popModal();
+        methods: {
+            handlePickVariable(variable) {
+                this.$props.callback(variable);
+                popModal();
+            },
         },
-    },
 
-    computed: {
-        ...mapState(["project"]),
-    },
-});
+        computed: {
+            ...mapState(["project"]),
+        },
+    });
 </script>
 
 <style scoped>
-.dialog {
-    width: 80vw;
-}
+    .dialog {
+        width: 80vw;
+    }
 
-#pick-variable-editor {
-    height: 20rem;
-}
+    #pick-variable-editor {
+        height: 20rem;
+    }
 </style>

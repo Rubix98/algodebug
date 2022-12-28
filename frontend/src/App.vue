@@ -16,46 +16,46 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import AppBar from "@/components/interface/appBar/AppBar.vue";
-import MainPage from "@/components/mainPage/MainPage.vue";
-import { container } from "jenesius-vue-modal";
-import BottomButtons from "@/components/interface/bottomButtons/BottomButtons.vue";
-import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
-import { mapActions } from "vuex";
+    import { defineComponent } from "vue";
+    import AppBar from "@/components/interface/appBar/AppBar.vue";
+    import MainPage from "@/components/mainPage/MainPage.vue";
+    import { container } from "jenesius-vue-modal";
+    import BottomButtons from "@/components/interface/bottomButtons/BottomButtons.vue";
+    import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
+    import { mapActions } from "vuex";
 
-export default defineComponent({
-    name: "App",
-    components: { NavigationDrawer, BottomButtons, AppBar, MainPage, Modal: container },
+    export default defineComponent({
+        name: "App",
+        components: { NavigationDrawer, BottomButtons, AppBar, MainPage, Modal: container },
 
-    mounted() {
-        this.updateProjects();
-        this.updateConverters();
-    },
-    data() {
-        return {
-            drawerRailMode: false,
-            showDrawer: false,
-        };
-    },
-
-    methods: {
-        ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
-
-        toggleDrawer() {
-            this.showDrawer = !this.showDrawer;
+        mounted() {
+            this.updateProjects();
+            this.updateConverters();
         },
-        changeDrawerRailMode(mode) {
-            this.drawerRailMode = mode;
-            this.showDrawer = mode;
+        data() {
+            return {
+                drawerRailMode: false,
+                showDrawer: false,
+            };
         },
-        changeDrawerValueTo(value) {
-            this.showDrawer = value;
+
+        methods: {
+            ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
+
+            toggleDrawer() {
+                this.showDrawer = !this.showDrawer;
+            },
+            changeDrawerRailMode(mode) {
+                this.drawerRailMode = mode;
+                this.showDrawer = mode;
+            },
+            changeDrawerValueTo(value) {
+                this.showDrawer = value;
+            },
         },
-    },
-});
+    });
 </script>
 
 <style lang="scss">
-@import "@/scss/global.scss";
+    @import "@/scss/global.scss";
 </style>

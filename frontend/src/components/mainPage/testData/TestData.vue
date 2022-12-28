@@ -30,58 +30,58 @@
 </template>
 
 <script>
-import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
-import AlgoBlock from "@/components/global/AlgoBlock.vue";
-import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import { defineComponent } from "vue";
-import { mapActions, mapGetters, mapState } from "vuex";
+    import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
+    import AlgoBlock from "@/components/global/AlgoBlock.vue";
+    import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import { defineComponent } from "vue";
+    import { mapActions, mapGetters, mapState } from "vuex";
 
-export default defineComponent({
-    components: { TestCasePicker, AlgoTextarea, AlgoBlock },
+    export default defineComponent({
+        components: { TestCasePicker, AlgoTextarea, AlgoBlock },
 
-    data() {
-        return {
-            isDynamicOutputOn: false,
-        };
-    },
-
-    methods: {
-        ...mapActions("project", ["updateCurrentTestCaseInput"]),
-    },
-
-    computed: {
-        ...mapState(["project"]),
-        ...mapGetters("project", ["currentTestCase", "currentFrame", "numberOfFrames"]),
-
-        input: {
-            get() {
-                return this.currentTestCase.input;
-            },
-            set(newValue) {
-                this.updateCurrentTestCaseInput(newValue);
-            },
+        data() {
+            return {
+                isDynamicOutputOn: false,
+            };
         },
 
-        output() {
-            let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
-            return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
+        methods: {
+            ...mapActions("project", ["updateCurrentTestCaseInput"]),
         },
-    },
-});
+
+        computed: {
+            ...mapState(["project"]),
+            ...mapGetters("project", ["currentTestCase", "currentFrame", "numberOfFrames"]),
+
+            input: {
+                get() {
+                    return this.currentTestCase.input;
+                },
+                set(newValue) {
+                    this.updateCurrentTestCaseInput(newValue);
+                },
+            },
+
+            output() {
+                let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
+                return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
+            },
+        },
+    });
 </script>
 
 <style lang="scss">
-@import "src/scss/variables";
+    @import "src/scss/variables";
 
-div.test-data-container {
-    gap: $main-page-gap;
-
-    &__input_and_output {
+    div.test-data-container {
         gap: $main-page-gap;
 
-        textarea {
-            font-family: $editor-font-family;
+        &__input_and_output {
+            gap: $main-page-gap;
+
+            textarea {
+                font-family: $editor-font-family;
+            }
         }
     }
-}
 </style>

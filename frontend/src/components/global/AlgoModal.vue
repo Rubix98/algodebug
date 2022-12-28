@@ -22,52 +22,52 @@
 </template>
 
 <script>
-import { popModal } from "jenesius-vue-modal";
-import { defineComponent } from "vue";
+    import { popModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    props: ["title"],
+    export default defineComponent({
+        props: ["title"],
 
-    methods: {
-        popModal() {
-            popModal();
+        methods: {
+            popModal() {
+                popModal();
+            },
         },
-    },
-});
+    });
 </script>
 
 <style lang="scss" scoped>
-@import "~vuetify/lib/styles/settings/_variables.scss";
+    @import "~vuetify/lib/styles/settings/_variables.scss";
 
-.dialog {
-    min-width: max(40vw, 35rem);
-    max-width: 90vw;
-    max-height: 90vh;
+    .dialog {
+        min-width: max(40vw, 35rem);
+        max-width: 90vw;
+        max-height: 90vh;
 
-    overflow-y: auto;
-
-    z-index: 100;
-
-    border-style: solid;
-    border-width: 1px;
-    border-color: $border-color-root;
-
-    &__content {
-        padding: 1rem 2rem;
-        max-height: 65vh;
         overflow-y: auto;
-    }
 
-    &__title {
-        padding: 1rem 2rem;
-        display: flex;
-        align-items: center;
-        h2 {
-            font-weight: 400;
+        z-index: 100;
+
+        border-style: solid;
+        border-width: 1px;
+        border-color: $border-color-root;
+
+        &__content {
+            padding: 1rem 2rem;
+            max-height: 65vh;
+            overflow-y: auto;
         }
-        &__close {
-            cursor: pointer;
+
+        &__title {
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            h2 {
+                font-weight: 400;
+            }
+            &__close {
+                cursor: pointer;
+            }
         }
     }
-}
 </style>

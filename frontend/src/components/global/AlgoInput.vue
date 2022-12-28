@@ -3,25 +3,25 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    props: ["value", "label"],
+    export default defineComponent({
+        props: ["value", "label"],
 
-    data() {
-        return {
-            model: "",
-        };
-    },
-
-    mounted() {
-        this.model = this.value;
-    },
-
-    watch: {
-        model() {
-            this.$emit("update:value", this.model);
+        data() {
+            return {
+                model: "",
+            };
         },
-    },
-});
+
+        mounted() {
+            this.model = this.value;
+        },
+
+        watch: {
+            model() {
+                this.$emit("update:value", this.model);
+            },
+        },
+    });
 </script>

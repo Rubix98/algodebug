@@ -9,62 +9,62 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { defineComponent } from "vue";
+    import { mapActions, mapGetters } from "vuex";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    data() {
-        return {
-            // Cannot read properties of undefined reading id
-            icons: [
-                {
-                    icon: "mdi-skip-backward",
-                    action: () => {
-                        this.setFrameId(0);
+    export default defineComponent({
+        data() {
+            return {
+                // Cannot read properties of undefined reading id
+                icons: [
+                    {
+                        icon: "mdi-skip-backward",
+                        action: () => {
+                            this.setFrameId(0);
+                        },
                     },
-                },
-                {
-                    icon: "mdi-step-backward",
-                    action: () => {
-                        this.setFrameId(this.currentFrame.id - 1);
+                    {
+                        icon: "mdi-step-backward",
+                        action: () => {
+                            this.setFrameId(this.currentFrame.id - 1);
+                        },
                     },
-                },
-                { icon: "mdi-play", action: () => {} },
-                {
-                    icon: "mdi-step-forward",
-                    action: () => {
-                        this.setFrameId(this.currentFrame.id + 1);
+                    { icon: "mdi-play", action: () => {} },
+                    {
+                        icon: "mdi-step-forward",
+                        action: () => {
+                            this.setFrameId(this.currentFrame.id + 1);
+                        },
                     },
-                },
-                {
-                    icon: "mdi-skip-forward",
-                    action: () => {
-                        this.setFrameId(this.numberOfFrames - 1);
+                    {
+                        icon: "mdi-skip-forward",
+                        action: () => {
+                            this.setFrameId(this.numberOfFrames - 1);
+                        },
                     },
-                },
-            ],
-        };
-    },
-
-    methods: {
-        ...mapActions("project", ["changeCurrentFrame"]),
-
-        setFrameId(index) {
-            if (index < 0 || index >= this.numberOfFrames) return;
-            this.changeCurrentFrame(index);
-            this.emitter.emit("currentFrameChangedEvent");
+                ],
+            };
         },
-    },
 
-    computed: {
-        ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
-    },
-});
+        methods: {
+            ...mapActions("project", ["changeCurrentFrame"]),
+
+            setFrameId(index) {
+                if (index < 0 || index >= this.numberOfFrames) return;
+                this.changeCurrentFrame(index);
+                this.emitter.emit("currentFrameChangedEvent");
+            },
+        },
+
+        computed: {
+            ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
+        },
+    });
 </script>
 
 <style scoped>
-i {
-    font-size: 40px;
-    margin: 0 10px;
-}
+    i {
+        font-size: 40px;
+        margin: 0 10px;
+    }
 </style>

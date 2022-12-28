@@ -37,92 +37,92 @@
 </template>
 
 <script>
-import AlgoLink from "@/components/global/AlgoLink.vue";
-import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
-import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
-import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
-import { pushModal } from "jenesius-vue-modal";
-import { defineComponent } from "vue";
+    import AlgoLink from "@/components/global/AlgoLink.vue";
+    import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
+    import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
+    import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { pushModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    props: ["sceneObject", "label", "headers", "emptyRow"],
-    components: { AlgoLink },
+    export default defineComponent({
+        props: ["sceneObject", "label", "headers", "emptyRow"],
+        components: { AlgoLink },
 
-    data() {
-        return {
-            model: "",
-        };
-    },
-
-    mounted() {
-        this.model = this.sceneObject.subobjects;
-    },
-
-    methods: {
-        addRow() {
-            this.model.push({ ...this.emptyRow });
-        },
-
-        removeRow(index) {
-            this.model.splice(index, 1);
-        },
-
-        selectType(row) {
-            pushModal(SelectPropertyTypeModal, {
-                sceneObjectType: this.$props.sceneObject.type,
-                callback: (selectedType) => {
-                    row.type = selectedType;
-                },
-            });
-        },
-
-        selectVariable(row) {
-            pushModal(PickVariableModal, {
-                callback: (selectedVariable) => {
-                    row.variable = selectedVariable;
-                },
-            });
-        },
-
-        selectConverter(row) {
-            pushModal(SelectConverterModal, {
-                callback: (selectedConverter) => {
-                    row.converter = selectedConverter;
-                },
-            });
-        },
-    },
-
-    computed: {
-        typeLabel() {
-            return (row) => {
-                return row.type ? row.type.label : null;
+        data() {
+            return {
+                model: "",
             };
         },
 
-        variableName() {
-            return (row) => {
-                return row.variable ? row.variable.name : null;
-            };
+        mounted() {
+            this.model = this.sceneObject.subobjects;
         },
 
-        converterTitle() {
-            return (row) => {
-                return row.converter ? row.converter.title : null;
-            };
+        methods: {
+            addRow() {
+                this.model.push({ ...this.emptyRow });
+            },
+
+            removeRow(index) {
+                this.model.splice(index, 1);
+            },
+
+            selectType(row) {
+                pushModal(SelectPropertyTypeModal, {
+                    sceneObjectType: this.$props.sceneObject.type,
+                    callback: (selectedType) => {
+                        row.type = selectedType;
+                    },
+                });
+            },
+
+            selectVariable(row) {
+                pushModal(PickVariableModal, {
+                    callback: (selectedVariable) => {
+                        row.variable = selectedVariable;
+                    },
+                });
+            },
+
+            selectConverter(row) {
+                pushModal(SelectConverterModal, {
+                    callback: (selectedConverter) => {
+                        row.converter = selectedConverter;
+                    },
+                });
+            },
         },
-    },
-});
+
+        computed: {
+            typeLabel() {
+                return (row) => {
+                    return row.type ? row.type.label : null;
+                };
+            },
+
+            variableName() {
+                return (row) => {
+                    return row.variable ? row.variable.name : null;
+                };
+            },
+
+            converterTitle() {
+                return (row) => {
+                    return row.converter ? row.converter.title : null;
+                };
+            },
+        },
+    });
 </script>
 
 <style lang="scss" scoped>
-.algo-table {
-    &__add-row {
-        margin-top: 1rem;
-    }
+    .algo-table {
+        &__add-row {
+            margin-top: 1rem;
+        }
 
-    &__remove-row {
-        cursor: pointer;
+        &__remove-row {
+            cursor: pointer;
+        }
     }
-}
 </style>

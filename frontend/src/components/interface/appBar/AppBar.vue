@@ -12,49 +12,53 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { redirectTo } from "@/javascript/utils/other";
-import logoDark from "@/img/logo-dark.png";
-import logo from "@/img/logo.png";
+    import { defineComponent } from "vue";
+    import { redirectTo } from "@/javascript/utils/other";
+    import logoDark from "@/img/logo-dark.png";
+    import logo from "@/img/logo.png";
 
-export default defineComponent({
-    name: "AppBar",
-    emits: ["toggleDrawer"],
-    props: {
-        showDrawerButton: {
-            type: Boolean,
+    export default defineComponent({
+        name: "AppBar",
+
+        emits: ["toggleDrawer"],
+
+        props: {
+            showDrawerButton: {
+                type: Boolean,
+            },
         },
-    },
-    methods: {
-        redirectToRoot() {
-            redirectTo(window.location.origin + window.location.pathname);
+
+        methods: {
+            redirectToRoot() {
+                redirectTo(window.location.origin + window.location.pathname);
+            },
         },
-    },
-    computed: {
-        logoUrl() {
-            return this.$vuetify.theme.global.name === "dark" ? logoDark : logo;
+
+        computed: {
+            logoUrl() {
+                return this.$vuetify.theme.global.name === "dark" ? logoDark : logo;
+            },
         },
-    },
-});
+    });
 </script>
 
 <style lang="scss">
-.app-bar {
-    &__logo {
-        margin-left: 0.7rem;
-        height: 65%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
+    .app-bar {
+        &__logo {
+            margin-left: 0.7rem;
+            height: 65%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
 
-        &__image {
-            height: 100%;
+            &__image {
+                height: 100%;
+            }
+        }
+
+        &__buttons {
+            margin-right: 2rem;
         }
     }
-
-    &__buttons {
-        margin-right: 2rem;
-    }
-}
 </style>

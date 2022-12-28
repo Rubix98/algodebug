@@ -14,23 +14,23 @@
 </template>
 
 <script>
-import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
-import { mapActions, mapGetters } from "vuex";
-import { openModal } from "jenesius-vue-modal";
-import { defineComponent } from "vue";
+    import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
+    import { mapActions, mapGetters } from "vuex";
+    import { openModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    methods: {
-        ...mapActions("project", ["deleteSceneObject"]),
+    export default defineComponent({
+        methods: {
+            ...mapActions("project", ["deleteSceneObject"]),
 
-        configureSceneObject(sceneObject, event) {
-            if (event.target.localName === "i") return;
-            openModal(ConfigureSceneObjectModal, { sceneObject });
+            configureSceneObject(sceneObject, event) {
+                if (event.target.localName === "i") return;
+                openModal(ConfigureSceneObjectModal, { sceneObject });
+            },
         },
-    },
 
-    computed: {
-        ...mapGetters("project", ["sceneObjects"]),
-    },
-});
+        computed: {
+            ...mapGetters("project", ["sceneObjects"]),
+        },
+    });
 </script>

@@ -7,24 +7,24 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    methods: {
-        download() {
-            this.emitter.emit("downloadStageEvent");
+    export default defineComponent({
+        methods: {
+            download() {
+                this.emitter.emit("downloadStageEvent");
+            },
         },
-    },
-});
+    });
 </script>
 
 <style scoped>
-.download-panel-container {
-    padding-top: 5px;
-    padding-right: 10px;
-}
+    .download-panel-container {
+        padding-top: 5px;
+        padding-right: 10px;
+    }
 
-i {
-    font-size: 30px;
-}
+    i {
+        font-size: 30px;
+    }
 </style>

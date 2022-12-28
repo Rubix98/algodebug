@@ -7,15 +7,15 @@
 </template>
 
 <script>
-import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
-import { openModal } from "jenesius-vue-modal";
-import { defineComponent } from "vue";
+    import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
+    import { openModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    methods: {
-        addNewSceneObject() {
-            openModal(ConfigureSceneObjectModal);
+    export default defineComponent({
+        methods: {
+            addNewSceneObject() {
+                openModal(ConfigureSceneObjectModal);
+            },
         },
-    },
-});
+    });
 </script>

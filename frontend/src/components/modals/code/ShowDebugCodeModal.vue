@@ -9,30 +9,30 @@
 </template>
 
 <script>
-import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import { mapGetters } from "vuex";
-import { defineComponent } from "vue";
-import toast from "@/javascript/utils/toastUtils";
+    import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import { mapGetters } from "vuex";
+    import { defineComponent } from "vue";
+    import toast from "@/javascript/utils/toastUtils";
 
-export default defineComponent({
-    components: { AlgoModal, CodeEditor },
+    export default defineComponent({
+        components: { AlgoModal, CodeEditor },
 
-    methods: {
-        copy() {
-            navigator.clipboard.writeText(this.debugCode).then(() => toast.info("Skopiowano"));
+        methods: {
+            copy() {
+                navigator.clipboard.writeText(this.debugCode).then(() => toast.info("Skopiowano"));
+            },
         },
-    },
 
-    computed: {
-        ...mapGetters("project", ["debugCode"]),
-    },
-});
+        computed: {
+            ...mapGetters("project", ["debugCode"]),
+        },
+    });
 </script>
 
 <style scoped>
-#debug-code-editor {
-    height: 50vh;
-    min-width: 90rem;
-}
+    #debug-code-editor {
+        height: 50vh;
+        min-width: 90rem;
+    }
 </style>

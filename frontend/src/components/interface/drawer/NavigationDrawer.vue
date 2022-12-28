@@ -26,97 +26,97 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import { openModal } from "jenesius-vue-modal";
-import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
-import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
-import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
-import { setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
-import userImage from "@/img/user.png";
+    import { defineComponent } from "vue";
+    import { openModal } from "jenesius-vue-modal";
+    import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
+    import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
+    import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+    import { setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
+    import userImage from "@/img/user.png";
 
-export default defineComponent({
-    name: "NavigationDrawer",
+    export default defineComponent({
+        name: "NavigationDrawer",
 
-    emits: ["toggledToRailVersionEvent", "toggledToNormalVersionEvent", "hideDrawerEvent", "themeChangeEvent"],
+        emits: ["toggledToRailVersionEvent", "toggledToNormalVersionEvent", "hideDrawerEvent", "themeChangeEvent"],
 
-    props: {
-        showDrawer: {
-            type: Boolean,
-            default: false,
-        },
-    },
-
-    data() {
-        return {
-            shouldShowRailVersion: true,
-            buttons: {
-                project: [
-                    { title: "Nowy projekt", icon: "mdi-file-document-plus", onClick: this.createNewProject },
-                    { title: "Zapisz projekt", icon: "mdi-content-save", onClick: this.openSaveProjectModal },
-                    { title: "Otwórz projekt", icon: "mdi-folder-open", onClick: this.openLoadProjectModal },
-                    { title: "Pokaż program debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
-                ],
-                settings: [
-                    { title: "Przełącz tryb ciemny", icon: "mdi-theme-light-dark", onClick: this.toggleDarkMode },
-                    { title: "Github", icon: "mdi-github", onClick: this.openGithub },
-                ],
+        props: {
+            showDrawer: {
+                type: Boolean,
+                default: false,
             },
-        };
-    },
-
-    methods: {
-        updateDrawerVersion() {
-            if (window.innerWidth >= 1280) {
-                this.$data.shouldShowRailVersion = true;
-                this.$emit("toggledToRailVersionEvent");
-            } else {
-                this.$data.shouldShowRailVersion = false;
-                this.$emit("toggledToNormalVersionEvent");
-            }
         },
 
-        createNewProject() {
-            window.location = "/";
+        data() {
+            return {
+                shouldShowRailVersion: true,
+                buttons: {
+                    project: [
+                        { title: "Nowy projekt", icon: "mdi-file-document-plus", onClick: this.createNewProject },
+                        { title: "Zapisz projekt", icon: "mdi-content-save", onClick: this.openSaveProjectModal },
+                        { title: "Otwórz projekt", icon: "mdi-folder-open", onClick: this.openLoadProjectModal },
+                        { title: "Pokaż program debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
+                    ],
+                    settings: [
+                        { title: "Przełącz tryb ciemny", icon: "mdi-theme-light-dark", onClick: this.toggleDarkMode },
+                        { title: "Github", icon: "mdi-github", onClick: this.openGithub },
+                    ],
+                },
+            };
         },
 
-        openLoadProjectModal() {
-            openModal(LoadProjectModal);
+        methods: {
+            updateDrawerVersion() {
+                if (window.innerWidth >= 1280) {
+                    this.$data.shouldShowRailVersion = true;
+                    this.$emit("toggledToRailVersionEvent");
+                } else {
+                    this.$data.shouldShowRailVersion = false;
+                    this.$emit("toggledToNormalVersionEvent");
+                }
+            },
+
+            createNewProject() {
+                window.location = "/";
+            },
+
+            openLoadProjectModal() {
+                openModal(LoadProjectModal);
+            },
+
+            openSaveProjectModal() {
+                openModal(SaveProjectModal);
+            },
+
+            showExtendedCode() {
+                openModal(ShowDebugCodeModal);
+            },
+
+            openGithub() {
+                window.open("https://github.com/Rubix98/algodebug", "_blank").focus();
+            },
+
+            toggleDarkMode() {
+                if (this.$vuetify.theme.global.name === "light") {
+                    this.$vuetify.theme.global.name = "dark";
+                } else {
+                    this.$vuetify.theme.global.name = "light";
+                }
+                setCurrentThemeInStorage(this.$vuetify.theme.global.name);
+                this.emitter.emit("themeChangeEvent");
+            },
         },
 
-        openSaveProjectModal() {
-            openModal(SaveProjectModal);
-        },
-
-        showExtendedCode() {
-            openModal(ShowDebugCodeModal);
-        },
-
-        openGithub() {
-            window.open("https://github.com/Rubix98/algodebug", "_blank").focus();
-        },
-
-        toggleDarkMode() {
-            if (this.$vuetify.theme.global.name === "light") {
-                this.$vuetify.theme.global.name = "dark";
-            } else {
-                this.$vuetify.theme.global.name = "light";
-            }
-            setCurrentThemeInStorage(this.$vuetify.theme.global.name);
-            this.emitter.emit("themeChangeEvent");
-        },
-    },
-
-    mounted() {
-        this.updateDrawerVersion();
-        addEventListener("resize", () => {
+        mounted() {
             this.updateDrawerVersion();
-        });
-    },
-
-    computed: {
-        getUserAvatarImg() {
-            return userImage;
+            addEventListener("resize", () => {
+                this.updateDrawerVersion();
+            });
         },
-    },
-});
+
+        computed: {
+            getUserAvatarImg() {
+                return userImage;
+            },
+        },
+    });
 </script>

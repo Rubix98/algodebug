@@ -31,114 +31,114 @@
 </template>
 
 <script>
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoTable from "@/components/global/AlgoTable.vue";
-import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
-import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
-import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
-import { mapActions, mapState } from "vuex";
-import { closeModal, pushModal } from "jenesius-vue-modal";
-import { validateSceneObject } from "@/javascript/utils/validationUtils";
-import { defineComponent } from "vue";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import AlgoTable from "@/components/global/AlgoTable.vue";
+    import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
+    import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
+    import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { mapActions, mapState } from "vuex";
+    import { closeModal, pushModal } from "jenesius-vue-modal";
+    import { validateSceneObject } from "@/javascript/utils/validationUtils";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    components: { AlgoModal, AlgoTable },
-    props: ["sceneObject"],
+    export default defineComponent({
+        components: { AlgoModal, AlgoTable },
+        props: ["sceneObject"],
 
-    data() {
-        return {
-            model: {
-                type: null,
-                variable: null,
-                converter: null,
-                subobjects: [],
+        data() {
+            return {
+                model: {
+                    type: null,
+                    variable: null,
+                    converter: null,
+                    subobjects: [],
+                },
+                sceneObjectTypes: [
+                    { key: "variable", label: "Zmienna" },
+                    { key: "graph", label: "Graf" },
+                    { key: "array", label: "Tablica" },
+                    { key: "points", label: "Zbiór punktów" },
+                    { key: "circle", label: "Okrąg" },
+                    { key: "shape", label: "Wielokąt" },
+                ],
+            };
+        },
+
+        mounted() {
+            if (this.$props.sceneObject) {
+                this.model = { ...this.$props.sceneObject };
+            }
+        },
+
+        methods: {
+            ...mapActions("project", ["saveSceneObject"]),
+
+            save() {
+                if (!validateSceneObject(this.model)) return;
+
+                this.saveSceneObject(this.model);
+                closeModal();
             },
-            sceneObjectTypes: [
-                { key: "variable", label: "Zmienna" },
-                { key: "graph", label: "Graf" },
-                { key: "array", label: "Tablica" },
-                { key: "points", label: "Zbiór punktów" },
-                { key: "circle", label: "Okrąg" },
-                { key: "shape", label: "Wielokąt" },
-            ],
-        };
-    },
 
-    mounted() {
-        if (this.$props.sceneObject) {
-            this.model = { ...this.$props.sceneObject };
-        }
-    },
+            selectType() {
+                pushModal(SelectSceneObjectTypeModal, {
+                    callback: (selectedType) => {
+                        this.model.type = selectedType;
+                        this.model.converter = null;
+                        this.model.subobjects = [];
+                    },
+                });
+            },
 
-    methods: {
-        ...mapActions("project", ["saveSceneObject"]),
+            selectVariable() {
+                pushModal(PickVariableModal, {
+                    callback: (selectedVariable) => {
+                        this.model.variable = selectedVariable;
+                    },
+                });
+            },
 
-        save() {
-            if (!validateSceneObject(this.model)) return;
+            selectConverter() {
+                pushModal(SelectConverterModal, {
+                    callback: (selectedConverter) => {
+                        this.model.converter = selectedConverter;
+                    },
+                });
+            },
 
-            this.saveSceneObject(this.model);
-            closeModal();
+            changeSelectedObject(selected) {
+                this.model.type = this.sceneObjectTypes.find((e) => e.label === selected);
+            },
         },
 
-        selectType() {
-            pushModal(SelectSceneObjectTypeModal, {
-                callback: (selectedType) => {
-                    this.model.type = selectedType;
-                    this.model.converter = null;
-                    this.model.subobjects = [];
-                },
-            });
-        },
+        computed: {
+            ...mapState(["project"]),
 
-        selectVariable() {
-            pushModal(PickVariableModal, {
-                callback: (selectedVariable) => {
-                    this.model.variable = selectedVariable;
-                },
-            });
-        },
+            isNewSceneObject() {
+                return this.model.index == null;
+            },
 
-        selectConverter() {
-            pushModal(SelectConverterModal, {
-                callback: (selectedConverter) => {
-                    this.model.converter = selectedConverter;
-                },
-            });
-        },
+            modalTitle() {
+                return this.isNewSceneObject ? "Dodaj nowy obiekt" : "Konfiguruj obiekt";
+            },
 
-        changeSelectedObject(selected) {
-            this.model.type = this.sceneObjectTypes.find((e) => e.label === selected);
-        },
-    },
+            typeLabel() {
+                return this.model.type ? this.model.type.label : null;
+            },
 
-    computed: {
-        ...mapState(["project"]),
+            variableName() {
+                return this.model.variable ? this.model.variable.name : null;
+            },
 
-        isNewSceneObject() {
-            return this.model.index == null;
-        },
+            converterTitle() {
+                return this.model.converter ? this.model.converter.title : null;
+            },
 
-        modalTitle() {
-            return this.isNewSceneObject ? "Dodaj nowy obiekt" : "Konfiguruj obiekt";
+            sceneObjectTypesForComboBox() {
+                return this.sceneObjectTypes.map((e) => {
+                    return e.label;
+                });
+            },
         },
-
-        typeLabel() {
-            return this.model.type ? this.model.type.label : null;
-        },
-
-        variableName() {
-            return this.model.variable ? this.model.variable.name : null;
-        },
-
-        converterTitle() {
-            return this.model.converter ? this.model.converter.title : null;
-        },
-
-        sceneObjectTypesForComboBox() {
-            return this.sceneObjectTypes.map((e) => {
-                return e.label;
-            });
-        },
-    },
-});
+    });
 </script>

@@ -10,44 +10,44 @@
 </template>
 
 <script>
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import { mapActions, mapState } from "vuex";
-import { closeModal } from "jenesius-vue-modal";
-import { defineComponent } from "vue";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import { mapActions, mapState } from "vuex";
+    import { closeModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    components: { AlgoModal },
+    export default defineComponent({
+        components: { AlgoModal },
 
-    data() {
-        return {
-            projectTitle: "",
-        };
-    },
-
-    mounted() {
-        this.projectTitle = this.project.title;
-    },
-
-    methods: {
-        ...mapActions("project", ["saveProject"]),
-
-        save(override) {
-            this.saveProject({
-                title: this.projectTitle,
-                override: override,
-            });
-            closeModal();
+        data() {
+            return {
+                projectTitle: "",
+            };
         },
-    },
 
-    computed: {
-        ...mapState(["project"]),
-    },
-});
+        mounted() {
+            this.projectTitle = this.project.title;
+        },
+
+        methods: {
+            ...mapActions("project", ["saveProject"]),
+
+            save(override) {
+                this.saveProject({
+                    title: this.projectTitle,
+                    override: override,
+                });
+                closeModal();
+            },
+        },
+
+        computed: {
+            ...mapState(["project"]),
+        },
+    });
 </script>
 
 <style scoped>
-input {
-    padding: 5px 10px;
-}
+    input {
+        padding: 5px 10px;
+    }
 </style>

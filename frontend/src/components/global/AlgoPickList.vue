@@ -37,20 +37,20 @@
 </template>
 
 <script>
-import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import { defineComponent } from "vue";
+    import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    props: ["options"],
-    emits: ["selectOptionEvent"],
-    components: { AlgoTextarea },
+    export default defineComponent({
+        props: ["options"],
+        emits: ["selectOptionEvent"],
+        components: { AlgoTextarea },
 
-    methods: {
-        selectOption(event, selectedOption) {
-            if (event.target.localName === "textarea") return;
+        methods: {
+            selectOption(event, selectedOption) {
+                if (event.target.localName === "textarea") return;
 
-            this.$emit("selectOptionEvent", selectedOption);
+                this.$emit("selectOptionEvent", selectedOption);
+            },
         },
-    },
-});
+    });
 </script>

@@ -12,39 +12,39 @@
 </template>
 
 <script>
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoInput from "@/components/global/AlgoInput.vue";
-import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import { sendRequest } from "@/javascript/utils/axiosUtils";
-import { popModal } from "jenesius-vue-modal";
-import { defineComponent } from "vue";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import AlgoInput from "@/components/global/AlgoInput.vue";
+    import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import { sendRequest } from "@/javascript/utils/axiosUtils";
+    import { popModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    components: { AlgoModal, AlgoInput, AlgoTextarea },
+    export default defineComponent({
+        components: { AlgoModal, AlgoInput, AlgoTextarea },
 
-    props: ["callback"],
+        props: ["callback"],
 
-    data() {
-        return {
-            converter: {
-                title: "",
-                code: "ostream& operator <<(ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}",
+        data() {
+            return {
+                converter: {
+                    title: "",
+                    code: "ostream& operator <<(ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}",
+                },
+            };
+        },
+
+        methods: {
+            addConverter() {
+                popModal().then(() => {
+                    this.$props.callback(this.converter);
+                });
             },
-        };
-    },
 
-    methods: {
-        addConverter() {
-            popModal().then(() => {
-                this.$props.callback(this.converter);
-            });
+            saveConverter() {
+                sendRequest("/converter/save", this.converter, "PUT").then(() => {
+                    this.addConverter();
+                });
+            },
         },
-
-        saveConverter() {
-            sendRequest("/converter/save", this.converter, "PUT").then(() => {
-                this.addConverter();
-            });
-        },
-    },
-});
+    });
 </script>

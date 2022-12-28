@@ -3,18 +3,18 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+    import { defineComponent } from "vue";
 
-export default defineComponent({
-    props: ["value", "label"],
-});
+    export default defineComponent({
+        props: ["value", "label"],
+    });
 </script>
 
 <style scoped lang="scss">
-a {
-    cursor: pointer;
-    &:hover {
-        text-decoration: underline;
+    a {
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
     }
-}
 </style>

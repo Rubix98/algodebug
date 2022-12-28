@@ -7,19 +7,19 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import RunButton from "@/components/interface/bottomButtons/buttons/RunButton.vue";
+    import { defineComponent } from "vue";
+    import RunButton from "@/components/interface/bottomButtons/buttons/RunButton.vue";
 
-export default defineComponent({
-    name: "BottomButtons",
-    components: { RunButton },
-});
+    export default defineComponent({
+        name: "BottomButtons",
+        components: { RunButton },
+    });
 </script>
 
 <style lang="scss" scoped>
-div.bottom-buttons {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-}
+    div.bottom-buttons {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+    }
 </style>
