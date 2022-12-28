@@ -56,15 +56,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import "src/scss/variables";
 .main-page-container {
     max-height: calc(100vh - 65px);
     padding: 10px;
-    gap: 10px;
+    gap: $main-page-gap;
 }
 
 .main-page-container > :first-child {
     height: 70%;
-    gap: 10px;
+    gap: $main-page-gap;
 }
 
 .main-page-container > :last-child {

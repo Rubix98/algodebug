@@ -1,9 +1,9 @@
 <template>
     <div class="test-data-container flex-row">
-        <TestCasePicker class="full-height" />
+        <TestCasePicker class="full-height ma-0" />
 
-        <div class="full-size flex-row">
-            <AlgoBlock class="full-size" header="Dane wejściowe">
+        <div class="test-data-container__input_and_output full-size flex-row">
+            <AlgoBlock class="full-size ma-0" header="Dane wejściowe">
                 <AlgoTextarea
                     :auto-grow="true"
                     v-model:value="input"
@@ -12,7 +12,7 @@
                 />
             </AlgoBlock>
 
-            <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="this.project.isRunning">
+            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.project.isRunning">
                 <template #checkbox>
                     <v-checkbox-btn
                         v-model="isDynamicOutputOn"
@@ -69,3 +69,15 @@ export default defineComponent({
     },
 });
 </script>
+
+<style lang="scss">
+@import "src/scss/variables";
+
+div.test-data-container {
+    gap: $main-page-gap;
+
+    &__input_and_output {
+        gap: $main-page-gap;
+    }
+}
+</style>
