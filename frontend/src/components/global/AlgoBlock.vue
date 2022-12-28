@@ -1,6 +1,6 @@
 <template>
     <div class="algo-block">
-        <v-card class="algo-block__card">
+        <v-card class="algo-block__card" elevation="3">
             <v-card-title class="algo-block__card__title">
                 {{ header }}
                 <slot name="checkbox"></slot>

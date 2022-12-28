@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card elevation="3">
         <div class="scene-container full-size">
             <SceneCanvas
                 class="full-size"
