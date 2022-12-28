@@ -51,6 +51,7 @@ export default defineComponent({
             shouldShowRailVersion: true,
             buttons: {
                 project: [
+                    { title: "Nowy projekt", icon: "mdi-file-document-plus", onClick: this.createNewProject },
                     { title: "Zapisz projekt", icon: "mdi-content-save", onClick: this.openSaveProjectModal },
                     { title: "Otwórz projekt", icon: "mdi-folder-open", onClick: this.openLoadProjectModal },
                     { title: "Pokaż program debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
@@ -72,6 +73,10 @@ export default defineComponent({
                 this.$data.shouldShowRailVersion = false;
                 this.$emit("toggledToNormalVersionEvent");
             }
+        },
+
+        createNewProject() {
+            window.location = "/";
         },
 
         openLoadProjectModal() {
