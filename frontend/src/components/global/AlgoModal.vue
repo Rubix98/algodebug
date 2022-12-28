@@ -40,6 +40,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+@import "~vuetify/lib/styles/settings/_variables.scss";
+
 .dialog {
     min-width: max(40vw, 35rem);
     max-width: 90vw;
@@ -48,6 +50,10 @@ export default defineComponent({
     overflow-y: auto;
 
     z-index: 100;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: $border-color-root;
 
     &__content {
         padding: 1rem 2rem;
