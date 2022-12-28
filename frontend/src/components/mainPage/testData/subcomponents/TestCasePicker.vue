@@ -71,6 +71,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .test-case-picker-container {
     text-align: center;
+    min-width: 12rem;
 
     button {
         margin: 10px;
