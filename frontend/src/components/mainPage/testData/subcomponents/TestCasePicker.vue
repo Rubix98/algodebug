@@ -16,21 +16,20 @@
                     </v-icon>
                 </v-list-item>
             </v-list>
-            <AlgoButton v-if="!project.isRunning" @click="this.addTestCase()" icon="mdi-plus-circle">
+            <v-btn prepend-icon="mdi-plus-circle" @click="this.addTestCase" v-if="!project.isRunning" variant="tonal">
                 Dodaj nowy test
-            </AlgoButton>
+            </v-btn>
         </div>
     </AlgoBlock>
 </template>
 
 <script>
 import AlgoBlock from "@/components/global/AlgoBlock.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    components: { AlgoBlock, AlgoButton },
+    components: { AlgoBlock },
 
     data() {
         return {

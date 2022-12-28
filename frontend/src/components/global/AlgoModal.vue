@@ -15,20 +15,17 @@
         <v-divider />
         <v-card-actions>
             <v-spacer />
-            <AlgoButton @click="popModal">Anuluj</AlgoButton>
+            <v-btn @click="popModal">Anuluj</v-btn>
             <slot name="buttons"></slot>
         </v-card-actions>
     </v-card>
 </template>
 
 <script>
-import AlgoButton from "@/components/global/AlgoButton.vue";
 import { popModal } from "jenesius-vue-modal";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    components: { AlgoButton },
-
     props: ["title"],
 
     methods: {

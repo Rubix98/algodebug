@@ -25,7 +25,7 @@
         ></AlgoTable>
 
         <template #buttons>
-            <AlgoButton type="ok" @click="save">Zapisz</AlgoButton>
+            <v-btn color="primary" @click="save">Zapisz</v-btn>
         </template>
     </AlgoModal>
 </template>
@@ -33,7 +33,6 @@
 <script>
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoTable from "@/components/global/AlgoTable.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
 import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
 import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
 import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
@@ -43,7 +42,7 @@ import { validateSceneObject } from "@/javascript/utils/validationUtils";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    components: { AlgoModal, AlgoTable, AlgoButton },
+    components: { AlgoModal, AlgoTable },
     props: ["sceneObject"],
 
     data() {

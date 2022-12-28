@@ -5,8 +5,8 @@
         <AlgoTextarea label="Kod" v-model:value="converter.code" placeholder="Kod" />
 
         <template #buttons>
-            <AlgoButton type="ok" @click="addConverter()">Ustaw</AlgoButton>
-            <AlgoButton type="ok" @click="saveConverter()">Zapisz i ustaw</AlgoButton>
+            <v-btn color="primary" @click="addConverter()">Ustaw</v-btn>
+            <v-btn color="primary" @click="saveConverter()">Zapisz i ustaw</v-btn>
         </template>
     </AlgoModal>
 </template>
@@ -15,13 +15,12 @@
 import AlgoModal from "@/components/global/AlgoModal.vue";
 import AlgoInput from "@/components/global/AlgoInput.vue";
 import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { popModal } from "jenesius-vue-modal";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    components: { AlgoModal, AlgoInput, AlgoButton, AlgoTextarea },
+    components: { AlgoModal, AlgoInput, AlgoTextarea },
 
     props: ["callback"],
 
