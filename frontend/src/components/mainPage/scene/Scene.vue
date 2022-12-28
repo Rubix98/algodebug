@@ -1,6 +1,6 @@
 <template>
     <v-card elevation="3">
-        <div class="scene-container full-size">
+        <div class="scene-container full-size" v-if="!showLoading">
             <SceneCanvas
                 class="full-size"
                 :sceneObjects="this.project.sceneObjects"
@@ -12,6 +12,10 @@
             <DownloadPanel v-if="this.project.isRunning" />
             <NavigationPanel v-if="this.project.isRunning" />
             <FrameNumberPanel v-if="this.project.isRunning" />
+        </div>
+        <div class="full-size d-flex flex-center flex-column" v-else>
+            <v-progress-circular indeterminate color="primary" />
+            <span class="mt-3">Trwa kompilacja kodu...</span>
         </div>
     </v-card>
 </template>
@@ -30,6 +34,9 @@ export default defineComponent({
     components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
     computed: {
         ...mapState(["project"]),
+        showLoading() {
+            return this.project.waitingForCompile;
+        },
     },
 });
 </script>

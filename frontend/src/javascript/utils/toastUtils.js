@@ -49,7 +49,6 @@ export function getEndpointRelatedToast(url) {
     if (url.startsWith("/compiler/compile"))
         return {
             success: "Pomyślnie skompilowano kod",
-            loading: "Trwa kompilacja...",
             error: "Wystąpił błąd kompilacji",
         };
 

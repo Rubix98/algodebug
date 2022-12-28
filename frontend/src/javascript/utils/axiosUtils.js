@@ -25,7 +25,7 @@ export function sendRequest(url, data = {}, method) {
             throw error;
         })
         .finally(() => {
-            if (loadingToast != undefined) toast.dismiss(loadingToast);
+            if (loadingToast !== undefined) toast.dismiss(loadingToast);
         });
 }
 
