@@ -1,5 +1,5 @@
 <template>
-    <div :id="id" class="code-editor-container elevation-3">
+    <div :id="id" class="code-editor-container">
         <slot></slot>
         <MonacoEditor
             :id="id"

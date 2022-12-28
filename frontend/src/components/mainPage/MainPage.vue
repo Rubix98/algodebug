@@ -5,7 +5,7 @@
         <div class="flex-row">
             <CodeEditor
                 id="main-editor"
-                class="width-1-of-2 v-card--variant-elevated"
+                class="width-1-of-2 v-card--variant-elevated elevation-3"
                 :code="this.project.code"
                 :editable="!this.project.isRunning"
                 :clickable="false"
