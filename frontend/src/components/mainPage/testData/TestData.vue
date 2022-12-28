@@ -78,6 +78,10 @@ div.test-data-container {
 
     &__input_and_output {
         gap: $main-page-gap;
+
+        textarea {
+            font-family: $editor-font-family;
+        }
     }
 }
 </style>
