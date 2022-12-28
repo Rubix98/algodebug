@@ -4,6 +4,7 @@
         v-model="model"
         :readonly="readonly"
         :label="label"
+        :no-resize="noResize"
         @keydown.tab.prevent="insertTabIndent"
     />
 </template>
@@ -26,6 +27,10 @@ export default defineComponent({
         autoGrow: {
             type: Boolean,
             default: false,
+        },
+        noResize: {
+            type: Boolean,
+            default: true,
         },
     },
 
