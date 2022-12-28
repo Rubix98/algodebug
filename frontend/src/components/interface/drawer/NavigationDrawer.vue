@@ -6,7 +6,7 @@
         @update:modelValue="this.$emit('hideDrawerEvent')"
     >
         <v-list>
-            <v-list-item :prepend-avatar="getUserAvatarImg" title="Użytkownik" subtitle="user@example.com" />
+            <v-list-item :prepend-avatar="userAvatarImg" title="Użytkownik" subtitle="user@example.com" />
         </v-list>
         <v-divider />
         <div class="buttons-list" v-for="(buttonsKeys, index) in Object.keys(buttons)" :key="buttonsKeys">
@@ -31,7 +31,7 @@
     import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
     import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
-    import { setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
+    import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
     import userImage from "@/img/user.png";
 
     export default defineComponent({
@@ -54,14 +54,18 @@
                         { title: "Nowy projekt", icon: "mdi-file-document-plus", onClick: this.createNewProject },
                         { title: "Zapisz projekt", icon: "mdi-content-save", onClick: this.openSaveProjectModal },
                         { title: "Otwórz projekt", icon: "mdi-folder-open", onClick: this.openLoadProjectModal },
-                        { title: "Pokaż program debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
+                        { title: "Kod debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
                     ],
                     settings: [
-                        { title: "Przełącz tryb ciemny", icon: "mdi-theme-light-dark", onClick: this.toggleDarkMode },
-                        { title: "Github", icon: "mdi-github", onClick: this.openGithub },
+                        { title: "Tryb ciemny", icon: "mdi-theme-light-dark", onClick: this.toggleDarkMode },
+                        { title: "GitHub", icon: "mdi-github", onClick: this.openGithub },
                     ],
                 },
             };
+        },
+
+        created() {
+            this.updateDarkLightModeButton();
         },
 
         methods: {
@@ -103,6 +107,18 @@
                 }
                 setCurrentThemeInStorage(this.$vuetify.theme.global.name);
                 this.emitter.emit("themeChangeEvent");
+                this.updateDarkLightModeButton();
+            },
+
+            updateDarkLightModeButton() {
+                const darkLightModeButton = this.buttons.settings[0];
+                if (getCurrentThemeFromStorage() === "dark") {
+                    darkLightModeButton.title = "Tryb jasny";
+                    darkLightModeButton.icon = "mdi-white-balance-sunny";
+                } else {
+                    darkLightModeButton.title = "Tryb ciemny";
+                    darkLightModeButton.icon = "mdi-moon-waning-crescent";
+                }
             },
         },
 
@@ -114,7 +130,7 @@
         },
 
         computed: {
-            getUserAvatarImg() {
+            userAvatarImg() {
                 return userImage;
             },
         },
