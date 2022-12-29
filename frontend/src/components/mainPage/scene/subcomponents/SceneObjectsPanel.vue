@@ -1,14 +1,13 @@
 <template>
     <div class="scene-objects-panel-container">
         <v-chip
-            closable
             v-for="(sceneObject, index) in sceneObjects"
             class="ma-2"
             :key="index"
             @click="configureSceneObject(sceneObject, $event)"
-            @click:close="deleteSceneObject(index)"
         >
             {{ sceneObject.type.label }} {{ sceneObject.variable ? sceneObject.variable.name : "null" }}
+            <v-icon icon="mdi-close-circle ms-2" variant="plain" size="18" @click="deleteSceneObject(index)" />
         </v-chip>
     </div>
 </template>
