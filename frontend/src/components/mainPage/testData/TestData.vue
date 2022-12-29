@@ -1,77 +1,87 @@
 <template>
     <div class="test-data-container flex-row">
-        <TestCasePicker />
+        <TestCasePicker class="full-height ma-0" />
 
-        <div class="full-size flex-row">
-            <AlgoBlock class="full-size" header="Dane wejściowe">
+        <div class="test-data-container__input_and_output full-size flex-row">
+            <AlgoBlock class="full-size ma-0" header="Dane wejściowe">
                 <AlgoTextarea
+                    :auto-grow="true"
                     v-model:value="input"
                     placeholder="Wprowadź dane wejściowe do programu"
-                    :readonly="project.isRunning"
-                >
-                </AlgoTextarea>
+                    :readonly="this.project.isRunning"
+                />
             </AlgoBlock>
 
-            <AlgoBlock class="full-size" header="Dane wyjściowe" v-if="project.isRunning">
+            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.project.isRunning">
                 <template #checkbox>
-                    Dynamiczny output: <input type="checkbox" v-model="isDynamicOutputOn" />
+                    <v-checkbox-btn
+                        v-model="isDynamicOutputOn"
+                        color="primary"
+                        label="Dynamiczny output"
+                        hide-details
+                        style="height: 2rem"
+                        class="shrink ma-0"
+                    />
                 </template>
-                <AlgoTextarea :value="output" :readonly="true"> </AlgoTextarea>
+                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
         </div>
     </div>
 </template>
 
 <script>
-import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
-import AlgoBlock from "@/components/global/AlgoBlock.vue";
-import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+    import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
+    import AlgoBlock from "@/components/global/AlgoBlock.vue";
+    import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import { defineComponent } from "vue";
+    import { mapActions, mapGetters, mapState } from "vuex";
 
-export default {
-    components: { TestCasePicker, AlgoTextarea, AlgoBlock },
+    export default defineComponent({
+        components: { TestCasePicker, AlgoTextarea, AlgoBlock },
 
-    data() {
-        return {
-            isDynamicOutputOn: false,
-        };
-    },
-
-    methods: {
-        ...mapActions("project", ["updateCurrentTestCaseInput"]),
-    },
-
-    computed: {
-        ...mapState(["project"]),
-        ...mapGetters("project", ["currentTestCase", "currentFrame", "numberOfFrames"]),
-
-        input: {
-            get() {
-                return this.currentTestCase.input;
-            },
-            set(newValue) {
-                this.updateCurrentTestCaseInput(newValue);
-            },
+        data() {
+            return {
+                isDynamicOutputOn: false,
+            };
         },
 
-        output() {
-            let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
-            return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
+        methods: {
+            ...mapActions("project", ["updateCurrentTestCaseInput"]),
         },
-    },
-};
+
+        computed: {
+            ...mapState(["project"]),
+            ...mapGetters("project", ["currentTestCase", "currentFrame", "numberOfFrames"]),
+
+            input: {
+                get() {
+                    return this.currentTestCase.input;
+                },
+                set(newValue) {
+                    this.updateCurrentTestCaseInput(newValue);
+                },
+            },
+
+            output() {
+                let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
+                return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
+            },
+        },
+    });
 </script>
 
-<style scoped>
-.test-data-container > :first-child {
-    width: 20%;
-    min-width: 200px;
-    max-width: 300px;
-    height: 100%;
-}
+<style lang="scss">
+    @import "src/scss/variables";
 
-textarea {
-    height: 100%;
-    padding: 5px;
-}
+    div.test-data-container {
+        gap: $main-page-gap;
+
+        &__input_and_output {
+            gap: $main-page-gap;
+
+            textarea {
+                font-family: $editor-font-family;
+            }
+        }
+    }
 </style>

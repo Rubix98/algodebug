@@ -1,41 +1,51 @@
 <template>
     <div class="algo-block">
-        <div class="header flex-vertical-space-between">
-            {{ header }}
-            <div><slot name="checkbox"></slot></div>
-        </div>
-
-        <div class="content">
-            <slot></slot>
-        </div>
+        <v-card class="algo-block__card" elevation="3">
+            <v-card-title class="algo-block__card__title">
+                {{ header }}
+                <slot name="checkbox"></slot>
+            </v-card-title>
+            <v-divider />
+            <v-card-text class="algo-block__card__content">
+                <slot></slot>
+            </v-card-text>
+        </v-card>
     </div>
 </template>
 
 <script>
-export default {
-    props: ["header"],
-};
+    import { defineComponent } from "vue";
+
+    export default defineComponent({
+        props: ["header"],
+    });
 </script>
 
-<style scoped>
-.algo-block {
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    margin: 5px;
-    padding: 0;
-}
+<style lang="scss" scoped>
+    .algo-block {
+        margin: 5px;
+        padding: 0;
 
-.header {
-    background: linear-gradient(#427aa1, #05668d);
-    height: 24px;
-    padding: 2px 15px;
-    font-size: 18px;
-    border-radius: 10px 10px 0 0;
-    color: #eee;
-    font-family: "SourceCodePro";
-}
+        &__card {
+            height: 100%;
+            &__title {
+                max-height: 3rem;
+                height: 3rem;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
 
-.content {
-    height: calc(100% - 24px);
-}
+                &:last-child {
+                    width: min-content;
+                }
+            }
+            &__content {
+                height: calc(100% - 3rem);
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+        }
+    }
 </style>

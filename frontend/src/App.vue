@@ -1,141 +1,61 @@
 <template>
-    <div class="app-container">
-        <Menu />
-
-        <div class="content-container">
+    <v-app>
+        <NavigationDrawer
+            :show-drawer="showDrawer"
+            @toggledToNormalVersionEvent="changeDrawerRailMode(false)"
+            @toggledToRailVersionEvent="changeDrawerRailMode(true)"
+            @hideDrawerEvent="changeDrawerValueTo(false)"
+        />
+        <AppBar @toggleDrawer="toggleDrawer" :show-drawer-button="!drawerRailMode" />
+        <v-main>
             <MainPage />
-        </div>
-
-        <Modal />
-    </div>
+        </v-main>
+        <BottomButtons />
+    </v-app>
+    <Modal />
 </template>
 
 <script>
-import Menu from "@/components/menu/Menu.vue";
-import MainPage from "@/components/mainPage/MainPage.vue";
-import { container } from "jenesius-vue-modal";
-import { mapActions } from "vuex";
+    import { defineComponent } from "vue";
+    import AppBar from "@/components/interface/appBar/AppBar.vue";
+    import MainPage from "@/components/mainPage/MainPage.vue";
+    import { container } from "jenesius-vue-modal";
+    import BottomButtons from "@/components/interface/bottomButtons/BottomButtons.vue";
+    import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
+    import { mapActions } from "vuex";
 
-export default {
-    // ERROR: Name "Menu" is reserved in HTML
-    // eslint-disable-next-line
-    components: { Menu, MainPage, Modal: container },
+    export default defineComponent({
+        name: "App",
+        components: { NavigationDrawer, BottomButtons, AppBar, MainPage, Modal: container },
 
-    mounted() {
-        this.updateProjects();
-        this.updateConverters();
-    },
+        mounted() {
+            this.updateProjects();
+            this.updateConverters();
+        },
+        data() {
+            return {
+                drawerRailMode: false,
+                showDrawer: false,
+            };
+        },
 
-    methods: {
-        ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
-    },
-};
+        methods: {
+            ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
+
+            toggleDrawer() {
+                this.showDrawer = !this.showDrawer;
+            },
+            changeDrawerRailMode(mode) {
+                this.drawerRailMode = mode;
+                this.showDrawer = mode;
+            },
+            changeDrawerValueTo(value) {
+                this.showDrawer = value;
+            },
+        },
+    });
 </script>
 
-<style scoped>
-.app-container {
-    width: 100vw;
-    height: 100vh;
-}
-
-.menu-container {
-    height: 50px;
-}
-
-.content-container {
-    width: 100%;
-    height: calc(100% - 50px);
-}
-
-.modal-container {
-    z-index: 10;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-</style>
-
-<style>
-/* Global */
-
-@font-face {
-    font-family: "SourceCodePro";
-    font-weight: 400;
-    font-style: normal;
-    font-display: auto;
-    src: local("SourceCodePro"), url("/public/fonts/SourceCodePro-Regular.ttf");
-}
-
-body {
-    font-family: "Tahoma", sans-serif;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.full-size {
-    width: 100%;
-    height: 100%;
-}
-
-.flex {
-    display: flex;
-}
-
-.flex-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: space-between;
-}
-
-.flex-row {
-    display: flex;
-    flex-direction: row;
-}
-
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.flex-vertical-left {
-    display: flex;
-    justify-content: flex-start;
-}
-
-.flex-vertical-center {
-    display: flex;
-    justify-content: center;
-}
-
-.flex-vertical-right {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.flex-vertical-space-between {
-    display: flex;
-    justify-content: space-between;
-}
-
-.flex-horizontal-center {
-    display: flex;
-
-    align-items: center;
-}
-
-.width-1-of-2 {
-    width: 50%;
-}
-
-.Vue-Toastification__container {
-    margin-top: 55px;
-}
+<style lang="scss">
+    @import "@/scss/global.scss";
 </style>

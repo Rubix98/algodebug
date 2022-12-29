@@ -5,47 +5,50 @@
 </template>
 
 <script>
-import { Stage } from "@/javascript/stage/Stage";
-import { mapActions, mapGetters, mapState } from "vuex";
+    import { Stage } from "@/javascript/stage/Stage";
+    import { mapActions, mapGetters, mapState } from "vuex";
+    import { defineComponent } from "vue";
 
-export default {
-    mounted() {
-        this.stage = new Stage("canvas");
+    export default defineComponent({
+        mounted() {
+            this.stage = new Stage("canvas");
 
-        this.emitter.on("startDebuggingEvent", this.draw);
-        this.emitter.on("currentFrameChangedEvent", this.draw);
-        this.emitter.on("stopDebuggingEvent", this.clearStage);
-        this.emitter.on("downloadStageEvent", this.download);
-    },
-
-    methods: {
-        ...mapActions("project", ["updateSceneObjectPosition"]),
-
-        draw() {
-            this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
+            this.emitter.on("startDebuggingEvent", this.draw);
+            this.emitter.on("currentFrameChangedEvent", this.draw);
+            this.emitter.on("stopDebuggingEvent", this.clearStage);
+            this.emitter.on("downloadStageEvent", this.download);
+            this.emitter.on("themeChangeEvent", () => {
+                if (this.projectIsRunning) this.draw();
+            });
         },
 
-        clearStage() {
-            this.stage.clearStage();
+        methods: {
+            ...mapActions("project", ["updateSceneObjectPosition"]),
+
+            draw() {
+                this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
+            },
+
+            clearStage() {
+                this.stage.clearStage();
+            },
+
+            download() {
+                this.stage.downloadImage();
+            },
         },
 
-        download() {
-            this.stage.downloadImage();
+        computed: {
+            ...mapState(["project"]),
+            ...mapGetters("project", ["sceneObjects", "currentFrame", "projectIsRunning"]),
         },
-    },
-
-    computed: {
-        ...mapState(["project"]),
-        ...mapGetters("project", ["sceneObjects", "currentFrame"]),
-    },
-};
+    });
 </script>
 
 <style scoped>
-#canvas {
-    background-color: white;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-}
+    #canvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
 </style>

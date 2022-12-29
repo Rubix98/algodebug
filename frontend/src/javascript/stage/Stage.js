@@ -1,5 +1,6 @@
 import { PainterFactory } from "./PainterFactory";
 import Konva from "konva";
+import { getCurrentThemeFromStorage } from "@/javascript/storage/themeStorage";
 
 export class Stage {
     constructor(containerId) {
@@ -38,7 +39,8 @@ export class Stage {
 
     draw(sceneObjects, frame, updateSceneObjectPosition) {
         this.clearStage();
-
+        let currentTheme = getCurrentThemeFromStorage();
+        let color = currentTheme === "light" ? "black" : "white";
         for (let sceneObject of sceneObjects) {
             let painter = PainterFactory(sceneObject.type.key, {
                 sceneObject: sceneObject,
@@ -46,6 +48,7 @@ export class Stage {
                 stageSize: this.getCanvasSize(),
                 updateSceneObjectPosition: updateSceneObjectPosition,
                 layers: this.layers,
+                color,
             });
 
             painter.draw();
@@ -88,7 +91,7 @@ export class Stage {
 
     downloadImage() {
         let uri = this.stage.toDataURL({ pixelRatio: 3 });
-        var link = document.createElement("a");
+        let link = document.createElement("a");
         link.download = "algodebug.jpeg";
         link.href = uri;
         document.body.appendChild(link);

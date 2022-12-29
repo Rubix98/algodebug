@@ -11,7 +11,7 @@ export class CirclePainter extends Painter {
                     x: circle.x,
                     y: -circle.y,
                     radius: circle.r,
-                    stroke: "black",
+                    stroke: this.color,
                     strokeWidth: 1,
                 })
             );

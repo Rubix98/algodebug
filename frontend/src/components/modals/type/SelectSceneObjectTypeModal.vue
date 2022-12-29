@@ -5,39 +5,34 @@
 </template>
 
 <script>
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoPickList from "@/components/global/AlgoPickList.vue";
-import { popModal } from "jenesius-vue-modal";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import AlgoPickList from "@/components/global/AlgoPickList.vue";
+    import { popModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default {
-    components: { AlgoModal, AlgoPickList },
+    export default defineComponent({
+        components: { AlgoModal, AlgoPickList },
 
-    props: ["callback"],
+        props: ["callback"],
 
-    data() {
-        return {
-            types: [
-                { key: "variable", label: "Zmienna" },
-                { key: "graph", label: "Graf" },
-                { key: "array", label: "Tablica" },
-                { key: "points", label: "Zbiór punktów" },
-                { key: "circle", label: "Okrąg" },
-                { key: "shape", label: "Wielokąt" },
-            ],
-        };
-    },
-
-    methods: {
-        handleSelectOption(selectedType) {
-            this.$props.callback(selectedType);
-            popModal();
+        data() {
+            return {
+                types: [
+                    { key: "variable", label: "Zmienna" },
+                    { key: "graph", label: "Graf" },
+                    { key: "array", label: "Tablica" },
+                    { key: "points", label: "Zbiór punktów" },
+                    { key: "circle", label: "Okrąg" },
+                    { key: "shape", label: "Wielokąt" },
+                ],
+            };
         },
-    },
-};
-</script>
 
-<style scoped>
-.dialog {
-    width: 40vw;
-}
-</style>
+        methods: {
+            handleSelectOption(selectedType) {
+                this.$props.callback(selectedType);
+                popModal();
+            },
+        },
+    });
+</script>

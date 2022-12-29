@@ -1,41 +1,38 @@
 <template>
     <AlgoModal title="Kod debugujący">
-        <CodeEditor id="debug-code-editor" :code="debugCode" :editable="false" :clickable="false" />
+        <CodeEditor id="debug-code-editor" :code="this.debugCode" :editable="false" :clickable="false" />
 
         <template #buttons>
-            <AlgoButton @click="copy()">Kopiuj</AlgoButton>
+            <v-btn @click="copy()" color="primary">Kopiuj</v-btn>
         </template>
     </AlgoModal>
 </template>
 
 <script>
-import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
-import { mapGetters } from "vuex";
-import toast from "@/javascript/utils/toastUtils";
+    import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import { mapGetters } from "vuex";
+    import { defineComponent } from "vue";
+    import toast from "@/javascript/utils/toastUtils";
 
-export default {
-    components: { AlgoModal, CodeEditor, AlgoButton },
+    export default defineComponent({
+        components: { AlgoModal, CodeEditor },
 
-    methods: {
-        copy() {
-            navigator.clipboard.writeText(this.debugCode).then(() => toast.info("Skopiowano"));
+        methods: {
+            copy() {
+                navigator.clipboard.writeText(this.debugCode).then(() => toast.info("Skopiowano"));
+            },
         },
-    },
 
-    computed: {
-        ...mapGetters("project", ["debugCode"]),
-    },
-};
+        computed: {
+            ...mapGetters("project", ["debugCode"]),
+        },
+    });
 </script>
 
 <style scoped>
-.dialog {
-    width: 80vw;
-}
-
-.code-editor-container {
-    height: 70vh;
-}
+    #debug-code-editor {
+        height: 50vh;
+        min-width: 90rem;
+    }
 </style>

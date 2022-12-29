@@ -1,16 +1,17 @@
 <template>
-    <div>
+    <div class="algo-table">
         <h2>{{ label }}</h2>
-
-        <table>
+        <v-table>
             <thead>
-                <th style="text-align: center"><AlgoIcon type="+" @click="addRow" /></th>
-                <th v-for="header in headers" :key="header">{{ header }}</th>
+                <tr>
+                    <th style="text-align: center" />
+                    <th v-for="header in headers" class="text-left" :key="header">{{ header }}</th>
+                </tr>
             </thead>
             <tbody>
                 <tr v-for="(row, index) in model" :key="index">
-                    <td style="text-align: center">
-                        <AlgoIcon type="x" @click="removeRow(index)" />
+                    <td class="algo-table__remove-row text-center">
+                        <v-icon class="primary" @click="removeRow(index)"> mdi-close</v-icon>
                     </td>
 
                     <td>
@@ -29,117 +30,99 @@
                         <input type="color" v-model="row.color" />
                     </td>
                 </tr>
-
-                <tr v-if="!model || model.length === 0">
-                    <td colspan="999" class="no-data-row">Brak danych</td>
-                </tr>
             </tbody>
-        </table>
+        </v-table>
+        <v-btn block @click="addRow" class="algo-table__add-row" prepend-icon="mdi-plus-circle"> Dodaj</v-btn>
     </div>
 </template>
 
 <script>
-import AlgoLink from "@/components/global/AlgoLink.vue";
-import AlgoIcon from "@/components/global/AlgoIcon.vue";
-import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
-import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
-import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
-import { pushModal } from "jenesius-vue-modal";
+    import AlgoLink from "@/components/global/AlgoLink.vue";
+    import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
+    import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
+    import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { pushModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default {
-    props: ["sceneObject", "label", "headers", "emptyRow"],
-    components: { AlgoLink, AlgoIcon },
+    export default defineComponent({
+        props: ["sceneObject", "label", "headers", "emptyRow"],
+        components: { AlgoLink },
 
-    data() {
-        return {
-            model: "",
-        };
-    },
-
-    mounted() {
-        this.model = this.sceneObject.subobjects;
-    },
-
-    methods: {
-        addRow() {
-            this.model.push({ ...this.emptyRow });
-        },
-
-        removeRow(index) {
-            this.model.splice(index, 1);
-        },
-
-        selectType(row) {
-            pushModal(SelectPropertyTypeModal, {
-                sceneObjectType: this.$props.sceneObject.type,
-                callback: (selectedType) => {
-                    row.type = selectedType;
-                },
-            });
-        },
-
-        selectVariable(row) {
-            pushModal(PickVariableModal, {
-                callback: (selectedVariable) => {
-                    row.variable = selectedVariable;
-                },
-            });
-        },
-
-        selectConverter(row) {
-            pushModal(SelectConverterModal, {
-                callback: (selectedConverter) => {
-                    row.converter = selectedConverter;
-                },
-            });
-        },
-    },
-
-    computed: {
-        typeLabel() {
-            return (row) => {
-                return row.type ? row.type.label : null;
+        data() {
+            return {
+                model: "",
             };
         },
 
-        variableName() {
-            return (row) => {
-                return row.variable ? row.variable.name : null;
-            };
+        mounted() {
+            this.model = this.sceneObject.subobjects;
         },
 
-        converterTitle() {
-            return (row) => {
-                return row.converter ? row.converter.title : null;
-            };
+        methods: {
+            addRow() {
+                this.model.push({ ...this.emptyRow });
+            },
+
+            removeRow(index) {
+                this.model.splice(index, 1);
+            },
+
+            selectType(row) {
+                pushModal(SelectPropertyTypeModal, {
+                    sceneObjectType: this.$props.sceneObject.type,
+                    callback: (selectedType) => {
+                        row.type = selectedType;
+                    },
+                });
+            },
+
+            selectVariable(row) {
+                pushModal(PickVariableModal, {
+                    callback: (selectedVariable) => {
+                        row.variable = selectedVariable;
+                    },
+                });
+            },
+
+            selectConverter(row) {
+                pushModal(SelectConverterModal, {
+                    callback: (selectedConverter) => {
+                        row.converter = selectedConverter;
+                    },
+                });
+            },
         },
-    },
-};
+
+        computed: {
+            typeLabel() {
+                return (row) => {
+                    return row.type ? row.type.label : null;
+                };
+            },
+
+            variableName() {
+                return (row) => {
+                    return row.variable ? row.variable.name : null;
+                };
+            },
+
+            converterTitle() {
+                return (row) => {
+                    return row.converter ? row.converter.title : null;
+                };
+            },
+        },
+    });
 </script>
 
-<style>
-table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
-}
+<style lang="scss" scoped>
+    .algo-table {
+        &__add-row {
+            margin-top: 1rem;
+        }
 
-table,
-td,
-th {
-    border: 1px solid black;
-}
-
-tr:nth-child(even) {
-    background-color: white;
-}
-
-tr:nth-child(odd) {
-    background-color: aliceblue;
-}
-
-.no-data-row {
-    color: silver;
-    text-align: center;
-}
+        &__remove-row {
+            cursor: pointer;
+        }
+    }
 </style>

@@ -1,16 +1,20 @@
 <template>
     <AlgoModal :title="modalTitle">
-        <AlgoFieldRow label="Rodzaj obiektu">
-            <AlgoLink :value="typeLabel" @click="selectType()" />
-        </AlgoFieldRow>
+        <v-combobox
+            label="Rodzaj obiektu"
+            :model-value="typeLabel"
+            :items="sceneObjectTypesForComboBox"
+            @update:modelValue="changeSelectedObject"
+        >
+        </v-combobox>
 
-        <AlgoFieldRow label="Przypisana zmienna">
-            <AlgoLink :value="variableName" @click="selectVariable()" />
-        </AlgoFieldRow>
+        <span @click="selectVariable">
+            <v-combobox label="Przypisana zmienna" :model-value="variableName" />
+        </span>
 
-        <AlgoFieldRow label="Konwerter">
-            <AlgoLink :value="converterTitle" label="Brak" @click="selectConverter()" /> </AlgoFieldRow
-        ><br />
+        <span @click="selectConverter">
+            <v-combobox label="Konwerter" :model-value="converterTitle" />
+        </span>
 
         <AlgoTable
             v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
@@ -21,110 +25,120 @@
         ></AlgoTable>
 
         <template #buttons>
-            <AlgoButton class="ok" @click="save">Zapisz</AlgoButton>
+            <v-btn color="primary" @click="save">Zapisz</v-btn>
         </template>
     </AlgoModal>
 </template>
 
 <script>
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoTable from "@/components/global/AlgoTable.vue";
-import AlgoLink from "@/components/global/AlgoLink.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
-import AlgoFieldRow from "@/components/global/AlgoFieldRow.vue";
-import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
-import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
-import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
-import { mapActions, mapState } from "vuex";
-import { closeModal, pushModal } from "jenesius-vue-modal";
-import { validateSceneObject } from "@/javascript/utils/validationUtils";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import AlgoTable from "@/components/global/AlgoTable.vue";
+    import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
+    import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
+    import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { mapActions, mapState } from "vuex";
+    import { closeModal, pushModal } from "jenesius-vue-modal";
+    import { validateSceneObject } from "@/javascript/utils/validationUtils";
+    import { defineComponent } from "vue";
 
-export default {
-    components: { AlgoModal, AlgoTable, AlgoLink, AlgoFieldRow, AlgoButton },
-    props: ["sceneObject"],
+    export default defineComponent({
+        components: { AlgoModal, AlgoTable },
+        props: ["sceneObject"],
 
-    data() {
-        return {
-            model: {
-                type: null,
-                variable: null,
-                converter: null,
-                subobjects: [],
+        data() {
+            return {
+                model: {
+                    type: null,
+                    variable: null,
+                    converter: null,
+                    subobjects: [],
+                },
+                sceneObjectTypes: [
+                    { key: "variable", label: "Zmienna" },
+                    { key: "graph", label: "Graf" },
+                    { key: "array", label: "Tablica" },
+                    { key: "points", label: "Zbiór punktów" },
+                    { key: "circle", label: "Okrąg" },
+                    { key: "shape", label: "Wielokąt" },
+                ],
+            };
+        },
+
+        mounted() {
+            if (this.$props.sceneObject) {
+                this.model = { ...this.$props.sceneObject };
+            }
+        },
+
+        methods: {
+            ...mapActions("project", ["saveSceneObject"]),
+
+            save() {
+                if (!validateSceneObject(this.model)) return;
+
+                this.saveSceneObject(this.model);
+                closeModal();
             },
-        };
-    },
 
-    mounted() {
-        if (this.$props.sceneObject) {
-            this.model = { ...this.$props.sceneObject };
-        }
-    },
+            selectType() {
+                pushModal(SelectSceneObjectTypeModal, {
+                    callback: (selectedType) => {
+                        this.model.type = selectedType;
+                        this.model.converter = null;
+                        this.model.subobjects = [];
+                    },
+                });
+            },
 
-    methods: {
-        ...mapActions("project", ["saveSceneObject"]),
+            selectVariable() {
+                pushModal(PickVariableModal, {
+                    callback: (selectedVariable) => {
+                        this.model.variable = selectedVariable;
+                    },
+                });
+            },
 
-        save() {
-            if (!validateSceneObject(this.model)) return;
+            selectConverter() {
+                pushModal(SelectConverterModal, {
+                    callback: (selectedConverter) => {
+                        this.model.converter = selectedConverter;
+                    },
+                });
+            },
 
-            this.saveSceneObject(this.model);
-            closeModal();
+            changeSelectedObject(selected) {
+                this.model.type = this.sceneObjectTypes.find((e) => e.label === selected);
+            },
         },
 
-        selectType() {
-            pushModal(SelectSceneObjectTypeModal, {
-                callback: (selectedType) => {
-                    this.model.type = selectedType;
-                    this.model.converter = null;
-                    this.model.subobjects = [];
-                },
-            });
-        },
+        computed: {
+            ...mapState(["project"]),
 
-        selectVariable() {
-            pushModal(PickVariableModal, {
-                callback: (selectedVariable) => {
-                    this.model.variable = selectedVariable;
-                },
-            });
-        },
+            isNewSceneObject() {
+                return this.model.index == null;
+            },
 
-        selectConverter() {
-            pushModal(SelectConverterModal, {
-                callback: (selectedConverter) => {
-                    this.model.converter = selectedConverter;
-                },
-            });
-        },
-    },
+            modalTitle() {
+                return this.isNewSceneObject ? "Dodaj nowy obiekt" : "Konfiguruj obiekt";
+            },
 
-    computed: {
-        ...mapState(["project"]),
+            typeLabel() {
+                return this.model.type ? this.model.type.label : null;
+            },
 
-        isNewSceneObject() {
-            return this.model.index == null;
-        },
+            variableName() {
+                return this.model.variable ? this.model.variable.name : null;
+            },
 
-        modalTitle() {
-            return this.isNewSceneObject ? "Dodaj nowy obiekt" : "Konfiguruj obiekt";
-        },
+            converterTitle() {
+                return this.model.converter ? this.model.converter.title : null;
+            },
 
-        typeLabel() {
-            return this.model.type ? this.model.type.label : null;
+            sceneObjectTypesForComboBox() {
+                return this.sceneObjectTypes.map((e) => {
+                    return e.label;
+                });
+            },
         },
-
-        variableName() {
-            return this.model.variable ? this.model.variable.name : null;
-        },
-
-        converterTitle() {
-            return this.model.converter ? this.model.converter.title : null;
-        },
-    },
-};
+    });
 </script>
-
-<style scoped>
-.dialog {
-    width: 80vw;
-}
-</style>

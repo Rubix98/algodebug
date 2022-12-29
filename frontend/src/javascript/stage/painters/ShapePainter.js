@@ -10,7 +10,7 @@ export class ShapePainter extends Painter {
             this.mainGroup.add(
                 new Konva.Line({
                     points: [point.x, -point.y, previousPoint.x, -previousPoint.y],
-                    stroke: "black",
+                    stroke: this.color,
                     strokeWidth: 1,
                 })
             );

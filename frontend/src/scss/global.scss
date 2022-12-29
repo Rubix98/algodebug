@@ -1,0 +1,103 @@
+@font-face {
+    font-family: "SourceCodePro";
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+    src: local("SourceCodePro"), url("/public/fonts/SourceCodePro-Regular.ttf");
+}
+
+html {
+    overflow: hidden !important;
+}
+
+body {
+    font-family: "Tahoma", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.full-size {
+    width: 100%;
+    height: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-vertical-left {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.flex-vertical-center {
+    display: flex;
+    justify-content: center;
+}
+
+.flex-vertical-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.flex-vertical-space-between {
+    display: flex;
+    justify-content: space-between;
+}
+
+.flex-horizontal-center {
+    display: flex;
+
+    align-items: center;
+}
+
+.width-1-of-2 {
+    width: 50%;
+}
+
+.Vue-Toastification__container {
+    margin-top: 55px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 400;
+}
+
+.modal-container {
+    background-color: transparentize(black, 0.7);
+    z-index: 2000;
+}

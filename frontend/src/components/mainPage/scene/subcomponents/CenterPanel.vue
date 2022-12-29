@@ -1,27 +1,21 @@
 <template>
     <div class="center-panel-container flex-center">
-        <AlgoButton @click="addNewSceneObject()"><i class="fa-solid fa-square-plus"></i> Dodaj nowy obiekt</AlgoButton>
+        <v-btn @click="addNewSceneObject()" prepend-icon="mdi-plus-circle" size="x-large" variant="tonal">
+            Dodaj nowy obiekt
+        </v-btn>
     </div>
 </template>
 
 <script>
-import AlgoButton from "@/components/global/AlgoButton";
-import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
-import { openModal } from "jenesius-vue-modal";
+    import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
+    import { openModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default {
-    components: { AlgoButton },
-
-    methods: {
-        addNewSceneObject() {
-            openModal(ConfigureSceneObjectModal);
+    export default defineComponent({
+        methods: {
+            addNewSceneObject() {
+                openModal(ConfigureSceneObjectModal);
+            },
         },
-    },
-};
+    });
 </script>
-
-<style scoped>
-button {
-    font-size: 30px;
-}
-</style>

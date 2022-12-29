@@ -22,9 +22,10 @@ export function sendRequest(url, data = {}, method) {
             let errorMessage = error.message + (error.response ? "\nDetails: " + error.response.data.error : "");
             console.error(errorMessage);
             toast.error(toastStrings.error ? toastStrings.error : "Wystąpił błąd! Spróbuj ponownie później.");
+            throw error;
         })
         .finally(() => {
-            if (loadingToast != undefined) toast.dismiss(loadingToast);
+            if (loadingToast !== undefined) toast.dismiss(loadingToast);
         });
 }
 

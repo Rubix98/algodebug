@@ -7,4 +7,14 @@ module.exports = {
     semi: true,
     singleQuote: false,
     printWidth: 120,
+    overrides: [
+        {
+            files: ["*.vue"],
+            options: {
+                vueIndentScriptAndStyle: true,
+                parser: "vue",
+                proseWrap: "always",
+            },
+        },
+    ],
 };

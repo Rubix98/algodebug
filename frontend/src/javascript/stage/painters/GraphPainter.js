@@ -46,7 +46,7 @@ export class GraphPainter extends Painter {
                 radius: this.style.vertexRadius,
                 fill: "white",
                 stroke: "black",
-                strokeWidth: 1,
+                strokeWidth: 2,
             });
             vertexGroup.add(vertexCircle);
 
@@ -90,7 +90,7 @@ export class GraphPainter extends Painter {
                 id: `edge-line-${edge.a}-${edge.b}`,
                 name: "edge-line",
                 points: [vertexFrom.x(), vertexFrom.y(), vertexTo.x(), vertexTo.y()],
-                stroke: "black",
+                stroke: this.color,
             });
             edgeGroup.add(edgeLine);
 
@@ -101,6 +101,7 @@ export class GraphPainter extends Painter {
                     text: String(edge.d),
                     x: centerPoint.x,
                     y: centerPoint.y,
+                    fill: this.color,
                     fontSize: this.style.fontSize,
                 });
                 edgeGroup.add(edgeText);

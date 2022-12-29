@@ -1,86 +1,88 @@
 <template>
     <AlgoBlock header="Wybór testów">
-        <div class="test-case-picker-container full-size">
-            <div
-                class="test-case flex-vertical-space-between"
-                v-for="(number, index) in numberOfTestCases"
-                :key="index"
-                :class="{ selected: isTestCaseSelected(index) }"
-                @click="switchTestCase(index, $event)"
-            >
-                Test {{ number }}
-                <AlgoIcon type="x" @click="deleteTestCase(index)" v-if="canRemoveTests" />
-            </div>
-
-            <AlgoButton class="add-button" v-if="!project.isRunning" @click="addTestCase()">
-                <i class="fa-solid fa-square-plus"></i> Dodaj nowy test
-            </AlgoButton>
+        <div class="test-case-picker-container">
+            <v-list density="compact" class="test-case-picker-container__tests">
+                <v-list-item
+                    v-for="(number, index) in this.numberOfTestCases"
+                    :key="index"
+                    :value="index"
+                    :title="`Test ${number}`"
+                    :active="isTestCaseSelected(index)"
+                    @click="switchTestCase(index)"
+                    active-color="primary"
+                >
+                    <v-icon class="test-close" v-if="canRemoveTests" @click="this.deleteTestCasePressed(index)">
+                        mdi-close
+                    </v-icon>
+                </v-list-item>
+            </v-list>
+            <v-btn prepend-icon="mdi-plus-circle" @click="this.addTestCase" v-if="!project.isRunning" variant="tonal">
+                Dodaj nowy test
+            </v-btn>
         </div>
     </AlgoBlock>
 </template>
 
 <script>
-import AlgoBlock from "@/components/global/AlgoBlock.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
-import AlgoIcon from "@/components/global/AlgoIcon.vue";
-import { mapState, mapGetters, mapActions } from "vuex";
+    import AlgoBlock from "@/components/global/AlgoBlock.vue";
+    import { mapActions, mapGetters, mapState } from "vuex";
+    import { defineComponent } from "vue";
 
-export default {
-    components: { AlgoBlock, AlgoButton, AlgoIcon },
+    export default defineComponent({
+        components: { AlgoBlock },
 
-    methods: {
-        ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
-
-        switchTestCase(index, event) {
-            if (event.target.localName === "i") return;
-            this.changeCurrentTestCase(index);
-            this.changeCurrentFrame(0);
-            this.emitter.emit("currentFrameChangedEvent");
-        },
-    },
-
-    computed: {
-        ...mapState(["project"]),
-        ...mapGetters("project", ["numberOfTestCases"]),
-
-        isTestCaseSelected() {
-            return (index) => index === this.project.selectedTestCaseId;
+        data() {
+            return {
+                lastIndex: 0,
+            };
         },
 
-        canRemoveTests() {
-            return !this.project.isRunning && this.project.testData.length > 1;
+        methods: {
+            ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
+
+            switchTestCase(index) {
+                this.changeCurrentTestCase(index);
+                this.changeCurrentFrame(0);
+                this.emitter.emit("currentFrameChangedEvent");
+                this.lastIndex = index;
+            },
+
+            deleteTestCasePressed(index) {
+                this.deleteTestCase(index);
+                if (index !== this.lastIndex) this.switchTestCase(this.lastIndex);
+            },
         },
-    },
-};
+
+        computed: {
+            ...mapState(["project"]),
+            ...mapGetters("project", ["numberOfTestCases"]),
+
+            isTestCaseSelected() {
+                return (index) => index === this.project.selectedTestCaseId;
+            },
+
+            canRemoveTests() {
+                return !this.project.isRunning && this.project.testData.length > 1;
+            },
+        },
+    });
 </script>
 
-<style scoped>
-.test-case-picker-container {
-    background-color: white;
-    border-radius: 0 0 10px 10px;
-    overflow: auto;
-    text-align: center;
-}
+<style lang="scss" scoped>
+    .test-case-picker-container {
+        text-align: center;
+        min-width: 12rem;
 
-.test-case {
-    padding: 5px;
-    border-top: 1px solid silver;
-    cursor: pointer;
-}
+        button {
+            margin: 10px;
+        }
 
-.test-case:first-child {
-    border: none;
-}
-
-.test-case:hover {
-    background-color: #eee;
-}
-
-.selected {
-    background-color: #ddd;
-}
-
-button {
-    margin: 10px;
-}
+        .test-close {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            transform: translateY(50%);
+            cursor: pointer;
+        }
+    }
 </style>

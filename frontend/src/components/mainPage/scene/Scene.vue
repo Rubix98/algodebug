@@ -1,72 +1,80 @@
 <template>
-    <div class="scene-container full-size">
-        <SceneCanvas
-            class="full-size"
-            :sceneObjects="project.sceneObjects"
-            :isRunning="project.isRunning"
-        ></SceneCanvas>
+    <v-card elevation="3">
+        <div class="scene-container full-size" v-if="!showLoading">
+            <SceneCanvas
+                class="full-size"
+                :sceneObjects="this.project.sceneObjects"
+                :isRunning="this.project.isRunning"
+            ></SceneCanvas>
 
-        <CenterPanel v-if="!project.isRunning" />
-        <SceneObjectsPanel v-if="!project.isRunning" />
-        <DownloadPanel v-if="project.isRunning" />
-        <NavigationPanel v-if="project.isRunning" />
-        <FrameNumberPanel v-if="project.isRunning" />
-    </div>
+            <CenterPanel v-if="!this.project.isRunning" />
+            <SceneObjectsPanel v-if="!this.project.isRunning" />
+            <DownloadPanel v-if="this.project.isRunning" />
+            <NavigationPanel v-if="this.project.isRunning" />
+            <FrameNumberPanel v-if="this.project.isRunning" />
+        </div>
+        <div class="full-size d-flex flex-center flex-column" v-else>
+            <v-progress-circular indeterminate color="primary" />
+            <span class="mt-3">Trwa kompilacja kodu...</span>
+        </div>
+    </v-card>
 </template>
 
 <script>
-import SceneCanvas from "@/components/mainPage/scene/subcomponents/SceneCanvas.vue";
-import CenterPanel from "@/components/mainPage/scene/subcomponents/CenterPanel.vue";
-import SceneObjectsPanel from "@/components/mainPage/scene/subcomponents/SceneObjectsPanel.vue";
-import DownloadPanel from "@/components/mainPage/scene/subcomponents/DownloadPanel.vue";
-import NavigationPanel from "@/components/mainPage/scene/subcomponents/NavigationPanel.vue";
-import FrameNumberPanel from "@/components/mainPage/scene/subcomponents/FrameNumberPanel.vue";
-import { mapState } from "vuex";
+    import SceneCanvas from "@/components/mainPage/scene/subcomponents/SceneCanvas.vue";
+    import CenterPanel from "@/components/mainPage/scene/subcomponents/CenterPanel.vue";
+    import SceneObjectsPanel from "@/components/mainPage/scene/subcomponents/SceneObjectsPanel.vue";
+    import DownloadPanel from "@/components/mainPage/scene/subcomponents/DownloadPanel.vue";
+    import NavigationPanel from "@/components/mainPage/scene/subcomponents/NavigationPanel.vue";
+    import FrameNumberPanel from "@/components/mainPage/scene/subcomponents/FrameNumberPanel.vue";
+    import { mapState } from "vuex";
+    import { defineComponent } from "vue";
 
-export default {
-    components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
-    computed: {
-        ...mapState(["project"]),
-    },
-};
+    export default defineComponent({
+        components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
+        computed: {
+            ...mapState(["project"]),
+            showLoading() {
+                return this.project.waitingForCompile;
+            },
+        },
+    });
 </script>
 
 <style scoped>
-.scene-container {
-    position: relative;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-}
+    .scene-container {
+        position: relative;
+    }
 
-.center-panel-container {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-}
+    .center-panel-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
 
-.scene-objects-panel-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-}
+    .scene-objects-panel-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 
-.download-panel-container {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-}
+    .download-panel-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
 
-.navigation-panel-container {
-    position: absolute;
-    width: 100%;
-    bottom: 0px;
-}
+    .navigation-panel-container {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
 
-.frame-number-panel-container {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-}
+    .frame-number-panel-container {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
 </style>

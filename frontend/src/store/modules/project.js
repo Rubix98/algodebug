@@ -11,6 +11,7 @@ export default {
         testData: [{ input: "" }],
         sceneObjects: [],
         isRunning: false,
+        waitingForCompile: false,
         selectedTestCaseId: 0,
         selectedFrameId: 0,
     },
@@ -62,6 +63,10 @@ export default {
 
         testData(state) {
             return state.testData.map((element, index) => ({ ...element, index }));
+        },
+
+        projectIsRunning(state) {
+            return state.isRunning;
         },
 
         numberOfTestCases(_, getters) {
@@ -242,6 +247,7 @@ export default {
         },
 
         compile({ commit, state, getters }) {
+            commit("set", { key: "waitingForCompile", value: true });
             const inputs = state.testData.map((testCase) => testCase.input);
             return sendRequest(
                 "/compiler/compile",
@@ -251,11 +257,16 @@ export default {
                     inputs: inputs,
                 },
                 "POST"
-            ).then((responseData) => {
-                commit("addOutputs", responseData);
-                commit("set", { key: "isRunning", value: true });
-                return true;
-            });
+            )
+                .then((responseData) => {
+                    commit("addOutputs", responseData);
+                    commit("set", { key: "isRunning", value: true });
+                    commit("set", { key: "waitingForCompile", value: false });
+                    return true;
+                })
+                .catch(() => {
+                    commit("set", { key: "waitingForCompile", value: false });
+                });
         },
 
         removeOutdatedVariables: ({ commit }, handlerFunction) => commit("removeOutdatedVariables", handlerFunction),

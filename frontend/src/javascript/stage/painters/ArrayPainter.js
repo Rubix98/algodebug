@@ -37,7 +37,7 @@ export class ArrayPainter extends Painter {
                 name: "element-rect",
                 width: this.style.cellSize,
                 height: this.style.cellSize,
-                stroke: "black",
+                stroke: this.color,
                 strokeWidth: 1,
             });
             elementGroup.add(elementRect);
@@ -50,6 +50,7 @@ export class ArrayPainter extends Painter {
                 height: this.style.cellSize,
                 fontSize: this.style.fontSize,
                 align: "center",
+                fill: this.color,
                 verticalAlign: "middle",
             });
             elementGroup.add(elementText);
@@ -64,6 +65,7 @@ export class ArrayPainter extends Painter {
                 height: this.style.rowHeight - this.style.cellSize,
                 fontSize: this.style.indexFontSize,
                 align: "center",
+                fill: this.color,
                 verticalAlign: "middle",
             });
             elementGroup.add(elementIndex);

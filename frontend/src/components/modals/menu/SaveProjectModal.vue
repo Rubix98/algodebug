@@ -1,57 +1,53 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <input type="text" v-model="projectTitle" class="full-size" placeholder="Tytuł projektu" />
+        <v-text-field label="Tytuł projektu" v-model="projectTitle" clearable />
 
         <template #buttons>
-            <AlgoButton class="ok" @click="save(false)">Zapisz jako</AlgoButton>
-            <AlgoButton class="ok" @click="save(true)" v-if="project.id">Zapisz</AlgoButton>
+            <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
+            <v-btn color="primary" @click="save(true)" v-if="project.id">Zapisz</v-btn>
         </template>
     </AlgoModal>
 </template>
 
 <script>
-import AlgoModal from "@/components/global/AlgoModal.vue";
-import AlgoButton from "@/components/global/AlgoButton.vue";
-import { mapState, mapActions } from "vuex";
-import { closeModal } from "jenesius-vue-modal";
+    import AlgoModal from "@/components/global/AlgoModal.vue";
+    import { mapActions, mapState } from "vuex";
+    import { closeModal } from "jenesius-vue-modal";
+    import { defineComponent } from "vue";
 
-export default {
-    components: { AlgoModal, AlgoButton },
+    export default defineComponent({
+        components: { AlgoModal },
 
-    data() {
-        return {
-            projectTitle: "",
-        };
-    },
-
-    mounted() {
-        this.projectTitle = this.project.title;
-    },
-
-    methods: {
-        ...mapActions("project", ["saveProject"]),
-
-        save(override) {
-            this.saveProject({
-                title: this.projectTitle,
-                override: override,
-            });
-            closeModal();
+        data() {
+            return {
+                projectTitle: "",
+            };
         },
-    },
 
-    computed: {
-        ...mapState(["project"]),
-    },
-};
+        mounted() {
+            this.projectTitle = this.project.title;
+        },
+
+        methods: {
+            ...mapActions("project", ["saveProject"]),
+
+            save(override) {
+                this.saveProject({
+                    title: this.projectTitle,
+                    override: override,
+                });
+                closeModal();
+            },
+        },
+
+        computed: {
+            ...mapState(["project"]),
+        },
+    });
 </script>
 
 <style scoped>
-.dialog {
-    width: 40vw;
-}
-
-input {
-    padding: 5px 10px;
-}
+    input {
+        padding: 5px 10px;
+    }
 </style>

@@ -1,26 +1,30 @@
 <template>
     <div class="download-panel-container">
-        <i class="fa-solid fa-download" @click="download"></i>
+        <v-btn icon elevation="0" @click="download">
+            <v-icon> mdi-download </v-icon>
+        </v-btn>
     </div>
 </template>
 
 <script>
-export default {
-    methods: {
-        download() {
-            this.emitter.emit("downloadStageEvent");
+    import { defineComponent } from "vue";
+
+    export default defineComponent({
+        methods: {
+            download() {
+                this.emitter.emit("downloadStageEvent");
+            },
         },
-    },
-};
+    });
 </script>
 
 <style scoped>
-.download-panel-container {
-    padding-top: 5px;
-    padding-right: 10px;
-}
+    .download-panel-container {
+        padding-top: 5px;
+        padding-right: 10px;
+    }
 
-i {
-    font-size: 30px;
-}
+    i {
+        font-size: 30px;
+    }
 </style>
