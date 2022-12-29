@@ -99,8 +99,6 @@ function handleVarTrackerMove(change, varObj, project) {
 
     let originalPos = { start: varObj.start, end: varObj.end };
 
-    let oldVarName = project.code.substring(varObj.start, varObj.end);
-
     let newVarRange = applyChangeOnInterval(varObj.start, varObj.end, change);
     if (newVarRange.end - newVarRange.start <= 0) return "Delete";
     varObj.start = newVarRange.start;
@@ -121,10 +119,8 @@ function handleVarTrackerMove(change, varObj, project) {
     expandRight(varObj, project);
     expandLeft(varObj, project);
 
-    let newVarName = project.code.substring(varObj.start, varObj.end);
-
     if (newVarName == "") return "Delete";
-    if (oldVarName != newVarName) return "Rename";
+    return "Rename";
 }
 
 export function moveTrackedVariables(project, change) {
