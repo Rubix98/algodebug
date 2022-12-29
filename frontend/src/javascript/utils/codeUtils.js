@@ -119,7 +119,7 @@ function handleVarTrackerMove(change, varObj, project) {
     expandRight(varObj, project);
     expandLeft(varObj, project);
 
-    if (newVarName == "") return "Delete";
+    if (varObj.end - varObj.start <= 0) return "Delete";
     return "Rename";
 }
 
