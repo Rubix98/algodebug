@@ -1,5 +1,5 @@
 import store from "@/store";
-import { areIntervalsIntersect, isSubinterval } from "./intervalsUtils";
+import { applyChangeOnInterval, areIntervalsIntersectOrTouching } from "./intervalsUtils";
 import lineColumn from "line-column";
 import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";
 
@@ -48,6 +48,7 @@ export function monacoChangeToLegacyFormat(code, change) {
         end: change.rangeOffset + change.rangeLength,
         size: -change.rangeLength,
         firstChangedLine: change.range.startLineNumber,
+        text: change.text,
     };
     let removedText = code.substring(result.start, result.end);
     result.deltaLineCount = -(removedText.match(/[\n]/g) ?? []).length;
@@ -59,29 +60,78 @@ export function monacoChangeToLegacyFormat(code, change) {
     return result;
 }
 
-function handleVarTrackerMove(change, varObj) {
-    if (varObj == null) return;
-
-    if (areIntervalsIntersect(varObj.start, varObj.end, change.start, change.end)) {
-        if (isSubinterval(varObj.start, varObj.end, change.start, change.end)) {
-            varObj.end += change.size;
-            if (varObj.end - varObj.start <= 0) return "Delete";
-            return "Rename";
-        }
-        return "Delete";
-    }
-
-    if (change.end <= varObj.start) {
-        varObj.start += change.size;
-        varObj.end += change.size;
-    }
+function isLegalVariableName(text) {
+    return /^[a-zA-Z_][a-zA-Z_0-9]*$/.test(text);
 }
 
-export function moveTrackedVariables(change) {
+function isLegalVariableCharacter(char) {
+    let code = char.charCodeAt(0);
+    return (code > 47 && code < 58) || (code > 64 && code < 91) || (code > 96 && code < 123) || code == 95;
+}
+
+function isDigit(char) {
+    return char >= "0" && char <= "9";
+}
+
+function expandLeft(varObj, project) {
+    let i = varObj.start - 1;
+    while (i >= 0 && isLegalVariableCharacter(project.code[i])) i--;
+    i++;
+    while (i <= varObj.end && isDigit(project.code[i])) i++;
+    varObj.start = i;
+}
+
+function expandRight(varObj, project) {
+    let i = varObj.end;
+    while (i < project.code.length && isLegalVariableCharacter(project.code[i])) i++;
+    varObj.end = i;
+}
+
+function findFirstLegalVariableName(text) {
+    const regex = /[a-zA-Z_][a-zA-Z_0-9]*/g;
+    let match = regex.exec(text);
+    if (match == null) return null;
+    return { start: match.index, end: regex.lastIndex };
+}
+
+function handleVarTrackerMove(change, varObj, project) {
+    if (varObj == null) return;
+
+    let originalPos = { start: varObj.start, end: varObj.end };
+
+    let oldVarName = project.code.substring(varObj.start, varObj.end);
+
+    let newVarRange = applyChangeOnInterval(varObj.start, varObj.end, change);
+    if (newVarRange.end - newVarRange.start <= 0) return "Delete";
+    varObj.start = newVarRange.start;
+    varObj.end = newVarRange.end;
+
+    if (!areIntervalsIntersectOrTouching(originalPos.start, originalPos.end, change.start, change.end)) {
+        return;
+    }
+
+    let potentialName = project.code.substring(varObj.start, varObj.end);
+    if (!isLegalVariableName(potentialName)) {
+        let legalName = findFirstLegalVariableName(potentialName);
+        if (legalName == null) return "Delete";
+        varObj.end = varObj.start + legalName.end;
+        varObj.start += legalName.start;
+    }
+
+    expandRight(varObj, project);
+    expandLeft(varObj, project);
+
+    let newVarName = project.code.substring(varObj.start, varObj.end);
+
+    if (newVarName == "") return "Delete";
+    if (oldVarName != newVarName) return "Rename";
+}
+
+export function moveTrackedVariables(project, change) {
     store.dispatch("project/removeOutdatedVariables", (sceneObj) => {
         let wasAnyVariableRenamed = false;
 
-        let result = handleVarTrackerMove(change, sceneObj.variable);
+        let result = handleVarTrackerMove(change, sceneObj.variable, project);
         if (result == "Delete") {
             sceneObj.variable = null;
         } else if (result == "Rename") {
@@ -89,7 +139,7 @@ export function moveTrackedVariables(change) {
         }
 
         for (let subobj of sceneObj.subobjects) {
-            result = handleVarTrackerMove(change, subobj.variable);
+            result = handleVarTrackerMove(change, subobj.variable, project);
             if (result == "Delete") {
                 subobj.variable = null;
             } else if (result == "Rename") {
