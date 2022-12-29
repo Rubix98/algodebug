@@ -94,7 +94,7 @@
                     }
 
                     let legacyChange = monacoChangeToLegacyFormat(this.$props.code, change);
-                    moveTrackedVariables(legacyChange);
+                    moveTrackedVariables(this.project, legacyChange);
                     moveBreakpoints(this.project, legacyChange);
                 }
             },
@@ -147,135 +147,95 @@
                 get() {
                     return this.$props.code;
                 },
-
-                updateAllDecorations() {
-                    this.updateVariablesDecorations(this.variablesDecorations);
-                    this.updateBreakpointsDecorations(this.breakpointsDecorations);
-                    this.updateLineDecorations(this.lineDecorations);
-                    this.updateTargetDecorations(this.targetDecorations);
-                },
-
-                updateVariablesDecorations(dec) {
-                    this.currentVariablesDecorations = this.editor.deltaDecorations(
-                        this.currentVariablesDecorations,
-                        dec
-                    );
-                },
-
-                updateBreakpointsDecorations(dec) {
-                    this.currentBreakpointsDecorations = this.editor.deltaDecorations(
-                        this.currentBreakpointsDecorations,
-                        dec
-                    );
-                },
-
-                updateLineDecorations(dec) {
-                    this.currentLineDecorations = this.editor.deltaDecorations(this.currentLineDecorations, dec);
-                },
-
-                updateTargetDecorations(dec) {
-                    this.currentTargetDecorations = this.editor.deltaDecorations(this.currentTargetDecorations, dec);
+                set(newValue) {
+                    this.setCode(newValue);
                 },
             },
 
-            computed: {
-                ...mapState(["project"]),
-                ...mapGetters("project", ["variables", "currentFrame"]),
+            variablesDecorations() {
+                if (!this.$props.showHighlightedVariables) return [];
 
-                modelCode: {
-                    get() {
-                        return this.$props.code;
-                    },
-                    set(newValue) {
-                        this.setCode(newValue);
-                    },
-                },
-
-                variablesDecorations() {
-                    if (!this.$props.showHighlightedVariables) return [];
-
-                    return this.variables.toArray().map((variable) => {
-                        let startLineColumn = lineColumn(this.$props.code, variable.start);
-                        let endLineColumn = lineColumn(this.$props.code, variable.end);
-                        return {
-                            range: new monaco.Range(
-                                startLineColumn.line,
-                                startLineColumn.col,
-                                endLineColumn.line,
-                                endLineColumn.col
-                            ),
-                            options: { inlineClassName: "highlight-variable" },
-                        };
-                    });
-                },
-
-                breakpointsDecorations() {
-                    if (!this.$props.showBreakpoints) return [];
-
-                    return this.$props.code.split("\n").map((_, i) => {
-                        return {
-                            range: new monaco.Range(i + 1, 1, i + 1, 1),
-                            options: {
-                                glyphMarginClassName: this.getBreakpointClass(i),
-                            },
-                        };
-                    });
-                },
-
-                lineDecorations() {
-                    if (!this.$props.showHighlightedVariables) return [];
-                    if (!this.project.isRunning) return [];
-
-                    return [
-                        {
-                            range: new monaco.Range(this.currentFrame?.line + 1, 1, this.currentFrame?.line + 1, 1),
-                            options: { isWholeLine: true, className: "highlight-line" },
-                        },
-                    ];
-                },
-
-                targetDecorations() {
-                    if (!this.$props.clickable) return [];
-
-                    return getVariablesArray(this.project.language, this.$props.code).map((word) => {
-                        return {
-                            range: new monaco.Range(
-                                word.startLineNumber,
-                                word.startColumn,
-                                word.endLineNumber,
-                                word.endColumn
-                            ),
-                            options: { inlineClassName: "target" },
-                        };
-                    });
-                },
-
-                getBreakpointClass() {
-                    return (i) => {
-                        if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
-                        if (!this.project.isRunning && this.$props.editable) return "breakpoint";
-                        return "";
+                return this.variables.toArray().map((variable) => {
+                    let startLineColumn = lineColumn(this.$props.code, variable.start);
+                    let endLineColumn = lineColumn(this.$props.code, variable.end);
+                    return {
+                        range: new monaco.Range(
+                            startLineColumn.line,
+                            startLineColumn.col,
+                            endLineColumn.line,
+                            endLineColumn.col
+                        ),
+                        options: { inlineClassName: "highlight-variable" },
                     };
-                },
+                });
             },
 
-            watch: {
-                editable: function (newVal) {
-                    this.options.readOnly = !newVal;
-                    this.editor.updateOptions({ readOnly: !newVal });
-                },
+            breakpointsDecorations() {
+                if (!this.$props.showBreakpoints) return [];
 
-                variablesDecorations: function (dec) {
-                    this.updateVariablesDecorations(dec);
-                },
+                return this.$props.code.split("\n").map((_, i) => {
+                    return {
+                        range: new monaco.Range(i + 1, 1, i + 1, 1),
+                        options: {
+                            glyphMarginClassName: this.getBreakpointClass(i),
+                        },
+                    };
+                });
+            },
 
-                breakpointsDecorations: function (dec) {
-                    this.updateBreakpointsDecorations(dec);
-                },
+            lineDecorations() {
+                if (!this.$props.showHighlightedVariables) return [];
+                if (!this.project.isRunning) return [];
 
-                lineDecorations: function (dec) {
-                    this.updateLineDecorations(dec);
-                },
+                return [
+                    {
+                        range: new monaco.Range(this.currentFrame?.line + 1, 1, this.currentFrame?.line + 1, 1),
+                        options: { isWholeLine: true, className: "highlight-line" },
+                    },
+                ];
+            },
+
+            targetDecorations() {
+                if (!this.$props.clickable) return [];
+
+                return getVariablesArray(this.project.language, this.$props.code).map((word) => {
+                    return {
+                        range: new monaco.Range(
+                            word.startLineNumber,
+                            word.startColumn,
+                            word.endLineNumber,
+                            word.endColumn
+                        ),
+                        options: { inlineClassName: "target" },
+                    };
+                });
+            },
+
+            getBreakpointClass() {
+                return (i) => {
+                    if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
+                    if (!this.project.isRunning && this.$props.editable) return "breakpoint";
+                    return "";
+                };
+            },
+        },
+
+        watch: {
+            editable: function (newVal) {
+                this.options.readOnly = !newVal;
+                this.editor.updateOptions({ readOnly: !newVal });
+            },
+
+            variablesDecorations: function (dec) {
+                this.updateVariablesDecorations(dec);
+            },
+
+            breakpointsDecorations: function (dec) {
+                this.updateBreakpointsDecorations(dec);
+            },
+
+            lineDecorations: function (dec) {
+                this.updateLineDecorations(dec);
             },
         },
     });
