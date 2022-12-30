@@ -24,7 +24,7 @@ jobs:
         run: npm run format:check
         working-directory: "./frontend"
       - name: "Check linting"
-        run: npm run lint
+        run: npm run lint:check
         working-directory: "./frontend"
       - name: "Build"
         run: npm run build
