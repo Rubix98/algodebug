@@ -116,6 +116,7 @@ function handleVarTrackerMove(change, varObj, project) {
     varObj.end = newVarRange.end;
 
     if (!areIntervalsIntersectOrTouching(originalPos.start, originalPos.end, change.start, change.end)) {
+        expandLeft();
         return;
     }
 
