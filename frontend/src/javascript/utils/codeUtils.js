@@ -173,8 +173,7 @@ function isLegalVariableName(text) {
 }
 
 function isLegalVariableCharacter(char) {
-    let code = char.charCodeAt(0);
-    return (code > 47 && code < 58) || (code > 64 && code < 91) || (code > 96 && code < 123) || code == 95;
+    return (char > "a" && char < "z") || (char > "A" && char < "Z") || (char > "0" && char < "9") || char == "_";
 }
 
 function isDigit(char) {
