@@ -1,52 +1,52 @@
-export function areIntervalsIntersectOrTouching(aStart, aEnd, bStart, bEnd) {
-    return aEnd >= bStart && aStart <= bEnd;
+export function areIntervalsIntersectOrTouching(intervalA, intervalB) {
+    return intervalA.end >= intervalB.start && intervalA.start <= intervalB.end;
 }
 
-export function applyChangeOnInterval(aStart, aEnd, change) {
-    let result = { start: aStart, end: aEnd };
+export function applyChangeOnInterval(intervalA, change) {
+    let result = { start: intervalA.start, end: intervalA.end };
 
-    if (change.end <= aStart) {
+    if (change.end <= intervalA.start) {
         result.start += change.size;
         result.end += change.size;
         return result;
     }
 
-    if (change.start >= aEnd) {
+    if (change.start >= intervalA.end) {
         return result;
     }
 
-    if (change.text.length > 0 && aStart == change.start && aEnd == change.end) {
-        result.start = aStart;
-        result.end = aStart + change.text.length;
+    if (change.text.length > 0 && intervalA.start == change.start && intervalA.end == change.end) {
+        result.start = intervalA.start;
+        result.end = intervalA.start + change.text.length;
         return result;
     }
 
-    if (isSubinterval(change.start, change.end, aStart, aEnd)) {
+    if (isSubinterval(change, intervalA)) {
         result.start = change.start;
         result.end = change.start;
         return result;
     }
 
-    if (isSubinterval(aStart, aEnd, change.start, change.end)) {
+    if (isSubinterval(intervalA, change)) {
         result.end += change.size;
         return result;
     }
 
-    if (change.start >= aStart && change.start <= aEnd) {
+    if (change.start >= intervalA.start && change.start <= intervalA.end) {
         result.end = change.start;
         return result;
     }
 
-    if (change.end >= aStart && change.end <= aEnd) {
+    if (change.end >= intervalA.start && change.end <= intervalA.end) {
         result.start = change.start;
         result.end -= change.size;
         return result;
     }
 
-    console.warn("Unhandled case", aStart, aEnd, change);
+    console.warn("Unhandled case", intervalA.start, intervalA.end, change);
     return result;
 }
 
-export function isSubinterval(mainStart, mainEnd, subStart, subEnd) {
-    return subStart >= mainStart && subEnd <= mainEnd;
+export function isSubinterval(mainInterval, subInterval) {
+    return subInterval.start >= mainInterval.start && subInterval.end <= mainInterval.end;
 }

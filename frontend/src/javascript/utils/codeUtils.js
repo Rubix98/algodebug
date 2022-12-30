@@ -110,12 +110,12 @@ function handleVarTrackerMove(change, varObj, project) {
 
     let originalPos = { start: varObj.start, end: varObj.end };
 
-    let newVarRange = applyChangeOnInterval(varObj.start, varObj.end, change);
+    let newVarRange = applyChangeOnInterval(varObj, change);
     if (newVarRange.end - newVarRange.start <= 0) return "Delete";
     varObj.start = newVarRange.start;
     varObj.end = newVarRange.end;
 
-    if (!areIntervalsIntersectOrTouching(originalPos.start, originalPos.end, change.start, change.end)) {
+    if (!areIntervalsIntersectOrTouching(originalPos, change)) {
         expandLeft(varObj, project);
         return;
     }
