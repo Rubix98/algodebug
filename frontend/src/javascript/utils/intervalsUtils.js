@@ -38,8 +38,8 @@ export function applyChangeOnInterval(intervalA, change) {
     }
 
     if (change.end >= intervalA.start && change.end <= intervalA.end) {
-        result.start = change.start;
-        result.end -= change.size;
+        result.start = change.end + change.size;
+        result.end += change.size;
         return result;
     }
 
