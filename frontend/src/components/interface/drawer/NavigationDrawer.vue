@@ -68,6 +68,13 @@
             this.updateDarkLightModeButton();
         },
 
+        mounted() {
+            this.updateDrawerVersion();
+            addEventListener("resize", () => {
+                this.updateDrawerVersion();
+            });
+        },
+
         methods: {
             updateDrawerVersion() {
                 if (window.innerWidth >= 1280) {
@@ -120,13 +127,6 @@
                     darkLightModeButton.icon = "mdi-moon-waning-crescent";
                 }
             },
-        },
-
-        mounted() {
-            this.updateDrawerVersion();
-            addEventListener("resize", () => {
-                this.updateDrawerVersion();
-            });
         },
 
         computed: {
