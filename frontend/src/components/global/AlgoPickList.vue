@@ -31,9 +31,8 @@
                 {{ option.label }}
             </v-list-item-title>
         </v-list-item>
+        <div v-if="options == null || options.length === 0">Brak danych</div>
     </v-list>
-
-    <div v-if="options == null || options.length === 0">Brak danych</div>
 </template>
 
 <script>
@@ -41,9 +40,9 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["options"],
-        emits: ["selectOptionEvent"],
         components: { AlgoTextarea },
+        emits: ["selectOptionEvent"],
+        props: ["options"],
 
         methods: {
             selectOption(event, selectedOption) {

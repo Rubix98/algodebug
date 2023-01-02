@@ -1,38 +1,39 @@
 <template>
-    <CompilingIndicator />
+    <span class="main-page">
+        <CompilingIndicator />
+        <div class="main-page-container flex-column full-size">
+            <div class="flex-row">
+                <CodeEditor
+                    id="main-editor"
+                    class="width-1-of-2 v-card--variant-elevated elevation-3"
+                    :code="this.project.code"
+                    :editable="!this.project.isRunning"
+                    :clickable="false"
+                    :showHighlightedVariables="true"
+                    :showBreakpoints="true"
+                >
+                    <CodePanel />
+                </CodeEditor>
 
-    <div class="main-page-container flex-column full-size">
-        <div class="flex-row">
-            <CodeEditor
-                id="main-editor"
-                class="width-1-of-2 v-card--variant-elevated elevation-3"
-                :code="this.project.code"
-                :editable="!this.project.isRunning"
-                :clickable="false"
-                :showHighlightedVariables="true"
-                :showBreakpoints="true"
-            >
-                <CodePanel />
-            </CodeEditor>
+                <DebugScene class="width-1-of-2" />
+            </div>
 
-            <Scene class="width-1-of-2" />
+            <TestData />
         </div>
-
-        <TestData />
-    </div>
+    </span>
 </template>
 
 <script>
     import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
     import CodePanel from "@/components/mainPage/codeEditor/subcomponents/CodePanel.vue";
-    import Scene from "@/components/mainPage/scene/Scene.vue";
+    import DebugScene from "@/components/mainPage/scene/DebugScene.vue";
     import TestData from "@/components/mainPage/testData/TestData.vue";
     import { mapState, mapActions } from "vuex";
     import { defineComponent } from "vue";
     import CompilingIndicator from "@/components/interface/compilingIndicator/CompilingIndicator.vue";
 
     export default defineComponent({
-        components: { CompilingIndicator, CodeEditor, CodePanel, Scene, TestData },
+        components: { CompilingIndicator, CodeEditor, CodePanel, DebugScene, TestData },
 
         mounted() {
             if (this.projectId) {
