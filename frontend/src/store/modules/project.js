@@ -8,7 +8,7 @@ export default {
         code: '#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout << "Hello world" << endl;\n}',
         language: "cpp",
         breakpoints: [],
-        testData: [{ input: "" }],
+        testData: [{ id: 0, input: "" }],
         sceneObjects: [],
         isRunning: false,
         waitingForCompile: false,
@@ -20,7 +20,7 @@ export default {
         variables(state) {
             return state.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
-                .filter((sceneObject) => sceneObject.variable !== null)
+                .filter((sceneObject) => sceneObject.variable != null)
                 .map((sceneObject) => sceneObject.variable)
                 .map((variable) => ({ id: variable.name, ...variable }));
         },
@@ -28,7 +28,7 @@ export default {
         converters(state) {
             return state.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
-                .filter((sceneObject) => sceneObject.converter !== null)
+                .filter((sceneObject) => sceneObject.converter != null)
                 .map((sceneObject) => sceneObject.converter)
                 .map((converter) => ({ id: converter.code, ...converter }));
         },
@@ -37,32 +37,20 @@ export default {
             return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
         },
 
-        testData(state) {
-            return state.testData.map((element, index) => ({ ...element, index }));
+        currentTestCase(state) {
+            return state.testData.findById(state.selectedTestCaseId);
         },
 
-        projectIsRunning(state) {
-            return state.isRunning;
-        },
-
-        numberOfTestCases(_, getters) {
-            return getters.testData.length;
-        },
-
-        currentTestCase(state, getters) {
-            return getters.testData[state.selectedTestCaseId];
-        },
-
-        currentFrames(_, getters) {
-            return getters.currentTestCase.frames.map((element, index) => ({ ...element, index }));
+        numberOfTestCases(state) {
+            return state.testData.length;
         },
 
         currentFrame(state, getters) {
-            return getters.currentFrames[state.selectedFrameId];
+            return getters.currentTestCase.frames.findById(state.selectedFrameId);
         },
 
         numberOfFrames(_, getters) {
-            return getters.currentFrames.length;
+            return getters.currentTestCase.frames.length;
         },
     },
 
@@ -72,11 +60,11 @@ export default {
         },
 
         addTestCase(state) {
-            state.testData.push({ input: "" });
+            state.testData.addElement({ input: "" });
         },
 
-        deleteTestCase(state, index) {
-            state.testData.splice(index, 1);
+        deleteTestCase(state, id) {
+            state.testData.deleteById(id);
         },
 
         changeCurrentTestCase(state, index) {
@@ -88,7 +76,7 @@ export default {
         },
 
         updateCurrentTestCaseInput(state, newValue) {
-            state.testData[state.selectedTestCaseId].input = newValue;
+            state.testData.findById(state.selectedTestCaseId).input = newValue;
         },
 
         addSceneObject(state, sceneObject) {
@@ -128,6 +116,8 @@ export default {
             state.title = project.title;
             state.author = project.author;
             state.description = project.description;
+
+            state.selectedTestCaseId = project.testCases.firstId();
         },
 
         addOutputs(state, outputs) {
@@ -167,7 +157,7 @@ export default {
         setCode: ({ commit }, newValue) => commit("set", { key: "code", value: newValue }),
         setBreakpoints: ({ commit }, newValue) => commit("set", { key: "breakpoints", value: newValue }),
         addTestCase: ({ commit }) => commit("addTestCase"),
-        deleteTestCase: ({ commit }, index) => commit("deleteTestCase", index),
+        deleteTestCase: ({ commit }, id) => commit("deleteTestCase", id),
         changeCurrentTestCase: ({ commit }, index) => commit("changeCurrentTestCase", index),
         changeCurrentFrame: ({ commit }, index) => commit("changeCurrentFrame", index),
         updateCurrentTestCaseInput: ({ commit }, newValue) => {

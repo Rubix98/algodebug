@@ -17,16 +17,16 @@
             this.emitter.on("currentFrameChangedEvent", this.draw);
             this.emitter.on("stopDebuggingEvent", this.clearStage);
             this.emitter.on("downloadStageEvent", this.download);
-            this.emitter.on("themeChangeEvent", () => {
-                if (this.projectIsRunning) this.draw();
-            });
+            this.emitter.on("themeChangeEvent", this.draw);
         },
 
         methods: {
             ...mapActions("project", ["updateSceneObjectPosition"]),
 
             draw() {
-                this.stage.draw(this.project.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
+                if (this.project.isRunning) {
+                    this.stage.draw(this.project.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
+                }
             },
 
             clearStage() {
@@ -40,7 +40,7 @@
 
         computed: {
             ...mapState(["project"]),
-            ...mapGetters("project", ["currentFrame", "projectIsRunning"]),
+            ...mapGetters("project", ["currentFrame"]),
         },
     });
 </script>

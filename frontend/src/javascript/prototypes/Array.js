@@ -50,3 +50,21 @@ Array.prototype.generateUniqueId = function () {
     const ids = this.ids();
     return ids.length > 0 ? Math.max(...ids) + 1 : 0;
 };
+
+Array.prototype.firstId = function () {
+    return this.length !== 0 ? this[0].id : null;
+};
+
+Array.prototype.lastId = function () {
+    return this.length !== 0 ? this[this.length - 1].id : null;
+};
+
+Array.prototype.nextId = function (id) {
+    const index = this.findIndexForId(id);
+    return index !== this.length - 1 ? this[index + 1].id : null;
+};
+
+Array.prototype.prevId = function (id) {
+    const index = this.findIndexForId(id);
+    return index !== 0 ? this[index - 1].id : null;
+};
