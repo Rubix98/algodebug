@@ -2,11 +2,11 @@
     <div class="scene-objects-panel-container">
         <v-chip
             closable
-            v-for="(sceneObject, index) in sceneObjects"
+            v-for="sceneObject in project.sceneObjects"
             class="ma-2"
-            :key="index"
+            :key="sceneObject.id"
             @click="configureSceneObject(sceneObject, $event)"
-            @click:close="deleteSceneObject(index)"
+            @click:close="deleteSceneObject(sceneObject.id)"
         >
             {{ sceneObject.type.label }} {{ sceneObject.variable ? sceneObject.variable.name : "null" }}
         </v-chip>
@@ -15,7 +15,7 @@
 
 <script>
     import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
-    import { mapActions, mapGetters } from "vuex";
+    import { mapActions, mapState } from "vuex";
     import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
 
@@ -30,7 +30,7 @@
         },
 
         computed: {
-            ...mapGetters("project", ["sceneObjects"]),
+            ...mapState(["project"]),
         },
     });
 </script>

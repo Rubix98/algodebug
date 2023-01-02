@@ -18,47 +18,23 @@ export default {
 
     getters: {
         variables(state) {
-            // TODO: zrefaktoryzować
-            let variables = [];
-            for (let sceneObject of state.sceneObjects) {
-                if (sceneObject.variable) {
-                    sceneObject.variable.id = sceneObject.variable.name;
-                    variables.addElement(sceneObject.variable);
-                }
-
-                for (let subobject of sceneObject.subobjects) {
-                    if (subobject.variable) {
-                        subobject.variable.id = subobject.variable.name;
-                        variables.addElement(subobject.variable);
-                    }
-                }
-            }
-            return variables;
+            return state.sceneObjects
+                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
+                .filter((sceneObject) => sceneObject.variable !== null)
+                .map((sceneObject) => sceneObject.variable)
+                .map((variable) => ({ id: variable.name, ...variable }));
         },
 
         converters(state) {
-            // TODO: zrefaktoryzować
-            let converters = [];
-            for (let sceneObject of state.sceneObjects) {
-                if (sceneObject.converter) {
-                    converters.addElement(sceneObject.converter);
-                }
-
-                for (let subobject of sceneObject.subobjects) {
-                    if (subobject.converter) {
-                        converters.addElement(subobject.converter);
-                    }
-                }
-            }
-            return converters;
+            return state.sceneObjects
+                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
+                .filter((sceneObject) => sceneObject.converter !== null)
+                .map((sceneObject) => sceneObject.converter)
+                .map((converter) => ({ id: converter.code, ...converter }));
         },
 
         debugCode(state, getters) {
             return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
-        },
-
-        sceneObjects(state) {
-            return state.sceneObjects.map((element, index) => ({ ...element, index }));
         },
 
         testData(state) {
@@ -115,8 +91,16 @@ export default {
             state.testData[state.selectedTestCaseId].input = newValue;
         },
 
-        deleteSceneObject(state, index) {
-            state.sceneObjects.splice(index, 1);
+        addSceneObject(state, sceneObject) {
+            state.sceneObjects.addElement(sceneObject);
+        },
+
+        deleteSceneObject(state, id) {
+            state.sceneObjects.deleteById(id);
+        },
+
+        updateSceneObjectPosition(state, { id, position }) {
+            state.sceneObjects.findById(id).position = position;
         },
 
         setProject(state, project) {
@@ -153,18 +137,6 @@ export default {
                     ...outputs[i].output,
                 };
             }
-        },
-
-        updateSceneObjectPosition(state, { sceneObject, position }) {
-            state.sceneObjects[sceneObject.index].position = position;
-        },
-
-        updateSceneObject(state, sceneObject) {
-            state.sceneObjects[sceneObject.index] = sceneObject;
-        },
-
-        addNewSceneObject(state, sceneObject) {
-            state.sceneObjects.push(sceneObject);
         },
 
         removeOutdatedVariables(state, handlerFunction) {
@@ -204,8 +176,8 @@ export default {
         deleteSceneObject: ({ commit }, index) => commit("deleteSceneObject", index),
         updateSceneObjectPosition: ({ commit }, payload) => commit("updateSceneObjectPosition", payload),
 
-        saveSceneObject({ commit }, sceneObject) {
-            commit(sceneObject.index != null ? "updateSceneObject" : "addNewSceneObject", sceneObject);
+        addSceneObject({ commit }, sceneObject) {
+            commit("addSceneObject", sceneObject);
         },
 
         loadProject({ commit }, projectId) {

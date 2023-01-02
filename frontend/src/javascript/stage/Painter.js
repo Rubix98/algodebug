@@ -42,7 +42,7 @@ export class Painter {
         newPosition[key] = point;
 
         this.updateSceneObjectPosition({
-            sceneObject: this.sceneObject,
+            id: this.sceneObject.id,
             position: newPosition,
         });
     }

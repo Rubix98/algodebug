@@ -36,6 +36,7 @@
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
     import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { deepCopy } from "@/javascript/utils/other";
     import { mapActions, mapState } from "vuex";
     import { closeModal, pushModal } from "jenesius-vue-modal";
     import { validateSceneObject } from "@/javascript/utils/validationUtils";
@@ -66,17 +67,17 @@
 
         mounted() {
             if (this.$props.sceneObject) {
-                this.model = { ...this.$props.sceneObject };
+                this.model = deepCopy(this.$props.sceneObject);
             }
         },
 
         methods: {
-            ...mapActions("project", ["saveSceneObject"]),
+            ...mapActions("project", ["addSceneObject"]),
 
             save() {
                 if (!validateSceneObject(this.model)) return;
 
-                this.saveSceneObject(this.model);
+                this.addSceneObject(this.model);
                 closeModal();
             },
 

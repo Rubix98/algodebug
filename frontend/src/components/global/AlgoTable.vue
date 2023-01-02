@@ -9,9 +9,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(row, index) in model" :key="index">
+                <tr v-for="row in model" :key="row.id">
                     <td class="algo-table__remove-row text-center">
-                        <v-icon class="primary" @click="removeRow(index)"> mdi-close</v-icon>
+                        <v-icon class="primary" @click="removeRow(row.id)"> mdi-close</v-icon>
                     </td>
 
                     <td>
@@ -50,7 +50,7 @@
 
         data() {
             return {
-                model: "",
+                model: [],
             };
         },
 
@@ -60,11 +60,11 @@
 
         methods: {
             addRow() {
-                this.model.push({ ...this.emptyRow });
+                this.model.addElement({ ...this.emptyRow });
             },
 
-            removeRow(index) {
-                this.model.splice(index, 1);
+            removeRow(id) {
+                this.model.deleteById(id);
             },
 
             selectType(row) {

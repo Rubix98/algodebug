@@ -8,6 +8,7 @@ Array.prototype.toggleElement = function (element) {
 
 Array.prototype.addElement = function (element) {
     const id = element.id ?? this.generateUniqueId();
+    console.log(id);
     const index = this.findIndexForId(id);
     if (index !== -1) {
         this[index] = element;
@@ -35,6 +36,10 @@ Array.prototype.hasId = function (id) {
     return this.some((element) => element.id === id);
 };
 
+Array.prototype.ids = function () {
+    return this.map((element) => element.id);
+};
+
 Array.prototype.sortedBy = function (key, order = 1) {
     return this.sort((a, b) => {
         return a[key] > b[key] ? order : -order;
@@ -42,6 +47,6 @@ Array.prototype.sortedBy = function (key, order = 1) {
 };
 
 Array.prototype.generateUniqueId = function () {
-    const ids = Array.from(this.keys());
-    return ids.length > 0 ? Math.max(...ids) : 0;
+    const ids = this.ids();
+    return ids.length > 0 ? Math.max(...ids) + 1 : 0;
 };
