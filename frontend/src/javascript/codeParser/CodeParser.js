@@ -5,7 +5,7 @@ export class CodeParser {
             let endIndex = parent.code.indexOf("</algodebug-variable>", beginIndex);
             let variableName = parent.code.slice(beginIndex, endIndex);
             let variableLevel = parent.curlyBracketsLevel + (parent.roundBracketsLevel ? 1 : 0);
-            let variableType = parent.variables.get(variableName).type;
+            let variableType = parent.variables.findById(variableName).type;
             parent.stack.push({ name: variableName, level: variableLevel, type: variableType });
         },
         "<algodebug-breakpoint>": function (parent, tag) {
@@ -119,7 +119,7 @@ class CodeUtils {
 
     static insertBreakpointTags(code, breakpoints) {
         let lines = code.split("\n");
-        for (let breakpoint of breakpoints.reversed()) {
+        for (let breakpoint of breakpoints.sortedBy("id", -1)) {
             lines[breakpoint.id] += `<algodebug-breakpoint>${breakpoint.id}</algodebug-breakpoint>`;
         }
         code = lines.join("\n");
@@ -155,7 +155,6 @@ class CodeUtils {
 
     static insertConvertersAfterIncludes(code, converters) {
         converters = converters
-            .toArray()
             .map((converter) => converter.code.slice(0, converter.code.indexOf("{")).trim() + ";")
             .join("\n");
 
@@ -170,10 +169,7 @@ class CodeUtils {
     }
 
     static insertConvertersAtTheEnd(code, converters) {
-        converters = converters
-            .toArray()
-            .map((converter) => converter.code)
-            .join("\n\n");
+        converters = converters.map((converter) => converter.code).join("\n\n");
         return code + "\n\n" + converters;
     }
 }

@@ -7,7 +7,7 @@ export default {
         id: null,
         code: '#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout << "Hello world" << endl;\n}',
         language: "cpp",
-        breakpoints: new Map(),
+        breakpoints: [],
         testData: [{ input: "" }],
         sceneObjects: [],
         isRunning: false,
@@ -19,7 +19,7 @@ export default {
     getters: {
         variables(state) {
             // TODO: zrefaktoryzować
-            let variables = new Map();
+            let variables = [];
             for (let sceneObject of state.sceneObjects) {
                 if (sceneObject.variable) {
                     sceneObject.variable.id = sceneObject.variable.name;
@@ -38,7 +38,7 @@ export default {
 
         converters(state) {
             // TODO: zrefaktoryzować
-            let converters = new Map();
+            let converters = [];
             for (let sceneObject of state.sceneObjects) {
                 if (sceneObject.converter) {
                     converters.addElement(sceneObject.converter);
@@ -137,11 +137,7 @@ export default {
             // TODO: Dynamiczne przepisywanie
             state.id = project._id;
             state.code = project.code;
-            state.breakpoints = new Map(
-                project.breakpoints.map((breakpoint) => {
-                    return [breakpoint.id, breakpoint];
-                })
-            ); // TODO: array -> map/set
+            state.breakpoints = project.breakpoints;
             state.language = project.language;
             state.testData = project.testCases;
             state.sceneObjects = project.sceneObjects;
@@ -180,11 +176,11 @@ export default {
         },
 
         deleteBreakpoint(state, id) {
-            state.breakpoints.delete(id);
+            state.breakpoints.deleteById(id);
         },
 
         addOrDeleteBreakpoint(state, id) {
-            state.breakpoints.addOrDelete({ id: id });
+            state.breakpoints.toggleElement({ id: id });
         },
 
         renameVariables(state, sceneObject) {
@@ -233,7 +229,7 @@ export default {
                     title: title,
                     language: state.language,
                     code: state.code,
-                    breakpoints: state.breakpoints.toArray(), // TODO: save as map
+                    breakpoints: state.breakpoints,
                     testCases: state.testData,
                     sceneObjects: state.sceneObjects,
                     author: state.author ? state.author : "AlgoDebug",

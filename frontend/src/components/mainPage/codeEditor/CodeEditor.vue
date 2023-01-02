@@ -55,7 +55,7 @@
         },
 
         methods: {
-            ...mapActions("project", ["setCode"]),
+            ...mapActions("project", ["setCode", "addOrDeleteBreakpoint"]),
 
             editorDidMount(editor) {
                 this.editor = editor;
@@ -102,7 +102,7 @@
             handleClick(event) {
                 if (event.target.element.classList.contains("breakpoint")) {
                     if (!this.$props.editable) return;
-                    this.project.breakpoints.addOrDelete({ id: event.target.position.lineNumber - 1 });
+                    this.addOrDeleteBreakpoint(event.target.position.lineNumber - 1);
                     return;
                 }
 
@@ -155,7 +155,7 @@
             variablesDecorations() {
                 if (!this.$props.showHighlightedVariables) return [];
 
-                return this.variables.toArray().map((variable) => {
+                return this.variables.map((variable) => {
                     let startLineColumn = lineColumn(this.$props.code, variable.start);
                     let endLineColumn = lineColumn(this.$props.code, variable.end);
                     return {
@@ -213,7 +213,7 @@
 
             getBreakpointClass() {
                 return (i) => {
-                    if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
+                    if (this.project.breakpoints.hasId(i)) return "breakpoint breakpoint-active";
                     if (!this.project.isRunning && this.$props.editable) return "breakpoint";
                     return "";
                 };
