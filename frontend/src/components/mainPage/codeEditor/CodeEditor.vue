@@ -55,7 +55,7 @@
         },
 
         methods: {
-            ...mapActions("project", ["setCode", "addOrDeleteBreakpoint"]),
+            ...mapActions("project", ["setCode", "toggleBreakpoint"]),
 
             editorDidMount(editor) {
                 this.editor = editor;
@@ -102,7 +102,7 @@
             handleClick(event) {
                 if (event.target.element.classList.contains("breakpoint")) {
                     if (!this.$props.editable) return;
-                    this.addOrDeleteBreakpoint(event.target.position.lineNumber - 1);
+                    this.toggleBreakpoint(event.target.position.lineNumber - 1);
                     return;
                 }
 

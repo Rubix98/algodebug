@@ -171,15 +171,7 @@ export default {
             state.sceneObjects.forEach(handlerFunction);
         },
 
-        addBreakpoint(state, id) {
-            state.breakpoints.addElement({ id: id });
-        },
-
-        deleteBreakpoint(state, id) {
-            state.breakpoints.deleteById(id);
-        },
-
-        addOrDeleteBreakpoint(state, id) {
+        toggleBreakpoint(state, id) {
             state.breakpoints.toggleElement({ id: id });
         },
 
@@ -201,6 +193,7 @@ export default {
     actions: {
         setIsRunning: ({ commit }, newValue) => commit("set", { key: "isRunning", value: newValue }),
         setCode: ({ commit }, newValue) => commit("set", { key: "code", value: newValue }),
+        setBreakpoints: ({ commit }, newValue) => commit("set", { key: "breakpoints", value: newValue }),
         addTestCase: ({ commit }) => commit("addTestCase"),
         deleteTestCase: ({ commit }, index) => commit("deleteTestCase", index),
         changeCurrentTestCase: ({ commit }, index) => commit("changeCurrentTestCase", index),
@@ -266,9 +259,7 @@ export default {
         },
 
         removeOutdatedVariables: ({ commit }, handlerFunction) => commit("removeOutdatedVariables", handlerFunction),
-        addBreakpoint: ({ commit }, id) => commit("addBreakpoint", id),
-        deleteBreakpoint: ({ commit }, id) => commit("deleteBreakpoint", id),
-        addOrDeleteBreakpoint: ({ commit }, id) => commit("addOrDeleteBreakpoint", id),
+        toggleBreakpoint: ({ commit }, id) => commit("toggleBreakpoint", id),
         renameVariables: ({ commit }, sceneObject) => commit("renameVariables", sceneObject),
     },
 };

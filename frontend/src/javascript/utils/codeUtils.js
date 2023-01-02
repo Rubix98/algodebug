@@ -107,22 +107,16 @@ export function moveBreakpoints(project, change) {
     if (change.deltaLineCount == 0) return;
 
     let firstChangedLine = change.firstChangedLine - 1;
+    let lastChangedLine = firstChangedLine - change.deltaLineCount;
 
-    let affectedBreakpoints = [];
-    for (let bp of project.breakpoints) {
-        if (bp[0] < firstChangedLine) continue;
-        if (bp[0] > firstChangedLine && bp[0] < firstChangedLine - change.deltaLineCount) {
-            store.dispatch("project/deleteBreakpoint", bp[0]);
-        } else if (bp[0] > firstChangedLine) {
-            affectedBreakpoints.push(bp[0]);
+    let breakpoints = project.breakpoints.filter(
+        (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
+    );
+    breakpoints.forEach((breakpoint) => {
+        if (breakpoint.id >= firstChangedLine) {
+            breakpoint.id += change.deltaLineCount;
         }
-    }
-    affectedBreakpoints.sort((a, b) => {
-        return change.deltaLineCount < 0 ? a - b : b - a;
     });
 
-    for (let affectedBreakpoint of affectedBreakpoints) {
-        store.dispatch("project/deleteBreakpoint", affectedBreakpoint);
-        store.dispatch("project/addBreakpoint", affectedBreakpoint + change.deltaLineCount);
-    }
+    store.dispatch("project/setBreakpoints", breakpoints);
 }
