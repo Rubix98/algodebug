@@ -122,10 +122,9 @@ function handleVarTrackerMove(change, varObj, project) {
 
     let potentialName = project.code.substring(varObj.start, varObj.end);
     if (!isLegalVariableName(potentialName)) {
-        let legalNamesCount = getLegalVariableNamesCount(potentialName);
-        if (legalNamesCount == 0) return "Delete";
-
         let legalName = findFirstLegalVariableName(potentialName);
+        if (legalName == null) return "Delete";
+
         varObj.end = varObj.start + legalName.end;
         varObj.start += legalName.start;
     }
@@ -154,11 +153,6 @@ function expandRight(varObj, project) {
 function getReservedKeywords(language = "cpp") {
     if (language == "cpp") return cppReservedKeywords;
     return [];
-}
-
-function getLegalVariableNamesCount(text) {
-    const regex = /[a-zA-Z_][a-zA-Z_0-9]*/g;
-    return (text.match(regex) ?? []).length;
 }
 
 function findFirstLegalVariableName(text) {
