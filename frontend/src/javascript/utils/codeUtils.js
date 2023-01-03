@@ -55,11 +55,11 @@ export function monacoChangeToLegacyFormat(code, change) {
     return result;
 }
 
-export function moveTrackedVariables(project, change) {
+export function moveTrackedVariables(code, change) {
     store.dispatch("project/removeOutdatedVariables", (sceneObj) => {
         let wasAnyVariableRenamed = false;
 
-        let result = handleVarTrackerMove(change, sceneObj.variable, project);
+        let result = handleVarTrackerMove(change, sceneObj.variable, code);
         if (result == "Delete") {
             sceneObj.variable = null;
         } else if (result == "Rename") {
@@ -67,7 +67,7 @@ export function moveTrackedVariables(project, change) {
         }
 
         for (let subobj of sceneObj.subobjects) {
-            result = handleVarTrackerMove(change, subobj.variable, project);
+            result = handleVarTrackerMove(change, subobj.variable, code);
             if (result == "Delete") {
                 subobj.variable = null;
             } else if (result == "Rename") {
@@ -105,7 +105,7 @@ export function moveBreakpoints(project, change) {
     }
 }
 
-function handleVarTrackerMove(change, varObj, project) {
+function handleVarTrackerMove(change, varObj, code) {
     if (varObj == null) return;
 
     let originalPos = { start: varObj.start, end: varObj.end };
@@ -116,11 +116,11 @@ function handleVarTrackerMove(change, varObj, project) {
     varObj.end = newVarRange.end;
 
     if (!areIntervalsIntersectOrTouching(originalPos, change)) {
-        expandLeft(varObj, project);
+        expandLeft(varObj, code);
         return;
     }
 
-    let potentialName = project.code.substring(varObj.start, varObj.end);
+    let potentialName = code.substring(varObj.start, varObj.end);
     if (!isLegalVariableName(potentialName)) {
         let legalName = findFirstLegalVariableName(potentialName);
         if (legalName == null) return "Delete";
@@ -129,24 +129,24 @@ function handleVarTrackerMove(change, varObj, project) {
         varObj.start += legalName.start;
     }
 
-    expandRight(varObj, project);
-    expandLeft(varObj, project);
+    expandRight(varObj, code);
+    expandLeft(varObj, code);
 
     if (varObj.end - varObj.start <= 0) return "Delete";
     return "Rename";
 }
 
-function expandLeft(varObj, project) {
+function expandLeft(varObj, code) {
     let i = varObj.start - 1;
-    while (i >= 0 && isLegalVariableCharacter(project.code[i])) i--;
+    while (i >= 0 && isLegalVariableCharacter(code[i])) i--;
     i++;
-    while (i <= varObj.end && isDigit(project.code[i])) i++;
+    while (i <= varObj.end && isDigit(code[i])) i++;
     varObj.start = i;
 }
 
-function expandRight(varObj, project) {
+function expandRight(varObj, code) {
     let i = varObj.end;
-    while (i < project.code.length && isLegalVariableCharacter(project.code[i])) i++;
+    while (i < code.length && isLegalVariableCharacter(code[i])) i++;
     varObj.end = i;
 }
 
