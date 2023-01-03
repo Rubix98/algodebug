@@ -21,7 +21,7 @@ export class Painter {
         for (let subobject of this.sceneObject.subobjects) {
             let variable = this.getVariable(subobject);
             if (!variable) continue;
-            this.subobjectFunctionMap[subobject.type.key].call(this, variable, subobject);
+            this.subobjectFunctionMap[subobject.type].call(this, variable, subobject);
         }
 
         this.getLayer().add(this.mainGroup);
@@ -49,7 +49,7 @@ export class Painter {
 
     getVariable(sceneObject) {
         const name = sceneObject.variable.name;
-        const type = sceneObject.type.key;
+        const type = sceneObject.type;
         let variable = this.frame.variables[name];
         return variable ? parse(variable, type) : undefined;
     }

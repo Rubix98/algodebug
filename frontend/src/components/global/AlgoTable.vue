@@ -41,6 +41,7 @@
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
     import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { getSceneObjectTypeLabel } from "@/javascript/utils/sceneObjectTypesUtils";
     import { pushModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
 
@@ -71,7 +72,7 @@
                 pushModal(SelectPropertyTypeModal, {
                     sceneObjectType: this.$props.sceneObject.type,
                     callback: (selectedType) => {
-                        row.type = selectedType;
+                        row.type = selectedType.key;
                     },
                 });
             },
@@ -96,19 +97,19 @@
         computed: {
             typeLabel() {
                 return (row) => {
-                    return row.type ? row.type.label : null;
+                    return getSceneObjectTypeLabel(row.type);
                 };
             },
 
             variableName() {
                 return (row) => {
-                    return row.variable ? row.variable.name : null;
+                    return row.variable?.name;
                 };
             },
 
             converterTitle() {
                 return (row) => {
-                    return row.converter ? row.converter.title : null;
+                    return row.converter?.title;
                 };
             },
         },

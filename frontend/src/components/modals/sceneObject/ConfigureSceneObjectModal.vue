@@ -4,7 +4,7 @@
             label="Rodzaj obiektu"
             :model-value="typeLabel"
             :items="sceneObjectTypesForComboBox"
-            @update:modelValue="changeSelectedObject"
+            @update:modelValue="selectType"
         >
         </v-combobox>
 
@@ -17,7 +17,7 @@
         </span>
 
         <AlgoTable
-            v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
+            v-if="hasSubtypes(model.type)"
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
@@ -34,13 +34,17 @@
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import AlgoTable from "@/components/global/AlgoTable.vue";
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
-    import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
     import { deepCopy } from "@/javascript/utils/other";
     import { mapActions, mapState } from "vuex";
     import { closeModal, pushModal } from "jenesius-vue-modal";
     import { validateSceneObject } from "@/javascript/utils/validationUtils";
     import { defineComponent } from "vue";
+    import {
+        getSceneObjectTypes,
+        getSceneObjectTypeLabel,
+        hasSubtypes,
+    } from "@/javascript/utils/sceneObjectTypesUtils";
 
     export default defineComponent({
         components: { AlgoModal, AlgoTable },
@@ -54,14 +58,7 @@
                     converter: null,
                     subobjects: [],
                 },
-                sceneObjectTypes: [
-                    { key: "variable", label: "Zmienna" },
-                    { key: "graph", label: "Graf" },
-                    { key: "array", label: "Tablica" },
-                    { key: "points", label: "Zbiór punktów" },
-                    { key: "circle", label: "Okrąg" },
-                    { key: "shape", label: "Wielokąt" },
-                ],
+                sceneObjectTypes: [],
             };
         },
 
@@ -69,6 +66,7 @@
             if (this.$props.sceneObject) {
                 this.model = deepCopy(this.$props.sceneObject);
             }
+            this.sceneObjectTypes = getSceneObjectTypes();
         },
 
         methods: {
@@ -81,14 +79,10 @@
                 closeModal();
             },
 
-            selectType() {
-                pushModal(SelectSceneObjectTypeModal, {
-                    callback: (selectedType) => {
-                        this.model.type = selectedType;
-                        this.model.converter = null;
-                        this.model.subobjects = [];
-                    },
-                });
+            selectType(selectedType) {
+                this.model.type = this.sceneObjectTypes.find((e) => e.label === selectedType).key;
+                this.model.converter = null;
+                this.model.subobjects = [];
             },
 
             selectVariable() {
@@ -106,10 +100,6 @@
                     },
                 });
             },
-
-            changeSelectedObject(selected) {
-                this.model.type = this.sceneObjectTypes.find((e) => e.label === selected);
-            },
         },
 
         computed: {
@@ -124,21 +114,25 @@
             },
 
             typeLabel() {
-                return this.model.type ? this.model.type.label : null;
+                return getSceneObjectTypeLabel(this.model.type);
             },
 
             variableName() {
-                return this.model.variable ? this.model.variable.name : null;
+                return this.model.variable?.name;
             },
 
             converterTitle() {
-                return this.model.converter ? this.model.converter.title : null;
+                return this.model.converter?.title;
             },
 
             sceneObjectTypesForComboBox() {
                 return this.sceneObjectTypes.map((e) => {
                     return e.label;
                 });
+            },
+
+            hasSubtypes() {
+                return (key) => hasSubtypes(key);
             },
         },
     });

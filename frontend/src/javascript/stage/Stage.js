@@ -42,7 +42,7 @@ export class Stage {
         let currentTheme = getCurrentThemeFromStorage();
         let color = currentTheme === "light" ? "black" : "white";
         for (let sceneObject of sceneObjects) {
-            let painter = PainterFactory(sceneObject.type.key, {
+            let painter = PainterFactory(sceneObject.type, {
                 sceneObject: sceneObject,
                 frame: frame,
                 stageSize: this.getCanvasSize(),

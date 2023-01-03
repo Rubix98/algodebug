@@ -8,13 +8,14 @@
             @click="configureSceneObject(sceneObject, $event)"
             @click:close="deleteSceneObject(sceneObject.id)"
         >
-            {{ sceneObject.type.label }} {{ sceneObject.variable ? sceneObject.variable.name : "null" }}
+            {{ sceneObjectLabel(sceneObject) }}
         </v-chip>
     </div>
 </template>
 
 <script>
     import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
+    import { getSceneObjectTypeLabel } from "@/javascript/utils/sceneObjectTypesUtils";
     import { mapActions, mapState } from "vuex";
     import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
@@ -31,6 +32,14 @@
 
         computed: {
             ...mapState(["project"]),
+
+            sceneObjectLabel() {
+                return (sceneObject) => {
+                    return `${getSceneObjectTypeLabel(sceneObject.type)} ${
+                        sceneObject.variable ? sceneObject.variable.name : "null"
+                    }`;
+                };
+            },
         },
     });
 </script>

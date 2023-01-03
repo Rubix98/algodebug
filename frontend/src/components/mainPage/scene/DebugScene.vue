@@ -1,9 +1,7 @@
 <template>
     <v-card elevation="3">
         <div class="scene-container full-size" v-if="!showLoading">
-            <SceneCanvas
-                class="full-size"
-            ></SceneCanvas>
+            <SceneCanvas class="full-size"></SceneCanvas>
 
             <CenterPanel v-if="!this.project.isRunning" />
             <SceneObjectsPanel v-if="!this.project.isRunning" />
