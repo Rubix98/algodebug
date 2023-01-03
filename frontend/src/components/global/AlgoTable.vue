@@ -45,8 +45,8 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["sceneObject", "label", "headers", "emptyRow"],
         components: { AlgoLink },
+        props: ["sceneObject", "label", "headers", "emptyRow"],
 
         data() {
             return {
