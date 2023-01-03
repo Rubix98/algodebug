@@ -41,6 +41,8 @@
             ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
 
             switchTestCase(index) {
+                if (index >= this.numberOfTestCases) return;
+
                 this.changeCurrentTestCase(index);
                 this.changeCurrentFrame(0);
                 this.emitter.emit("currentFrameChangedEvent");

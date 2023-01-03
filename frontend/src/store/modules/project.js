@@ -78,7 +78,7 @@ export default {
         },
 
         currentFrames(_, getters) {
-            return getters.currentTestCase.frames.map((element, index) => ({ ...element, index }));
+            return (getters.currentTestCase.frames ?? []).map((element, index) => ({ ...element, index }));
         },
 
         currentFrame(state, getters) {
@@ -101,6 +101,9 @@ export default {
 
         deleteTestCase(state, index) {
             state.testData.splice(index, 1);
+            if (state.selectedTestCaseId >= state.testData.length) {
+                state.selectedTestCaseId = state.testData.length - 1;
+            }
         },
 
         changeCurrentTestCase(state, index) {
