@@ -123,9 +123,9 @@ function handleVarTrackerMove(change, varObj, project) {
     let potentialName = project.code.substring(varObj.start, varObj.end);
     if (!isLegalVariableName(potentialName)) {
         let legalNamesCount = getLegalVariableNamesCount(potentialName);
-        if (legalNamesCount != 1) return "Delete";
+        if (legalNamesCount == 0) return "Delete";
 
-        let legalName = findLegalVariableName(potentialName);
+        let legalName = findFirstLegalVariableName(potentialName);
         varObj.end = varObj.start + legalName.end;
         varObj.start += legalName.start;
     }
@@ -161,7 +161,7 @@ function getLegalVariableNamesCount(text) {
     return (text.match(regex) ?? []).length;
 }
 
-function findLegalVariableName(text) {
+function findFirstLegalVariableName(text) {
     const regex = /[a-zA-Z_][a-zA-Z_0-9]*/g;
     let match = regex.exec(text);
     if (match == null) return null;
@@ -173,7 +173,7 @@ function isLegalVariableName(text) {
 }
 
 function isLegalVariableCharacter(char) {
-    return (char > "a" && char < "z") || (char > "A" && char < "Z") || (char > "0" && char < "9") || char == "_";
+    return (char >= "a" && char <= "z") || (char >= "A" && char <= "Z") || (char >= "0" && char <= "9") || char == "_";
 }
 
 function isDigit(char) {
