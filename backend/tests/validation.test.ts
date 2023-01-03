@@ -3,9 +3,8 @@ import { Converter } from "../src/models/Converter";
 import { Project } from "../src/models/Project";
 import { Breakpoint } from "../src/structures/Breakpoint";
 import { Language } from "../src/structures/Language";
-import { Mark } from "../src/structures/Mark";
+import { Variable } from "../src/structures/Variable";
 import { ObjectType } from "../src/structures/ObjectType";
-import { SceneObject } from "../src/structures/SceneObject";
 import { TestCase } from "../src/structures/TestCase";
 import { sanitizeConverter } from "../src/models/Converter";
 
@@ -40,11 +39,10 @@ let validConverter = {
 
 let validProject = {
     title: "nonempty",
-    description: null,
     code: "",
     language: "cpp" as Language,
     breakpoints: [],
-    testCases: [],
+    testData: [],
     sceneObjects: [],
     author: "nonempty",
 } as Project;
@@ -52,24 +50,14 @@ let validProject = {
 let validNestedProject = {
     ...validProject,
     breakpoints: [{ id: 1 } as Breakpoint, { id: 2 } as Breakpoint, { id: 3 } as Breakpoint],
-    testCases: [{ input: "some\ninput" } as TestCase, { input: "some other input" } as TestCase],
+    testData: [{ id: 0, input: "some\ninput" } as TestCase, { id: 0, input: "some other input" } as TestCase],
     sceneObjects: [
         {
             id: 1,
-            type: { key: "somekey", label: "somelabel", image: null } as ObjectType,
-            variable: { start: 0, end: 1, name: "", type: null, converter: validConverter } as Mark,
+            type: "graph" as ObjectType,
+            variable: { id: "", start: 0, end: 1, name: "" } as Variable,
             converter: validConverter,
             color: "#000000",
-            subobjects: [
-                {
-                    id: 1,
-                    type: { key: "somekey", label: "somelabel", image: null } as ObjectType,
-                    variable: { start: 0, end: 1, name: "", type: null, converter: validConverter } as Mark,
-                    converter: validConverter,
-                    color: "#000000",
-                    subobjects: [],
-                } as SceneObject,
-            ],
         },
     ],
 } as Project;
@@ -88,8 +76,8 @@ describe("Project validation", () => {
         // ignore the difference in creation and modification date
         expect(checked.value).toEqual({
             ...validProject,
-            creationDate: expect.any(Date),
-            modificationDate: expect.any(Date),
+            creationDate: undefined,
+            modificationDate: undefined,
         });
     });
 
@@ -128,11 +116,11 @@ describe("Project validation", () => {
         // check if date is added and is of type Date
         let checked = checkProject({ ...validProject, creationDate: undefined });
         expect(checked.ok).toBe(true);
-        if (checked.value) expect(checked.value.creationDate).toBeInstanceOf(Date);
+        if (checked.value) expect(checked.value.creationDate).toBe(undefined);
 
         checked = checkProject({ ...validProject, modificationDate: undefined });
         expect(checked.ok).toBe(true);
-        if (checked.value) expect(checked.value.modificationDate).toBeInstanceOf(Date);
+        if (checked.value) expect(checked.value.modificationDate).toBe(undefined);
     });
 
     test("Valid project with nested objects", () => {
@@ -162,8 +150,8 @@ describe("Project validation", () => {
         // ignore the difference in creation and modification date
         expect(checked.value).toEqual({
             ...validNestedProject,
-            creationDate: expect.any(Date),
-            modificationDate: expect.any(Date),
+            creationDate: undefined,
+            modificationDate: undefined,
         });
     });
 

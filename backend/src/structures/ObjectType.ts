@@ -1,17 +1,20 @@
-import { Static, Record, String, Null } from "runtypes";
+import { Union, Literal, Static } from "runtypes";
 
-export const ObjectType = Record({
-    key: String,
-    label: String,
-    image: String.Or(Null),
-});
+export const ObjectType = Union(
+    Literal("variable"),
+    Literal("graph"),
+    Literal("graph_edges"),
+    Literal("graph_vertices"),
+    Literal("graph_path"),
+    Literal("array"),
+    Literal("array_index"),
+    Literal("array_part"),
+    Literal("points"),
+    Literal("points_point"),
+    Literal("points_stretch"),
+    Literal("points_path"),
+    Literal("circle"),
+    Literal("shape")
+);
 
 export type ObjectType = Static<typeof ObjectType>;
-
-export const sanitizeObjectType = (o: ObjectType) => {
-    return {
-        key: o.key,
-        label: o.label,
-        image: o.image,
-    } as ObjectType;
-};

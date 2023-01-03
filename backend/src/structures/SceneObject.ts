@@ -1,37 +1,25 @@
 import { Converter, sanitizeConverter } from "../models/Converter";
-import { Mark, sanitizeMark } from "./Mark";
-import { ObjectType, sanitizeObjectType } from "./ObjectType";
-import { Record, String, Array, Number, Lazy, Runtype, Null } from "runtypes";
+import { Variable, sanitizeVariable } from "./Variable";
+import { ObjectType } from "./ObjectType";
+import { Static, Record, String, Number, Null, Optional } from "runtypes";
 
-// Lazy because subobject is recursive
-export const SceneObject: Runtype<SceneObject> = Lazy(() =>
-    Record({
-        id: Number.Or(Null),
-        type: ObjectType,
-        variable: Mark,
-        converter: Converter.Or(Null),
-        color: String.Or(Null),
-        subobjects: Array(SceneObject),
-    })
-);
+export const SceneObject = Record({
+    id: Number,
+    parentId: Optional(Number),
+    type: ObjectType,
+    variable: Variable,
+    converter: Converter.Or(Null),
+    color: Optional(String),
+});
 
-// for same reason as above type is created manually instead of using Static
-export type SceneObject = {
-    id: number | null;
-    type: ObjectType;
-    variable: Mark;
-    converter: Converter | null;
-    color: string | null;
-    subobjects: SceneObject[];
-};
+export type SceneObject = Static<typeof SceneObject>;
 
-export const sanitizeSceneObject = (s: SceneObject): SceneObject => {
+export const sanitizeSceneObject = (s: SceneObject) => {
     return {
         id: s.id,
-        type: sanitizeObjectType(s.type),
-        variable: sanitizeMark(s.variable),
+        type: s.type,
+        variable: sanitizeVariable(s.variable),
         converter: sanitizeConverter(s.converter),
         color: s.color,
-        subobjects: s.subobjects.map(sanitizeSceneObject),
     } as SceneObject;
 };

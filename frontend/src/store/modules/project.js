@@ -4,7 +4,7 @@ import { CodeParser } from "@/javascript/codeParser/CodeParser";
 export default {
     namespaced: true,
     state: {
-        id: null,
+        _id: null,
         title: "",
         code: '#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout << "Hello world" << endl;\n}',
         language: "cpp",
@@ -20,17 +20,14 @@ export default {
     getters: {
         variables(state) {
             return state.sceneObjects
-                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
                 .filter((sceneObject) => sceneObject.variable != null)
                 .map((sceneObject) => sceneObject.variable);
         },
 
         converters(state) {
             return state.sceneObjects
-                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
                 .filter((sceneObject) => sceneObject.converter != null)
-                .map((sceneObject) => sceneObject.converter)
-                .map((converter) => ({ id: converter.code, ...converter }));
+                .map((sceneObject) => sceneObject.converter);
         },
 
         debugCode(state, getters) {
@@ -56,7 +53,7 @@ export default {
         jsonForSave(state) {
             return (override, title = null) => {
                 let result = {
-                    id: override ? state.id : null,
+                    _id: override ? state._id : undefined,
                     title: title ?? state.title,
                 };
                 ["code", "language", "breakpoints", "testData", "sceneObjects"].forEach(
@@ -114,32 +111,18 @@ export default {
         },
 
         setProject(state, project) {
-            // TODO: Zmienić strukturę tych obiektów w bazie danych
-            project.breakpoints.forEach((breakpoint) => (breakpoint.id = breakpoint._id));
-            project.sceneObjects.forEach((sceneObject) => {
-                if (sceneObject.converter) {
-                    sceneObject.converter = { ...sceneObject.converter, id: sceneObject.converter._id };
-                }
-
-                sceneObject.subobjects.forEach((subobject) => {
-                    if (subobject.converter) {
-                        subobject.converter = { ...subobject.converter, id: subobject.converter._id };
-                    }
-                });
-            });
-
             // TODO: Dynamiczne przepisywanie
-            state.id = project._id;
+            state._id = project._id;
             state.code = project.code;
             state.breakpoints = project.breakpoints;
             state.language = project.language;
-            state.testData = project.testCases;
+            state.testData = project.testData;
             state.sceneObjects = project.sceneObjects;
             state.title = project.title;
             state.author = project.author;
             state.description = project.description;
 
-            state.selectedTestCaseId = project.testCases.firstId();
+            state.selectedTestCaseId = project.testData.firstId();
         },
 
         addOutputs(state, outputs) {
@@ -210,10 +193,12 @@ export default {
         },
 
         saveProject({ commit, getters }, { override, title }) {
-            sendRequest("/project/save", getters.jsonForSave(override, title), "PUT").then((responseData) => {
-                commit("set", { key: "id", value: responseData.id });
-                commit("set", { key: "title", value: responseData.title });
-            });
+            sendRequest("/project/save", getters.jsonForSave(override, title), override ? "PUT" : "POST").then(
+                (responseData) => {
+                    commit("set", { key: "id", value: responseData.id });
+                    commit("set", { key: "title", value: responseData.title });
+                }
+            );
         },
 
         compile({ commit, getters }) {
