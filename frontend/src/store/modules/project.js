@@ -21,8 +21,7 @@ export default {
             return state.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
                 .filter((sceneObject) => sceneObject.variable != null)
-                .map((sceneObject) => sceneObject.variable)
-                .map((variable) => ({ id: variable.name, ...variable }));
+                .map((sceneObject) => sceneObject.variable);
         },
 
         converters(state) {
@@ -135,8 +134,7 @@ export default {
 
         updateVariable(state, variable) {
             const id = variable.id;
-            variable.name = state.code.substring(variable.start, variable.end);
-            variable.id = `${variable.name}-${variable.start}`;
+            variable.id = variable.name = state.code.substring(variable.start, variable.end);
 
             state.sceneObjects.forEach((sceneObject) => {
                 if (sceneObject.variable?.id === id) {

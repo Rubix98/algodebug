@@ -3,8 +3,6 @@
         <div class="scene-container full-size" v-if="!showLoading">
             <SceneCanvas
                 class="full-size"
-                :sceneObjects="this.project.sceneObjects"
-                :isRunning="this.project.isRunning"
             ></SceneCanvas>
 
             <CenterPanel v-if="!this.project.isRunning" />

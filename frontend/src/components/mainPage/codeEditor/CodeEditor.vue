@@ -77,11 +77,11 @@
             handlePickVariable(event) {
                 const word = this.editor.getModel().getWordAtPosition(event.target.position);
                 const variable = {
+                    id: event.target.element.innerText,
                     name: event.target.element.innerText,
                     start: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.startColumn),
                     end: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.endColumn),
                 };
-                variable.id = `${variable.name}-${variable.start}`;
                 this.$emit("pickVariableEvent", variable);
             },
 

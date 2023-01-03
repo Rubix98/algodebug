@@ -8,7 +8,6 @@ Array.prototype.toggleElement = function (element) {
 
 Array.prototype.addElement = function (element) {
     const id = element.id ?? this.generateUniqueId();
-    console.log(id);
     const index = this.findIndexForId(id);
     if (index !== -1) {
         this[index] = element;

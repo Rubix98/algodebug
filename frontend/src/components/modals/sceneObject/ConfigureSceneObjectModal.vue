@@ -21,7 +21,7 @@
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-            :emptyRow="{ name: '', type: null, variable: null, converter: null }"
+            :emptyRow="{ type: null, variable: null, converter: null }"
         ></AlgoTable>
 
         <template #buttons>
