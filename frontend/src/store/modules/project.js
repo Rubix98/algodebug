@@ -129,25 +129,39 @@ export default {
             }
         },
 
-        removeOutdatedVariables(state, handlerFunction) {
-            state.sceneObjects.forEach(handlerFunction);
-        },
-
         toggleBreakpoint(state, id) {
             state.breakpoints.toggleElement({ id: id });
         },
 
-        renameVariables(state, sceneObject) {
-            sceneObject.variable.id = sceneObject.variable.name = state.code.substring(
-                sceneObject.variable.start,
-                sceneObject.variable.end
-            );
+        updateVariable(state, variable) {
+            const id = variable.id;
+            variable.name = state.code.substring(variable.start, variable.end);
+            variable.id = `${variable.name}-${variable.start}`;
 
-            sceneObject.subobjects.forEach((subObj) => {
-                subObj.variable.id = subObj.variable.name = state.code.substring(
-                    subObj.variable.start,
-                    subObj.variable.end
-                );
+            state.sceneObjects.forEach((sceneObject) => {
+                if (sceneObject.variable?.id === id) {
+                    sceneObject.variable = variable;
+                }
+
+                sceneObject.subobjects.forEach((subobject) => {
+                    if (subobject.variable?.id === id) {
+                        subobject.variable = variable;
+                    }
+                });
+            });
+        },
+
+        deleteVariable(state, id) {
+            state.sceneObjects.forEach((sceneObject) => {
+                if (sceneObject.variable?.id === id) {
+                    sceneObject.variable = null;
+                }
+
+                sceneObject.subobjects.forEach((subobject) => {
+                    if (subobject.variable?.id === id) {
+                        subobject.variable = null;
+                    }
+                });
             });
         },
     },
@@ -219,9 +233,8 @@ export default {
                     commit("set", { key: "waitingForCompile", value: false });
                 });
         },
-
-        removeOutdatedVariables: ({ commit }, handlerFunction) => commit("removeOutdatedVariables", handlerFunction),
         toggleBreakpoint: ({ commit }, id) => commit("toggleBreakpoint", id),
-        renameVariables: ({ commit }, sceneObject) => commit("renameVariables", sceneObject),
+        updateVariable: ({ commit }, variable) => commit("updateVariable", variable),
+        deleteVariable: ({ commit }, id) => commit("deleteVariable", id),
     },
 };

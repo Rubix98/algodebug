@@ -2,6 +2,7 @@ import store from "@/store";
 import { areIntervalsIntersect, isSubinterval } from "./intervalsUtils";
 import lineColumn from "line-column";
 import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";
+import { deepCopy } from "@/javascript/utils/other";
 
 function getReservedKeywords(language = "cpp") {
     if (language == "cpp") return cppReservedKeywords;
@@ -59,64 +60,50 @@ export function monacoChangeToLegacyFormat(code, change) {
     return result;
 }
 
-function handleVarTrackerMove(change, varObj) {
-    if (varObj == null) return;
+function handleVarTrackerMove(variable, change) {
+    let result = deepCopy(variable);
 
-    if (areIntervalsIntersect(varObj.start, varObj.end, change.start, change.end)) {
-        if (isSubinterval(varObj.start, varObj.end, change.start, change.end)) {
-            varObj.end += change.size;
-            if (varObj.end - varObj.start <= 0) return "Delete";
-            return "Rename";
-        }
-        return "Delete";
+    if (isSubinterval(variable.start, variable.end, change.start, change.end)) {
+        result.end += change.size;
+        return result.end - result.start > 0 ? result : null;
+    }
+    if (areIntervalsIntersect(variable.start, variable.end, change.start, change.end)) {
+        return null;
     }
 
-    if (change.end <= varObj.start) {
-        varObj.start += change.size;
-        varObj.end += change.size;
+    if (change.end <= variable.start) {
+        result.start += change.size;
+        result.end += change.size;
     }
+
+    return result;
 }
 
-export function moveTrackedVariables(change) {
-    store.dispatch("project/removeOutdatedVariables", (sceneObj) => {
-        let wasAnyVariableRenamed = false;
-
-        let result = handleVarTrackerMove(change, sceneObj.variable);
-        if (result == "Delete") {
-            sceneObj.variable = null;
-        } else if (result == "Rename") {
-            wasAnyVariableRenamed = true;
-        }
-
-        for (let subobj of sceneObj.subobjects) {
-            result = handleVarTrackerMove(change, subobj.variable);
-            if (result == "Delete") {
-                subobj.variable = null;
-            } else if (result == "Rename") {
-                wasAnyVariableRenamed = true;
-            }
-        }
-
-        if (wasAnyVariableRenamed) {
-            store.dispatch("project/renameVariables", sceneObj);
+export function moveTrackedVariables(variables, change) {
+    variables.forEach((variable) => {
+        let newVariable = handleVarTrackerMove(variable, change);
+        if (newVariable == null) {
+            store.dispatch("project/deleteVariable", variable.id);
+        } else {
+            store.dispatch("project/updateVariable", newVariable);
         }
     });
 }
 
-export function moveBreakpoints(project, change) {
+export function moveBreakpoints(breakpoints, change) {
     if (change.deltaLineCount == 0) return;
 
     let firstChangedLine = change.firstChangedLine - 1;
     let lastChangedLine = firstChangedLine - change.deltaLineCount;
 
-    let breakpoints = project.breakpoints.filter(
+    let newBreakpoints = breakpoints.filter(
         (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
     );
-    breakpoints.forEach((breakpoint) => {
+    newBreakpoints.forEach((breakpoint) => {
         if (breakpoint.id >= firstChangedLine) {
             breakpoint.id += change.deltaLineCount;
         }
     });
 
-    store.dispatch("project/setBreakpoints", breakpoints);
+    store.dispatch("project/setBreakpoints", newBreakpoints);
 }

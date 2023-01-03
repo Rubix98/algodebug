@@ -81,6 +81,7 @@
                     start: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.startColumn),
                     end: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.endColumn),
                 };
+                variable.id = `${variable.name}-${variable.start}`;
                 this.$emit("pickVariableEvent", variable);
             },
 
@@ -94,8 +95,8 @@
                     }
 
                     let legacyChange = monacoChangeToLegacyFormat(this.$props.code, change);
-                    moveTrackedVariables(legacyChange);
-                    moveBreakpoints(this.project, legacyChange);
+                    moveTrackedVariables(this.variables, legacyChange);
+                    moveBreakpoints(this.project.breakpoints, legacyChange);
                 }
             },
 
