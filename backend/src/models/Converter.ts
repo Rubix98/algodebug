@@ -16,7 +16,6 @@ const isId = (x: any): x is ObjectId => {
 export const Converter = Record({
     title: String.withConstraint((s) => s.length > 0),
     language: Language,
-    type: String.withConstraint((s) => s.length > 0).Or(Null),
     code: String,
 
     _id: Optional(Unknown.withGuard(isId)),
@@ -31,7 +30,6 @@ export const sanitizeConverter = (c: Converter | null) => {
     return {
         title: c.title,
         language: c.language,
-        type: c.type,
         code: c.code,
         _id: c._id ? new ObjectId(c._id) : undefined,
     } as Converter;

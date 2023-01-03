@@ -34,7 +34,6 @@ let validConverter = {
     title: "nonempty",
     language: "cpp" as Language,
     code: "",
-    type: null,
 } as Converter;
 
 let validProject = {
