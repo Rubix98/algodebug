@@ -19,7 +19,13 @@
     export default defineComponent({
         name: "RunButton",
         methods: {
-            ...mapActions("project", ["setLanguage", "setIsRunning", "changeCurrentFrame", "compile"]),
+            ...mapActions("project", [
+                "setLanguage",
+                "setIsRunning",
+                "setWaitingForCompile",
+                "changeCurrentFrame",
+                "compile",
+            ]),
 
             runButtonPressed() {
                 if (this.projectRunning) {
@@ -51,8 +57,13 @@
                 return this.project.isRunning;
             },
 
-            waitingForCompile() {
-                return this.project.waitingForCompile;
+            waitingForCompile: {
+                get() {
+                    return this.project.waitingForCompile;
+                },
+                set(value) {
+                    this.setWaitingForCompile(value);
+                },
             },
 
             runButtonIcon() {

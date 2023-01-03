@@ -5,6 +5,7 @@ export default {
     namespaced: true,
     state: {
         id: null,
+        title: "",
         code: '#include <iostream>\nusing namespace std;\n\nint main() {\n\tcout << "Hello world" << endl;\n}',
         language: "cpp",
         breakpoints: [],
@@ -50,6 +51,28 @@ export default {
 
         numberOfFrames(_, getters) {
             return getters.currentTestCase.frames.length;
+        },
+
+        jsonForSave(state) {
+            return (override, title = null) => {
+                let result = {
+                    id: override ? state.id : null,
+                    title: title ?? state.title,
+                };
+                ["code", "language", "breakpoints", "testData", "sceneObjects"].forEach(
+                    (property) => (result[property] = state[property])
+                );
+
+                return result;
+            };
+        },
+
+        jsonForCompile(state, getters) {
+            return {
+                code: getters.debugCode,
+                language: state.language,
+                inputs: state.testData.map((testCase) => testCase.input),
+            };
         },
     },
 
@@ -120,12 +143,9 @@ export default {
         },
 
         addOutputs(state, outputs) {
-            for (let i in state.testData) {
-                state.testData[i] = {
-                    ...state.testData[i],
-                    ...outputs[i].output,
-                };
-            }
+            state.testData.forEach((testCase, index) => {
+                Object.assign(testCase, outputs[index].output);
+            });
         },
 
         toggleBreakpoint(state, id) {
@@ -166,6 +186,7 @@ export default {
 
     actions: {
         setIsRunning: ({ commit }, newValue) => commit("set", { key: "isRunning", value: newValue }),
+        setWaitingForCompile: ({ commit }, newValue) => commit("set", { key: "waitingForCompile", value: newValue }),
         setCode: ({ commit }, newValue) => commit("set", { key: "code", value: newValue }),
         setBreakpoints: ({ commit }, newValue) => commit("set", { key: "breakpoints", value: newValue }),
         addTestCase: ({ commit }) => commit("addTestCase"),
@@ -188,46 +209,22 @@ export default {
             });
         },
 
-        saveProject({ commit, state }, { title, override }) {
-            sendRequest(
-                "/project/save",
-                {
-                    _id: override ? state.id : null,
-                    title: title,
-                    language: state.language,
-                    code: state.code,
-                    breakpoints: state.breakpoints,
-                    testCases: state.testData,
-                    sceneObjects: state.sceneObjects,
-                    author: state.author ? state.author : "AlgoDebug",
-                    description: state.description ? state.description : null,
-                },
-                "PUT"
-            ).then((responseData) => {
+        saveProject({ commit, getters }, { override, title }) {
+            sendRequest("/project/save", getters.jsonForSave(override, title), "PUT").then((responseData) => {
                 commit("set", { key: "id", value: responseData.id });
                 commit("set", { key: "title", value: responseData.title });
             });
         },
 
-        compile({ commit, state, getters }) {
+        compile({ commit, getters }) {
             commit("set", { key: "waitingForCompile", value: true });
-            const inputs = state.testData.map((testCase) => testCase.input);
-            return sendRequest(
-                "/compiler/compile",
-                {
-                    code: getters.debugCode,
-                    language: "cpp",
-                    inputs: inputs,
-                },
-                "POST"
-            )
+            return sendRequest("/compiler/compile", getters.jsonForCompile, "POST")
                 .then((responseData) => {
                     commit("addOutputs", responseData);
                     commit("set", { key: "isRunning", value: true });
-                    commit("set", { key: "waitingForCompile", value: false });
                     return true;
                 })
-                .catch(() => {
+                .finally(() => {
                     commit("set", { key: "waitingForCompile", value: false });
                 });
         },
