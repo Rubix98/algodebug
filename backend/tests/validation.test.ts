@@ -86,8 +86,7 @@ describe("Project validation", () => {
         // ignore the difference in creation and modification date
         expect(checked.value).toEqual({
             ...validProject,
-            creationDate: undefined,
-            modificationDate: undefined,
+            modificationDate: expect.any(Date),
         });
     });
 
@@ -130,7 +129,7 @@ describe("Project validation", () => {
 
         checked = checkProject({ ...validProject, modificationDate: undefined });
         expect(checked.ok).toBe(true);
-        if (checked.value) expect(checked.value.modificationDate).toBe(undefined);
+        if (checked.value) expect(checked.value.modificationDate).toBeInstanceOf(Date);
     });
 
     test("Valid project with nested objects", () => {
@@ -160,8 +159,7 @@ describe("Project validation", () => {
         // ignore the difference in creation and modification date
         expect(checked.value).toEqual({
             ...validNestedProject,
-            creationDate: undefined,
-            modificationDate: undefined,
+            modificationDate: expect.any(Date),
         });
     });
 

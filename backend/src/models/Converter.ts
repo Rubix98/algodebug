@@ -14,11 +14,10 @@ const isId = (x: any): x is ObjectId => {
 };
 
 export const Converter = Record({
+    _id: Optional(Unknown.withGuard(isId)),
     title: String.withConstraint((s) => s.length > 0),
     language: Language,
     code: String,
-
-    _id: Optional(Unknown.withGuard(isId)),
 });
 
 export type Converter = Static<typeof Converter>;
@@ -28,9 +27,9 @@ export const sanitizeConverter = (c: Converter | null) => {
         return null;
     }
     return {
+        _id: c._id ? new ObjectId(c._id) : undefined,
         title: c.title,
         language: c.language,
         code: c.code,
-        _id: c._id ? new ObjectId(c._id) : undefined,
     } as Converter;
 };

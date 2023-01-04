@@ -22,7 +22,7 @@
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-            :emptyRow="{ type: null, variable: null, converter: null, subobjects: [], color: '#000000' }"
+            :emptyRow="{ type: null, variable: null, converter: null, color: '#000000' }"
         ></AlgoTable>
 
         <template #buttons>
@@ -57,10 +57,8 @@
                     type: null,
                     variable: null,
                     converter: null,
-                    color: null,
                     subobjects: [],
                 },
-                sceneObjectTypes: [],
             };
         },
 
@@ -68,7 +66,6 @@
             if (this.$props.sceneObject) {
                 this.model = deepCopy(this.$props.sceneObject);
             }
-            this.sceneObjectTypes = getSceneObjectTypes();
         },
 
         methods: {
@@ -125,6 +122,10 @@
 
             converterTitle() {
                 return this.model.converter?.title;
+            },
+
+            sceneObjectTypes() {
+                return getSceneObjectTypes(this.$props.sceneObjectType);
             },
 
             sceneObjectTypesForComboBox() {

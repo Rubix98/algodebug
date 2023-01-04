@@ -22,6 +22,8 @@ const isId = (x: any): x is ObjectId => {
 const isValidDate = (x: any): x is Date => x instanceof Date && !isNaN(x.getTime());
 
 export const Project = Record({
+    _id: Optional(Unknown.withGuard(isId)),
+
     // project description
     title: String.withConstraint((s) => s.length > 0),
 
@@ -36,8 +38,6 @@ export const Project = Record({
     author: Optional(String.withConstraint((s) => s.length > 0)),
     creationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
     modificationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
-
-    _id: Optional(Unknown.withGuard(isId)),
 });
 
 export type Project = Static<typeof Project>;
