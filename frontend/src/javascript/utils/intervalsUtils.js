@@ -65,3 +65,7 @@ function areIntervalsEqual(intervalA, intervalB) {
 export function areIntervalsIntersectOrTouching(intervalA, intervalB) {
     return intervalA.end >= intervalB.start && intervalA.start <= intervalB.end;
 }
+
+export function isIntervalEmpty(interval) {
+    return interval.end - interval.start <= 0;
+}

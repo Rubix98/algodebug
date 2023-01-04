@@ -95,7 +95,7 @@
                     }
 
                     let legacyChange = monacoChangeToLegacyFormat(this.$props.code, change);
-                    moveTrackedVariables(this.variables, legacyChange);
+                    moveTrackedVariables(this.variables, legacyChange, this.project.code);
                     moveBreakpoints(this.project.breakpoints, legacyChange);
                 }
             },

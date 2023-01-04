@@ -22,16 +22,20 @@ export default {
             return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
         },
 
-        variables(state) {
-            return state.sceneObjects
+        variables(_, getters) {
+            return getters.sceneObjectsFlat
                 .filter((sceneObject) => sceneObject.variable != null)
                 .map((sceneObject) => sceneObject.variable);
         },
 
-        converters(state) {
-            return state.sceneObjects
+        converters(_, getters) {
+            return getters.sceneObjectsFlat
                 .filter((sceneObject) => sceneObject.converter != null)
                 .map((sceneObject) => sceneObject.converter);
+        },
+
+        sceneObjectsFlat(state) {
+            return state.sceneObjects.flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects]);
         },
 
         currentTestCase(state) {
@@ -128,15 +132,17 @@ export default {
         },
 
         /* Variables */
-        updateVariable(state, variable) {
-            const id = variable.id;
+        updateVariable(state, { id, variable }) {
             variable.id = variable.name = state.code.substring(variable.start, variable.end);
-
-            state.sceneObjects.find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
+            state.sceneObjects
+                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
+                .find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
         },
 
         deleteVariable(state, id) {
-            state.sceneObjects.find((sceneObject) => sceneObject.variable?.id === id).variable = null;
+            state.sceneObjects
+                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
+                .find((sceneObject) => sceneObject.variable?.id === id).variable = null;
         },
     },
 
@@ -163,7 +169,7 @@ export default {
         updateSceneObjectPosition: ({ commit }, payload) => commit("updateSceneObjectPosition", payload),
 
         /* Variables */
-        updateVariable: ({ commit }, variable) => commit("updateVariable", variable),
+        updateVariable: ({ commit }, payload) => commit("updateVariable", payload),
         deleteVariable: ({ commit }, id) => commit("deleteVariable", id),
 
         /* Logic */
