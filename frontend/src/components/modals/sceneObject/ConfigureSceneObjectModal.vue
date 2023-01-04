@@ -56,6 +56,7 @@
                     type: null,
                     variable: null,
                     converter: null,
+                    color: null,
                     subobjects: [],
                 },
                 sceneObjectTypes: [],

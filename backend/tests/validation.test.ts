@@ -4,6 +4,7 @@ import { Project } from "../src/models/Project";
 import { Breakpoint } from "../src/structures/Breakpoint";
 import { Language } from "../src/structures/Language";
 import { Variable } from "../src/structures/Variable";
+import { SceneObject } from "../src/structures/SceneObject";
 import { ObjectType } from "../src/structures/ObjectType";
 import { TestCase } from "../src/structures/TestCase";
 import { sanitizeConverter } from "../src/models/Converter";
@@ -52,11 +53,21 @@ let validNestedProject = {
     testData: [{ id: 0, input: "some\ninput" } as TestCase, { id: 0, input: "some other input" } as TestCase],
     sceneObjects: [
         {
-            id: 1,
+            id: 0,
             type: "graph" as ObjectType,
             variable: { id: "", start: 0, end: 1, name: "" } as Variable,
             converter: validConverter,
             color: "#000000",
+            subobjects: [
+                {
+                    id: 0,
+                    type: "variable" as ObjectType,
+                    variable: { id: "", start: 0, end: 1, name: "" } as Variable,
+                    converter: validConverter,
+                    color: "#000000",
+                    subobjects: [],
+                } as SceneObject,
+            ],
         },
     ],
 } as Project;
