@@ -15,8 +15,7 @@ export class PointsPainter extends Painter {
     };
 
     drawModel(points) {
-        for (let index in points) {
-            let point = points[index];
+        points.forEach((point, index) => {
             const pointGroup = new Konva.Group({
                 point: point,
                 id: `point-${index}`,
@@ -44,7 +43,7 @@ export class PointsPainter extends Painter {
                 fontSize: this.style.fontSize,
             });
             pointGroup.add(pointText);
-        }
+        });
     }
 
     highlightPoints(points, subobject) {

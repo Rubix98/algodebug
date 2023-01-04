@@ -1,7 +1,7 @@
 import { Converter, sanitizeConverter } from "../models/Converter";
 import { Variable, sanitizeVariable } from "./Variable";
 import { ObjectType } from "./ObjectType";
-import { Record, String, Array, Number, Lazy, Runtype, Null, Undefined } from "runtypes";
+import { Record, String, Array, Number, Lazy, Runtype, Null, Optional } from "runtypes";
 
 // Lazy because subobject is recursive
 export const SceneObject: Runtype<SceneObject> = Lazy(() =>

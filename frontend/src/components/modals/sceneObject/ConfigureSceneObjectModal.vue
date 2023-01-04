@@ -5,15 +5,16 @@
             :model-value="typeLabel"
             :items="sceneObjectTypesForComboBox"
             @update:modelValue="selectType"
+            @keypress.prevent
         >
         </v-combobox>
 
         <span @click="selectVariable">
-            <v-combobox label="Przypisana zmienna" :model-value="variableName" />
+            <v-combobox label="Przypisana zmienna" :model-value="variableName" @keypress.prevent />
         </span>
 
         <span @click="selectConverter">
-            <v-combobox label="Konwerter" :model-value="converterTitle" />
+            <v-combobox label="Konwerter" :model-value="converterTitle" @keypress.prevent />
         </span>
 
         <AlgoTable
@@ -21,7 +22,7 @@
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-            :emptyRow="{ type: null, variable: null, converter: null }"
+            :emptyRow="{ type: null, variable: null, converter: null, subobjects: [], color: '#000000' }"
         ></AlgoTable>
 
         <template #buttons>

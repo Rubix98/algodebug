@@ -25,13 +25,15 @@ export default {
         variables(_, getters) {
             return getters.sceneObjectsFlat
                 .filter((sceneObject) => sceneObject.variable != null)
-                .map((sceneObject) => sceneObject.variable);
+                .map((sceneObject) => sceneObject.variable)
+                .unique();
         },
 
         converters(_, getters) {
             return getters.sceneObjectsFlat
                 .filter((sceneObject) => sceneObject.converter != null)
-                .map((sceneObject) => sceneObject.converter);
+                .map((sceneObject) => sceneObject.converter)
+                .unique("_id");
         },
 
         sceneObjectsFlat(state) {

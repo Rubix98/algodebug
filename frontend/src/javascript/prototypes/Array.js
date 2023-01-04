@@ -45,6 +45,13 @@ Array.prototype.sortedBy = function (key, order = 1) {
     });
 };
 
+Array.prototype.unique = function (property = "id") {
+    return this.filter(
+        (element, index, array) =>
+            array.findIndex((foundElement) => foundElement[property] === element[property]) === index
+    );
+};
+
 Array.prototype.generateUniqueId = function () {
     const ids = this.ids();
     return ids.length > 0 ? Math.max(...ids) + 1 : 0;
