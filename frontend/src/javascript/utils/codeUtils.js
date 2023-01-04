@@ -1,13 +1,8 @@
 import store from "@/store";
-import { areIntervalsIntersect, isSubinterval } from "./intervalsUtils";
+import { applyChangeOnInterval, areIntervalsIntersectOrTouching } from "./intervalsUtils";
 import lineColumn from "line-column";
 import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";
 import { deepCopy } from "@/javascript/utils/other";
-
-function getReservedKeywords(language = "cpp") {
-    if (language == "cpp") return cppReservedKeywords;
-    return [];
-}
 
 export function getVariablesArray(language, code) {
     const reservedKeywords = getReservedKeywords(language);
@@ -49,6 +44,7 @@ export function monacoChangeToLegacyFormat(code, change) {
         end: change.rangeOffset + change.rangeLength,
         size: -change.rangeLength,
         firstChangedLine: change.range.startLineNumber,
+        text: change.text,
     };
     let removedText = code.substring(result.start, result.end);
     result.deltaLineCount = -(removedText.match(/[\n]/g) ?? []).length;
@@ -106,4 +102,73 @@ export function moveBreakpoints(breakpoints, change) {
     });
 
     store.dispatch("project/setBreakpoints", newBreakpoints);
+}
+
+function handleVarTrackerMove(change, varObj, code) {
+    if (varObj == null) return;
+
+    let originalPos = { start: varObj.start, end: varObj.end };
+
+    let newVarRange = applyChangeOnInterval(varObj, change);
+    if (newVarRange.end - newVarRange.start <= 0) return "Delete";
+    varObj.start = newVarRange.start;
+    varObj.end = newVarRange.end;
+
+    if (!areIntervalsIntersectOrTouching(originalPos, change)) {
+        expandLeft(varObj, code);
+        return;
+    }
+
+    let potentialName = code.substring(varObj.start, varObj.end);
+    if (!isLegalVariableName(potentialName)) {
+        let legalName = findFirstLegalVariableName(potentialName);
+        if (legalName == null) return "Delete";
+
+        varObj.end = varObj.start + legalName.end;
+        varObj.start += legalName.start;
+    }
+
+    expandRight(varObj, code);
+    expandLeft(varObj, code);
+
+    if (varObj.end - varObj.start <= 0) return "Delete";
+    return "Rename";
+}
+
+function expandLeft(varObj, code) {
+    let i = varObj.start - 1;
+    while (i >= 0 && isLegalVariableCharacter(code[i])) i--;
+    i++;
+    while (i <= varObj.end && isDigit(code[i])) i++;
+    varObj.start = i;
+}
+
+function expandRight(varObj, code) {
+    let i = varObj.end;
+    while (i < code.length && isLegalVariableCharacter(code[i])) i++;
+    varObj.end = i;
+}
+
+function getReservedKeywords(language = "cpp") {
+    if (language == "cpp") return cppReservedKeywords;
+    return [];
+}
+
+function findFirstLegalVariableName(text) {
+    const regex = /[a-zA-Z_][a-zA-Z_0-9]*/g;
+    let match = regex.exec(text);
+    if (match == null) return null;
+    return { start: match.index, end: regex.lastIndex };
+}
+
+function isLegalVariableName(text) {
+    return /^[a-zA-Z_][a-zA-Z_0-9]*$/.test(text);
+}
+
+function isLegalVariableCharacter(char) {
+    return (char >= "a" && char <= "z") || (char >= "A" && char <= "Z") || (char >= "0" && char <= "9") || char == "_";
+}
+
+function isDigit(char) {
+    return char >= "0" && char <= "9";
 }

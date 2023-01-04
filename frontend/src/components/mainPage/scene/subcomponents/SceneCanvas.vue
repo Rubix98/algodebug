@@ -24,9 +24,9 @@
             ...mapActions("project", ["updateSceneObjectPosition"]),
 
             draw() {
-                if (this.project.isRunning) {
-                    this.stage.draw(this.project.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
-                }
+                if (!this.project.isRunning || !this.currentFrame) return;
+
+                this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
             },
 
             clearStage() {
