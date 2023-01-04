@@ -17,15 +17,15 @@
             this.emitter.on("currentFrameChangedEvent", this.draw);
             this.emitter.on("stopDebuggingEvent", this.clearStage);
             this.emitter.on("downloadStageEvent", this.download);
-            this.emitter.on("themeChangeEvent", () => {
-                if (this.projectIsRunning) this.draw();
-            });
+            this.emitter.on("themeChangeEvent", this.draw);
         },
 
         methods: {
             ...mapActions("project", ["updateSceneObjectPosition"]),
 
             draw() {
+                if (!this.projectIsRunning || !this.currentFrame) return;
+
                 this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
             },
 
