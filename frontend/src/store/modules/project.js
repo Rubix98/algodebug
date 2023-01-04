@@ -13,11 +13,15 @@ export default {
         sceneObjects: [],
         isRunning: false,
         waitingForCompile: false,
-        selectedTestCaseId: 0,
-        selectedFrameId: 0,
+        currentTestCaseId: 0,
+        currentFrameId: 0,
     },
 
     getters: {
+        debugCode(state, getters) {
+            return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
+        },
+
         variables(state) {
             return state.sceneObjects
                 .filter((sceneObject) => sceneObject.variable != null)
@@ -30,20 +34,12 @@ export default {
                 .map((sceneObject) => sceneObject.converter);
         },
 
-        debugCode(state, getters) {
-            return new CodeParser(state.code, getters.variables, state.breakpoints, getters.converters).parse();
-        },
-
         currentTestCase(state) {
-            return state.testData.findById(state.selectedTestCaseId);
-        },
-
-        numberOfTestCases(state) {
-            return state.testData.length;
+            return state.testData.findById(state.currentTestCaseId);
         },
 
         currentFrame(state, getters) {
-            return getters.currentTestCase.frames.findById(state.selectedFrameId);
+            return getters.currentTestCase.frames.findById(state.currentFrameId);
         },
 
         numberOfFrames(_, getters) {
@@ -74,10 +70,32 @@ export default {
     },
 
     mutations: {
+        /* Setters */
         set(state, { key, value }) {
             state[key] = value;
         },
 
+        setProject(state, project) {
+            ["_id", "title", "code", "breakpoints", "language", "testData", "sceneObjects", "title"].forEach(
+                (property) => (state[property] = project[property])
+            );
+            state.currentTestCaseId = project.testData.firstId();
+        },
+
+        switchCurrentTestCase(state, index) {
+            state.currentTestCaseId = index;
+        },
+
+        switchCurrentFrame(state, index) {
+            state.currentFrameId = index;
+        },
+
+        /* Breakpoints */
+        toggleBreakpoint(state, id) {
+            state.breakpoints.toggleElement({ id: id });
+        },
+
+        /* TestData */
         addTestCase(state) {
             state.testData.addElement({ input: "" });
         },
@@ -86,18 +104,17 @@ export default {
             state.testData.deleteById(id);
         },
 
-        changeCurrentTestCase(state, index) {
-            state.selectedTestCaseId = index;
-        },
-
-        changeCurrentFrame(state, index) {
-            state.selectedFrameId = index;
-        },
-
         updateCurrentTestCaseInput(state, newValue) {
-            state.testData.findById(state.selectedTestCaseId).input = newValue;
+            state.testData.findById(state.currentTestCaseId).input = newValue;
         },
 
+        addOutputs(state, outputs) {
+            state.testData.forEach((testCase, index) => {
+                Object.assign(testCase, outputs[index].output);
+            });
+        },
+
+        /* SceneObjects */
         addSceneObject(state, sceneObject) {
             state.sceneObjects.addElement(sceneObject);
         },
@@ -110,82 +127,46 @@ export default {
             state.sceneObjects.findById(id).position = position;
         },
 
-        setProject(state, project) {
-            // TODO: Dynamiczne przepisywanie
-            state._id = project._id;
-            state.code = project.code;
-            state.breakpoints = project.breakpoints;
-            state.language = project.language;
-            state.testData = project.testData;
-            state.sceneObjects = project.sceneObjects;
-            state.title = project.title;
-            state.author = project.author;
-            state.description = project.description;
-
-            state.selectedTestCaseId = project.testData.firstId();
-        },
-
-        addOutputs(state, outputs) {
-            state.testData.forEach((testCase, index) => {
-                Object.assign(testCase, outputs[index].output);
-            });
-        },
-
-        toggleBreakpoint(state, id) {
-            state.breakpoints.toggleElement({ id: id });
-        },
-
+        /* Variables */
         updateVariable(state, variable) {
             const id = variable.id;
             variable.id = variable.name = state.code.substring(variable.start, variable.end);
 
-            state.sceneObjects.forEach((sceneObject) => {
-                if (sceneObject.variable?.id === id) {
-                    sceneObject.variable = variable;
-                }
-
-                sceneObject.subobjects.forEach((subobject) => {
-                    if (subobject.variable?.id === id) {
-                        subobject.variable = variable;
-                    }
-                });
-            });
+            state.sceneObjects.find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
         },
 
         deleteVariable(state, id) {
-            state.sceneObjects.forEach((sceneObject) => {
-                if (sceneObject.variable?.id === id) {
-                    sceneObject.variable = null;
-                }
-
-                sceneObject.subobjects.forEach((subobject) => {
-                    if (subobject.variable?.id === id) {
-                        subobject.variable = null;
-                    }
-                });
-            });
+            state.sceneObjects.find((sceneObject) => sceneObject.variable?.id === id).variable = null;
         },
     },
 
     actions: {
-        setIsRunning: ({ commit }, newValue) => commit("set", { key: "isRunning", value: newValue }),
-        setWaitingForCompile: ({ commit }, newValue) => commit("set", { key: "waitingForCompile", value: newValue }),
+        /* Setters */
         setCode: ({ commit }, newValue) => commit("set", { key: "code", value: newValue }),
         setBreakpoints: ({ commit }, newValue) => commit("set", { key: "breakpoints", value: newValue }),
+        setIsRunning: ({ commit }, newValue) => commit("set", { key: "isRunning", value: newValue }),
+        setWaitingForCompile: ({ commit }, newValue) => commit("set", { key: "waitingForCompile", value: newValue }),
+        switchCurrentTestCase: ({ commit }, index) => commit("switchCurrentTestCase", index),
+        switchCurrentFrame: ({ commit }, index) => commit("switchCurrentFrame", index),
+
+        /* Breakpoints */
+        toggleBreakpoint: ({ commit }, id) => commit("toggleBreakpoint", id),
+
+        /* TestData */
         addTestCase: ({ commit }) => commit("addTestCase"),
         deleteTestCase: ({ commit }, id) => commit("deleteTestCase", id),
-        changeCurrentTestCase: ({ commit }, index) => commit("changeCurrentTestCase", index),
-        changeCurrentFrame: ({ commit }, index) => commit("changeCurrentFrame", index),
-        updateCurrentTestCaseInput: ({ commit }, newValue) => {
-            commit("updateCurrentTestCaseInput", newValue);
-        },
+        updateCurrentTestCaseInput: ({ commit }, newValue) => commit("updateCurrentTestCaseInput", newValue),
+
+        /* SceneObjects */
+        addSceneObject: ({ commit }, sceneObject) => commit("addSceneObject", sceneObject),
         deleteSceneObject: ({ commit }, index) => commit("deleteSceneObject", index),
         updateSceneObjectPosition: ({ commit }, payload) => commit("updateSceneObjectPosition", payload),
 
-        addSceneObject({ commit }, sceneObject) {
-            commit("addSceneObject", sceneObject);
-        },
+        /* Variables */
+        updateVariable: ({ commit }, variable) => commit("updateVariable", variable),
+        deleteVariable: ({ commit }, id) => commit("deleteVariable", id),
 
+        /* Logic */
         loadProject({ commit }, projectId) {
             sendRequest("/project/find/" + projectId, null, "GET").then((responseData) => {
                 commit("setProject", responseData);
@@ -213,8 +194,5 @@ export default {
                     commit("set", { key: "waitingForCompile", value: false });
                 });
         },
-        toggleBreakpoint: ({ commit }, id) => commit("toggleBreakpoint", id),
-        updateVariable: ({ commit }, variable) => commit("updateVariable", variable),
-        deleteVariable: ({ commit }, id) => commit("deleteVariable", id),
     },
 };

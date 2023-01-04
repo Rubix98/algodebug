@@ -23,7 +23,7 @@
                 "setLanguage",
                 "setIsRunning",
                 "setWaitingForCompile",
-                "changeCurrentFrame",
+                "switchCurrentFrame",
                 "compile",
             ]),
 
@@ -46,7 +46,7 @@
 
             stopProgram() {
                 this.setIsRunning(false);
-                this.changeCurrentFrame(0);
+                this.switchCurrentFrame(0);
                 this.emitter.emit("stopDebuggingEvent");
             },
         },

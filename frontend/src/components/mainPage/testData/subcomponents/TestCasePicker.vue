@@ -29,30 +29,30 @@
 
 <script>
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
-    import { mapActions, mapGetters, mapState } from "vuex";
+    import { mapActions, mapState } from "vuex";
     import { defineComponent } from "vue";
 
     export default defineComponent({
         components: { AlgoBlock },
 
         methods: {
-            ...mapActions("project", ["addTestCase", "deleteTestCase", "changeCurrentTestCase", "changeCurrentFrame"]),
+            ...mapActions("project", ["addTestCase", "deleteTestCase", "switchCurrentTestCase", "switchCurrentFrame"]),
 
             switchTestCase(index) {
-                this.changeCurrentTestCase(index);
-                this.changeCurrentFrame(0);
+                this.switchCurrentTestCase(index);
+                this.switchCurrentFrame(0);
                 this.emitter.emit("currentFrameChangedEvent");
             },
 
             handleAddTestCase() {
                 this.addTestCase();
-                this.changeCurrentTestCase(this.project.testData.lastId());
+                this.switchCurrentTestCase(this.project.testData.lastId());
             },
 
             handleDeleteTestCase(id) {
-                if (id === this.project.selectedTestCaseId) {
+                if (id === this.project.currentTestCaseId) {
                     const nearestId = this.project.testData.nextId(id) ?? this.project.testData.prevId(id);
-                    this.changeCurrentTestCase(nearestId);
+                    this.switchCurrentTestCase(nearestId);
                 }
                 this.deleteTestCase(id);
             },
@@ -60,10 +60,9 @@
 
         computed: {
             ...mapState(["project"]),
-            ...mapGetters("project", ["numberOfTestCases"]),
 
             isTestCaseSelected() {
-                return (id) => id === this.project.selectedTestCaseId;
+                return (id) => id === this.project.currentTestCaseId;
             },
 
             canRemoveTests() {
