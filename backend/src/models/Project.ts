@@ -43,16 +43,19 @@ export const Project = Record({
 export type Project = Static<typeof Project>;
 
 export const sanitizeProject = (p: Project) => {
-    return {
+    const result = {
+        _id: p._id ? new ObjectId(p._id) : undefined,
         title: p.title,
         code: p.code,
         language: p.language,
         breakpoints: p.breakpoints.map(sanitizeBreakpoint),
         testData: p.testData.map(sanitizeTestCase),
         sceneObjects: p.sceneObjects.map(sanitizeSceneObject),
-        author: p.author,
-        creationDate: p.creationDate,
-        modificationDate: p.modificationDate,
-        _id: p._id ? new ObjectId(p._id) : undefined,
+        modificationDate: p.modificationDate ?? new Date(),
     } as Project;
+
+    if (p.author != null) result.author = p.author;
+    if (p.creationDate != null) result.creationDate = p.creationDate;
+
+    return result;
 };

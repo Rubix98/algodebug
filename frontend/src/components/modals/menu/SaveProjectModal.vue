@@ -4,7 +4,7 @@
 
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
-            <v-btn color="primary" @click="save(true)" v-if="project.id">Zapisz</v-btn>
+            <v-btn color="primary" @click="save(true)" v-if="project._id">Zapisz</v-btn>
         </template>
     </AlgoModal>
 </template>
