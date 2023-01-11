@@ -5,7 +5,3 @@ export function formatDate(date) {
 export function redirectTo(url) {
     window.location.href = url;
 }
-
-export function deepCopy(object) {
-    return JSON.parse(JSON.stringify(object));
-}

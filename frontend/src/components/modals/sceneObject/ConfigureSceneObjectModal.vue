@@ -36,7 +36,7 @@
     import AlgoTable from "@/components/global/AlgoTable.vue";
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
-    import { deepCopy } from "@/javascript/utils/other";
+    import { cloneDeep } from "lodash";
     import { mapActions, mapState } from "vuex";
     import { closeModal, pushModal } from "jenesius-vue-modal";
     import { validateSceneObject } from "@/javascript/utils/validationUtils";
@@ -64,7 +64,7 @@
 
         mounted() {
             if (this.$props.sceneObject) {
-                this.model = deepCopy(this.$props.sceneObject);
+                this.model = cloneDeep(this.$props.sceneObject);
             }
         },
 

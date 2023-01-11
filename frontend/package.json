@@ -17,6 +17,7 @@
         "jenesius-vue-modal": "^1.8.2",
         "konva": "^8.3.13",
         "line-column": "^1.0.2",
+        "lodash": "^4.17.21",
         "mitt": "^3.0.0",
         "monaco-editor": "^0.34.1",
         "monaco-editor-vue3": "^0.1.6",
