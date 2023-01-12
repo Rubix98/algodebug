@@ -24,9 +24,9 @@
             ...mapActions("project", ["updateSceneObjectPosition"]),
 
             draw() {
-                if (!this.projectIsRunning || !this.currentFrame) return;
+                if (!this.project.isRunning || !this.currentFrame) return;
 
-                this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
+                this.stage.draw(this.project.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
             },
 
             clearStage() {
@@ -40,7 +40,7 @@
 
         computed: {
             ...mapState(["project"]),
-            ...mapGetters("project", ["sceneObjects", "currentFrame", "projectIsRunning"]),
+            ...mapGetters("project", ["currentFrame"]),
         },
     });
 </script>

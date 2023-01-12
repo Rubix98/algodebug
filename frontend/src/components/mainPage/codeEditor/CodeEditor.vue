@@ -55,7 +55,7 @@
         },
 
         methods: {
-            ...mapActions("project", ["setCode"]),
+            ...mapActions("project", ["setCode", "toggleBreakpoint"]),
 
             editorDidMount(editor) {
                 this.editor = editor;
@@ -77,6 +77,7 @@
             handlePickVariable(event) {
                 const word = this.editor.getModel().getWordAtPosition(event.target.position);
                 const variable = {
+                    id: event.target.element.innerText,
                     name: event.target.element.innerText,
                     start: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.startColumn),
                     end: lineColumn(this.$props.code).toIndex(event.target.position.lineNumber, word.endColumn),
@@ -94,15 +95,15 @@
                     }
 
                     let legacyChange = monacoChangeToLegacyFormat(this.$props.code, change);
-                    moveTrackedVariables(this.project.code, legacyChange);
-                    moveBreakpoints(this.project, legacyChange);
+                    moveTrackedVariables(this.variables, legacyChange, this.project.code);
+                    moveBreakpoints(this.project.breakpoints, legacyChange);
                 }
             },
 
             handleClick(event) {
                 if (event.target.element.classList.contains("breakpoint")) {
                     if (!this.$props.editable) return;
-                    this.project.breakpoints.addOrDelete({ id: event.target.position.lineNumber - 1 });
+                    this.toggleBreakpoint(event.target.position.lineNumber - 1);
                     return;
                 }
 
@@ -155,7 +156,7 @@
             variablesDecorations() {
                 if (!this.$props.showHighlightedVariables) return [];
 
-                return this.variables.toArray().map((variable) => {
+                return this.variables.map((variable) => {
                     let startLineColumn = lineColumn(this.$props.code, variable.start);
                     let endLineColumn = lineColumn(this.$props.code, variable.end);
                     return {
@@ -213,7 +214,7 @@
 
             getBreakpointClass() {
                 return (i) => {
-                    if (this.project.breakpoints.has(i)) return "breakpoint breakpoint-active";
+                    if (this.project.breakpoints.hasId(i)) return "breakpoint breakpoint-active";
                     if (!this.project.isRunning && this.$props.editable) return "breakpoint";
                     return "";
                 };

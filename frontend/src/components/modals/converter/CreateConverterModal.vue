@@ -18,6 +18,7 @@
     import { sendRequest } from "@/javascript/utils/axiosUtils";
     import { popModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
+    import { mapState } from "vuex";
 
     export default defineComponent({
         components: { AlgoModal, AlgoInput, AlgoTextarea },
@@ -41,10 +42,15 @@
             },
 
             saveConverter() {
-                sendRequest("/converter/save", this.converter, "PUT").then(() => {
+                this.converter.language = this.project.language;
+                sendRequest("/converter/save", this.converter, "POST").then(() => {
                     this.addConverter();
                 });
             },
+        },
+
+        computed: {
+            ...mapState(["project"]),
         },
     });
 </script>

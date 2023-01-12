@@ -1,7 +1,7 @@
-import { Static, Record, Number, Null } from "runtypes";
+import { Static, Record, Number } from "runtypes";
 
 export const Breakpoint = Record({
-    id: Number.Or(Null),
+    id: Number,
 });
 
 export type Breakpoint = Static<typeof Breakpoint>;

@@ -31,6 +31,8 @@ export default {
     actions: {
         updateProjects({ commit }) {
             sendRequest("/project/findAll", null, "GET").then((responseData) => {
+                if (!responseData) return;
+
                 responseData.forEach((project) => {
                     project.dialogData = getDialogDataForProject(project);
                 });
@@ -40,6 +42,8 @@ export default {
 
         updateConverters({ commit }) {
             sendRequest("/converter/findAll", null, "GET").then((responseData) => {
+                if (!responseData) return;
+
                 responseData.forEach((converter) => {
                     converter.dialogData = getDialogDataForConverter(converter);
                 });

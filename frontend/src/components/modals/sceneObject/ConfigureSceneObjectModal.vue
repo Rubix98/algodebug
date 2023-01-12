@@ -4,24 +4,25 @@
             label="Rodzaj obiektu"
             :model-value="typeLabel"
             :items="sceneObjectTypesForComboBox"
-            @update:modelValue="changeSelectedObject"
+            @update:modelValue="selectType"
+            @keypress.prevent
         >
         </v-combobox>
 
         <span @click="selectVariable">
-            <v-combobox label="Przypisana zmienna" :model-value="variableName" />
+            <v-combobox label="Przypisana zmienna" :model-value="variableName" @keypress.prevent />
         </span>
 
         <span @click="selectConverter">
-            <v-combobox label="Konwerter" :model-value="converterTitle" />
+            <v-combobox label="Konwerter" :model-value="converterTitle" @keypress.prevent />
         </span>
 
         <AlgoTable
-            v-if="model.type && !['variable', 'circle', 'shape', 'line'].includes(model.type.key)"
+            v-if="hasSubtypes(model.type)"
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-            :emptyRow="{ name: '', type: null, variable: null, converter: null }"
+            :emptyRow="{ type: null, variable: null, converter: null, color: '#000000' }"
         ></AlgoTable>
 
         <template #buttons>
@@ -34,12 +35,17 @@
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import AlgoTable from "@/components/global/AlgoTable.vue";
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
-    import SelectSceneObjectTypeModal from "@/components/modals/type/SelectSceneObjectTypeModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { cloneDeep } from "lodash";
     import { mapActions, mapState } from "vuex";
     import { closeModal, pushModal } from "jenesius-vue-modal";
     import { validateSceneObject } from "@/javascript/utils/validationUtils";
     import { defineComponent } from "vue";
+    import {
+        getSceneObjectTypes,
+        getSceneObjectTypeLabel,
+        hasSubtypes,
+    } from "@/javascript/utils/sceneObjectTypesUtils";
 
     export default defineComponent({
         components: { AlgoModal, AlgoTable },
@@ -53,41 +59,29 @@
                     converter: null,
                     subobjects: [],
                 },
-                sceneObjectTypes: [
-                    { key: "variable", label: "Zmienna" },
-                    { key: "graph", label: "Graf" },
-                    { key: "array", label: "Tablica" },
-                    { key: "points", label: "Zbiór punktów" },
-                    { key: "circle", label: "Okrąg" },
-                    { key: "shape", label: "Wielokąt" },
-                ],
             };
         },
 
         mounted() {
             if (this.$props.sceneObject) {
-                this.model = { ...this.$props.sceneObject };
+                this.model = cloneDeep(this.$props.sceneObject);
             }
         },
 
         methods: {
-            ...mapActions("project", ["saveSceneObject"]),
+            ...mapActions("project", ["addSceneObject"]),
 
             save() {
                 if (!validateSceneObject(this.model)) return;
 
-                this.saveSceneObject(this.model);
+                this.addSceneObject(this.model);
                 closeModal();
             },
 
-            selectType() {
-                pushModal(SelectSceneObjectTypeModal, {
-                    callback: (selectedType) => {
-                        this.model.type = selectedType;
-                        this.model.converter = null;
-                        this.model.subobjects = [];
-                    },
-                });
+            selectType(selectedType) {
+                this.model.type = this.sceneObjectTypes.find((e) => e.label === selectedType).key;
+                this.model.converter = null;
+                this.model.subobjects = [];
             },
 
             selectVariable() {
@@ -105,10 +99,6 @@
                     },
                 });
             },
-
-            changeSelectedObject(selected) {
-                this.model.type = this.sceneObjectTypes.find((e) => e.label === selected);
-            },
         },
 
         computed: {
@@ -123,21 +113,29 @@
             },
 
             typeLabel() {
-                return this.model.type ? this.model.type.label : null;
+                return getSceneObjectTypeLabel(this.model.type);
             },
 
             variableName() {
-                return this.model.variable ? this.model.variable.name : null;
+                return this.model.variable?.name;
             },
 
             converterTitle() {
-                return this.model.converter ? this.model.converter.title : null;
+                return this.model.converter?.title;
+            },
+
+            sceneObjectTypes() {
+                return getSceneObjectTypes(this.$props.sceneObjectType);
             },
 
             sceneObjectTypesForComboBox() {
                 return this.sceneObjectTypes.map((e) => {
                     return e.label;
                 });
+            },
+
+            hasSubtypes() {
+                return (key) => hasSubtypes(key);
             },
         },
     });

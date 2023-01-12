@@ -7,7 +7,7 @@
                     id="main-editor"
                     class="width-1-of-2 v-card--variant-elevated elevation-3"
                     :code="this.project.code"
-                    :editable="!this.project.isRunning"
+                    :editable="!this.project.isRunning && !this.project.waitingForCompile"
                     :clickable="false"
                     :showHighlightedVariables="true"
                     :showBreakpoints="true"

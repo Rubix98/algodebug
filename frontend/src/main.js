@@ -8,6 +8,9 @@ import { getCurrentThemeFromStorage } from "@/javascript/storage/themeStorage";
 import Toast, { POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
+import "@/javascript/prototypes/Array";
+import "@/javascript/prototypes/String";
+
 // Vuetify
 import "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.css";
@@ -15,8 +18,6 @@ import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
-import "@/javascript/prototypes/Map";
-import "@/javascript/prototypes/String";
 
 const vuetify = createVuetify({
     components,

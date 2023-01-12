@@ -1,37 +1,43 @@
 import { Converter, sanitizeConverter } from "../models/Converter";
-import { Mark, sanitizeMark } from "./Mark";
-import { ObjectType, sanitizeObjectType } from "./ObjectType";
-import { Record, String, Array, Number, Lazy, Runtype, Null } from "runtypes";
+import { Variable, sanitizeVariable } from "./Variable";
+import { ObjectType } from "./ObjectType";
+import { Record, String, Array, Number, Lazy, Runtype, Unknown, Optional, Null } from "runtypes";
 
 // Lazy because subobject is recursive
 export const SceneObject: Runtype<SceneObject> = Lazy(() =>
     Record({
-        id: Number.Or(Null),
+        id: Number,
         type: ObjectType,
-        variable: Mark,
+        variable: Variable,
         converter: Converter.Or(Null),
-        color: String.Or(Null),
-        subobjects: Array(SceneObject),
+        color: Optional(String.Or(Null)),
+        position: Optional(Unknown.Or(Null)),
+        subobjects: Optional(Array(SceneObject).Or(Null)),
     })
 );
 
 // for same reason as above type is created manually instead of using Static
 export type SceneObject = {
-    id: number | null;
+    id: number;
     type: ObjectType;
-    variable: Mark;
+    variable: Variable;
     converter: Converter | null;
-    color: string | null;
-    subobjects: SceneObject[];
+    color?: string | null;
+    position?: unknown | null;
+    subobjects?: SceneObject[] | null;
 };
 
 export const sanitizeSceneObject = (s: SceneObject): SceneObject => {
-    return {
+    const result = {
         id: s.id,
-        type: sanitizeObjectType(s.type),
-        variable: sanitizeMark(s.variable),
+        type: s.type,
+        variable: sanitizeVariable(s.variable),
         converter: sanitizeConverter(s.converter),
-        color: s.color,
-        subobjects: s.subobjects.map(sanitizeSceneObject),
     } as SceneObject;
+
+    if (s.color) result.color = s.color;
+    if (s.position) result.position = s.position;
+    if (s.subobjects) result.subobjects = s.subobjects.map(sanitizeSceneObject);
+
+    return result;
 };

@@ -19,7 +19,13 @@
     export default defineComponent({
         name: "RunButton",
         methods: {
-            ...mapActions("project", ["setLanguage", "setIsRunning", "changeCurrentFrame", "compile"]),
+            ...mapActions("project", [
+                "setLanguage",
+                "setIsRunning",
+                "setWaitingForCompile",
+                "switchCurrentFrame",
+                "compile",
+            ]),
 
             runButtonPressed() {
                 if (this.projectRunning) {
@@ -40,7 +46,7 @@
 
             stopProgram() {
                 this.setIsRunning(false);
-                this.changeCurrentFrame(0);
+                this.switchCurrentFrame(0);
                 this.emitter.emit("stopDebuggingEvent");
             },
         },
@@ -51,8 +57,13 @@
                 return this.project.isRunning;
             },
 
-            waitingForCompile() {
-                return this.project.waitingForCompile;
+            waitingForCompile: {
+                get() {
+                    return this.project.waitingForCompile;
+                },
+                set(value) {
+                    this.setWaitingForCompile(value);
+                },
             },
 
             runButtonIcon() {

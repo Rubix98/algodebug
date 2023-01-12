@@ -1,26 +1,29 @@
 <template>
-    <v-text-field :model="model" :label="label" />
+    <v-text-field v-model="model" :label="label" />
 </template>
 
 <script>
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["value", "label"],
+        props: {
+            value: {
+                type: String,
+            },
 
-        data() {
-            return {
-                model: "",
-            };
+            label: {
+                type: String,
+            },
         },
 
-        mounted() {
-            this.model = this.value;
-        },
-
-        watch: {
-            model() {
-                this.$emit("update:value", this.model);
+        computed: {
+            model: {
+                get() {
+                    return this.$props.value;
+                },
+                set(value) {
+                    this.$emit("update:value", value);
+                },
             },
         },
     });

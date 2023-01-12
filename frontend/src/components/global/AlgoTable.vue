@@ -9,9 +9,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(row, index) in model" :key="index">
+                <tr v-for="row in model" :key="row.id">
                     <td class="algo-table__remove-row text-center">
-                        <v-icon class="primary" @click="removeRow(index)"> mdi-close</v-icon>
+                        <v-icon class="primary" @click="removeRow(row.id)"> mdi-close</v-icon>
                     </td>
 
                     <td>
@@ -41,6 +41,7 @@
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
     import SelectPropertyTypeModal from "@/components/modals/type/SelectPropertyTypeModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import { getSceneObjectTypeLabel } from "@/javascript/utils/sceneObjectTypesUtils";
     import { pushModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
 
@@ -50,7 +51,7 @@
 
         data() {
             return {
-                model: "",
+                model: [],
             };
         },
 
@@ -60,18 +61,18 @@
 
         methods: {
             addRow() {
-                this.model.push({ ...this.emptyRow });
+                this.model.addElement({ ...this.emptyRow });
             },
 
-            removeRow(index) {
-                this.model.splice(index, 1);
+            removeRow(id) {
+                this.model.deleteById(id);
             },
 
             selectType(row) {
                 pushModal(SelectPropertyTypeModal, {
                     sceneObjectType: this.$props.sceneObject.type,
                     callback: (selectedType) => {
-                        row.type = selectedType;
+                        row.type = selectedType.key;
                     },
                 });
             },
@@ -96,19 +97,19 @@
         computed: {
             typeLabel() {
                 return (row) => {
-                    return row.type ? row.type.label : null;
+                    return getSceneObjectTypeLabel(row.type);
                 };
             },
 
             variableName() {
                 return (row) => {
-                    return row.variable ? row.variable.name : null;
+                    return row.variable?.name;
                 };
             },
 
             converterTitle() {
                 return (row) => {
-                    return row.converter ? row.converter.title : null;
+                    return row.converter?.title;
                 };
             },
         },

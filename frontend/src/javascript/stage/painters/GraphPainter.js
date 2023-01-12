@@ -21,8 +21,7 @@ export class GraphPainter extends Painter {
     }
 
     drawVertices(vertices) {
-        for (let index in vertices) {
-            const vertex = vertices[index];
+        vertices.forEach((vertex, index) => {
             const vertexId = "vertex-" + vertex;
             const vertexPosition = this.getPosition(
                 vertexId,
@@ -66,7 +65,7 @@ export class GraphPainter extends Painter {
             vertexGroup.add(vertexText);
 
             vertexGroup.on("dragmove", (event) => this.handleVertexMove(event));
-        }
+        });
     }
 
     drawEdges(edges) {

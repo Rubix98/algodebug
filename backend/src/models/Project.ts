@@ -22,39 +22,40 @@ const isId = (x: any): x is ObjectId => {
 const isValidDate = (x: any): x is Date => x instanceof Date && !isNaN(x.getTime());
 
 export const Project = Record({
+    _id: Optional(Unknown.withGuard(isId)),
+
     // project description
     title: String.withConstraint((s) => s.length > 0),
-    description: String.Or(Null),
 
     // project data
     code: String,
     language: Language,
     breakpoints: Array(Breakpoint),
-    testCases: Array(TestCase),
+    testData: Array(TestCase),
     sceneObjects: Array(SceneObject),
 
     // project metadata
-    author: String.withConstraint((s) => s.length > 0),
+    author: Optional(String.withConstraint((s) => s.length > 0)),
     creationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
     modificationDate: Optional(Unknown.withConstraint(isValidDate || dateError)),
-
-    _id: Optional(Unknown.withGuard(isId)),
 });
 
 export type Project = Static<typeof Project>;
 
 export const sanitizeProject = (p: Project) => {
-    return {
+    const result = {
+        _id: p._id ? new ObjectId(p._id) : undefined,
         title: p.title,
-        description: p.description,
         code: p.code,
         language: p.language,
         breakpoints: p.breakpoints.map(sanitizeBreakpoint),
-        testCases: p.testCases.map(sanitizeTestCase),
+        testData: p.testData.map(sanitizeTestCase),
         sceneObjects: p.sceneObjects.map(sanitizeSceneObject),
-        author: p.author,
-        creationDate: p.creationDate ? p.creationDate : new Date(),
-        modificationDate: p.modificationDate ? p.modificationDate : new Date(),
-        _id: p._id ? new ObjectId(p._id) : undefined,
+        modificationDate: p.modificationDate ?? new Date(),
     } as Project;
+
+    if (p.author != null) result.author = p.author;
+    if (p.creationDate != null) result.creationDate = p.creationDate;
+
+    return result;
 };

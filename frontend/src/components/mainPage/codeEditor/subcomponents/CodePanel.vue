@@ -23,7 +23,7 @@
         },
 
         methods: {
-            ...mapActions("project", ["setLanguage", "setIsRunning", "changeCurrentFrame", "compile"]),
+            ...mapActions("project", ["setLanguage", "setIsRunning", "switchCurrentFrame", "compile"]),
         },
 
         computed: {

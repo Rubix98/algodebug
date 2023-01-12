@@ -50,6 +50,8 @@ export const saveProject = async (req: Request, res: Response) => {
     }
 
     try {
+        data.creationDate = data.modificationDate = new Date();
+        data.author = "AlgoDebug";
         const result = await projects.insertOne(data);
         res.status(200).json(result);
     } catch (err) {
@@ -70,6 +72,7 @@ export const updateProject = async (req: Request, res: Response) => {
         const id = new ObjectId(data._id);
 
         try {
+            data.modificationDate = new Date();
             const result = await projects.updateOne({ _id: id }, { $set: data });
             res.status(200).json(result);
         } catch (err) {

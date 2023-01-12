@@ -1,5 +1,5 @@
 import store from "@/store";
-import { applyChangeOnInterval, areIntervalsIntersectOrTouching } from "./intervalsUtils";
+import { applyChangeOnInterval, areIntervalsIntersectOrTouching, isIntervalEmpty } from "./intervalsUtils";
 import lineColumn from "line-column";
 import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";
 
@@ -55,85 +55,59 @@ export function monacoChangeToLegacyFormat(code, change) {
     return result;
 }
 
-export function moveTrackedVariables(code, change) {
-    store.dispatch("project/removeOutdatedVariables", (sceneObj) => {
-        let wasAnyVariableRenamed = false;
-
-        let result = handleVarTrackerMove(change, sceneObj.variable, code);
-        if (result == "Delete") {
-            sceneObj.variable = null;
-        } else if (result == "Rename") {
-            wasAnyVariableRenamed = true;
-        }
-
-        for (let subobj of sceneObj.subobjects) {
-            result = handleVarTrackerMove(change, subobj.variable, code);
-            if (result == "Delete") {
-                subobj.variable = null;
-            } else if (result == "Rename") {
-                wasAnyVariableRenamed = true;
-            }
-        }
-
-        if (wasAnyVariableRenamed) {
-            store.dispatch("project/renameVariables", sceneObj);
-        }
-    });
-}
-
-export function moveBreakpoints(project, change) {
+export function moveBreakpoints(breakpoints, change) {
     if (change.deltaLineCount == 0) return;
 
     let firstChangedLine = change.firstChangedLine - 1;
+    let lastChangedLine = firstChangedLine - change.deltaLineCount;
 
-    let affectedBreakpoints = [];
-    for (let bp of project.breakpoints) {
-        if (bp[0] < firstChangedLine) continue;
-        if (bp[0] > firstChangedLine && bp[0] < firstChangedLine - change.deltaLineCount) {
-            store.dispatch("project/deleteBreakpoint", bp[0]);
-        } else if (bp[0] > firstChangedLine) {
-            affectedBreakpoints.push(bp[0]);
+    let newBreakpoints = breakpoints.filter(
+        (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
+    );
+    newBreakpoints.forEach((breakpoint) => {
+        if (breakpoint.id >= firstChangedLine) {
+            breakpoint.id += change.deltaLineCount;
         }
-    }
-    affectedBreakpoints.sort((a, b) => {
-        return change.deltaLineCount < 0 ? a - b : b - a;
     });
 
-    for (let affectedBreakpoint of affectedBreakpoints) {
-        store.dispatch("project/deleteBreakpoint", affectedBreakpoint);
-        store.dispatch("project/addBreakpoint", affectedBreakpoint + change.deltaLineCount);
-    }
+    store.dispatch("project/setBreakpoints", newBreakpoints);
 }
 
-function handleVarTrackerMove(change, varObj, code) {
-    if (varObj == null) return;
+export function moveTrackedVariables(variables, change, code) {
+    variables.forEach((variable) => {
+        let newVariable = handleVarTrackerMove(variable, change, code);
+        if (newVariable == null) {
+            store.dispatch("project/deleteVariable", variable.id);
+        } else {
+            store.dispatch("project/updateVariable", { id: variable.id, variable: newVariable });
+        }
+    });
+}
 
-    let originalPos = { start: varObj.start, end: varObj.end };
+function handleVarTrackerMove(variable, change, code) {
+    let result = { start: variable.start, end: variable.end };
+    result = applyChangeOnInterval(result, change);
 
-    let newVarRange = applyChangeOnInterval(varObj, change);
-    if (newVarRange.end - newVarRange.start <= 0) return "Delete";
-    varObj.start = newVarRange.start;
-    varObj.end = newVarRange.end;
+    if (isIntervalEmpty(result)) return null;
 
-    if (!areIntervalsIntersectOrTouching(originalPos, change)) {
-        expandLeft(varObj, code);
-        return;
+    if (!areIntervalsIntersectOrTouching(variable, change)) {
+        expandLeft(result, code);
+        return result;
     }
 
-    let potentialName = code.substring(varObj.start, varObj.end);
+    let potentialName = code.substring(result.start, result.end);
     if (!isLegalVariableName(potentialName)) {
         let legalName = findFirstLegalVariableName(potentialName);
-        if (legalName == null) return "Delete";
+        if (legalName == null) return null;
 
-        varObj.end = varObj.start + legalName.end;
-        varObj.start += legalName.start;
+        result.end = result.start + legalName.end;
+        result.start = result.start + legalName.start;
     }
 
-    expandRight(varObj, code);
-    expandLeft(varObj, code);
+    expandRight(result, code);
+    expandLeft(result, code);
 
-    if (varObj.end - varObj.start <= 0) return "Delete";
-    return "Rename";
+    return !isIntervalEmpty(result) ? result : null;
 }
 
 function expandLeft(varObj, code) {
