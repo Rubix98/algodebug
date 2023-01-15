@@ -1,4 +1,5 @@
-import { Converter, sanitizeConverter } from "../models/Converter";
+import { Converter } from "../../converter/model";
+import { sanitizeConverter } from "../../converter/service";
 import { Variable, sanitizeVariable } from "./Variable";
 import { ObjectType } from "./ObjectType";
 import { Record, String, Array, Number, Lazy, Runtype, Unknown, Optional, Null } from "runtypes";

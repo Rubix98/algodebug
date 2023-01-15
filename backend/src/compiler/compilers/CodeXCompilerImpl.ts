@@ -1,5 +1,5 @@
-import { CompilerRequest, CompilerResponse } from "../../types/compiler";
-import { OutputParser } from "../../utils/OutputParser";
+import { CompilerRequest, CompilerResponse } from "../types";
+import { OutputParser } from "../utils/OutputParser";
 import { Compiler } from "./compilerFactory";
 
 // https://github.com/Jaagrav/CodeX-API

@@ -1,4 +1,4 @@
-import { CompilerRequest, CompilerResponse } from "../../types/compiler";
+import { CompilerRequest, CompilerResponse } from "../types";
 import { AlgoDebugCompilerImpl } from "./AlgoDebugCompilerImpl";
 import { CodeXCompilerImpl } from "./CodeXCompilerImpl";
 import { JDoodleCompilerImpl } from "./JDoodleCompilerImpl";

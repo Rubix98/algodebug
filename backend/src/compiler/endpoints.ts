@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { validateCode } from "../services/dbservice";
-import { sendRequestsToCompilerAPI } from "../services/compilerservice";
+import { validateCode } from "./service";
+import { sendRequestsToCompilerAPI } from "./service";
 
 export const compileCode = async (req: Request, res: Response) => {
     const [isOk, data] = validateCode(req.body);

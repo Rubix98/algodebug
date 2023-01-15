@@ -1,13 +1,14 @@
-import { validateConverter, validateProject } from "../src/services/dbservice";
-import { Converter } from "../src/models/Converter";
-import { Project } from "../src/models/Project";
-import { Breakpoint } from "../src/structures/Breakpoint";
-import { Language } from "../src/structures/Language";
-import { Variable } from "../src/structures/Variable";
-import { SceneObject } from "../src/structures/SceneObject";
-import { ObjectType } from "../src/structures/ObjectType";
-import { TestCase } from "../src/structures/TestCase";
-import { sanitizeConverter } from "../src/models/Converter";
+import { validateConverter } from "../src/converter/service";
+import { validateProject } from "../src/project/service";
+import { Converter } from "../src/converter/model";
+import { Project } from "../src/project/model";
+import { Breakpoint } from "../src/project/structures/Breakpoint";
+import { Language } from "../src/converter/structures/Language";
+import { Variable } from "../src/project/structures/Variable";
+import { SceneObject } from "../src/project/structures/SceneObject";
+import { ObjectType } from "../src/project/structures/ObjectType";
+import { TestCase } from "../src/project/structures/TestCase";
+import { sanitizeConverter } from "../src/converter/service";
 
 const checkProject = (o: unknown) => {
     // might throw an error

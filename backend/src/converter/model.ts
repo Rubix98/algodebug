@@ -1,5 +1,5 @@
-import { Language } from "../structures/Language";
-import { Static, Record, String, Unknown, Optional, Null } from "runtypes";
+import { Language } from "./structures/Language";
+import { Static, Record, String, Unknown, Optional } from "runtypes";
 
 import { ObjectId } from "mongodb";
 
@@ -21,15 +21,3 @@ export const Converter = Record({
 });
 
 export type Converter = Static<typeof Converter>;
-
-export const sanitizeConverter = (c: Converter | null) => {
-    if (c === null) {
-        return null;
-    }
-    return {
-        _id: c._id ? new ObjectId(c._id) : undefined,
-        title: c.title,
-        language: c.language,
-        code: c.code,
-    } as Converter;
-};

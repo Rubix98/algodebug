@@ -2,11 +2,23 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
 
-import { InitializeConnection } from "./services/dbservice";
-import { getProjectById, getAllProjects, saveProject, updateProject } from "./endpoints/project";
-import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./endpoints/converter";
-import { compileCode } from "./endpoints/compiler";
-import { CompilerTypes } from "./services/compilers/compilerFactory";
+import { getProjectById, getAllProjects, saveProject, updateProject } from "./project/endpoints";
+import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./converter/endpoints";
+import { compileCode } from "./compiler/endpoints";
+import { CompilerTypes } from "./compiler/compilers/compilerFactory";
+import { Collection, MongoClient } from "mongodb";
+import { Project } from "./project/model";
+import { Converter } from "./converter/model";
+
+let projectCollection: Collection<Project>;
+let converterCollection: Collection<Converter>;
+
+export const getCollections = () => {
+    return {
+        projects: projectCollection,
+        converters: converterCollection,
+    };
+};
 
 interface ResponseError extends Error {
     status?: number;
@@ -37,7 +49,19 @@ if (process.env.COMPILER == CompilerTypes.JDOODLE) {
 }
 
 // initialize database connection
-await InitializeConnection();
+try {
+    const client = new MongoClient(process.env.DATABASE_URI as string);
+
+    await client.connect();
+
+    const database = client.db(process.env.DATABASE_NAME);
+    projectCollection = database.collection<Project>("projects");
+    converterCollection = database.collection<Converter>("converters");
+    console.log("Successfully connected to database");
+} catch (error) {
+    console.log("Error while connecting to database:");
+    throw error;
+}
 
 // initialize express app
 const app = express();

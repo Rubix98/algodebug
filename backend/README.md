@@ -31,7 +31,7 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 `DATABASE_NAME` - name of the application database  
 `COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
 `COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)  
-`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)
+`COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)  
 `COMPILER_API_URL` - alternative url to compiler's API (only for AlgoDebug compiler)
 
 If you want to change these values locally, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
@@ -50,15 +50,3 @@ You have two options:
 Validators can be tested with `npm test`  
 This should cover most common API request mistakes.  
 (note: this checks only validators not whole API so invalid JSONs, invalid request endpoints and database operations are not tested)
-
-### Project Overview
-
--   `src` - source code
-    -   `endpoints` - implement endpoints logic
-    -   `models` - schema for database (mongo bson document templates)
-    -   `structures` - smaller classes which compose models
-    -   `services` - logic that is not directly related to API
-    -   `app.ts` - main file with all API endpoints and middleware
-    -   `types` - typescript type declaration files (.d.ts)
--   `tests` - Jest unit tests
-    -   `validation.test.ts` - tests API validation functions (not API itself)
