@@ -1,6 +1,7 @@
-import { getCollections, validateProject } from "../services/dbservice";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
+import { getCollections } from "../app";
+import { validateProject } from "./service";
 
 export const getAllProjects = async (_req: Request, res: Response) => {
     const { projects } = getCollections();

@@ -1,4 +1,4 @@
-import { CodeBreakpoint, CodeOutput } from "../types/compiler";
+import { CodeBreakpoint, CodeOutput } from "../types";
 import { parse } from "node-html-parser";
 
 const BREAKPOINT_TAG = "algodebug-breakpoint";

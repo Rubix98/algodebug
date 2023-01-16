@@ -1,4 +1,4 @@
-import { Static, Record, String, Number, Null } from "runtypes";
+import { Static, Record, String, Number } from "runtypes";
 
 export const Variable = Record({
     id: String,

@@ -1,4 +1,5 @@
-import { CompilerMultiTestsRequest, CompilerResponse } from "../types/compiler";
+import { CompilerMultiTestsRequest, CompilerResponse } from "./types";
+import { Code } from "./structures/Code";
 import { getCompiler } from "./compilers/compilerFactory";
 
 export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsRequest): Promise<CompilerResponse[]> {
@@ -14,3 +15,21 @@ export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsReque
     }
     return results;
 }
+
+type validCodeOrError = [true, Code] | [false, unknown];
+
+export const sanitizeCode = (c: Code) => {
+    return {
+        code: c.code,
+        language: c.language,
+        inputs: c.inputs,
+    } as Code;
+};
+
+export const validateCode = (req: unknown): validCodeOrError => {
+    try {
+        return [true, Code.check(req)];
+    } catch (error) {
+        return [false, error];
+    }
+};

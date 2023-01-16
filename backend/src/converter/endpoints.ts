@@ -1,4 +1,5 @@
-import { getCollections, validateConverter } from "../services/dbservice";
+import { validateConverter } from "./service";
+import { getCollections } from "../app";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 
