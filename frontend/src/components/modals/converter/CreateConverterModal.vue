@@ -29,7 +29,7 @@
             return {
                 converter: {
                     title: "",
-                    code: "ostream& operator <<(ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}",
+                    code: "std::ostream& operator <<(std::ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}",
                 },
             };
         },
