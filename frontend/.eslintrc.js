@@ -23,6 +23,7 @@ module.exports = {
                     "props",
                     "data",
                     [
+                        "setup",
                         "mounted",
                         "beforeMount",
                         "updated",
