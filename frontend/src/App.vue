@@ -22,7 +22,7 @@
     import { container as ModalContainer } from "jenesius-vue-modal";
     import BottomButtons from "@/components/interface/bottomButtons/BottomButtons.vue";
     import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
-    import { mapActions } from "vuex";
+    import { useCachedListStore } from "@/stores/cachedList";
 
     export default defineComponent({
         name: "App",
@@ -36,14 +36,20 @@
             };
         },
 
+        setup() {
+            const store = useCachedListStore();
+
+            const { updateProjects, updateConverters } = store;
+
+            return { updateProjects, updateConverters };
+        },
+
         mounted() {
             this.updateProjects();
             this.updateConverters();
         },
 
         methods: {
-            ...mapActions("cachedLists", ["updateProjects", "updateConverters"]),
-
             toggleDrawer() {
                 this.showDrawer = !this.showDrawer;
             },

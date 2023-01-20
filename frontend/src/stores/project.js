@@ -1,8 +1,8 @@
-import {defineStore} from "pinia";
-import {sendRequest} from "@/javascript/utils/axiosUtils";
-import {CodeParser} from "@/javascript/codeParser/CodeParser";
+import { defineStore } from "pinia";
+import { sendRequest } from "@/javascript/utils/axiosUtils";
+import { CodeParser } from "@/javascript/codeParser/CodeParser";
 
-export const useProjectStore = defineStore("project",{
+export const useProjectStore = defineStore("project", {
     state: () => ({
         _id: null,
         title: "",
@@ -75,38 +75,63 @@ export const useProjectStore = defineStore("project",{
         },
     },
 
-
     actions: {
         /* Setters */
-        setCode (newValue) {this.code = newValue},
-        setBreakpoints (newValue){this.breakpoints = newValue},
-        setIsRunning(newValue) {this.isRunning = newValue},
-        setWaitingForCompile (newValue) {this.waitingForCompile = newValue},
-        switchCurrentTestCase (index) {this.currentTestCaseId = index},
-        switchCurrentFrame (index) { this.currentFrameId = index},
+        setCode(newValue) {
+            this.code = newValue;
+        },
+        setBreakpoints(newValue) {
+            this.breakpoints = newValue;
+        },
+        setIsRunning(newValue) {
+            this.isRunning = newValue;
+        },
+        setWaitingForCompile(newValue) {
+            this.waitingForCompile = newValue;
+        },
+        switchCurrentTestCase(index) {
+            this.currentTestCaseId = index;
+        },
+        switchCurrentFrame(index) {
+            this.currentFrameId = index;
+        },
 
         /* Breakpoints */
-        toggleBreakpoint (id) {this.breakpoints.toggleElement({ id: id })},
+        toggleBreakpoint(id) {
+            this.breakpoints.toggleElement({ id: id });
+        },
 
         /* TestData */
-        addTestCase() { this.addElement({ input: "" })},
-        deleteTestCase (id) {this.testData.deleteById(id)},
-        updateCurrentTestCaseInput (newValue) {this.testData.findById(this.currentTestCaseId).input = newValue},
+        addTestCase() {
+            this.testData.addElement({ input: "" });
+        },
+        deleteTestCase(id) {
+            this.testData.deleteById(id);
+        },
+        updateCurrentTestCaseInput(newValue) {
+            this.testData.findById(this.currentTestCaseId).input = newValue;
+        },
 
         /* SceneObjects */
-        addSceneObject (sceneObject) {this.sceneObjects.addElement(sceneObject)},
-        deleteSceneObject (index) {this.sceneObjects.deleteById(index)},
-        updateSceneObjectPosition (payload) { this.sceneObjects.findById(payload.id).position = payload.position},
+        addSceneObject(sceneObject) {
+            this.sceneObjects.addElement(sceneObject);
+        },
+        deleteSceneObject(index) {
+            this.sceneObjects.deleteById(index);
+        },
+        updateSceneObjectPosition(payload) {
+            this.sceneObjects.findById(payload.id).position = payload.position;
+        },
 
         /* Variables */
-        updateVariable (payload)  {
-            const {id, variable} = payload;
+        updateVariable(payload) {
+            const { id, variable } = payload;
             variable.id = variable.name = this.code.substring(variable.start, variable.end);
             this.sceneObjects
-            .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
-            .find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
+                .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
+                .find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
         },
-        deleteVariable (id)  {
+        deleteVariable(id) {
             this.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
                 .find((sceneObject) => sceneObject.variable?.id === id).variable = null;
@@ -123,7 +148,7 @@ export const useProjectStore = defineStore("project",{
             });
         },
 
-        saveProject( { override, title }) {
+        saveProject({ override, title }) {
             sendRequest("/project/save", this.jsonForSave(override, title), override ? "PUT" : "POST").then(
                 (responseData) => {
                     this.id = responseData.id;
@@ -143,7 +168,7 @@ export const useProjectStore = defineStore("project",{
                     return true;
                 })
                 .finally(() => {
-                    this.waitingForCompile =    false;
+                    this.waitingForCompile = false;
                 });
         },
     },

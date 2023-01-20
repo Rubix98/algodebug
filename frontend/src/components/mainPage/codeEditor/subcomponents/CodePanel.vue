@@ -4,16 +4,18 @@
             :items="languages"
             item-title="label"
             item-value="key"
-            v-model="language"
-            :disabled="this.project.isRunning"
+            v-model="projectLanguage"
+            :disabled="this.isRunning"
         />
     </div>
 </template>
 
 <script>
-    import { mapActions, mapGetters, mapState } from "vuex";
+    import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
-    export default {
+    export default defineComponent({
         props: [],
 
         data() {
@@ -22,24 +24,26 @@
             };
         },
 
-        methods: {
-            ...mapActions("project", ["setLanguage", "setIsRunning", "switchCurrentFrame", "compile"]),
+        setup() {
+            const store = useProjectStore();
+
+            const { setLanguage, setIsRunning, switchCurrentFrame, compile } = store;
+            const { language, isRunning, debugCode } = storeToRefs(store);
+
+            return { setLanguage, setIsRunning, switchCurrentFrame, compile, language, isRunning, debugCode };
         },
 
         computed: {
-            ...mapState(["project"]),
-            ...mapGetters("project", ["debugCode"]),
-
-            language: {
+            projectLanguage: {
                 get() {
-                    return this.project.language;
+                    return this.language;
                 },
                 set(newValue) {
                     this.setLanguage(newValue);
                 },
             },
         },
-    };
+    });
 </script>
 
 <style scoped lang="scss">

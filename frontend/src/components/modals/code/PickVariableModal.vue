@@ -2,7 +2,7 @@
     <AlgoModal title="Zaznacz zmienną">
         <CodeEditor
             id="pick-variable-editor"
-            :code="this.project.code"
+            :code="this.code"
             :editable="false"
             :clickable="true"
             @pickVariableEvent="handlePickVariable"
@@ -16,23 +16,27 @@
     import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
-    import { mapState } from "vuex";
     import { popModal } from "jenesius-vue-modal";
+    import { storeToRefs } from "pinia";
+    import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         components: { CodeEditor, AlgoModal },
 
         props: ["callback"],
+        setup() {
+            const store = useProjectStore();
+
+            const { code } = storeToRefs(store);
+
+            return { code };
+        },
 
         methods: {
             handlePickVariable(variable) {
                 this.$props.callback(variable);
                 popModal();
             },
-        },
-
-        computed: {
-            ...mapState(["project"]),
         },
     });
 </script>

@@ -18,7 +18,8 @@
     import { sendRequest } from "@/javascript/utils/axiosUtils";
     import { popModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
-    import { mapState } from "vuex";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoInput, AlgoTextarea },
@@ -34,6 +35,14 @@
             };
         },
 
+        setup() {
+            const store = useProjectStore();
+
+            const { language } = storeToRefs(store);
+
+            return { language };
+        },
+
         methods: {
             addConverter() {
                 popModal().then(() => {
@@ -42,15 +51,11 @@
             },
 
             saveConverter() {
-                this.converter.language = this.project.language;
+                this.converter.language = this.language;
                 sendRequest("/converter/save", this.converter, "POST").then(() => {
                     this.addConverter();
                 });
             },
-        },
-
-        computed: {
-            ...mapState(["project"]),
         },
     });
 </script>

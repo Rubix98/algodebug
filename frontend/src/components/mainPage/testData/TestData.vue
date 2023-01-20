@@ -8,11 +8,11 @@
                     :auto-grow="true"
                     v-model:value="input"
                     placeholder="Wprowadź dane wejściowe do programu"
-                    :readonly="this.project.isRunning"
+                    :readonly="this.isRunning"
                 />
             </AlgoBlock>
 
-            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.project.isRunning">
+            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.isRunning">
                 <template #checkbox>
                     <v-checkbox-btn
                         v-model="isDynamicOutputOn"
@@ -34,7 +34,8 @@
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
     import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
     import { defineComponent } from "vue";
-    import { mapActions, mapGetters, mapState } from "vuex";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: { TestCasePicker, AlgoTextarea, AlgoBlock },
@@ -45,14 +46,17 @@
             };
         },
 
-        methods: {
-            ...mapActions("project", ["updateCurrentTestCaseInput"]),
+        setup() {
+            const store = useProjectStore();
+
+            const { updateCurrentTestCaseInput } = store;
+
+            const { currentTestCase, currentFrame, numberOfFrames, isRunning } = storeToRefs(store);
+
+            return { currentTestCase, currentFrame, numberOfFrames, updateCurrentTestCaseInput, isRunning };
         },
 
         computed: {
-            ...mapState(["project"]),
-            ...mapGetters("project", ["currentTestCase", "currentFrame", "numberOfFrames"]),
-
             input: {
                 get() {
                     return this.currentTestCase.input;

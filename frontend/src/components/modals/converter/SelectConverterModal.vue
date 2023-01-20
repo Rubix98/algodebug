@@ -14,20 +14,29 @@
     import CreateConverterModal from "@/components/modals/converter/CreateConverterModal.vue";
     import { popModal, pushModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
-    import { mapActions, mapGetters } from "vuex";
+    import { useCachedListStore } from "@/stores/cachedList";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoPickList },
 
         props: ["callback"],
 
+        setup() {
+            const store = useCachedListStore();
+
+            const { updateConverters } = store;
+
+            const { converters } = storeToRefs(store);
+
+            return { updateConverters, converters };
+        },
+
         created() {
             this.updateConverters();
         },
 
         methods: {
-            ...mapActions("cachedLists", ["updateConverters"]),
-
             handleSelectOption(selectedConverter) {
                 this.$props.callback(selectedConverter);
                 popModal();
@@ -40,10 +49,6 @@
                     },
                 });
             },
-        },
-
-        computed: {
-            ...mapGetters("cachedLists", ["converters"]),
         },
     });
 </script>

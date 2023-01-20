@@ -37,15 +37,15 @@
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
     import { cloneDeep } from "lodash";
-    import { mapActions, mapState } from "vuex";
     import { closeModal, pushModal } from "jenesius-vue-modal";
     import { validateSceneObject } from "@/javascript/utils/validationUtils";
     import { defineComponent } from "vue";
     import {
-        getSceneObjectTypes,
         getSceneObjectTypeLabel,
+        getSceneObjectTypes,
         hasSubtypes,
     } from "@/javascript/utils/sceneObjectTypesUtils";
+    import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         components: { AlgoModal, AlgoTable },
@@ -62,6 +62,14 @@
             };
         },
 
+        setup() {
+            const store = useProjectStore();
+
+            const { addSceneObject } = store;
+
+            return { addSceneObject };
+        },
+
         mounted() {
             if (this.$props.sceneObject) {
                 this.model = cloneDeep(this.$props.sceneObject);
@@ -69,8 +77,6 @@
         },
 
         methods: {
-            ...mapActions("project", ["addSceneObject"]),
-
             save() {
                 if (!validateSceneObject(this.model)) return;
 
@@ -102,8 +108,6 @@
         },
 
         computed: {
-            ...mapState(["project"]),
-
             isNewSceneObject() {
                 return this.model.index == null;
             },

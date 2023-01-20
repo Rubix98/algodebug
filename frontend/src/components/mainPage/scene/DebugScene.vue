@@ -3,11 +3,11 @@
         <div class="scene-container full-size" v-if="!showLoading">
             <SceneCanvas class="full-size"></SceneCanvas>
 
-            <CenterPanel v-if="!this.project.isRunning" />
-            <SceneObjectsPanel v-if="!this.project.isRunning" />
-            <DownloadPanel v-if="this.project.isRunning" />
-            <NavigationPanel v-if="this.project.isRunning" />
-            <FrameNumberPanel v-if="this.project.isRunning" />
+            <CenterPanel v-if="!this.isRunning" />
+            <SceneObjectsPanel v-if="!this.isRunning" />
+            <DownloadPanel v-if="this.isRunning" />
+            <NavigationPanel v-if="this.isRunning" />
+            <FrameNumberPanel v-if="this.isRunning" />
         </div>
         <div class="full-size d-flex flex-center flex-column" v-else>
             <v-progress-circular indeterminate color="primary" />
@@ -23,15 +23,21 @@
     import DownloadPanel from "@/components/mainPage/scene/subcomponents/DownloadPanel.vue";
     import NavigationPanel from "@/components/mainPage/scene/subcomponents/NavigationPanel.vue";
     import FrameNumberPanel from "@/components/mainPage/scene/subcomponents/FrameNumberPanel.vue";
-    import { mapState } from "vuex";
     import { defineComponent } from "vue";
+    import { storeToRefs } from "pinia";
+    import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
+        setup() {
+            const store = useProjectStore();
+            const { isRunning, waitingForCompile } = storeToRefs(store);
+
+            return { isRunning, waitingForCompile };
+        },
         computed: {
-            ...mapState(["project"]),
             showLoading() {
-                return this.project.waitingForCompile;
+                return this.waitingForCompile;
             },
         },
     });

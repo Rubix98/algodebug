@@ -6,8 +6,8 @@
                 <CodeEditor
                     id="main-editor"
                     class="width-1-of-2 v-card--variant-elevated elevation-3"
-                    :code="this.project.code"
-                    :editable="!this.project.isRunning && !this.project.waitingForCompile"
+                    :code="this.code"
+                    :editable="!this.isRunning && !this.waitingForCompile"
                     :clickable="false"
                     :showHighlightedVariables="true"
                     :showBreakpoints="true"
@@ -28,12 +28,23 @@
     import CodePanel from "@/components/mainPage/codeEditor/subcomponents/CodePanel.vue";
     import DebugScene from "@/components/mainPage/scene/DebugScene.vue";
     import TestData from "@/components/mainPage/testData/TestData.vue";
-    import { mapState, mapActions } from "vuex";
     import { defineComponent } from "vue";
     import CompilingIndicator from "@/components/interface/compilingIndicator/CompilingIndicator.vue";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: { CompilingIndicator, CodeEditor, CodePanel, DebugScene, TestData },
+
+        setup() {
+            const store = useProjectStore();
+
+            const { loadProject } = store;
+
+            const { code, isRunning, waitingForCompile } = storeToRefs(store);
+
+            return { loadProject, code, isRunning, waitingForCompile };
+        },
 
         mounted() {
             if (this.projectId) {
@@ -41,13 +52,7 @@
             }
         },
 
-        methods: {
-            ...mapActions("project", ["loadProject"]),
-        },
-
         computed: {
-            ...mapState(["project"]),
-
             projectId() {
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get("projectId");

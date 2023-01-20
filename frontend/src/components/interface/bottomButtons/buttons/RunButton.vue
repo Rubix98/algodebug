@@ -14,24 +14,34 @@
 
 <script>
     import { defineComponent } from "vue";
-    import { mapActions, mapState } from "vuex";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         name: "RunButton",
-        methods: {
-            ...mapActions("project", [
-                "setLanguage",
-                "setIsRunning",
-                "setWaitingForCompile",
-                "switchCurrentFrame",
-                "compile",
-            ]),
+        setup() {
+            const store = useProjectStore();
 
+            const { isRunning, waitingForCompile } = storeToRefs(store);
+            const { setIsRunning, setWaitingForCompile, switchCurrentFrame, compile } = store;
+
+            return {
+                isRunning,
+                waitingForCompile,
+                setIsRunning,
+                setWaitingForCompile,
+                switchCurrentFrame,
+                compile,
+            };
+        },
+
+        methods: {
             runButtonPressed() {
                 if (this.projectRunning) {
                     this.stopProgram();
                 } else {
-                    this.waitingForCompile = true;
+                    this.setWaitingForCompile(true);
+
                     this.runProgram();
                 }
             },
@@ -39,7 +49,8 @@
             runProgram() {
                 this.compile().then((success) => {
                     if (!success) return;
-                    this.waitingForCompile = false;
+                    this.setWaitingForCompile(false);
+
                     this.emitter.emit("startDebuggingEvent");
                 });
             },
@@ -51,19 +62,8 @@
             },
         },
         computed: {
-            ...mapState(["project"]),
-
             projectRunning() {
-                return this.project.isRunning;
-            },
-
-            waitingForCompile: {
-                get() {
-                    return this.project.waitingForCompile;
-                },
-                set(value) {
-                    this.setWaitingForCompile(value);
-                },
+                return this.isRunning;
             },
 
             runButtonIcon() {

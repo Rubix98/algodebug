@@ -1,47 +1,42 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <v-text-field label="Tytuł projektu" v-model="projectTitle" clearable />
+        <v-text-field label="Tytuł projektu" v-model="title" clearable />
 
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
-            <v-btn color="primary" @click="save(true)" v-if="project._id">Zapisz</v-btn>
+            <v-btn color="primary" @click="save(true)" v-if="this.projectId">Zapisz</v-btn>
         </template>
     </AlgoModal>
 </template>
 
 <script>
     import AlgoModal from "@/components/global/AlgoModal.vue";
-    import { mapActions, mapState } from "vuex";
     import { closeModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal },
 
-        data() {
-            return {
-                projectTitle: "",
-            };
-        },
+        setup() {
+            const store = useProjectStore();
 
-        mounted() {
-            this.projectTitle = this.project.title;
+            const { saveProject } = store;
+
+            const { title, _id } = storeToRefs(store);
+
+            return { saveProject, title, projectId: _id };
         },
 
         methods: {
-            ...mapActions("project", ["saveProject"]),
-
             save(override) {
                 this.saveProject({
-                    title: this.projectTitle,
+                    title: this.title,
                     override: override,
                 });
                 closeModal();
             },
-        },
-
-        computed: {
-            ...mapState(["project"]),
         },
     });
 </script>

@@ -3,13 +3,19 @@
 </template>
 
 <script>
-    import { mapGetters } from "vuex";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
-        computed: {
-            ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
+        setup() {
+            const store = useProjectStore();
 
+            const { currentFrame, numberOfFrames } = storeToRefs(store);
+
+            return { currentFrame, numberOfFrames };
+        },
+        computed: {
             currentFrameId() {
                 return this.numberOfFrames ? this.currentFrame.id + 1 : 0;
             },

@@ -3,7 +3,7 @@
         <div class="test-case-picker-container">
             <v-list density="compact" class="test-case-picker-container__tests">
                 <v-list-item
-                    v-for="(testCase, index) in project.testData"
+                    v-for="(testCase, index) in this.testData"
                     :key="testCase.id"
                     :title="`Test ${index + 1}`"
                     :active="isTestCaseSelected(testCase.id)"
@@ -18,7 +18,7 @@
             <v-btn
                 prepend-icon="mdi-plus-circle"
                 @click="this.handleAddTestCase"
-                v-if="!project.isRunning"
+                v-if="!this.isRunning"
                 variant="tonal"
             >
                 Dodaj nowy test
@@ -29,15 +29,31 @@
 
 <script>
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
-    import { mapActions, mapState } from "vuex";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { storeToRefs } from "pinia";
 
     export default defineComponent({
         components: { AlgoBlock },
+        setup() {
+            const store = useProjectStore();
+
+            const { addTestCase, deleteTestCase, switchCurrentTestCase, switchCurrentFrame } = store;
+
+            const { currentTestCaseId, testData, isRunning } = storeToRefs(store);
+
+            return {
+                addTestCase,
+                deleteTestCase,
+                switchCurrentTestCase,
+                switchCurrentFrame,
+                currentTestCaseId,
+                testData,
+                isRunning,
+            };
+        },
 
         methods: {
-            ...mapActions("project", ["addTestCase", "deleteTestCase", "switchCurrentTestCase", "switchCurrentFrame"]),
-
             switchTestCase(index) {
                 this.switchCurrentTestCase(index);
                 this.switchCurrentFrame(0);
@@ -46,12 +62,12 @@
 
             handleAddTestCase() {
                 this.addTestCase();
-                this.switchCurrentTestCase(this.project.testData.lastId());
+                this.switchCurrentTestCase(this.testData.lastId());
             },
 
             handleDeleteTestCase(id) {
-                if (id === this.project.currentTestCaseId) {
-                    const nearestId = this.project.testData.nextId(id) ?? this.project.testData.prevId(id);
+                if (id === this.currentTestCaseId) {
+                    const nearestId = this.testData.nextId(id) ?? this.testData.prevId(id);
                     this.switchCurrentTestCase(nearestId);
                 }
                 this.deleteTestCase(id);
@@ -59,14 +75,12 @@
         },
 
         computed: {
-            ...mapState(["project"]),
-
             isTestCaseSelected() {
-                return (id) => id === this.project.currentTestCaseId;
+                return (id) => id === this.currentTestCaseId;
             },
 
             canRemoveTests() {
-                return !this.project.isRunning && this.project.testData.length > 1;
+                return !this.isRunning && this.testData.length > 1;
             },
         },
     });

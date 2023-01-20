@@ -6,16 +6,23 @@
 
 <script>
     import { defineComponent } from "vue";
-    import { mapState } from "vuex";
+    import { storeToRefs } from "pinia";
+    import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         name: "CompilingIndicator",
 
-        computed: {
-            ...mapState(["project"]),
+        setup() {
+            const store = useProjectStore();
 
+            const { waitingForCompile } = storeToRefs(store);
+
+            return { waitingForCompile };
+        },
+
+        computed: {
             showIndicator() {
-                return this.project.waitingForCompile;
+                return this.waitingForCompile;
             },
         },
     });
