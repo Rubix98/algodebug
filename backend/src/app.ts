@@ -13,6 +13,7 @@ import { Project } from "./project/model";
 import { Converter } from "./converter/model";
 import { User } from "./user/model";
 import { initializePassport } from "./user/service";
+import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoints";
 
 let projectCollection: Collection<Project>;
 let converterCollection: Collection<Converter>;
@@ -65,9 +66,17 @@ try {
     projectCollection = database.collection<Project>("projects");
     converterCollection = database.collection<Converter>("converters");
 
-    // unique constraint on provider and user id from provider
+    const cursor = database.listCollections({ name: "users" });
+    let created = true;
+
+    // if users doesn't exist set created to true
+    if ((await cursor.toArray()).length != 0) created = false;
+
     userCollection = database.collection<User>("users");
-    await userCollection.createIndex({ provider: 1, id: 1 }, { unique: true });
+    if (created) {
+        // unique constraint on provider and user id from provider
+        await userCollection.createIndex({ provider: 1, _id: 1 }, { unique: true });
+    }
 
     console.log("Successfully connected to database");
 } catch (error) {
@@ -129,31 +138,10 @@ app.put("/converter/save", updateConverter);
 app.post("/compiler/compile", compileCode);
 
 // passport
-app.get("/auth/google", passport.authenticate("google", { scope: ["email", "profile"] }));
-
-app.get(
-    "/auth/google/callback",
-    passport.authenticate("google", {
-        successRedirect: "/auth/success",
-        failureRedirect: "/error",
-    })
-);
-
-app.get("/auth/success", (req: Request, res: Response) => {
-    // ten endpoint ma za zadanie wysłać wiadomość do openera (głównego okna AlgoDebug), dzięki czemu poinformujemy aplikację o poprawnej autoryzacji oraz zamknąć okno z autoryzacją.
-    res.setHeader("Content-Type", "text/html");
-    const user = JSON.stringify(req.user);
-    res.send(
-        `<script>window.onload = () => {if (!window.opener) return; window.opener.postMessage(${user}, "http://localhost:8081"); window.close()}</script>`
-    );
-});
-
-app.get("/logout", (req: Request, res: Response) => {
-    req.logout(() => {
-        res.status(200).json({ loggedIn: false });
-    });
-});
-
-app.get("/auth/verify", (req: Request, res: Response) => {
-    res.status(200).json({ loggedIn: req.isAuthenticated() });
-});
+// order of these routes is important
+app.get("/logout", authLogout);
+app.get("/auth/success", authSuccess);
+app.get("/auth/verify", authVerify);
+app.get("/auth/:provider/callback", authCallback);
+app.get("/auth/:provider", authUser);
+app.get("/error", (_req, res) => res.send("Error while logging in"));

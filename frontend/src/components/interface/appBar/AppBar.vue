@@ -6,18 +6,18 @@
         </div>
         <v-spacer />
         <div class="app-bar__buttons">
-            <v-btn color="primary" v-if="!loggedIn" @click="login"> Zaloguj się </v-btn>
-            <v-btn color="primary" v-if="loggedIn" @click="logout"> Wyloguj się </v-btn>
+            <v-btn color="primary" v-if="!this.loggedIn" @click="login"> Zaloguj się </v-btn>
+            <v-btn color="primary" v-if="this.loggedIn" @click="logout"> Wyloguj się </v-btn>
         </div>
     </v-app-bar>
 </template>
 
 <script>
     import { defineComponent } from "vue";
-    import { sendRequest } from "@/javascript/utils/axiosUtils";
     import { redirectTo } from "@/javascript/utils/other";
     import logoDark from "@/img/logo-dark.png";
     import logo from "@/img/logo.png";
+    import store from "@/store";
 
     export default defineComponent({
         name: "AppBar",
@@ -30,11 +30,6 @@
             },
         },
 
-        data() {
-            return {
-                loggedIn: false,
-            };
-        },
         mounted() {
             this.verify();
         },
@@ -45,37 +40,23 @@
             },
 
             login() {
-                window.open("http://localhost:8080/auth/google", "_blank", "height=570,width=520");
-
-                window.addEventListener(
-                    "message",
-                    (event) => {
-                        if (event.origin !== "http://localhost:8080" || !event.data) return;
-
-                        // user object in event.data
-                        console.log(event.data);
-                        // can be saved to store or cookie
-
-                        this.loggedIn = true;
-                    },
-                    false
-                );
+                store.dispatch("user/login");
             },
 
             verify() {
-                sendRequest("/auth/verify", {}, "GET").then((responseData) => {
-                    this.loggedIn = responseData.loggedIn;
-                });
+                store.dispatch("user/verify");
             },
 
             logout() {
-                sendRequest("/logout", {}, "GET").then((responseData) => {
-                    this.loggedIn = responseData.loggedIn;
-                });
+                store.dispatch("user/logout");
             },
         },
 
         computed: {
+            loggedIn() {
+                return store.getters["user/loggedIn"];
+            },
+
             logoUrl() {
                 return this.$vuetify.theme.global.name === "dark" ? logoDark : logo;
             },
