@@ -67,10 +67,10 @@ try {
     converterCollection = database.collection<Converter>("converters");
 
     const cursor = database.listCollections({ name: "users" });
-    let created = true;
+    let created = false;
 
     // if users doesn't exist set created to true
-    if ((await cursor.toArray()).length != 0) created = false;
+    if ((await cursor.toArray()).length == 0) created = true;
 
     userCollection = database.collection<User>("users");
     if (created) {
