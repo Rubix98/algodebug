@@ -66,17 +66,8 @@ try {
     projectCollection = database.collection<Project>("projects");
     converterCollection = database.collection<Converter>("converters");
 
-    const cursor = database.listCollections({ name: "users" });
-    let created = false;
-
-    // if users doesn't exist set created to true
-    if ((await cursor.toArray()).length == 0) created = true;
-
     userCollection = database.collection<User>("users");
-    if (created) {
-        // unique constraint on provider and user id from provider
-        await userCollection.createIndex({ provider: 1, _id: 1 }, { unique: true });
-    }
+    await userCollection.createIndex({ provider: 1, _id: 1 }, { unique: true });
 
     console.log("Successfully connected to database");
 } catch (error) {
