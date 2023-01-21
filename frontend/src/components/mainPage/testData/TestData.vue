@@ -35,7 +35,7 @@
     import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { TestCasePicker, AlgoTextarea, AlgoBlock },
@@ -46,17 +46,12 @@
             };
         },
 
-        setup() {
-            const store = useProjectStore();
-
-            const { updateCurrentTestCaseInput } = store;
-
-            const { currentTestCase, currentFrame, numberOfFrames, isRunning } = storeToRefs(store);
-
-            return { currentTestCase, currentFrame, numberOfFrames, updateCurrentTestCaseInput, isRunning };
+        methods: {
+            ...mapActions(useProjectStore, ["updateCurrentTestCaseInput"]),
         },
 
         computed: {
+            ...mapState(useProjectStore, ["currentTestCase", "currentFrame", "numberOfFrames", "isRunning"]),
             input: {
                 get() {
                     return this.currentTestCase.input;

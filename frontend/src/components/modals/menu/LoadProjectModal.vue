@@ -10,29 +10,24 @@
     import { redirectTo } from "@/javascript/utils/other";
     import { defineComponent } from "vue";
     import { useCachedListStore } from "@/stores/cachedList";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoPickList },
-
-        setup() {
-            const store = useCachedListStore();
-
-            const { updateProjects } = store;
-
-            const { projects } = storeToRefs(store);
-
-            return { updateProjects, projects };
-        },
 
         created() {
             this.updateProjects();
         },
 
         methods: {
+            ...mapActions(useCachedListStore, ["updateProjects"]),
             loadProject(selectedProject) {
                 redirectTo("?projectId=" + selectedProject._id);
             },
+        },
+
+        computed: {
+            ...mapState(useCachedListStore, ["projects"]),
         },
     });
 </script>

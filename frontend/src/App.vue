@@ -23,6 +23,7 @@
     import BottomButtons from "@/components/interface/bottomButtons/BottomButtons.vue";
     import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
     import { useCachedListStore } from "@/stores/cachedList";
+    import { mapActions } from "pinia";
 
     export default defineComponent({
         name: "App",
@@ -36,20 +37,13 @@
             };
         },
 
-        setup() {
-            const store = useCachedListStore();
-
-            const { updateProjects, updateConverters } = store;
-
-            return { updateProjects, updateConverters };
-        },
-
         mounted() {
             this.updateProjects();
             this.updateConverters();
         },
 
         methods: {
+            ...mapActions(useCachedListStore, ["updateProjects", "updateConverters"]),
             toggleDrawer() {
                 this.showDrawer = !this.showDrawer;
             },

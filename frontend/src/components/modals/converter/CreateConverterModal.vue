@@ -19,7 +19,7 @@
     import { popModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoInput, AlgoTextarea },
@@ -35,14 +35,6 @@
             };
         },
 
-        setup() {
-            const store = useProjectStore();
-
-            const { language } = storeToRefs(store);
-
-            return { language };
-        },
-
         methods: {
             addConverter() {
                 popModal().then(() => {
@@ -56,6 +48,10 @@
                     this.addConverter();
                 });
             },
+        },
+
+        computed: {
+            ...mapState(useProjectStore, ["language"]),
         },
     });
 </script>

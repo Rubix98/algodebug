@@ -24,18 +24,15 @@
     import NavigationPanel from "@/components/mainPage/scene/subcomponents/NavigationPanel.vue";
     import FrameNumberPanel from "@/components/mainPage/scene/subcomponents/FrameNumberPanel.vue";
     import { defineComponent } from "vue";
-    import { storeToRefs } from "pinia";
+    import { mapState } from "pinia";
     import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         components: { SceneCanvas, CenterPanel, SceneObjectsPanel, DownloadPanel, NavigationPanel, FrameNumberPanel },
-        setup() {
-            const store = useProjectStore();
-            const { isRunning, waitingForCompile } = storeToRefs(store);
 
-            return { isRunning, waitingForCompile };
-        },
         computed: {
+            ...mapState(useProjectStore, ["isRunning", "waitingForCompile"]),
+
             showLoading() {
                 return this.waitingForCompile;
             },

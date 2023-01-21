@@ -11,7 +11,7 @@
 <script>
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         data() {
@@ -46,22 +46,19 @@
                 ],
             };
         },
-        setup() {
-            const store = useProjectStore();
-
-            const { switchCurrentFrame } = store;
-
-            const { currentFrame, numberOfFrames } = storeToRefs(store);
-
-            return { switchCurrentFrame, currentFrame, numberOfFrames };
-        },
 
         methods: {
+            ...mapActions(useProjectStore, ["switchCurrentFrame"]),
+
             setFrameId(index) {
                 if (index < 0 || index >= this.numberOfFrames) return;
                 this.switchCurrentFrame(index);
                 this.emitter.emit("currentFrameChangedEvent");
             },
+        },
+
+        computed: {
+            ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
         },
     });
 </script>

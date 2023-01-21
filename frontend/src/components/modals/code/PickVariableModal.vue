@@ -17,26 +17,22 @@
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
     import { popModal } from "jenesius-vue-modal";
-    import { storeToRefs } from "pinia";
+    import { mapState } from "pinia";
     import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         components: { CodeEditor, AlgoModal },
 
         props: ["callback"],
-        setup() {
-            const store = useProjectStore();
-
-            const { code } = storeToRefs(store);
-
-            return { code };
-        },
 
         methods: {
             handlePickVariable(variable) {
                 this.$props.callback(variable);
                 popModal();
             },
+        },
+        computed: {
+            ...mapState(useProjectStore, ["code"]),
         },
     });
 </script>

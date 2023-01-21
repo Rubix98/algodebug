@@ -13,7 +13,7 @@
 <script>
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         props: [],
@@ -24,16 +24,13 @@
             };
         },
 
-        setup() {
-            const store = useProjectStore();
-
-            const { setLanguage, setIsRunning, switchCurrentFrame, compile } = store;
-            const { language, isRunning, debugCode } = storeToRefs(store);
-
-            return { setLanguage, setIsRunning, switchCurrentFrame, compile, language, isRunning, debugCode };
+        methods: {
+            ...mapActions(useProjectStore, ["setLanuage", "switchCurrentFrame", "compile"]),
         },
 
         computed: {
+            ...mapState(useProjectStore, ["language", "isRunning", "debugCode"]),
+
             projectLanguage: {
                 get() {
                     return this.language;

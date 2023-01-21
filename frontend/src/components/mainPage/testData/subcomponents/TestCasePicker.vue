@@ -31,29 +31,19 @@
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoBlock },
-        setup() {
-            const store = useProjectStore();
-
-            const { addTestCase, deleteTestCase, switchCurrentTestCase, switchCurrentFrame } = store;
-
-            const { currentTestCaseId, testData, isRunning } = storeToRefs(store);
-
-            return {
-                addTestCase,
-                deleteTestCase,
-                switchCurrentTestCase,
-                switchCurrentFrame,
-                currentTestCaseId,
-                testData,
-                isRunning,
-            };
-        },
 
         methods: {
+            ...mapActions(useProjectStore, [
+                "addTestCase",
+                "deleteTestCase",
+                "switchCurrentTestCase",
+                "switchCurrentFrame",
+            ]),
+
             switchTestCase(index) {
                 this.switchCurrentTestCase(index);
                 this.switchCurrentFrame(0);
@@ -75,6 +65,7 @@
         },
 
         computed: {
+            ...mapState(useProjectStore, ["currentTestCaseId", "testData", "isRunning"]),
             isTestCaseSelected() {
                 return (id) => id === this.currentTestCaseId;
             },

@@ -19,19 +19,12 @@
     import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
-        setup() {
-            const store = useProjectStore();
-
-            const { deleteSceneObject } = store;
-
-            const { sceneObjects } = storeToRefs(store);
-
-            return { deleteSceneObject, sceneObjects };
-        },
         methods: {
+            ...mapActions(useProjectStore, ["deleteSceneObject"]),
+
             configureSceneObject(sceneObject, event) {
                 if (event.target.localName === "i") return;
                 openModal(ConfigureSceneObjectModal, { sceneObject });
@@ -39,6 +32,8 @@
         },
 
         computed: {
+            ...mapState(useProjectStore, ["sceneObjects"]),
+
             sceneObjectLabel() {
                 return (sceneObject) => {
                     return `${getSceneObjectTypeLabel(sceneObject.type)} ${

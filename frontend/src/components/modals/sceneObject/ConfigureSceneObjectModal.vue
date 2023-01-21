@@ -46,6 +46,7 @@
         hasSubtypes,
     } from "@/javascript/utils/sceneObjectTypesUtils";
     import { useProjectStore } from "@/stores/project";
+    import { mapActions } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoTable },
@@ -62,14 +63,6 @@
             };
         },
 
-        setup() {
-            const store = useProjectStore();
-
-            const { addSceneObject } = store;
-
-            return { addSceneObject };
-        },
-
         mounted() {
             if (this.$props.sceneObject) {
                 this.model = cloneDeep(this.$props.sceneObject);
@@ -77,6 +70,8 @@
         },
 
         methods: {
+            ...mapActions(useProjectStore, ["addSceneObject"]),
+
             save() {
                 if (!validateSceneObject(this.model)) return;
 

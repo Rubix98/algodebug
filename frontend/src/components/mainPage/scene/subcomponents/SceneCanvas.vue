@@ -8,18 +8,9 @@
     import { Stage } from "@/javascript/stage/Stage";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
-        setup() {
-            const store = useProjectStore();
-
-            const { updateSceneObjectPosition } = store;
-
-            const { currentFrame, isRunning, sceneObjects } = storeToRefs(store);
-
-            return { updateSceneObjectPosition, currentFrame, isRunning, sceneObjects };
-        },
         mounted() {
             this.stage = new Stage("canvas");
 
@@ -31,6 +22,8 @@
         },
 
         methods: {
+            ...mapActions(useProjectStore, ["updateSceneObjectPosition"]),
+
             draw() {
                 if (!this.isRunning || !this.currentFrame) return;
 
@@ -44,6 +37,10 @@
             download() {
                 this.stage.downloadImage();
             },
+        },
+
+        computed: {
+            ...mapState(useProjectStore, ["currentFrame", "isRunning", "sceneObjects"]),
         },
     });
 </script>

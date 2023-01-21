@@ -5,17 +5,11 @@
 <script>
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapState } from "pinia";
 
     export default defineComponent({
-        setup() {
-            const store = useProjectStore();
-
-            const { currentFrame, numberOfFrames } = storeToRefs(store);
-
-            return { currentFrame, numberOfFrames };
-        },
         computed: {
+            ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
             currentFrameId() {
                 return this.numberOfFrames ? this.currentFrame.id + 1 : 0;
             },

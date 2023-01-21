@@ -23,7 +23,7 @@
     import { defineComponent } from "vue";
     import { getCurrentThemeFromStorage } from "@/javascript/storage/themeStorage";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { MonacoEditor },
@@ -48,16 +48,6 @@
             };
         },
 
-        setup() {
-            const store = useProjectStore();
-
-            const { setCode, toggleBreakpoint } = store;
-
-            const { variables, currentFrame, code, breakpoints } = storeToRefs(store);
-
-            return { setCode, toggleBreakpoint, variables, currentFrame, projectCode: code, breakpoints };
-        },
-
         mounted() {
             this.updateAllDecorations();
             this.emitter.on("themeChangeEvent", () => {
@@ -66,6 +56,8 @@
         },
 
         methods: {
+            ...mapActions(useProjectStore, ["setCode", "toggleBreakpoint"]),
+
             editorDidMount(editor) {
                 this.editor = editor;
 
@@ -149,6 +141,9 @@
         },
 
         computed: {
+            ...mapState(useProjectStore, ["variables", "currentFrame", "breakpoints"]),
+            ...mapState(useProjectStore, { projectCode: (state) => state.code }),
+
             modelCode: {
                 get() {
                     return this.$props.code;

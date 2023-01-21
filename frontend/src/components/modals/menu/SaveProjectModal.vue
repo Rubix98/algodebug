@@ -4,7 +4,7 @@
 
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
-            <v-btn color="primary" @click="save(true)" v-if="this.projectId">Zapisz</v-btn>
+            <v-btn color="primary" @click="save(true)" v-if="this._id">Zapisz</v-btn>
         </template>
     </AlgoModal>
 </template>
@@ -14,22 +14,14 @@
     import { closeModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal },
 
-        setup() {
-            const store = useProjectStore();
-
-            const { saveProject } = store;
-
-            const { title, _id } = storeToRefs(store);
-
-            return { saveProject, title, projectId: _id };
-        },
-
         methods: {
+            ...mapActions(useProjectStore, ["saveProject"]),
+
             save(override) {
                 this.saveProject({
                     title: this.title,
@@ -37,6 +29,10 @@
                 });
                 closeModal();
             },
+        },
+
+        computed: {
+            ...mapState(useProjectStore, ["title", "_id"]),
         },
     });
 </script>

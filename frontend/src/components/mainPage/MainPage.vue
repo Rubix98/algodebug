@@ -31,20 +31,10 @@
     import { defineComponent } from "vue";
     import CompilingIndicator from "@/components/interface/compilingIndicator/CompilingIndicator.vue";
     import { useProjectStore } from "@/stores/project";
-    import { storeToRefs } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { CompilingIndicator, CodeEditor, CodePanel, DebugScene, TestData },
-
-        setup() {
-            const store = useProjectStore();
-
-            const { loadProject } = store;
-
-            const { code, isRunning, waitingForCompile } = storeToRefs(store);
-
-            return { loadProject, code, isRunning, waitingForCompile };
-        },
 
         mounted() {
             if (this.projectId) {
@@ -52,7 +42,12 @@
             }
         },
 
+        methods: {
+            ...mapActions(useProjectStore, ["loadProject"]),
+        },
+
         computed: {
+            ...mapState(useProjectStore, ["code", "isRunning", "waitingForCompile"]),
             projectId() {
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get("projectId");
