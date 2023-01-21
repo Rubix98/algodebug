@@ -37,7 +37,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "~vuetify/lib/styles/settings/_variables.scss";
+    @import "node_modules/vuetify/lib/styles/settings/_variables.scss";
 
     .dialog {
         min-width: max(40vw, 35rem);
