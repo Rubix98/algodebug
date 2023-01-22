@@ -11,7 +11,7 @@ export function initializeGoogle() {
             {
                 clientID: process.env.GOOGLE_CLIENT_ID as string,
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-                callbackURL: "http://localhost:8080/auth/google/callback",
+                callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`,
                 userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
                 passReqToCallback: true,
             },

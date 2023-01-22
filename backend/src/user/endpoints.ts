@@ -1,7 +1,6 @@
 import passport from "passport";
 import { Provider } from "./structures/Provider";
 import { NextFunction, Request, Response } from "express";
-import { validateUser } from "./service";
 
 const checkProvider = (provider: string) => {
     try {
@@ -43,7 +42,7 @@ export const authSuccess = (req: Request, res: Response) => {
         "<script>" +
         "window.onload = () => {" +
         "if (!window.opener) return;" +
-        `window.opener.postMessage(${user}, \"http://localhost:8081\");` +
+        `window.opener.postMessage(${user}, "${process.env.FRONTEND_URL}");` +
         "window.close()" +
         "}" +
         "</script>";
