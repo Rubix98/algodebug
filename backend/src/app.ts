@@ -34,19 +34,17 @@ interface ResponseError extends Error {
 // test env variables
 dotenv.config({ path: ".env.local" });
 dotenv.config({ path: ".env" });
-dotenv.config({ path: "../.env" });
 
-// .env
 [
     "DATABASE_URI",
     "DATABASE_NAME",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
     "ALGO_SECRET",
-    // ../.env
-    "BACKEND_PORT",
+    "PORT",
     "BACKEND_URL",
     "FRONTEND_URL",
+    "ORIGINS",
 ].forEach((variable) => {
     if (!process.env[variable]) {
         throw new Error(`Environment variable ${variable} is not set`);
@@ -97,8 +95,8 @@ app.use(passport.session());
 
 /* Middleware */
 
-app.listen(process.env.BACKEND_PORT, () => {
-    console.log(`Backend server is running on port: ${process.env.BACKEND_PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Backend server is running on port: ${process.env.PORT}`);
 });
 
 // attach application/json header to all responses

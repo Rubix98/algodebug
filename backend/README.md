@@ -26,8 +26,6 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 
 ## Environmental variables
 
-Inside `.env`:
-
 `DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
 `COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
@@ -37,9 +35,6 @@ Inside `.env`:
 `GOOGLE_CLIENT_ID` - your client id to Google API  
 `GOOGLE_CLIENT_SECRET` - your client secret to Google API  
 `ALGO_SECRET` - secret for generating session tokens
-
-Additionally in `../.env` you can find these variables used by backend:
-
 `ORIGINS` - origins to allow cross-origin requests separated by commas  
 `BACKEND_PORT` - what port to use to set up http server  
 `BACKEND_URL` - url to backend (used foR setting redirect url for google oauth)  
