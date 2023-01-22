@@ -43,7 +43,7 @@ Additionally in `../.env` you can find these variables used by backend:
 `ORIGINS` - origins to allow cross-origin requests separated by commas  
 `BACKEND_PORT` - what port to use to set up http server  
 `BACKEND_URL` - url to backend (used foR setting redirect url for google oauth)  
-`FRONTEND_URL` - url to frontend (used for setting redirect url for google oauth)  
+`FRONTEND_URL` - url to frontend (used for setting redirect url for google oauth)
 
 If you want to change these values locally, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
 

@@ -7,7 +7,7 @@ export const User = Record({
     username: String.withConstraint((s) => s.length > 0),
     // since these are provided by google I don't tihnk some crazy regex is needed
     email: String.withConstraint((s) => s.length > 0).Or(Null),
-    picture: String.withConstraint((s) => s.length > 0).Or(Null)
+    picture: String.withConstraint((s) => s.length > 0).Or(Null),
 });
 
 export type User = Static<typeof User>;

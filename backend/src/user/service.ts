@@ -19,14 +19,13 @@ export function initializePassport() {
 }
 
 export const processUser = async (provider: Provider, profile: passport.Profile) => {
-
     const user = {
         _id: profile.id,
         provider: provider,
         username: profile.displayName,
         // should always exist but technically not required in certain services
         email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
-        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null
+        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
     } as User;
 
     const [isOk, data] = validateUser(user);

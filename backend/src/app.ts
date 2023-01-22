@@ -37,15 +37,21 @@ dotenv.config({ path: ".env" });
 dotenv.config({ path: "../.env" });
 
 // .env
-["DATABASE_URI", "DATABASE_NAME", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "ALGO_SECRET",
-// ../.env
-"BACKEND_PORT", "BACKEND_URL", "FRONTEND_URL"].forEach(
-    (variable) => {
-        if (!process.env[variable]) {
-            throw new Error(`Environment variable ${variable} is not set`);
-        }
+[
+    "DATABASE_URI",
+    "DATABASE_NAME",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "ALGO_SECRET",
+    // ../.env
+    "BACKEND_PORT",
+    "BACKEND_URL",
+    "FRONTEND_URL",
+].forEach((variable) => {
+    if (!process.env[variable]) {
+        throw new Error(`Environment variable ${variable} is not set`);
     }
-);
+});
 
 if (process.env.COMPILER && !Object.keys(CompilerTypes).includes(process.env.COMPILER)) {
     throw new Error(
