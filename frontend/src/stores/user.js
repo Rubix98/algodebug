@@ -1,51 +1,56 @@
 import { sendRequest } from "@/javascript/utils/axiosUtils.js";
+import { defineStore } from "pinia";
 
-export default {
-    namespaced: true,
-    state: {
-        user: null,
-    },
+export const useUserStore =  defineStore("user",{
+    state: () => ({
+        user: null
+    }),
 
     getters: {
-        loggedIn(state) {
-            return state.user ? true : false;
+        loggedIn() {
+            return !!this.user;
         },
 
-        user(state) {
-            return state.user ? state.user : null;
+        username() {
+            if (!this.loggedIn) return null;
+            return this.user.username;
         },
-    },
 
-    mutations: {
-        setUser(state, user) {
-            state.user = user;
+        userId() {
+            if (!this.loggedIn) return null;
+            return this.user._id;
         },
+
+        userAuthProvider() {
+            if (!this.loggedIn) return null;
+            return this.user.provider;
+        }
     },
 
     actions: {
-        login({ commit }) {
+        login() {
             window.open("http://localhost:8080/auth/google", "_blank", "height=570,width=520");
 
             window.addEventListener(
                 "message",
                 (event) => {
                     if (event.origin !== "http://localhost:8080" || !event.data) return;
-                    commit("setUser", event.data);
+                    this.user= event.data;
                 },
                 false
             );
         },
 
-        verify({ commit }) {
+        verify() {
             sendRequest("/auth/verify", {}, "GET").then((responseData) => {
-                commit("setUser", responseData.loggedIn ? responseData.user : null);
+                this.user =  responseData.loggedIn ? responseData.user : null;
             });
         },
 
-        logout({ commit }) {
+        logout() {
             sendRequest("/logout", {}, "GET").then(() => {
-                commit("setUser", null);
+                this.user = null;
             });
         },
     },
-};
+});

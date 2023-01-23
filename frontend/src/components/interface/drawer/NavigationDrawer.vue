@@ -6,7 +6,7 @@
         @update:modelValue="this.$emit('hideDrawerEvent')"
     >
         <v-list>
-            <v-list-item :prepend-avatar="userAvatarImg" title="Użytkownik" subtitle="user@example.com" />
+            <v-list-item :prepend-avatar="userAvatarImg" :title="usernameToShow" subtitle="" />
         </v-list>
         <v-divider />
         <div class="buttons-list" v-for="(buttonsKeys, index) in Object.keys(buttons)" :key="buttonsKeys">
@@ -33,6 +33,8 @@
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
     import userImage from "@/img/user.png";
+    import {mapState} from "pinia";
+    import {useUserStore} from "@/stores/user";
 
     export default defineComponent({
         name: "NavigationDrawer",
@@ -130,9 +132,15 @@
         },
 
         computed: {
+            ...mapState(useUserStore, ["username"]),
+
             userAvatarImg() {
                 return userImage;
             },
+
+            usernameToShow() {
+              return this.username == null ? "Niezalogowany" : this.username;
+            }
         },
     });
 </script>
