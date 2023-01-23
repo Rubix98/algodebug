@@ -1,4 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
+import passport from "passport";
+import session from "express-session";
 import cors from "cors";
 import * as dotenv from "dotenv";
 
@@ -9,14 +11,19 @@ import { CompilerTypes } from "./compiler/compilers/compilerFactory";
 import { Collection, MongoClient } from "mongodb";
 import { Project } from "./project/model";
 import { Converter } from "./converter/model";
+import { User } from "./user/model";
+import { initializePassport } from "./user/service";
+import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoints";
 
 let projectCollection: Collection<Project>;
 let converterCollection: Collection<Converter>;
+let userCollection: Collection<User>;
 
 export const getCollections = () => {
     return {
         projects: projectCollection,
         converters: converterCollection,
+        users: userCollection,
     };
 };
 
@@ -28,11 +35,13 @@ interface ResponseError extends Error {
 dotenv.config({ path: ".env.local" });
 dotenv.config({ path: ".env" });
 
-["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME"].forEach((variable) => {
-    if (!process.env[variable]) {
-        throw new Error(`Environment variable ${variable} is not set`);
+["PORT", "ORIGINS", "DATABASE_URI", "DATABASE_NAME", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "ALGO_SECRET"].forEach(
+    (variable) => {
+        if (!process.env[variable]) {
+            throw new Error(`Environment variable ${variable} is not set`);
+        }
     }
-});
+);
 
 if (process.env.COMPILER && !Object.keys(CompilerTypes).includes(process.env.COMPILER)) {
     throw new Error(
@@ -51,12 +60,15 @@ if (process.env.COMPILER == CompilerTypes.JDOODLE) {
 // initialize database connection
 try {
     const client = new MongoClient(process.env.DATABASE_URI as string);
-
     await client.connect();
-
     const database = client.db(process.env.DATABASE_NAME);
+
     projectCollection = database.collection<Project>("projects");
     converterCollection = database.collection<Converter>("converters");
+
+    userCollection = database.collection<User>("users");
+    await userCollection.createIndex({ provider: 1, _id: 1 }, { unique: true });
+
     console.log("Successfully connected to database");
 } catch (error) {
     console.log("Error while connecting to database:");
@@ -65,6 +77,13 @@ try {
 
 // initialize express app
 const app = express();
+
+// initialize passport
+initializePassport();
+// tutaj w opcjach można konfigurować tą sesję (chociażby czas żywotności ciasteczka)
+app.use(session({ secret: process.env.ALGO_SECRET as string, resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 /* Middleware */
 
@@ -79,7 +98,7 @@ app.use((_req, res, next) => {
 });
 
 // allow cross-origin requests for all origins defined in .env
-app.use(cors({ origin: (process.env.ORIGINS as string).split(",") }));
+app.use(cors({ origin: (process.env.ORIGINS as string).split(","), credentials: true }));
 
 // parse request body as JSON
 app.use(express.json());
@@ -108,3 +127,12 @@ app.put("/converter/save", updateConverter);
 
 // compiler
 app.post("/compiler/compile", compileCode);
+
+// passport
+// order of these routes is important
+app.get("/logout", authLogout);
+app.get("/auth/success", authSuccess);
+app.get("/auth/verify", authVerify);
+app.get("/auth/:provider/callback", authCallback);
+app.get("/auth/:provider", authUser);
+app.get("/error", (_req, res) => res.send("Error while logging in"));
