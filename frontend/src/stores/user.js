@@ -1,9 +1,9 @@
 import { sendRequest } from "@/javascript/utils/axiosUtils.js";
 import { defineStore } from "pinia";
 
-export const useUserStore =  defineStore("user",{
+export const useUserStore = defineStore("user", {
     state: () => ({
-        user: null
+        user: null,
     }),
 
     getters: {
@@ -24,7 +24,7 @@ export const useUserStore =  defineStore("user",{
         userAuthProvider() {
             if (!this.loggedIn) return null;
             return this.user.provider;
-        }
+        },
     },
 
     actions: {
@@ -35,7 +35,7 @@ export const useUserStore =  defineStore("user",{
                 "message",
                 (event) => {
                     if (event.origin !== "http://localhost:8080" || !event.data) return;
-                    this.user= event.data;
+                    this.user = event.data;
                 },
                 false
             );
@@ -43,7 +43,7 @@ export const useUserStore =  defineStore("user",{
 
         verify() {
             sendRequest("/auth/verify", {}, "GET").then((responseData) => {
-                this.user =  responseData.loggedIn ? responseData.user : null;
+                this.user = responseData.loggedIn ? responseData.user : null;
             });
         },
 

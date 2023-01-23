@@ -33,8 +33,8 @@
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
     import userImage from "@/img/user.png";
-    import {mapState} from "pinia";
-    import {useUserStore} from "@/stores/user";
+    import { mapState } from "pinia";
+    import { useUserStore } from "@/stores/user";
 
     export default defineComponent({
         name: "NavigationDrawer",
@@ -139,8 +139,8 @@
             },
 
             usernameToShow() {
-              return this.username == null ? "Niezalogowany" : this.username;
-            }
+                return this.username == null ? "Niezalogowany" : this.username;
+            },
         },
     });
 </script>

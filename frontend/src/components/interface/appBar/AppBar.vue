@@ -17,8 +17,8 @@
     import { redirectTo } from "@/javascript/utils/other";
     import logoDark from "@/img/logo-dark.png";
     import logo from "@/img/logo.png";
-    import {mapActions, mapState} from "pinia";
-    import {useUserStore} from "@/stores/user";
+    import { mapActions, mapState } from "pinia";
+    import { useUserStore } from "@/stores/user";
 
     export default defineComponent({
         name: "AppBar",
@@ -41,7 +41,6 @@
             redirectToRoot() {
                 redirectTo(window.location.origin + window.location.pathname);
             },
-
         },
 
         computed: {
