@@ -3,6 +3,7 @@
         <v-app-bar-nav-icon @click="this.$emit('toggleDrawer')" v-if="showDrawerButton" />
         <div class="app-bar__logo">
             <img class="app-bar__logo__image" :src="logoUrl" @click="redirectToRoot()" alt="AlgoDebug logo" />
+            <img class="app-bar__logo__image" :src="titleUrl" @click="redirectToRoot()" alt="AlgoDebug logo" />
         </div>
         <v-spacer />
         <div class="app-bar__buttons">
@@ -15,8 +16,10 @@
 <script>
     import { defineComponent } from "vue";
     import { redirectTo } from "@/javascript/utils/other";
-    import logoDark from "@/img/logo-dark.png";
     import logo from "@/img/logo.png";
+    import logoDark from "@/img/logo-dark.png";
+    import title from "@/img/title.png";
+    import titleDark from "@/img/title-dark.png";
     import store from "@/store";
 
     export default defineComponent({
@@ -60,6 +63,10 @@
             logoUrl() {
                 return this.$vuetify.theme.global.name === "dark" ? logoDark : logo;
             },
+
+            titleUrl() {
+                return this.$vuetify.theme.global.name === "dark" ? titleDark : title;
+            }
         },
     });
 </script>
