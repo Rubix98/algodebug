@@ -66,7 +66,7 @@
 
             titleUrl() {
                 return this.$vuetify.theme.global.name === "dark" ? titleDark : title;
-            }
+            },
         },
     });
 </script>
