@@ -1,8 +1,10 @@
 declare namespace NodeJS {
     export interface ProcessEnv {
-        // from .env
+        PORT: string;
+        ORIGINS: string;
         DATABASE_URI: string;
         DATABASE_NAME: string;
+        BACKEND_URL: string;
 
         COMPILER: string;
         COMPILER_CLIENT_ID: string;
@@ -11,12 +13,5 @@ declare namespace NodeJS {
         GOOGLE_CLIENT_ID: string;
         GOOGLE_CLIENT_SECRET: string;
         ALGO_SECRET: string;
-
-        // from ../.env
-        BACKEND_URL: string;
-        FRONTEND_URL: string;
-        FRONTEND_PORT: string;
-        BACKEND_PORT: string;
-        ORIGINS: string;
     }
 }

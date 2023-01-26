@@ -26,8 +26,11 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 
 ## Environmental variables
 
+`PORT` - what port to use to set up http server  
+`ORIGINS` - origins to allow cross-origin requests separated by commas  
 `DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
+`BACKEND_URL` - url to backend (used foR setting redirect url for google oauth)  
 `COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
 `COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)  
 `COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)  
@@ -35,10 +38,6 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 `GOOGLE_CLIENT_ID` - your client id to Google API  
 `GOOGLE_CLIENT_SECRET` - your client secret to Google API  
 `ALGO_SECRET` - secret for generating session tokens
-`ORIGINS` - origins to allow cross-origin requests separated by commas  
-`BACKEND_PORT` - what port to use to set up http server  
-`BACKEND_URL` - url to backend (used foR setting redirect url for google oauth)  
-`FRONTEND_URL` - url to frontend (used for setting redirect url for google oauth)
 
 If you want to change these values locally, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
 

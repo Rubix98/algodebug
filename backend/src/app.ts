@@ -36,15 +36,14 @@ dotenv.config({ path: ".env.local" });
 dotenv.config({ path: ".env" });
 
 [
+    "PORT",
+    "ORIGINS",
     "DATABASE_URI",
     "DATABASE_NAME",
+    "BACKEND_URL",
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
     "ALGO_SECRET",
-    "PORT",
-    "BACKEND_URL",
-    "FRONTEND_URL",
-    "ORIGINS",
 ].forEach((variable) => {
     if (!process.env[variable]) {
         throw new Error(`Environment variable ${variable} is not set`);
