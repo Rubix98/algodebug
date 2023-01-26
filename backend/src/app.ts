@@ -13,7 +13,7 @@ import { Project } from "./project/model";
 import { Converter } from "./converter/model";
 import { User } from "./user/model";
 import { initializePassport } from "./user/service";
-import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoints";
+import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoint";
 
 let projectCollection: Collection<Project>;
 let converterCollection: Collection<Converter>;
