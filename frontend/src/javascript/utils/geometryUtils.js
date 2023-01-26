@@ -1,10 +1,10 @@
 export function rescalePoints(points) {
     const sceneBoundingBoxSize = 400;
 
-    let minX = points.map(point => point.x).getMinValue()
-    let maxX = points.map(point => point.x).getMaxValue();
-    let minY = points.map(point => point.y).getMinValue();
-    let maxY = points.map(point => point.y).getMaxValue();
+    let minX = points.map((point) => point.x).getMinValue();
+    let maxX = points.map((point) => point.x).getMaxValue();
+    let minY = points.map((point) => point.y).getMinValue();
+    let maxY = points.map((point) => point.y).getMaxValue();
 
     let scaleFactor = { x: 1, y: 1 };
     if (maxX - minX != 0) scaleFactor.x = sceneBoundingBoxSize / (maxX - minX);
