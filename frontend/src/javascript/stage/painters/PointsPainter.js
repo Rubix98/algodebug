@@ -15,6 +15,7 @@ export class PointsPainter extends Painter {
     };
 
     drawModel(points) {
+        this.rescalePoints(points);
         points.forEach((point, index) => {
             const pointGroup = new Konva.Group({
                 point: point,

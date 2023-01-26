@@ -5,6 +5,7 @@ export class ShapePainter extends Painter {
     layerPosition = "center";
 
     drawModel(shape) {
+        this.rescalePoints(shape);
         let previousPoint = shape.at(-1);
         for (let point of shape) {
             this.mainGroup.add(

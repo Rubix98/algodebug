@@ -61,4 +61,28 @@ export class Painter {
     getLayer() {
         return this.layers[this.layerPosition];
     }
+
+    rescalePoints(points) {
+        let minX = Math.min.apply(null, points.map(function(point) { return point.x; }));
+        let maxX = Math.max.apply(null, points.map(function(point) { return point.x; }));
+        let minY = Math.min.apply(null, points.map(function(point) { return point.y; }));
+        let maxY = Math.max.apply(null, points.map(function(point) { return point.y; }));
+
+        let scaleX = 1;
+        let scaleY = 1;
+        let centerX = minX += (maxX - minX) / 2
+        let centerY = minY += (maxY - minY) / 2
+
+        if (maxX - minX != 0)
+            scaleX = 240 / (maxX - minX);
+
+        if (maxY - minY != 0)
+            scaleY = 240 / (maxY - minY);
+            
+        for (let point of points) {
+            point.x = (point.x - centerX) * scaleX;
+            point.y = (point.y - centerY) * scaleY;
+        }
+    }
+
 }
