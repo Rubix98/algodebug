@@ -13,7 +13,6 @@ const checkProvider = (provider: string) => {
 };
 
 export const authUser = (req: Request, res: Response, next: NextFunction) => {
-    console.log("authUser: " + req.headers.host);
     const provider = req.params.provider;
     if (!checkProvider(provider)) {
         res.status(400).json({ error: "Invalid provider" });
@@ -24,7 +23,6 @@ export const authUser = (req: Request, res: Response, next: NextFunction) => {
 
 export const authCallback = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.params.provider;
-    console.log("authUserCallback: " + req.headers.host);
     if (!checkProvider(provider)) {
         res.status(400).json({ error: "Invalid provider" });
     } else {
@@ -41,7 +39,6 @@ export const authSuccess = (req: Request, res: Response) => {
     // with user data and script to close auth window
     res.setHeader("Content-Type", "text/html");
     const user = JSON.stringify(req.user);
-    console.log(req.get("origin"))
     const script =
         "<script>" +
         "window.onload = () => {" +
