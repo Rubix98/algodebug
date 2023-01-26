@@ -34,9 +34,9 @@ export const authCallback = (req: Request, res: Response, next: NextFunction) =>
 };
 
 export const authSuccess = (req: Request, res: Response) => {
-    const origin = req.headers.referer;
     // will send message to window opener (main AlgoDebug window)
     // with user data and script to close auth window
+    const origin = req.headers.referer;
     res.setHeader("Content-Type", "text/html");
     const user = JSON.stringify(req.user);
     const script =
