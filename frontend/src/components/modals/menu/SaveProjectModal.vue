@@ -23,10 +23,7 @@
             ...mapActions(useProjectStore, ["saveProject"]),
 
             save(override) {
-                this.saveProject({
-                    title: this.title,
-                    override: override,
-                });
+                this.saveProject(this.title, override);
                 closeModal();
             },
         },
