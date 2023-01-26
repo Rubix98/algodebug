@@ -1,7 +1,6 @@
 import passport from "passport";
 import { Provider } from "./structures/Provider";
 import { NextFunction, Request, Response } from "express";
-import { validateUser } from "./service";
 
 const checkProvider = (provider: string) => {
     try {
@@ -37,13 +36,14 @@ export const authCallback = (req: Request, res: Response, next: NextFunction) =>
 export const authSuccess = (req: Request, res: Response) => {
     // will send message to window opener (main AlgoDebug window)
     // with user data and script to close auth window
+    const origin = req.headers.referer;
     res.setHeader("Content-Type", "text/html");
     const user = JSON.stringify(req.user);
     const script =
         "<script>" +
         "window.onload = () => {" +
         "if (!window.opener) return;" +
-        `window.opener.postMessage(${user}, \"http://localhost:8081\");` +
+        `window.opener.postMessage(${user}, "${origin}");` +
         "window.close()" +
         "}" +
         "</script>";

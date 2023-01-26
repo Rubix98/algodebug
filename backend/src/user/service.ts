@@ -19,36 +19,28 @@ export function initializePassport() {
 }
 
 export const processUser = async (provider: Provider, profile: passport.Profile) => {
-    let user = null;
+    const user = {
+        _id: profile.id,
+        provider: provider,
+        username: profile.displayName,
+        // should always exist but technically not required in certain services
+        email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
+        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
+    } as User;
+
+    const [isOk, data] = validateUser(user);
+
+    if (!isOk) {
+        return null;
+    }
 
     try {
-        user = await getUserById(profile.id, provider);
+        await saveUser(data);
     } catch (error) {
         return null;
     }
 
-    if (user == null) {
-        const u = {
-            _id: profile.id,
-            provider: provider,
-            username: profile.displayName,
-        } as User;
-
-        const [isOk, data] = validateUser(u);
-
-        if (!isOk) {
-            return null;
-        }
-
-        try {
-            await saveUser(data);
-            user = data;
-        } catch (error) {
-            return null;
-        }
-    }
-
-    return user;
+    return data;
 };
 
 const sanitizeUser = (u: User) => {
@@ -56,6 +48,8 @@ const sanitizeUser = (u: User) => {
         _id: u._id,
         provider: u.provider,
         username: u.username,
+        picture: u.picture,
+        email: u.email,
     } as User;
 
     return user;
@@ -77,5 +71,9 @@ export const getUserById = async (id: string, provider: Provider) => {
 
 export const saveUser = async (user: User) => {
     const { users } = getCollections();
-    await users.insertOne(user);
+    if (await getUserById(user._id, user.provider)) {
+        await users.updateOne({ _id: user._id, provider: user.provider }, { $set: user });
+    } else {
+        await users.insertOne(user);
+    }
 };
