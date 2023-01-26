@@ -29,12 +29,12 @@ export const useUserStore = defineStore("user", {
 
     actions: {
         login() {
-            window.open("http://localhost:8080/auth/google", "_blank", "height=570,width=520");
+            window.open(process.env.VUE_APP_BACKEND_URL + "/auth/google", "_blank", "height=570,width=520");
 
             window.addEventListener(
                 "message",
                 (event) => {
-                    if (event.origin !== "http://localhost:8080" || !event.data) return;
+                    if (event.origin !== process.env.VUE_APP_BACKEND_URL || !event.data) return;
                     this.user = event.data;
                 },
                 false
