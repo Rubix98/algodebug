@@ -5,29 +5,29 @@ export function rescalePoints(points) {
         .map(function (point) {
             return point.x;
         })
-        .arrayMin();
+        .getMinValue();
     let maxX = points
         .map(function (point) {
             return point.x;
         })
-        .arrayMax();
+        .getMaxValue();
     let minY = points
         .map(function (point) {
             return point.y;
         })
-        .arrayMin();
+        .getMinValue();
     let maxY = points
         .map(function (point) {
             return point.y;
         })
-        .arrayMax();
+        .getMaxValue();
 
-    let scalar = { x: 1, y: 1 };
+    let scaleFactor = { x: 1, y: 1 };
     if (maxX - minX != 0) scalar.x = sceneBoundingBoxSize / (maxX - minX);
     if (maxY - minY != 0) scalar.y = sceneBoundingBoxSize / (maxY - minY);
 
     for (let point of points) {
-        point.x = (point.x - minX - (maxX - minX) / 2) * scalar.x;
-        point.y = (point.y - minY - (maxY - minY) / 2) * scalar.y;
+        point.x = (point.x - minX - (maxX - minX) / 2) * scaleFactor.x;
+        point.y = (point.y - minY - (maxY - minY) / 2) * scaleFactor.y;
     }
 }

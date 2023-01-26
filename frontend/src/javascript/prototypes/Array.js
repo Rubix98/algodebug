@@ -75,10 +75,10 @@ Array.prototype.prevId = function (id) {
     return index !== 0 ? this[index - 1].id : null;
 };
 
-Array.prototype.arrayMin = function () {
+Array.prototype.getMinValue = function () {
     return Math.min.apply(Math, this);
 };
 
-Array.prototype.arrayMax = function () {
+Array.prototype.getMaxValue = function () {
     return Math.max.apply(Math, this);
 };
