@@ -1,11 +1,11 @@
 import Konva from "konva";
 import { Painter } from "../Painter";
-
+import { rescalePoints } from "../../utils/geometryUtils";
 export class ShapePainter extends Painter {
     layerPosition = "center";
 
     drawModel(shape) {
-        this.rescalePoints(shape);
+        rescalePoints(shape);
         let previousPoint = shape.at(-1);
         for (let point of shape) {
             this.mainGroup.add(

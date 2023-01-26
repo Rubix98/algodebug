@@ -74,3 +74,11 @@ Array.prototype.prevId = function (id) {
     const index = this.findIndexForId(id);
     return index !== 0 ? this[index - 1].id : null;
 };
+
+Array.prototype.arrayMin = function () {
+    return Math.min.apply(Math, this);
+};
+
+Array.prototype.arrayMax = function () {
+    return Math.max.apply(Math, this);
+};
