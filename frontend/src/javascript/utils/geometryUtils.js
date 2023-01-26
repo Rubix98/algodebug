@@ -23,8 +23,8 @@ export function rescalePoints(points) {
         .getMaxValue();
 
     let scaleFactor = { x: 1, y: 1 };
-    if (maxX - minX != 0) scalar.x = sceneBoundingBoxSize / (maxX - minX);
-    if (maxY - minY != 0) scalar.y = sceneBoundingBoxSize / (maxY - minY);
+    if (maxX - minX != 0) scaleFactor.x = sceneBoundingBoxSize / (maxX - minX);
+    if (maxY - minY != 0) scaleFactor.y = sceneBoundingBoxSize / (maxY - minY);
 
     for (let point of points) {
         point.x = (point.x - minX - (maxX - minX) / 2) * scaleFactor.x;
