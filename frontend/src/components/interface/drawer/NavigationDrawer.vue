@@ -9,19 +9,9 @@
             <v-list-item :prepend-avatar="userAvatarImg" :title="usernameToShow" subtitle="" />
         </v-list>
         <v-divider />
-        <div class="buttons-list" v-for="(buttonsKeys, index) in Object.keys(buttons)" :key="buttonsKeys">
-            <v-list density="compact">
-                <v-list-item
-                    v-for="button in buttons[buttonsKeys]"
-                    :key="button.title"
-                    :prepend-icon="button.icon"
-                    :title="button.title"
-                    @click="button.onClick"
-                />
-            </v-list>
-            <v-divider v-if="index < Object.keys(buttons).length - 1" />
-            <!-- If is not a last key -->
-        </div>
+        <NavigationDrawerButtons :buttons="buttons.project" />
+        <v-divider />
+        <NavigationDrawerButtons :buttons="buttons.settings" />
     </v-navigation-drawer>
 </template>
 
@@ -33,11 +23,13 @@
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
     import userImage from "@/img/user.png";
-    import { mapState } from "pinia";
+    import { mapActions, mapState } from "pinia";
     import { useUserStore } from "@/stores/user";
+    import NavigationDrawerButtons from "@/components/interface/drawer/NavigationDrawerButtons.vue";
 
     export default defineComponent({
         name: "NavigationDrawer",
+        components: { NavigationDrawerButtons },
 
         emits: ["toggledToRailVersionEvent", "toggledToNormalVersionEvent", "hideDrawerEvent", "themeChangeEvent"],
 
@@ -49,18 +41,48 @@
         },
 
         data() {
+            const logoutButton = { title: "Wyloguj", icon: "mdi-logout", onClick: this.logout, show: this.loggedIn };
+            const darkModeButton = {
+                title: "Tryb ciemny",
+                icon: "mdi-theme-light-dark",
+                onClick: this.toggleDarkMode,
+                show: true,
+            };
             return {
                 shouldShowRailVersion: true,
+                darkModeButton,
+                logoutButton,
                 buttons: {
                     project: [
-                        { title: "Nowy projekt", icon: "mdi-file-document-plus", onClick: this.createNewProject },
-                        { title: "Zapisz projekt", icon: "mdi-content-save", onClick: this.openSaveProjectModal },
-                        { title: "Otwórz projekt", icon: "mdi-folder-open", onClick: this.openLoadProjectModal },
-                        { title: "Kod debugujący", icon: "mdi-code-braces", onClick: this.showExtendedCode },
+                        {
+                            title: "Nowy projekt",
+                            icon: "mdi-file-document-plus",
+                            onClick: this.createNewProject,
+                            show: true,
+                        },
+                        {
+                            title: "Zapisz projekt",
+                            icon: "mdi-content-save",
+                            onClick: this.openSaveProjectModal,
+                            show: true,
+                        },
+                        {
+                            title: "Otwórz projekt",
+                            icon: "mdi-folder-open",
+                            onClick: this.openLoadProjectModal,
+                            show: true,
+                        },
+                        {
+                            title: "Kod debugujący",
+                            icon: "mdi-code-braces",
+                            onClick: this.showExtendedCode,
+                            show: true,
+                        },
                     ],
                     settings: [
-                        { title: "Tryb ciemny", icon: "mdi-theme-light-dark", onClick: this.toggleDarkMode },
-                        { title: "GitHub", icon: "mdi-github", onClick: this.openGithub },
+                        darkModeButton,
+                        { title: "GitHub", icon: "mdi-github", onClick: this.openGithub, show: true },
+                        logoutButton,
                     ],
                 },
             };
@@ -78,6 +100,8 @@
         },
 
         methods: {
+            ...mapActions(useUserStore, ["logout"]),
+
             updateDrawerVersion() {
                 if (window.innerWidth >= 1280) {
                     this.$data.shouldShowRailVersion = true;
@@ -120,19 +144,18 @@
             },
 
             updateDarkLightModeButton() {
-                const darkLightModeButton = this.buttons.settings[0];
                 if (getCurrentThemeFromStorage() === "dark") {
-                    darkLightModeButton.title = "Tryb jasny";
-                    darkLightModeButton.icon = "mdi-white-balance-sunny";
+                    this.darkModeButton.title = "Tryb jasny";
+                    this.darkModeButton.icon = "mdi-white-balance-sunny";
                 } else {
-                    darkLightModeButton.title = "Tryb ciemny";
-                    darkLightModeButton.icon = "mdi-moon-waning-crescent";
+                    this.darkModeButton.title = "Tryb ciemny";
+                    this.darkModeButton.icon = "mdi-moon-waning-crescent";
                 }
             },
         },
 
         computed: {
-            ...mapState(useUserStore, ["username"]),
+            ...mapState(useUserStore, ["username", "loggedIn"]),
 
             userAvatarImg() {
                 return userImage;
@@ -140,6 +163,12 @@
 
             usernameToShow() {
                 return this.username == null ? "Niezalogowany" : this.username;
+            },
+        },
+
+        watch: {
+            loggedIn(newValue) {
+                this.logoutButton.show = newValue;
             },
         },
     });

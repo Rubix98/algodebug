@@ -8,7 +8,6 @@
         <v-spacer />
         <div class="app-bar__buttons">
             <v-btn color="primary" v-if="!this.loggedIn" @click="login"> Zaloguj się </v-btn>
-            <v-btn variant="text" color="primary" v-if="this.loggedIn" @click="logout"> Wyloguj się </v-btn>
         </div>
     </v-app-bar>
 </template>
@@ -20,7 +19,6 @@
     import logoDark from "@/img/logo-dark.png";
     import title from "@/img/title.png";
     import titleDark from "@/img/title-dark.png";
-    import store from "@/store";
     import { mapActions, mapState } from "pinia";
     import { useUserStore } from "@/stores/user";
 
