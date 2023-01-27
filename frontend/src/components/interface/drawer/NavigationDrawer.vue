@@ -6,7 +6,7 @@
         @update:modelValue="this.$emit('hideDrawerEvent')"
     >
         <v-list>
-            <v-list-item :prepend-avatar="userAvatarImg" :title="usernameToShow" subtitle="" />
+            <v-list-item :prepend-avatar="userAvatarImg" :title="userNameToShow" subtitle="" />
         </v-list>
         <v-divider />
         <NavigationDrawerButtons :buttons="buttons.project" />
@@ -22,7 +22,7 @@
     import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
-    import userImage from "@/img/user.png";
+    import defaultUserImage from "@/img/user.png";
     import { mapActions, mapState } from "pinia";
     import { useUserStore } from "@/stores/user";
     import NavigationDrawerButtons from "@/components/interface/drawer/NavigationDrawerButtons.vue";
@@ -155,14 +155,14 @@
         },
 
         computed: {
-            ...mapState(useUserStore, ["username", "loggedIn"]),
+            ...mapState(useUserStore, ["userName", "loggedIn", "userPicture"]),
 
             userAvatarImg() {
-                return userImage;
+                return this.userPicture === null ? defaultUserImage : this.userPicture;
             },
 
-            usernameToShow() {
-                return this.username == null ? "Niezalogowany" : this.username;
+            userNameToShow() {
+                return this.userName == null ? "Niezalogowany" : this.userName;
             },
         },
 

@@ -11,7 +11,7 @@ export const useUserStore = defineStore("user", {
             return !!this.user;
         },
 
-        username() {
+        userName() {
             if (!this.loggedIn) return null;
             return this.user.username;
         },
@@ -19,6 +19,11 @@ export const useUserStore = defineStore("user", {
         userId() {
             if (!this.loggedIn) return null;
             return this.user._id;
+        },
+
+        userPicture() {
+            if (!this.loggedIn) return null;
+            return this.user.picture;
         },
 
         userAuthProvider() {
@@ -35,6 +40,7 @@ export const useUserStore = defineStore("user", {
                 "message",
                 (event) => {
                     if (event.origin !== process.env.VUE_APP_BACKEND_URL || !event.data) return;
+                    console.log(event.data);
                     this.user = event.data;
                 },
                 false
