@@ -1,7 +1,7 @@
 <template>
     <v-list density="compact">
         <v-list-item
-            v-for="button in buttonsWithShowSetToTrue"
+            v-for="button in visibleButtons"
             :key="button.title"
             :prepend-icon="button.icon"
             :title="button.title"
@@ -11,9 +11,9 @@
 </template>
 
 <script>
-    import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
-    export default defineComponent({
+export default defineComponent({
         name: "NavigationDrawerButtons",
         props: {
             buttons: {
@@ -22,7 +22,7 @@
             },
         },
         computed: {
-            buttonsWithShowSetToTrue() {
+            visibleButtons() {
                 return this.$props.buttons.filter((button) => button.show === true);
             },
         },
