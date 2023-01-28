@@ -40,7 +40,6 @@ export const useUserStore = defineStore("user", {
                 "message",
                 (event) => {
                     if (event.origin !== process.env.VUE_APP_BACKEND_URL || !event.data) return;
-                    console.log(event.data);
                     this.user = event.data;
                 },
                 false
