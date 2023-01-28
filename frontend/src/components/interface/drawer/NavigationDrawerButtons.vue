@@ -11,9 +11,9 @@
 </template>
 
 <script>
-    import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
-    export default defineComponent({
+export default defineComponent({
         name: "NavigationDrawerButtons",
         props: {
             buttons: {
@@ -23,7 +23,7 @@
         },
         computed: {
             visibleButtons() {
-                return this.$props.buttons.filter((button) => button.show === true);
+                return this.$props.buttons.filter((button) => !!button.hidden === false);
             },
         },
     });

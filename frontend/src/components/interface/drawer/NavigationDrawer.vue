@@ -16,18 +16,18 @@
 </template>
 
 <script>
-    import { defineComponent } from "vue";
-    import { openModal } from "jenesius-vue-modal";
-    import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
-    import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
-    import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
-    import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
-    import defaultUserImage from "@/img/user.png";
-    import { mapActions, mapState } from "pinia";
-    import { useUserStore } from "@/stores/user";
-    import NavigationDrawerButtons from "@/components/interface/drawer/NavigationDrawerButtons.vue";
+import {defineComponent} from "vue";
+import {openModal} from "jenesius-vue-modal";
+import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
+import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
+import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+import {getCurrentThemeFromStorage, setCurrentThemeInStorage} from "@/javascript/storage/themeStorage";
+import defaultUserImage from "@/img/user.png";
+import {mapActions, mapState} from "pinia";
+import {useUserStore} from "@/stores/user";
+import NavigationDrawerButtons from "@/components/interface/drawer/NavigationDrawerButtons.vue";
 
-    export default defineComponent({
+export default defineComponent({
         name: "NavigationDrawer",
         components: { NavigationDrawerButtons },
 
@@ -41,12 +41,11 @@
         },
 
         data() {
-            const logoutButton = { title: "Wyloguj", icon: "mdi-logout", onClick: this.logout, show: this.loggedIn };
+            const logoutButton = { title: "Wyloguj", icon: "mdi-logout", onClick: this.logout, hidden: !this.loggedIn };
             const darkModeButton = {
                 title: "Tryb ciemny",
                 icon: "mdi-theme-light-dark",
                 onClick: this.toggleDarkMode,
-                show: true,
             };
             return {
                 shouldShowRailVersion: true,
@@ -58,30 +57,26 @@
                             title: "Nowy projekt",
                             icon: "mdi-file-document-plus",
                             onClick: this.createNewProject,
-                            show: true,
                         },
                         {
                             title: "Zapisz projekt",
                             icon: "mdi-content-save",
                             onClick: this.openSaveProjectModal,
-                            show: true,
                         },
                         {
                             title: "Otwórz projekt",
                             icon: "mdi-folder-open",
                             onClick: this.openLoadProjectModal,
-                            show: true,
                         },
                         {
                             title: "Kod debugujący",
                             icon: "mdi-code-braces",
                             onClick: this.showExtendedCode,
-                            show: true,
                         },
                     ],
                     settings: [
                         darkModeButton,
-                        { title: "GitHub", icon: "mdi-github", onClick: this.openGithub, show: true },
+                        { title: "GitHub", icon: "mdi-github", onClick: this.openGithub },
                         logoutButton,
                     ],
                 },
@@ -168,7 +163,7 @@
 
         watch: {
             loggedIn(newValue) {
-                this.logoutButton.show = newValue;
+                this.logoutButton.hidden = !newValue;
             },
         },
     });
