@@ -8,7 +8,6 @@
         <v-spacer />
         <div class="app-bar__buttons">
             <v-btn color="primary" v-if="!this.loggedIn" @click="login"> Zaloguj się </v-btn>
-            <v-btn color="primary" v-if="this.loggedIn" @click="logout"> Wyloguj się </v-btn>
         </div>
     </v-app-bar>
 </template>
@@ -20,7 +19,8 @@
     import logoDark from "@/img/logo-dark.png";
     import title from "@/img/title.png";
     import titleDark from "@/img/title-dark.png";
-    import store from "@/store";
+    import { mapActions, mapState } from "pinia";
+    import { useUserStore } from "@/stores/user";
 
     export default defineComponent({
         name: "AppBar",
@@ -38,27 +38,15 @@
         },
 
         methods: {
+            ...mapActions(useUserStore, ["login", "verify", "logout"]),
+
             redirectToRoot() {
                 redirectTo(window.location.origin + window.location.pathname);
-            },
-
-            login() {
-                store.dispatch("user/login");
-            },
-
-            verify() {
-                store.dispatch("user/verify");
-            },
-
-            logout() {
-                store.dispatch("user/logout");
             },
         },
 
         computed: {
-            loggedIn() {
-                return store.getters["user/loggedIn"];
-            },
+            ...mapState(useUserStore, ["loggedIn"]),
 
             logoUrl() {
                 return this.$vuetify.theme.global.name === "dark" ? logoDark : logo;

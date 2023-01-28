@@ -9,8 +9,9 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from "vuex";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         data() {
@@ -47,7 +48,7 @@
         },
 
         methods: {
-            ...mapActions("project", ["switchCurrentFrame"]),
+            ...mapActions(useProjectStore, ["switchCurrentFrame"]),
 
             setFrameId(index) {
                 if (index < 0 || index >= this.numberOfFrames) return;
@@ -57,7 +58,7 @@
         },
 
         computed: {
-            ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
+            ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
         },
     });
 </script>

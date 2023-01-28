@@ -2,7 +2,7 @@
     <div class="scene-objects-panel-container">
         <v-chip
             closable
-            v-for="sceneObject in project.sceneObjects"
+            v-for="sceneObject in this.sceneObjects"
             class="ma-2"
             :key="sceneObject.id"
             @click="configureSceneObject(sceneObject, $event)"
@@ -16,13 +16,14 @@
 <script>
     import ConfigureSceneObjectModal from "@/components/modals/sceneObject/ConfigureSceneObjectModal.vue";
     import { getSceneObjectTypeLabel } from "@/javascript/utils/sceneObjectTypesUtils";
-    import { mapActions, mapState } from "vuex";
     import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         methods: {
-            ...mapActions("project", ["deleteSceneObject"]),
+            ...mapActions(useProjectStore, ["deleteSceneObject"]),
 
             configureSceneObject(sceneObject, event) {
                 if (event.target.localName === "i") return;
@@ -31,7 +32,7 @@
         },
 
         computed: {
-            ...mapState(["project"]),
+            ...mapState(useProjectStore, ["sceneObjects"]),
 
             sceneObjectLabel() {
                 return (sceneObject) => {

@@ -11,9 +11,10 @@
 <script>
     import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
     import AlgoModal from "@/components/global/AlgoModal.vue";
-    import { mapGetters } from "vuex";
     import { defineComponent } from "vue";
     import toast from "@/javascript/utils/toastUtils";
+    import { mapState } from "pinia";
+    import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
         components: { AlgoModal, CodeEditor },
@@ -25,7 +26,7 @@
         },
 
         computed: {
-            ...mapGetters("project", ["debugCode"]),
+            ...mapState(useProjectStore, ["debugCode"]),
         },
     });
 </script>

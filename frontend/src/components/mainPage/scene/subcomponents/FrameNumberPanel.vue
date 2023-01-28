@@ -3,13 +3,13 @@
 </template>
 
 <script>
-    import { mapGetters } from "vuex";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { mapState } from "pinia";
 
     export default defineComponent({
         computed: {
-            ...mapGetters("project", ["currentFrame", "numberOfFrames"]),
-
+            ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
             currentFrameId() {
                 return this.numberOfFrames ? this.currentFrame.id + 1 : 0;
             },
