@@ -89,6 +89,7 @@ function handleVarTrackerMove(variable, change, code) {
     result = applyChangeOnInterval(result, change);
 
     if (isIntervalEmpty(result)) return null;
+    if (!change.last) return result;
 
     if (!areIntervalsIntersectOrTouching(variable, change)) {
         expandLeft(result, code);
