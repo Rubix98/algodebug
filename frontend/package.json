@@ -6,8 +6,8 @@
         "dev": "vite",
         "serve": "vite",
         "build": "vite build",
-        "lint": "vue-cli-service lint",
-        "lint:check": "vue-cli-service lint --no-fix",
+        "lint": "eslint --ext \".js,.ts,.vue\" --fix .",
+        "lint:check": "eslint --ext \".js,.ts,.vue\" .",
         "format": "prettier --write --list-different .",
         "format:check": "prettier --check ."
     },
@@ -33,6 +33,7 @@
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.19.1",
+        "@babel/preset-env": "^7.20.2",
         "@mdi/font": "^7.1.96",
         "@vitejs/plugin-vue": "^4.0.0",
         "@vue/compiler-sfc": "^3.2.41",
