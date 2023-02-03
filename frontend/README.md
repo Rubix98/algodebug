@@ -5,7 +5,7 @@ Frontend is written in VueJs using VueX. Drawing graphic objects on the stage is
 ## Environmental variables
 
 `PORT` - what port to use to set up application  
-`VUE_APP_BACKEND_URL` - url to backend server
+`VITE_APP_BACKEND_URL` - url to backend server
 
 If you want to change these values locally, you can override them in `.env.local` file.
 

@@ -17,7 +17,6 @@ export class VariablePainter extends Painter {
             fontSize: this.style.fontSize,
             fill: this.color,
             y: variableNumber * this.style.fontSize,
-            fill: this.themeColor,
         });
         this.mainGroup.add(variableText);
     }
