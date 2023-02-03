@@ -6,8 +6,9 @@
 
 <script>
     import { Stage } from "@/javascript/stage/Stage";
-    import { mapActions, mapGetters, mapState } from "vuex";
     import { defineComponent } from "vue";
+    import { useProjectStore } from "@/stores/project";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         mounted() {
@@ -21,12 +22,12 @@
         },
 
         methods: {
-            ...mapActions("project", ["updateSceneObjectPosition"]),
+            ...mapActions(useProjectStore, ["updateSceneObjectPosition"]),
 
             draw() {
-                if (!this.project.isRunning || !this.currentFrame) return;
+                if (!this.isRunning || !this.currentFrame) return;
 
-                this.stage.draw(this.project.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
+                this.stage.draw(this.sceneObjects, this.currentFrame, this.updateSceneObjectPosition);
             },
 
             clearStage() {
@@ -39,8 +40,7 @@
         },
 
         computed: {
-            ...mapState(["project"]),
-            ...mapGetters("project", ["currentFrame"]),
+            ...mapState(useProjectStore, ["currentFrame", "isRunning", "sceneObjects"]),
         },
     });
 </script>

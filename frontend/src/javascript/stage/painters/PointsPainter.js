@@ -1,6 +1,6 @@
 import Konva from "konva";
 import { Painter } from "../Painter";
-
+import { rescalePoints } from "../../utils/geometryUtils";
 export class PointsPainter extends Painter {
     subobjectFunctionMap = {
         points_point: this.highlightPoints,
@@ -15,6 +15,7 @@ export class PointsPainter extends Painter {
     };
 
     drawModel(points) {
+        rescalePoints(points);
         points.forEach((point, index) => {
             const pointGroup = new Konva.Group({
                 point: point,

@@ -1,4 +1,4 @@
-import store from "@/store";
+import { useProjectStore } from "@/stores/project";
 import { applyChangeOnInterval, areIntervalsIntersectOrTouching, isIntervalEmpty } from "./intervalsUtils";
 import lineColumn from "line-column";
 import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";
@@ -56,7 +56,7 @@ export function monacoChangeToLegacyFormat(code, change) {
 }
 
 export function moveBreakpoints(breakpoints, change) {
-    if (change.deltaLineCount == 0) return;
+    if (change.deltaLineCount === 0) return;
 
     let firstChangedLine = change.firstChangedLine - 1;
     let lastChangedLine = firstChangedLine - change.deltaLineCount;
@@ -70,16 +70,18 @@ export function moveBreakpoints(breakpoints, change) {
         }
     });
 
-    store.dispatch("project/setBreakpoints", newBreakpoints);
+    const store = useProjectStore();
+    store.setBreakpoints(newBreakpoints);
 }
 
 export function moveTrackedVariables(variables, change, code) {
+    const store = useProjectStore();
     variables.forEach((variable) => {
         let newVariable = handleVarTrackerMove(variable, change, code);
         if (newVariable == null) {
-            store.dispatch("project/deleteVariable", variable.id);
+            store.deleteVariable(variable.id);
         } else {
-            store.dispatch("project/updateVariable", { id: variable.id, variable: newVariable });
+            store.updateVariable({ id: variable.id, variable: newVariable });
         }
     });
 }
