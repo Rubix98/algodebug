@@ -7,7 +7,6 @@ export default defineConfig({
     server: {
         strictPort: true,
         port: 8000,
-
     },
     base: "/",
     assetsDir: "/",
