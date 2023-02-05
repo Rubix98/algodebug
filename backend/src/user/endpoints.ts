@@ -4,9 +4,9 @@ import { NextFunction, Request, Response } from "express";
 import { User } from "./model";
 
 type RequestData = {
-    user: User
-    referer: string
-}
+    user: User;
+    referer: string;
+};
 
 const checkProvider = (provider: string) => {
     try {
@@ -49,7 +49,7 @@ export const authSuccess = (req: Request, res: Response) => {
 
     const data = req.user as RequestData;
     const user = JSON.stringify(data.user);
-    
+
     const script =
         "<script>" +
         "window.onload = () => {" +
