@@ -1,6 +1,12 @@
 import passport from "passport";
 import { Provider } from "./structures/Provider";
 import { NextFunction, Request, Response } from "express";
+import { User } from "./model";
+
+type RequestData = {
+    user: User
+    referer: string
+}
 
 const checkProvider = (provider: string) => {
     try {
@@ -13,10 +19,12 @@ const checkProvider = (provider: string) => {
 
 export const authUser = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.params.provider;
+    const referer = req.headers.referer;
+
     if (!checkProvider(provider)) {
         res.status(400).json({ error: "Invalid provider" });
     } else {
-        passport.authenticate("google", { scope: ["email", "profile"] })(req, res, next);
+        passport.authenticate("google", { scope: ["email", "profile"], state: referer })(req, res, next);
     }
 };
 
@@ -29,6 +37,7 @@ export const authCallback = (req: Request, res: Response, next: NextFunction) =>
             successRedirect: "/auth/success",
             failureRedirect: "/error",
             failureMessage: true,
+            state: req.query.state as string | undefined,
         })(req, res, next);
     }
 };
@@ -36,14 +45,16 @@ export const authCallback = (req: Request, res: Response, next: NextFunction) =>
 export const authSuccess = (req: Request, res: Response) => {
     // will send message to window opener (main AlgoDebug window)
     // with user data and script to close auth window
-    const origin = req.headers.referer;
     res.setHeader("Content-Type", "text/html");
-    const user = JSON.stringify(req.user);
+
+    const data = req.user as RequestData;
+    const user = JSON.stringify(data.user);
+    
     const script =
         "<script>" +
         "window.onload = () => {" +
         "if (!window.opener) return;" +
-        `window.opener.postMessage(${user}, "${origin}");` +
+        `window.opener.postMessage(${user}, "${data.referer}");` +
         "window.close()" +
         "}" +
         "</script>";
