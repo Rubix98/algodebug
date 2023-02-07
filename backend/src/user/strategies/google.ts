@@ -18,7 +18,7 @@ export function initializeGoogle() {
             async (request, _accessToken, _refreshToken, profile, done: (arg0: null, arg1: any) => any) => {
                 const user = await processUser("google", profile);
                 if (user == null) return done(null, false);
-                return done(null, { data: user, referer: request.query.state });
+                return done(null, { user: user, referer: request.query.state });
             }
         )
     );
