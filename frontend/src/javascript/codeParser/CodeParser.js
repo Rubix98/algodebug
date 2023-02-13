@@ -147,8 +147,8 @@ class CodeUtils {
     static insertAlgodebugMacros(code) {
         return (
             `#define ALGODEBUG_VARIABLE(x) "<algodebug-variable " << "name=\\"" << #x << "\\">\\n" << x << "\\n</algodebug-variable>\\n"\n` +
-            `#define ALGODEBUG_BREAKPOINT(line, x) cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n" << x << "</algodebug-breakpoint>\\n"\n` +
-            `#define ALGODEBUG_EMPTY_BREAKPOINT(line) cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n</algodebug-breakpoint>\\n"\n\n` +
+            `#define ALGODEBUG_BREAKPOINT(line, x) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n" << x << "</algodebug-breakpoint>\\n"\n` +
+            `#define ALGODEBUG_EMPTY_BREAKPOINT(line) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n</algodebug-breakpoint>\\n"\n\n` +
             code
         );
     }

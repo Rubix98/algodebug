@@ -14,24 +14,20 @@
 
 <script>
     import { defineComponent } from "vue";
-    import { mapActions, mapState } from "vuex";
+    import { useProjectStore } from "@/stores/project";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         name: "RunButton",
-        methods: {
-            ...mapActions("project", [
-                "setLanguage",
-                "setIsRunning",
-                "setWaitingForCompile",
-                "switchCurrentFrame",
-                "compile",
-            ]),
 
+        methods: {
+            ...mapActions(useProjectStore, ["setIsRunning", "setWaitingForCompile", "switchCurrentFrame", "compile"]),
             runButtonPressed() {
                 if (this.projectRunning) {
                     this.stopProgram();
                 } else {
-                    this.waitingForCompile = true;
+                    this.setWaitingForCompile(true);
+
                     this.runProgram();
                 }
             },
@@ -39,7 +35,8 @@
             runProgram() {
                 this.compile().then((success) => {
                     if (!success) return;
-                    this.waitingForCompile = false;
+                    this.setWaitingForCompile(false);
+
                     this.emitter.emit("startDebuggingEvent");
                 });
             },
@@ -50,20 +47,11 @@
                 this.emitter.emit("stopDebuggingEvent");
             },
         },
+
         computed: {
-            ...mapState(["project"]),
-
+            ...mapState(useProjectStore, ["isRunning", "waitingForCompile"]),
             projectRunning() {
-                return this.project.isRunning;
-            },
-
-            waitingForCompile: {
-                get() {
-                    return this.project.waitingForCompile;
-                },
-                set(value) {
-                    this.setWaitingForCompile(value);
-                },
+                return this.isRunning;
             },
 
             runButtonIcon() {

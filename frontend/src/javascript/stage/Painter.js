@@ -1,6 +1,5 @@
 import Konva from "konva";
 import { parse } from "../utils/parsingUtils";
-
 export class Painter {
     constructor(properties) {
         Object.assign(this, properties);

@@ -14,7 +14,8 @@ Obviously requires node.js: <https://nodejs.org> >= 18
 After consideraton I decided to remove compiled javascript from this repository and as such you should always install this with dev dependencies using:  
 `npm install -d`
 
-As for database you can connect to `MongoDB Atlas` using URI like in [example below](./README.md#L37)
+As for database you can connect to `MongoDB Atlas` using URI like:  
+`mongodb+srv://<USERNAME>:<PASSWORD>@streamchess.jlv3n.mongodb.net/`
 
 Alternatively you can use local database for development - `MongoDB Community Server`:  
 <https://www.mongodb.com/try/download/community>  
@@ -26,13 +27,17 @@ In any case you might be intrested in using `MongoDB Compass` to explore the dat
 ## Environmental variables
 
 `PORT` - what port to use to set up http server  
-`ORIGINS` - origins to allow cross-origin requests separated by commas (in node 17+ use 127.0.0.1 instead of localhost)  
+`ORIGINS` - origins to allow cross-origin requests separated by commas  
 `DATABASE_URI` - URI to your MongoDB service  
 `DATABASE_NAME` - name of the application database  
+`BACKEND_URL` - url to backend (used foR setting redirect url for google oauth)  
 `COMPILER` - id of chosen compiler's API. Possible values: ALGODEBUG (default), CODEX, JDOODLE  
 `COMPILER_CLIENT_ID` - your client id to compiler's API (required for: JDOODLE)  
 `COMPILER_CLIENT_SECRET` - your client secret to compiler's API (required for: JDOODLE)  
-`COMPILER_API_URL` - alternative url to compiler's API (only for AlgoDebug compiler)
+`COMPILER_API_URL` - alternative url to compiler's API (only for AlgoDebug compiler)  
+`GOOGLE_CLIENT_ID` - your client id to Google API  
+`GOOGLE_CLIENT_SECRET` - your client secret to Google API  
+`ALGO_SECRET` - secret for generating session tokens
 
 If you want to change these values locally, you can override them in `.env.local` file. Especially you can set your database connection or your secret data in `.env.local` file.
 

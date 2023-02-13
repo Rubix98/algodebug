@@ -4,11 +4,14 @@ import toast, { getEndpointRelatedToast } from "@/javascript/utils/toastUtils";
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
 
+    if (!data) data = {};
+    data.withCredentials = true;
+
     const toastStrings = getEndpointRelatedToast(url);
     const loadingToast = toastStrings.loading ? toast.info(toastStrings.loading, { timeout: false }) : undefined;
 
     method = method.toLowerCase();
-    url = process.env.VUE_APP_BACKEND_URL + url;
+    url = import.meta.env.VITE_APP_BACKEND_URL + url;
     console.log(method, url);
 
     return axios[method](url, data)

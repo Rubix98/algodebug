@@ -1,4 +1,4 @@
-import store from "@/store";
+import { useProjectStore } from "@/stores/project";
 import { applyChangeOnInterval, areIntervalsIntersectOrTouching, isIntervalEmpty } from "./intervalsUtils";
 import lineColumn from "line-column";
 import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";

@@ -13,7 +13,6 @@
 <script>
     import MonacoEditor from "monaco-editor-vue3";
     import * as monaco from "monaco-editor/esm/vs/editor/editor.main";
-    import { mapState, mapActions, mapGetters } from "vuex";
     import {
         getVariablesArray,
         monacoChangeToLegacyFormat,
@@ -23,6 +22,8 @@
     import lineColumn from "line-column";
     import { defineComponent } from "vue";
     import { getCurrentThemeFromStorage } from "@/javascript/storage/themeStorage";
+    import { useProjectStore } from "@/stores/project";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { MonacoEditor },
@@ -55,7 +56,7 @@
         },
 
         methods: {
-            ...mapActions("project", ["setCode", "toggleBreakpoint"]),
+            ...mapActions(useProjectStore, ["setCode", "toggleBreakpoint"]),
 
             editorDidMount(editor) {
                 this.editor = editor;
@@ -89,7 +90,7 @@
                 for (let change of event.changes) {
                     // change.forceMoveMarkers is undefined when text is changed by code.
                     // We must update decorations manually, because otherwise it doesn't show up on startup
-                    if (change.forceMoveMarkers == undefined) {
+                    if (change.forceMoveMarkers === undefined) {
                         this.updateAllDecorations();
                         break;
                     }
@@ -112,7 +113,6 @@
 
                 if (event.target.element.classList.contains("target")) {
                     this.handlePickVariable(event);
-                    return;
                 }
             },
 
@@ -144,8 +144,8 @@
         },
 
         computed: {
-            ...mapState(["project"]),
-            ...mapGetters("project", ["variables", "currentFrame"]),
+            ...mapState(useProjectStore, ["variables", "currentFrame", "breakpoints"]),
+            ...mapState(useProjectStore, { projectCode: (state) => state.code }),
 
             modelCode: {
                 get() {
@@ -189,7 +189,7 @@
 
             lineDecorations() {
                 if (!this.$props.showHighlightedVariables) return [];
-                if (!this.project.isRunning) return [];
+                if (!this.isRunning) return [];
 
                 return [
                     {
@@ -202,7 +202,7 @@
             targetDecorations() {
                 if (!this.$props.clickable) return [];
 
-                return getVariablesArray(this.project.language, this.$props.code).map((word) => {
+                return getVariablesArray(this.language, this.$props.code).map((word) => {
                     return {
                         range: new monaco.Range(
                             word.startLineNumber,
@@ -217,8 +217,8 @@
 
             getBreakpointClass() {
                 return (i) => {
-                    if (this.project.breakpoints.hasId(i)) return "breakpoint breakpoint-active";
-                    if (!this.project.isRunning && this.$props.editable) return "breakpoint";
+                    if (this.breakpoints.hasId(i)) return "breakpoint breakpoint-active";
+                    if (!this.isRunning && this.$props.editable) return "breakpoint";
                     return "";
                 };
             },

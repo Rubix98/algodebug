@@ -18,7 +18,8 @@
     import { sendRequest } from "@/javascript/utils/axiosUtils";
     import { popModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
-    import { mapState } from "vuex";
+    import { useProjectStore } from "@/stores/project";
+    import { mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoInput, AlgoTextarea },
@@ -29,7 +30,7 @@
             return {
                 converter: {
                     title: "",
-                    code: "ostream& operator <<(ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}",
+                    code: "std::ostream& operator <<(std::ostream& os, const <typ> <nazwa>) {\n\t// Konwersja obiektu na string \n\treturn os;\n}",
                 },
             };
         },
@@ -42,7 +43,7 @@
             },
 
             saveConverter() {
-                this.converter.language = this.project.language;
+                this.converter.language = this.language;
                 sendRequest("/converter/save", this.converter, "POST").then(() => {
                     this.addConverter();
                 });
@@ -50,7 +51,7 @@
         },
 
         computed: {
-            ...mapState(["project"]),
+            ...mapState(useProjectStore, ["language"]),
         },
     });
 </script>

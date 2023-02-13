@@ -9,7 +9,8 @@
     import AlgoPickList from "@/components/global/AlgoPickList.vue";
     import { redirectTo } from "@/javascript/utils/other";
     import { defineComponent } from "vue";
-    import { mapActions, mapGetters } from "vuex";
+    import { useCachedListStore } from "@/stores/cachedList";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal, AlgoPickList },
@@ -19,15 +20,14 @@
         },
 
         methods: {
-            ...mapActions("cachedLists", ["updateProjects"]),
-
+            ...mapActions(useCachedListStore, ["updateProjects"]),
             loadProject(selectedProject) {
                 redirectTo("?projectId=" + selectedProject._id);
             },
         },
 
         computed: {
-            ...mapGetters("cachedLists", ["projects"]),
+            ...mapState(useCachedListStore, ["projects"]),
         },
     });
 </script>
