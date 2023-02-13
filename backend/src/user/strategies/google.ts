@@ -15,10 +15,10 @@ export function initializeGoogle() {
                 userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
                 passReqToCallback: true,
             },
-            async (_request, _accessToken, _refreshToken, profile, done: (arg0: null, arg1: any) => any) => {
+            async (request, _accessToken, _refreshToken, profile, done: (arg0: null, arg1: any) => any) => {
                 const user = await processUser("google", profile);
                 if (user == null) return done(null, false);
-                return done(null, user);
+                return done(null, { user: user, referer: request.query.state });
             }
         )
     );
