@@ -55,31 +55,41 @@ export function monacoChangeToLegacyFormat(code, change) {
     return result;
 }
 
-export function moveBreakpoints(breakpoints, change) {
-    if (change.deltaLineCount == 0) return;
+export function moveBreakpoints(breakpoints, changes) {
+    for (let change of changes) {
+        if (change.deltaLineCount == 0) return;
 
-    let firstChangedLine = change.firstChangedLine - 1;
-    let lastChangedLine = firstChangedLine - change.deltaLineCount;
+        let firstChangedLine = change.firstChangedLine - 1;
+        let lastChangedLine = firstChangedLine - change.deltaLineCount;
 
-    let newBreakpoints = breakpoints.filter(
-        (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
-    );
-    newBreakpoints.forEach((breakpoint) => {
-        if (breakpoint.id >= firstChangedLine) {
-            breakpoint.id += change.deltaLineCount;
-        }
-    });
+        let newBreakpoints = breakpoints.filter(
+            (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
+        );
+        newBreakpoints.forEach((breakpoint) => {
+            if (breakpoint.id >= firstChangedLine) {
+                breakpoint.id += change.deltaLineCount;
+            }
+        });
 
-    store.dispatch("project/setBreakpoints", newBreakpoints);
+        store.dispatch("project/setBreakpoints", newBreakpoints);
+    }
 }
 
-export function moveTrackedVariables(variables, change, code) {
+export function moveTrackedVariables(variables, changes, code) {
+    if (changes.length <= 0) return;
+    changes[changes.length - 1].last = true;
+
     variables.forEach((variable) => {
-        let newVariable = handleVarTrackerMove(variable, change, code);
-        if (newVariable == null) {
-            store.dispatch("project/deleteVariable", variable.id);
-        } else {
-            store.dispatch("project/updateVariable", { id: variable.id, variable: newVariable });
+        let variableAfterChanges = variable;
+        for (let change of changes) {
+            variableAfterChanges = handleVarTrackerMove(variableAfterChanges, change, code);
+            if (variableAfterChanges == null) {
+                store.dispatch("project/deleteVariable", variable.id);
+                break;
+            }
+        }
+        if (variableAfterChanges != null) {
+            store.dispatch("project/updateVariable", { id: variable.id, variable: variableAfterChanges });
         }
     });
 }

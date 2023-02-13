@@ -99,13 +99,8 @@
                     .filter((ch) => ch.forceMoveMarkers != undefined)
                     .map((ch) => monacoChangeToLegacyFormat(this.$props.code, ch));
 
-                if (legacyChanges.length <= 0) return;
-                legacyChanges[legacyChanges.length - 1].last = true;
-
-                for (let legacyChange of legacyChanges) {
-                    moveTrackedVariables(this.variables, legacyChange, this.project.code);
-                    moveBreakpoints(this.project.breakpoints, legacyChange);
-                }
+                moveTrackedVariables(this.variables, legacyChanges, this.project.code);
+                moveBreakpoints(this.project.breakpoints, legacyChanges);
             },
 
             handleClick(event) {
