@@ -71,11 +71,14 @@ export function moveBreakpoints(breakpoints, changes) {
             }
         });
 
-        store.dispatch("project/setBreakpoints", newBreakpoints);
+        const store = useProjectStore();
+        store.setBreakpoints(newBreakpoints);
     }
 }
 
 export function moveTrackedVariables(variables, changes, code) {
+    const store = useProjectStore();
+
     if (changes.length <= 0) return;
     changes[changes.length - 1].last = true;
 
@@ -84,12 +87,12 @@ export function moveTrackedVariables(variables, changes, code) {
         for (let change of changes) {
             variableAfterChanges = handleVarTrackerMove(variableAfterChanges, change, code);
             if (variableAfterChanges == null) {
-                store.dispatch("project/deleteVariable", variable.id);
+                store.deleteVariable(variable.id);
                 break;
             }
         }
         if (variableAfterChanges != null) {
-            store.dispatch("project/updateVariable", { id: variable.id, variable: variableAfterChanges });
+            store.updateVariable({ id: variable.id, variable: variableAfterChanges });
         }
     });
 }
