@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", {
 
     actions: {
         login() {
-            window.open(import.meta.env.VITE_APP_BACKEND_URL + "/auth/google", "_blank", "height=570,width=520");
+            window.open(BACKEND_URL + "/auth/google", "_blank", "height=570,width=520");
 
             window.addEventListener(
                 "message",

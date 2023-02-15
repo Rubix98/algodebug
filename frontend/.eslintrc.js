@@ -12,6 +12,9 @@ module.exports = {
     },
     ignorePatterns: ["dist/", "node_modules/"],
     plugins: ["vue"],
+    globals: {
+        BACKEND_URL: true,
+    },
     rules: {
         "vue/order-in-components": [
             "error",

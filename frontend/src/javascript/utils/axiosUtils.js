@@ -11,7 +11,7 @@ export function sendRequest(url, data = {}, method) {
     const loadingToast = toastStrings.loading ? toast.info(toastStrings.loading, { timeout: false }) : undefined;
 
     method = method.toLowerCase();
-    url = import.meta.env.VITE_APP_BACKEND_URL + url;
+    url = BACKEND_URL + url;
     console.log(method, url);
 
     return axios[method](url, data)
