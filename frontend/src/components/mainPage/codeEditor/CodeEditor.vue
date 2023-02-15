@@ -92,13 +92,16 @@
                     // We must update decorations manually, because otherwise it doesn't show up on startup
                     if (change.forceMoveMarkers === undefined) {
                         this.updateAllDecorations();
-                        continue;
+                        break;
                     }
-
-                    let legacyChange = monacoChangeToLegacyFormat(this.$props.code, change);
-                    moveTrackedVariables(this.variables, legacyChange, this.projectCode);
-                    moveBreakpoints(this.breakpoints, legacyChange);
                 }
+
+                const legacyChanges = event.changes
+                    .filter((ch) => ch.forceMoveMarkers != undefined)
+                    .map((ch) => monacoChangeToLegacyFormat(this.$props.code, ch));
+
+                moveTrackedVariables(this.variables, legacyChanges, this.projectCode);
+                moveBreakpoints(this.breakpoints, legacyChanges);
             },
 
             handleClick(event) {

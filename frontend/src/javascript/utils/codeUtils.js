@@ -55,33 +55,44 @@ export function monacoChangeToLegacyFormat(code, change) {
     return result;
 }
 
-export function moveBreakpoints(breakpoints, change) {
-    if (change.deltaLineCount === 0) return;
+export function moveBreakpoints(breakpoints, changes) {
+    for (let change of changes) {
+        if (change.deltaLineCount == 0) return;
 
-    let firstChangedLine = change.firstChangedLine - 1;
-    let lastChangedLine = firstChangedLine - change.deltaLineCount;
+        let firstChangedLine = change.firstChangedLine - 1;
+        let lastChangedLine = firstChangedLine - change.deltaLineCount;
 
-    let newBreakpoints = breakpoints.filter(
-        (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
-    );
-    newBreakpoints.forEach((breakpoint) => {
-        if (breakpoint.id >= firstChangedLine) {
-            breakpoint.id += change.deltaLineCount;
-        }
-    });
+        let newBreakpoints = breakpoints.filter(
+            (breakpoint) => breakpoint.id <= firstChangedLine || breakpoint.id >= lastChangedLine
+        );
+        newBreakpoints.forEach((breakpoint) => {
+            if (breakpoint.id >= firstChangedLine) {
+                breakpoint.id += change.deltaLineCount;
+            }
+        });
 
-    const store = useProjectStore();
-    store.setBreakpoints(newBreakpoints);
+        const store = useProjectStore();
+        store.setBreakpoints(newBreakpoints);
+    }
 }
 
-export function moveTrackedVariables(variables, change, code) {
+export function moveTrackedVariables(variables, changes, code) {
     const store = useProjectStore();
+
+    if (changes.length <= 0) return;
+    changes[changes.length - 1].last = true;
+
     variables.forEach((variable) => {
-        let newVariable = handleVarTrackerMove(variable, change, code);
-        if (newVariable == null) {
-            store.deleteVariable(variable.id);
-        } else {
-            store.updateVariable({ id: variable.id, variable: newVariable });
+        let variableAfterChanges = variable;
+        for (let change of changes) {
+            variableAfterChanges = handleVarTrackerMove(variableAfterChanges, change, code);
+            if (variableAfterChanges == null) {
+                store.deleteVariable(variable.id);
+                break;
+            }
+        }
+        if (variableAfterChanges != null) {
+            store.updateVariable({ id: variable.id, variable: variableAfterChanges });
         }
     });
 }
@@ -91,6 +102,7 @@ function handleVarTrackerMove(variable, change, code) {
     result = applyChangeOnInterval(result, change);
 
     if (isIntervalEmpty(result)) return null;
+    if (!change.last) return result;
 
     if (!areIntervalsIntersectOrTouching(variable, change)) {
         expandLeft(result, code);
