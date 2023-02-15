@@ -18,5 +18,6 @@ services:
     ports:
     - ${BACKEND_PORT}:${BACKEND_PORT}
     environment:
+      - BACKEND_URL=${BACKEND_URL}
       - PORT=${BACKEND_PORT}
       - ORIGINS=${ORIGINS}
