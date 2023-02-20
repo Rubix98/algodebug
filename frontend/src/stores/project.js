@@ -52,6 +52,10 @@ export const useProjectStore = defineStore("project", {
             return this.currentTestCase.frames.length;
         },
 
+        allFrames() {
+            return this.currentTestCase.frames;
+        },
+
         jsonForSave() {
             return (override, title = null) => {
                 let result = {
