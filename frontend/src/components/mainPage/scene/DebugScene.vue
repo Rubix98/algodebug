@@ -1,6 +1,6 @@
 <template>
     <v-card elevation="3">
-        <div class="scene-container full-size" v-if="!showLoading">
+        <div class="scene-container full-size" :class="{ hidden: showLoading }">
             <SceneCanvas class="full-size"></SceneCanvas>
 
             <CenterPanel v-if="!this.isRunning" />
@@ -9,7 +9,7 @@
             <NavigationPanel v-if="this.isRunning" />
             <FrameNumberPanel v-if="this.isRunning" />
         </div>
-        <div class="full-size d-flex flex-center flex-column" v-else>
+        <div class="full-size d-flex flex-center flex-column" :class="{ hidden: !showLoading }">
             <v-progress-circular indeterminate color="primary" />
             <span class="mt-3">Trwa kompilacja kodu...</span>
         </div>
@@ -75,5 +75,9 @@
         position: absolute;
         bottom: 0;
         right: 0;
+    }
+
+    .hidden {
+        display: none;
     }
 </style>

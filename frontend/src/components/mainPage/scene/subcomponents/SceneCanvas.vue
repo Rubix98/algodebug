@@ -21,6 +21,14 @@
             this.emitter.on("themeChangeEvent", this.draw);
         },
 
+        unmounted() {
+            this.emitter.off("startDebuggingEvent", this.draw);
+            this.emitter.off("currentFrameChangedEvent", this.draw);
+            this.emitter.off("stopDebuggingEvent", this.clearStage);
+            this.emitter.off("downloadStageEvent", this.download);
+            this.emitter.off("themeChangeEvent", this.draw);
+        },
+
         methods: {
             ...mapActions(useProjectStore, ["updateSceneObjectPosition"]),
 
