@@ -23,12 +23,12 @@ export function exportToPDF(stage) {
         documentDefinition.content[documentDefinition.content.length - 1].pageBreak = undefined;
     }
 
-    pdfMake.createPdf(documentDefinition).download("algodebug.pdf");
+    pdfMake.createPdf(documentDefinition).download(getSafeProjectFilename("pdf"));
 }
 
 export function exportToPNG(stage) {
     let uri = stage.getBase64Image();
-    downloadFile("algodebug.png", uri);
+    downloadFile(getSafeProjectFilename("png"), uri);
 }
 
 function downloadFile(name, uri) {
@@ -38,6 +38,14 @@ function downloadFile(name, uri) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+function getSafeProjectFilename(extension) {
+    const projectStore = useProjectStore();
+    let projectTitle = projectStore.projectTitle;
+    projectTitle = projectTitle.replace(/[^a-z0-9]/gi, "_").replace(/_{2,}/g, "_");
+    projectTitle = projectTitle.substring(0, 200);
+    return projectTitle + "." + extension;
 }
 
 function getBlankPDFDocumentDefinition() {

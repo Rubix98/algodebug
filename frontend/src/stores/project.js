@@ -77,6 +77,10 @@ export const useProjectStore = defineStore("project", {
                 inputs: this.testData.map((testCase) => testCase.input),
             };
         },
+
+        projectTitle() {
+            return this.title;
+        },
     },
 
     actions: {
