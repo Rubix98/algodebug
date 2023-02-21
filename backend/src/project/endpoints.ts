@@ -2,6 +2,17 @@ import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { getCollections } from "../app";
 import { validateProject } from "./service";
+import { User } from "../user/model";
+
+export const isAuthenticated = (req: Request): string | null => {
+    const user = req.user as User;
+
+    if (!user) {
+        return null; 
+    }
+
+    return user.username;
+};
 
 export const getAllProjects = async (_req: Request, res: Response) => {
     const { projects } = getCollections();
@@ -31,6 +42,19 @@ export const getProjectById = async (req: Request, res: Response) => {
                 res.status(404).json({ error: "No project found with given id" });
                 return;
             } else {
+                const loggedUser = isAuthenticated(req);
+
+                if (loggedUser == null) {
+                    if (result.author != "AlgoDebug") {
+                        res.status(403).json({ error: "User is not authorised" });
+                        return;
+                    }
+                } else {
+                    if (result.author != "AlgoDebug" && result.author != loggedUser) {
+                        res.status(403).json({ error: "User is not authorised" });
+                        return;
+                    }
+                }
                 res.status(200).json(result);
             }
         } catch (err) {

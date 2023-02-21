@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\src",
+    "\\backend\\src\\project",
+    "\\backend\\src\\user"
+  ],
+  "SelectedNode": "\\backend\\src\\project\\endpoints.ts",
+  "PreviewInSolutionExplorer": false
+}
