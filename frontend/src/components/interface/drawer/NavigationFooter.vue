@@ -1,9 +1,9 @@
 <template>
     <footer>
         <v-divider />
-        <div class="footerContent">
-            AlgoDebug<sup>&#169;</sup> &#9679; <a href="#" @click="showDevelopersModal()">Autorzy</a>
-        </div>
+        <v-list density="compact">
+            <v-list-item prepend-icon="mdi-email-fast" title="Kontakt" @click="showDevelopersModal()" />
+        </v-list>
     </footer>
 </template>
 
@@ -27,10 +27,5 @@
         position: absolute;
         width: 100%;
         bottom: 0px;
-    }
-
-    .footerContent {
-        padding: 5px;
-        text-align: center;
     }
 </style>
