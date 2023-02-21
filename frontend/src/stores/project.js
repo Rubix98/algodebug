@@ -126,7 +126,8 @@ export const useProjectStore = defineStore("project", {
         /* Variables */
         updateVariable(payload) {
             const { id, variable } = payload;
-            variable.id = variable.name = this.code.substring(variable.start, variable.end);
+            variable.name = this.code.substring(variable.start, variable.end);
+            variable.id = variable.name + "@" + variable.start;
             this.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
                 .find((sceneObject) => sceneObject.variable?.id === id).variable = variable;

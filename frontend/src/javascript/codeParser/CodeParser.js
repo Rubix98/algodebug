@@ -3,10 +3,11 @@ export class CodeParser {
         "<algodebug-variable>": function (parent, tag) {
             let beginIndex = tag.position + tag.key.length;
             let endIndex = parent.code.indexOf("</algodebug-variable>", beginIndex);
-            let variableName = parent.code.slice(beginIndex, endIndex);
+            let variableID = parent.code.slice(beginIndex, endIndex);
+            let variableName = variableID.split("@")[0];
             let variableLevel = parent.curlyBracketsLevel + (parent.roundBracketsLevel ? 1 : 0);
-            let variableType = parent.variables.findById(variableName).type;
-            parent.stack.push({ name: variableName, level: variableLevel, type: variableType });
+            let variableType = parent.variables.findById(variableID).type;
+            parent.stack.push({ id: variableID, name: variableName, level: variableLevel, type: variableType });
         },
         "<algodebug-breakpoint>": function (parent, tag) {
             let beginIndex = tag.position + tag.key.length;
@@ -111,7 +112,7 @@ class CodeUtils {
             code =
                 code.slice(0, variable.start) +
                 "<algodebug-variable>" +
-                code.slice(variable.start, variable.end) +
+                variable.id +
                 "</algodebug-variable>" +
                 code.slice(variable.end);
         }
@@ -128,13 +129,22 @@ class CodeUtils {
     }
 
     static removeVariableTags(code) {
-        code = code.replaceAll("<algodebug-variable>", "").replaceAll("</algodebug-variable>", "");
+        let i = -1;
+        while ((i = code.indexOf("<algodebug-variable>")) > 0) {
+            let start = i + "<algodebug-variable>".length;
+            let end = code.indexOf("</algodebug-variable>", start);
+            let variableID = code.substring(start, end);
+            let variableName = variableID.split("@")[0];
+            code = code.substring(0, i) + variableName + code.substring(end + "</algodebug-variable>".length);
+        }
         return code;
     }
 
     static replaceBreakpointTags(code, parsedBreakpoints) {
         for (let breakpoint of parsedBreakpoints) {
-            let variables = breakpoint.variables.map((variable) => `ALGODEBUG_VARIABLE(${variable.name})`).join(" << ");
+            let variables = breakpoint.variables
+                .map((variable) => `ALGODEBUG_VARIABLE(${variable.name}, ${variable.id.split("@")[1]})`)
+                .join(" << ");
             code = code.replace(
                 `<algodebug-breakpoint>${breakpoint.line}</algodebug-breakpoint>`,
                 variables.length !== 0
@@ -147,7 +157,7 @@ class CodeUtils {
 
     static insertAlgodebugMacros(code) {
         return (
-            `#define ALGODEBUG_VARIABLE(x) "<algodebug-variable " << "name=\\"" << #x << "\\">\\n" << x << "\\n</algodebug-variable>\\n"\n` +
+            `#define ALGODEBUG_VARIABLE(x, y) "<algodebug-variable " << "name=\\"" << #x << "@" << y << "\\">\\n" << x << "\\n</algodebug-variable>\\n"\n` +
             `#define ALGODEBUG_BREAKPOINT(line, x) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n" << x << "</algodebug-breakpoint>\\n"\n` +
             `#define ALGODEBUG_EMPTY_BREAKPOINT(line) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n</algodebug-breakpoint>\\n"\n\n` +
             code
