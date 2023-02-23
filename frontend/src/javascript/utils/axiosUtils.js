@@ -3,7 +3,7 @@ import toast, { getEndpointRelatedToast } from "@/javascript/utils/toastUtils";
 
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
-
+    axios.defaults.withCredentials = true;
     if (!data) data = {};
     data.withCredentials = true;
 

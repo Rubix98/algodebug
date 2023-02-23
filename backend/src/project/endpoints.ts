@@ -4,20 +4,26 @@ import { getCollections } from "../app";
 import { validateProject } from "./service";
 import { User } from "../user/model";
 
-export const isAuthenticated = (req: Request): string | null => {
+export const isAuthenticated = (req: Request): string => {
+    console.log(req.user);
     const user = req.user as User;
+    const name = user?.username;
 
-    if (!user) {
-        return null; 
+    if (user == null) {
+        return "";
     }
-
-    return user.username;
+    return name;
 };
 
-export const getAllProjects = async (_req: Request, res: Response) => {
+export const getAllProjects = async (req: Request, res: Response) => {
     const { projects } = getCollections();
     try {
-        const result = await projects.find({}).toArray();
+        const username = isAuthenticated(req);
+        const result = await projects
+            .find({
+                author: { $in: ["AlgoDebug", username] },
+            })
+            .toArray();
 
         if (!result || result.length === 0) {
             res.status(204).send();
@@ -44,13 +50,13 @@ export const getProjectById = async (req: Request, res: Response) => {
             } else {
                 const loggedUser = isAuthenticated(req);
 
-                if (loggedUser == null) {
+                if (!loggedUser) {
                     if (result.author != "AlgoDebug") {
                         res.status(403).json({ error: "User is not authorised" });
                         return;
                     }
                 } else {
-                    if (result.author != "AlgoDebug" && result.author != loggedUser) {
+                    if (result.author !== "AlgoDebug" && result.author !== loggedUser) {
                         res.status(403).json({ error: "User is not authorised" });
                         return;
                     }
@@ -73,11 +79,15 @@ export const saveProject = async (req: Request, res: Response) => {
         res.status(400).json({ error: "Invalid request body: " + data });
         return;
     }
+    if (!req.user) {
+        res.status(403).json({ error: "You must be logged in to save a project" });
+        return;
+    }
+    const author = isAuthenticated(req);
+    const project = { ...data, author, creationDate: new Date(), modificationDate: new Date() };
 
     try {
-        data.creationDate = data.modificationDate = new Date();
-        data.author = "AlgoDebug";
-        const result = await projects.insertOne(data);
+        const result = await projects.insertOne(project);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json(err);
@@ -92,11 +102,16 @@ export const updateProject = async (req: Request, res: Response) => {
         res.status(400).json({ error: "Invalid request body: " + data });
         return;
     }
-
+    if (!req.user) {
+        res.status(403).json({ error: "You must be logged in to update a project" });
+        return;
+    }
     try {
         const id = new ObjectId(data._id);
 
         try {
+            const user = req.user as User;
+            data.author = user.username;
             data.modificationDate = new Date();
             const result = await projects.updateOne({ _id: id }, { $set: data });
             res.status(200).json(result);
