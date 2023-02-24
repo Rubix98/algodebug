@@ -71,7 +71,7 @@ export const authLogout = (req: Request, res: Response) => {
 
 export const authVerify = (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
-        res.status(200).json({ loggedIn: true, user: req.user as RequestData });
+        res.status(200).json({ loggedIn: true, user: req.user as User });
     } else {
         res.status(200).json({ loggedIn: false });
     }

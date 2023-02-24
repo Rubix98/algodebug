@@ -1,24 +1,18 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { getCollections } from "../app";
-import { validateProject } from "./service";
+import { validateProject, isUserAuthorised } from "./service";
 import { User } from "../user/model";
 
-export const isAuthenticated = (req: Request): string => {
-    console.log(req.user);
+export const getAuthenticatedUserName = (req: Request): string => {
     const user = req.user as User;
-    const name = user?.username;
-
-    if (user == null) {
-        return "";
-    }
-    return name;
+    return user?.username;
 };
 
 export const getAllProjects = async (req: Request, res: Response) => {
     const { projects } = getCollections();
     try {
-        const username = isAuthenticated(req);
+        const username = getAuthenticatedUserName(req);
         const result = await projects
             .find({
                 author: { $in: ["AlgoDebug", username] },
@@ -48,20 +42,13 @@ export const getProjectById = async (req: Request, res: Response) => {
                 res.status(404).json({ error: "No project found with given id" });
                 return;
             } else {
-                const loggedUser = isAuthenticated(req);
+                const user = getAuthenticatedUserName(req);
 
-                if (!loggedUser) {
-                    if (result.author != "AlgoDebug") {
-                        res.status(403).json({ error: "User is not authorised" });
-                        return;
-                    }
+                if (isUserAuthorised(result, user)) {
+                    res.status(200).json(result);
                 } else {
-                    if (result.author !== "AlgoDebug" && result.author !== loggedUser) {
-                        res.status(403).json({ error: "User is not authorised" });
-                        return;
-                    }
+                    res.status(403).json({ error: "User is not authorised" });
                 }
-                res.status(200).json(result);
             }
         } catch (err) {
             res.status(500).json(err);
@@ -83,7 +70,7 @@ export const saveProject = async (req: Request, res: Response) => {
         res.status(403).json({ error: "You must be logged in to save a project" });
         return;
     }
-    const author = isAuthenticated(req);
+    const author = getAuthenticatedUserName(req);
     const project = { ...data, author, creationDate: new Date(), modificationDate: new Date() };
 
     try {

@@ -1,8 +1,10 @@
 import { ObjectId } from "mongodb";
 import { Project } from "./model";
+import { User } from "../user/model";
 import { sanitizeBreakpoint } from "./structures/Breakpoint";
 import { sanitizeSceneObject } from "./structures/SceneObject";
 import { sanitizeTestCase } from "./structures/TestCase";
+import { getAuthenticatedUserName } from "./endpoints";
 
 type validProjectOrError = [true, Project] | [false, unknown];
 
@@ -29,5 +31,13 @@ export const validateProject = (req: unknown): validProjectOrError => {
         return [true, sanitizeProject(Project.check(req))];
     } catch (error) {
         return [false, error];
+    }
+};
+
+export const isUserAuthorised = (project: Project, user: string): boolean => {
+    if (project.author === "AlgoDebug" || (user && project.author === user)) {
+        return true;
+    } else {
+        return false;
     }
 };

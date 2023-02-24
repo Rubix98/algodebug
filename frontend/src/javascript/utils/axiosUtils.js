@@ -5,7 +5,6 @@ export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
     axios.defaults.withCredentials = true;
     if (!data) data = {};
-    data.withCredentials = true;
 
     const toastStrings = getEndpointRelatedToast(url);
     const loadingToast = toastStrings.loading ? toast.info(toastStrings.loading, { timeout: false }) : undefined;
