@@ -4,7 +4,6 @@ import { User } from "../user/model";
 import { sanitizeBreakpoint } from "./structures/Breakpoint";
 import { sanitizeSceneObject } from "./structures/SceneObject";
 import { sanitizeTestCase } from "./structures/TestCase";
-import { getAuthenticatedUserName } from "./endpoints";
 
 type validProjectOrError = [true, Project] | [false, unknown];
 
