@@ -1,7 +1,7 @@
 <template>
-    <AlgoModal title="Drużyna AlgoDebug" closeButtonLabel="Zamknij">
+    <AlgoModal title="Zespół AlgoDebug" closeButtonLabel="Zamknij">
         <ul>
-            <li>Marcin Wojdat - CEO</li>
+            <li>Marcin Wojdat - Kierownik projektu</li>
             <li>Jakub Pawłowski - Pracownik miesiąca styczeń 2023</li>
             <li>Łukasz Skabowski - Pracownik miesiąca grudzień 2022</li>
             <li>Mateusz Sobkowiak - Backend</li>
@@ -11,7 +11,7 @@
             <br />
             <v-divider />
             <br />
-            <div><b>Kontakt: </b><a href="mailto:support@algodebug.pl">support@algodebug.pl</a></div>
+            <div><b>Kontakt: </b><a href="mailto:algodebug.kni@gmail.com">algodebug.kni@gmail.com</a></div>
             <br />
         </ul>
     </AlgoModal>
