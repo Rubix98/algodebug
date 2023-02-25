@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <v-text-field label="Tytuł projektu" v-model="title" clearable />
+        <v-text-field label="Tytuł projektu" v-model="tempTitle" clearable />
 
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
@@ -14,22 +14,33 @@
     import { closeModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { mapActions, mapWritableState } from "pinia";
+    import { mapActions, mapState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal },
+
+        data() {
+            return {
+                tempTitle: "",
+            };
+        },
+
+        mounted() {
+            this.tempTitle = this.title;
+        },
 
         methods: {
             ...mapActions(useProjectStore, ["saveProject"]),
 
             save(override) {
-                this.saveProject(this.title, override);
+                if (override) this.saveProject(this.title, true);
+                else this.saveProject(this.tempTitle, false);
                 closeModal();
             },
         },
 
         computed: {
-            ...mapWritableState(useProjectStore, ["title", "_id"]),
+            ...mapState(useProjectStore, ["title", "_id"]),
         },
     });
 </script>
