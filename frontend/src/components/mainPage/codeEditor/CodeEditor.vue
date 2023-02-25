@@ -144,7 +144,7 @@
         },
 
         computed: {
-            ...mapState(useProjectStore, ["variables", "currentFrame", "breakpoints"]),
+            ...mapState(useProjectStore, ["variables", "currentFrame", "breakpoints", "isRunning"]),
             ...mapState(useProjectStore, { projectCode: (state) => state.code }),
 
             modelCode: {
