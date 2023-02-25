@@ -1,7 +1,9 @@
 <template>
     <AlgoModal title="Wybierz format zapisu">
-        <v-btn @click="handleDownloadOption('PNG')">PNG (jedna klatka)</v-btn>
-        <v-btn @click="handleDownloadOption('PDF')">PDF (wszystkie klatki)</v-btn>
+        <div class="flex-center">
+            <v-btn @click="handleDownloadOption('PNG')" class="download-button">PNG (jedna klatka)</v-btn>
+            <v-btn @click="handleDownloadOption('PDF')" class="download-button">PDF (wszystkie klatki)</v-btn>
+        </div>
     </AlgoModal>
 </template>
 
@@ -23,3 +25,9 @@
         },
     });
 </script>
+
+<style scoped>
+    .download-button {
+        margin: 5px 15px;
+    }
+</style>
