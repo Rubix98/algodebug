@@ -43,7 +43,7 @@ function downloadFile(name, uri) {
 function getSafeProjectFilename(extension) {
     const projectStore = useProjectStore();
     let projectTitle = projectStore.projectTitle;
-    projectTitle = projectTitle.replace(/[^a-z0-9]/gi, "_").replace(/_{2,}/g, "_");
+    projectTitle = projectTitle.replace(/[^a-z0-9żźćńółęąś]/gi, "_").replace(/_{2,}/g, "_");
     projectTitle = projectTitle.substring(0, 200);
     return projectTitle + "." + extension;
 }
