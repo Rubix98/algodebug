@@ -10,6 +10,7 @@
         </v-list>
         <v-divider />
         <NavigationDrawerButtons />
+        <NavigationFooter />
     </v-navigation-drawer>
 </template>
 
@@ -19,10 +20,11 @@
     import { mapState } from "pinia";
     import { useUserStore } from "@/stores/user";
     import NavigationDrawerButtons from "@/components/interface/drawer/NavigationDrawerButtons.vue";
+    import NavigationFooter from "@/components/interface/drawer/NavigationFooter.vue";
 
     export default defineComponent({
         name: "NavigationDrawer",
-        components: { NavigationDrawerButtons },
+        components: { NavigationDrawerButtons, NavigationFooter },
 
         emits: ["toggledToRailVersionEvent", "toggledToNormalVersionEvent", "hideDrawerEvent"],
 

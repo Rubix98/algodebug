@@ -15,7 +15,7 @@
         <v-divider />
         <v-card-actions>
             <v-spacer />
-            <v-btn @click="popModal">Anuluj</v-btn>
+            <v-btn @click="popModal">{{ closeButtonLabel ?? "Anuluj" }}</v-btn>
             <slot name="buttons"></slot>
         </v-card-actions>
     </v-card>
@@ -26,7 +26,7 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["title"],
+        props: ["title", "closeButtonLabel"],
 
         methods: {
             popModal() {
