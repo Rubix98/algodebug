@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <v-text-field label="Tytuł projektu" v-model="tempTitle" clearable />
+        <v-text-field label="Tytuł projektu" v-model="newTitle" clearable />
 
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
@@ -21,20 +21,19 @@
 
         data() {
             return {
-                tempTitle: "",
+                newTitle: "",
             };
         },
 
         mounted() {
-            this.tempTitle = this.title;
+            this.newTitle = this.title;
         },
 
         methods: {
             ...mapActions(useProjectStore, ["saveProject"]),
 
             save(override) {
-                if (override) this.saveProject(this.title, true);
-                else this.saveProject(this.tempTitle, false);
+                this.saveProject(this.newTitle, override);
                 closeModal();
             },
         },

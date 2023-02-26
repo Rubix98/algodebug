@@ -153,7 +153,7 @@ export const useProjectStore = defineStore("project", {
             this.title = title;
             sendRequest("/project/save", this.jsonForSave(override, title), override ? "PUT" : "POST").then(
                 (responseData) => {
-                    this._id = responseData.insertedId;
+                    if (!override) this._id = responseData.insertedId;
                 }
             );
         },
