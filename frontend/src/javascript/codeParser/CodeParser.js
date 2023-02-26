@@ -101,6 +101,7 @@ export class CodeParser {
         this.code = CodeUtils.insertConvertersAfterIncludes(this.code, this.converters);
         this.code = CodeUtils.insertConvertersAtTheEnd(this.code, this.converters);
         this.code = CodeUtils.insertAlgodebugMacros(this.code);
+        this.code = CodeUtils.insertNecessaryIncludes(this.code);
     }
 }
 
@@ -171,5 +172,13 @@ class CodeUtils {
     static insertConvertersAtTheEnd(code, converters) {
         converters = converters.map((converter) => converter.code).join("\n\n");
         return code + "\n\n" + converters;
+    }
+
+    static insertNecessaryIncludes(code) {
+        const regex = /#include[ \t]<iostream>/g;
+        if (!regex.test(code)) {
+            return "#include <iostream>\n" + code;
+        }
+        return code;
     }
 }
