@@ -89,14 +89,8 @@ export class Stage {
         this.stage.find("Group").forEach((layer) => layer.destroy());
     }
 
-    downloadImage() {
-        let uri = this.stage.toDataURL({ pixelRatio: 3 });
-        let link = document.createElement("a");
-        link.download = "algodebug.jpeg";
-        link.href = uri;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    getBase64Image() {
+        return this.stage.toDataURL({ pixelRatio: 2 });
     }
 
     getCanvasSize() {

@@ -52,6 +52,10 @@ export const useProjectStore = defineStore("project", {
             return this.currentTestCase.frames.length;
         },
 
+        allFrames() {
+            return this.currentTestCase.frames;
+        },
+
         jsonForSave() {
             return (override, title = null) => {
                 let result = {
@@ -72,6 +76,10 @@ export const useProjectStore = defineStore("project", {
                 language: this.language,
                 inputs: this.testData.map((testCase) => testCase.input),
             };
+        },
+
+        projectTitle() {
+            return this.title;
         },
     },
 
