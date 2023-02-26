@@ -175,7 +175,7 @@ class CodeUtils {
     }
 
     static insertNecessaryIncludes(code) {
-        const regex = /#include[ \t]<iostream>/g;
+        const regex = /#include[ \t]*<iostream>/g;
         if (!regex.test(code)) {
             return "#include <iostream>\n" + code;
         }
