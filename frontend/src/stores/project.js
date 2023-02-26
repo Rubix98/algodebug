@@ -150,10 +150,10 @@ export const useProjectStore = defineStore("project", {
         },
 
         saveProject(title, override) {
-            this.title = title;
+            if (override || this.title == "") this.title = title;
             sendRequest("/project/save", this.jsonForSave(override, title), override ? "PUT" : "POST").then(
                 (responseData) => {
-                    if (!override) this._id = responseData.insertedId;
+                    if (this._id == null) this._id = responseData.insertedId;
                 }
             );
         },
