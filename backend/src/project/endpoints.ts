@@ -6,7 +6,7 @@ import { validateProject } from "./service";
 export const getAllProjects = async (_req: Request, res: Response) => {
     const { projects } = getCollections();
     try {
-        const result = await projects.find({}).toArray();
+        const result = await projects.find({}).sort({ modificationDate: -1 }).toArray();
 
         if (!result || result.length === 0) {
             res.status(204).send();

@@ -50,7 +50,7 @@
 
     export default defineComponent({
         components: { AlgoModal, AlgoTable },
-        props: ["sceneObject"],
+        props: ["sceneObject", "variable"],
 
         data() {
             return {
@@ -66,6 +66,10 @@
         mounted() {
             if (this.$props.sceneObject) {
                 this.model = cloneDeep(this.$props.sceneObject);
+            }
+
+            if (this.$props.variable) {
+                this.model.variable = this.$props.variable;
             }
         },
 

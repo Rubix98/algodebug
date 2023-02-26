@@ -9,6 +9,7 @@
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
+    import { exportToPNG, exportToPDF } from "@/javascript/utils/downloadUtils";
 
     export default defineComponent({
         mounted() {
@@ -42,8 +43,12 @@
                 this.stage.clearStage();
             },
 
-            download() {
-                this.stage.downloadImage();
+            download(format) {
+                if (format == "PNG") {
+                    exportToPNG(this.stage);
+                } else if (format == "PDF") {
+                    exportToPDF(this.stage);
+                }
             },
         },
 

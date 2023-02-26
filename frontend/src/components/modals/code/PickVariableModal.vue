@@ -1,7 +1,7 @@
 <template>
     <AlgoModal title="Zaznacz zmienną">
-        <CodeEditor
-            id="pick-variable-editor"
+        <CodeViewer
+            id="pick-variable-viewer"
             :code="this.code"
             :editable="false"
             :clickable="true"
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+    import CodeViewer from "../../mainPage/codeEditor/CodeViewer.vue";
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
     import { popModal } from "jenesius-vue-modal";
@@ -21,7 +21,7 @@
     import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
-        components: { CodeEditor, AlgoModal },
+        components: { CodeViewer, AlgoModal },
 
         props: ["callback"],
 
@@ -42,7 +42,7 @@
         width: 80vw;
     }
 
-    #pick-variable-editor {
+    #pick-variable-viewer {
         height: 20rem;
     }
 </style>
