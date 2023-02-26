@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Kod debugujący">
-        <CodeViewer id="debug-code-editor" :code="this.debugCode" :editable="false" :clickable="false" />
+        <CodeViewer id="debug-code-viewer" :code="this.debugCode" :editable="false" :clickable="false" />
 
         <template #buttons>
             <v-btn @click="copy()" color="primary">Kopiuj</v-btn>
@@ -32,7 +32,7 @@
 </script>
 
 <style scoped>
-    #debug-code-editor {
+    #debug-code-viewer {
         height: 50vh;
         min-width: 90rem;
     }
