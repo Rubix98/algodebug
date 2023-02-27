@@ -17,6 +17,7 @@
                 keybindings: [KeyMod.CtrlCmd | KeyCode.F10],
 
                 contextMenuGroupId: "navigation",
+                contextMenuOrder: 1,
 
                 run: () => {
                     const variable = this.getVariableInPosition(this.editor.getPosition());
@@ -37,6 +38,7 @@
                 keybindings: [KeyMod.CtrlCmd | KeyCode.F11],
 
                 contextMenuGroupId: "navigation",
+                contextMenuOrder: 2,
 
                 run: () => {
                     const variable = this.getVariableInPosition(this.editor.getPosition());
