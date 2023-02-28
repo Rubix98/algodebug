@@ -1,0 +1,28 @@
+name: Frontend CD
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: ci_frontend
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: "Install dependencies"
+        run: npm ci
+        working-directory: "./frontend"
+      - name: "Build"
+        run: npm run build
+        working-directory: "./frontend"
+      - name: "Deploy built project on VPS"
+        uses: wangyucode/sftp-upload-action@main
+        with:
+          host: "${{ secrets.SFTP_ADDRESS }}"
+          port: "${{ secrets.SFTP_PORT }}"
+          username: "${{ secrets.SFTP_USERNAME }}"
+          password: "${{ secrets.SFTP_PASSWORD }}"
+          localDir: "./frontend/dist"
+          remoteDir: "/home/${{ secrets.SFTP_USERNAME }}/www/"
+          dryRun: false
