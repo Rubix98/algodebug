@@ -46,51 +46,70 @@ export class CodeParser {
 
     parse() {
         this.prepareCode();
-        this.initializeTags();
 
-        while (this.findNextTag()) {
-            let tag = this.findNextTag();
-            tag.action(this, tag);
-            this.updateTagPosition(tag);
+        let tags = this.findAllPositionsOfEveryTag();
+        tags = this.filterNonCodeTags(tags);
+        for (let tag of tags) {
+            this.actions[tag.key](this, tag);
         }
 
         this.parseCode();
         return this.code;
     }
 
-    initializeTags() {
-        this.tags = [];
+    findAllPositionsOfEveryTag() {
+        let result = [];
         for (let actionKey in this.actions) {
-            this.tags.push({
-                id: this.tags.length,
-                key: actionKey,
-                position: 0,
-                action: this.actions[actionKey],
-            });
+            result = result.concat(
+                this.code.findAllOccurences(actionKey).map((o) => {
+                    return { key: actionKey, position: o };
+                })
+            );
         }
-        this.updateAllTagsPosition();
+        return result.sortedBy("position");
     }
 
-    updateAllTagsPosition() {
-        for (let tag of this.tags) {
-            this.updateTagPosition(tag);
-        }
-    }
+    findAllNonCodeIntervals() {
+        let result = [];
+        let currentSituation = null;
+        for (let i = 0; i < this.code.length - 1; i++) {
+            if (currentSituation == null) {
+                if (this.code[i] == '"' || this.code[i] == "'") {
+                    currentSituation = this.code[i];
+                } else if (this.code[i] == "/" && this.code[i + 1] == "/") {
+                    currentSituation = "//";
+                } else if (this.code[i] == "/" && this.code[i + 1] == "*") {
+                    currentSituation = "/*";
+                }
+                if (currentSituation != null) result.push({ start: i, end: null });
+                continue;
+            }
 
-    updateTagPosition(tag) {
-        let position = this.code.indexOf(tag.key, tag.position + 1);
-        position = position !== -1 ? position : this.inf;
-        this.tags[tag.id].position = position;
-    }
+            if (currentSituation == '"' || currentSituation == "'") {
+                if (this.code[i] == "\\") i++;
+                else if (this.code[i] == currentSituation) currentSituation = null;
+            } else if (currentSituation == "//") {
+                if (this.code[i] == "\n") currentSituation = null;
+            } else if (currentSituation == "/*") {
+                if (this.code[i] == "*" && this.code[i + 1] == "/") currentSituation = null;
+            }
 
-    findNextTag() {
-        let result = null;
-        for (let tag of this.tags) {
-            if (tag.position !== this.inf && (result == null || tag.position < result.position)) {
-                result = tag;
+            if (currentSituation == null) {
+                result[result.length - 1].end = i;
             }
         }
         return result;
+    }
+
+    filterNonCodeTags(tags) {
+        const intervals = this.findAllNonCodeIntervals();
+        return tags.filter((tag) => {
+            return (
+                intervals.find((interval) => {
+                    return interval.start <= tag.position && interval.end >= tag.position;
+                }) == undefined
+            );
+        });
     }
 
     prepareCode() {
