@@ -98,6 +98,6 @@ h5 {
 }
 
 .modal-container {
-    background-color: transparentize(black, 0.7);
+    background-color: transparentize(black, 0.7) !important;
     z-index: 2000;
 }
