@@ -41,7 +41,7 @@
             ...mapActions(useUserStore, ["login", "verify", "logout"]),
 
             redirectToRoot() {
-                redirectTo(rootUrl);
+                redirectTo(this.rootUrl);
             },
         },
 
