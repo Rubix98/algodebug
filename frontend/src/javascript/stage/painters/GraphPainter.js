@@ -100,6 +100,10 @@ export class GraphPainter extends Painter {
                     text: String(edge.d),
                     x: centerPoint.x,
                     y: centerPoint.y,
+                    strokeEnabled: true,
+                    fillAfterStrokeEnabled: true,
+                    stroke: this.color == "white" ? "black" : "white",
+                    strokeWidth: 5,
                     fill: this.color,
                     fontSize: this.style.fontSize,
                 });
