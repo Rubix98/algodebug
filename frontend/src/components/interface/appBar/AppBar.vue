@@ -1,10 +1,10 @@
 <template>
     <v-app-bar>
         <v-app-bar-nav-icon @click="this.$emit('toggleDrawer')" v-if="showDrawerButton" />
-        <div class="app-bar__logo">
-            <img class="app-bar__logo__image" :src="logoUrl" @click="redirectToRoot()" alt="AlgoDebug logo" />
-            <img class="app-bar__logo__image" :src="titleUrl" @click="redirectToRoot()" alt="AlgoDebug logo" />
-        </div>
+        <a :href="rootUrl" class="app-bar__logo">
+            <img class="app-bar__logo__image" :src="logoUrl" alt="AlgoDebug logo" />
+            <img class="app-bar__logo__image" :src="titleUrl" alt="AlgoDebug logo" />
+        </a>
         <v-spacer />
         <div class="app-bar__buttons">
             <v-btn color="primary" v-if="!this.loggedIn" @click="login"> Zaloguj się </v-btn>
@@ -41,7 +41,7 @@
             ...mapActions(useUserStore, ["login", "verify", "logout"]),
 
             redirectToRoot() {
-                redirectTo(window.location.origin + window.location.pathname);
+                redirectTo(this.rootUrl);
             },
         },
 
@@ -55,6 +55,10 @@
             titleUrl() {
                 return this.$vuetify.theme.global.name === "dark" ? titleDark : title;
             },
+
+            rootUrl() {
+                return window.location.origin + window.location.pathname;
+            },
         },
     });
 </script>
@@ -67,7 +71,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: pointer;
 
             &__image {
                 height: 100%;

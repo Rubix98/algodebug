@@ -15,8 +15,9 @@
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import AlgoInput from "@/components/global/AlgoInput.vue";
     import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import UnsavedChangesModal from "@/components/modals/other/UnsavedChangesModal.vue";
     import { sendRequest } from "@/javascript/utils/axiosUtils";
-    import { popModal } from "jenesius-vue-modal";
+    import { promptModal, popModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapState } from "pinia";
@@ -52,6 +53,13 @@
 
         computed: {
             ...mapState(useProjectStore, ["language"]),
+        },
+
+        async beforeModalClose(e) {
+            if (e.background) {
+                const shouldClose = await promptModal(UnsavedChangesModal);
+                return shouldClose;
+            }
         },
     });
 </script>

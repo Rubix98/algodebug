@@ -1,13 +1,12 @@
 <template>
     <AlgoModal title="Wczytaj projekt">
-        <AlgoPickList :options="this.projects" @selectOptionEvent="loadProject" />
+        <AlgoPickList :options="this.projectsWithHrefs" />
     </AlgoModal>
 </template>
 
 <script>
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import AlgoPickList from "@/components/global/AlgoPickList.vue";
-    import { redirectTo } from "@/javascript/utils/other";
     import { defineComponent } from "vue";
     import { useCachedListStore } from "@/stores/cachedList";
     import { mapActions, mapState } from "pinia";
@@ -21,13 +20,16 @@
 
         methods: {
             ...mapActions(useCachedListStore, ["updateProjects"]),
-            loadProject(selectedProject) {
-                redirectTo("?projectId=" + selectedProject._id);
-            },
         },
 
         computed: {
             ...mapState(useCachedListStore, ["projects"]),
+
+            projectsWithHrefs() {
+                return this.projects.map((project) => {
+                    return { ...project, href: "?projectId=" + project._id };
+                });
+            },
         },
     });
 </script>
