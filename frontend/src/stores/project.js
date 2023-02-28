@@ -134,7 +134,8 @@ export const useProjectStore = defineStore("project", {
         /* Variables */
         updateVariable(payload) {
             const { id, variable } = payload;
-            variable.id = variable.name = this.code.substring(variable.start, variable.end);
+            variable.name = this.code.substring(variable.start, variable.end);
+            variable.id = variable.name + "@" + variable.start;
             this.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
                 .find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
@@ -157,10 +158,10 @@ export const useProjectStore = defineStore("project", {
         },
 
         saveProject(title, override) {
+            if (override || this.title == "") this.title = title;
             sendRequest("/project/save", this.jsonForSave(override, title), override ? "PUT" : "POST").then(
                 (responseData) => {
-                    this.id = responseData.id;
-                    this.title = responseData.title;
+                    if (this._id == null) this._id = responseData.insertedId;
                 }
             );
         },

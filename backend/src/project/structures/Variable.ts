@@ -1,7 +1,7 @@
 import { Static, Record, String, Number } from "runtypes";
 
 export const Variable = Record({
-    id: String,
+    id: String.withConstraint((s) => /^.*@[0-9]+$/.test(s)),
     start: Number,
     end: Number,
     name: String,

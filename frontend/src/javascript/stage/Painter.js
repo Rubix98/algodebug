@@ -47,9 +47,9 @@ export class Painter {
     }
 
     getVariable(sceneObject) {
-        const name = sceneObject.variable.name;
+        const id = sceneObject.variable.id;
         const type = sceneObject.type;
-        let variable = this.frame.variables[name];
+        let variable = this.frame.variables[id];
         return variable ? parse(variable, type) : undefined;
     }
 

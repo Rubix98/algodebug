@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Zapisz projekt">
-        <v-text-field label="Tytuł projektu" v-model="title" clearable />
+        <v-text-field label="Tytuł projektu" v-model="newTitle" clearable />
 
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
@@ -19,11 +19,21 @@
     export default defineComponent({
         components: { AlgoModal },
 
+        data() {
+            return {
+                newTitle: "",
+            };
+        },
+
+        mounted() {
+            this.newTitle = this.title;
+        },
+
         methods: {
             ...mapActions(useProjectStore, ["saveProject"]),
 
             save(override) {
-                this.saveProject(this.title, override);
+                this.saveProject(this.newTitle, override);
                 closeModal();
             },
         },

@@ -220,11 +220,13 @@
             getVariableInPosition() {
                 return (pos) => {
                     const token = this.editor.getModel().getWordAtPosition(pos);
+                    const start = lineColumn(this.$props.code).toIndex(pos.lineNumber, token.startColumn);
+                    const end = lineColumn(this.$props.code).toIndex(pos.lineNumber, token.endColumn);
                     const variable = {
-                        id: token.word,
+                        id: `${token.word}@${start}`,
                         name: token.word,
-                        start: lineColumn(this.$props.code).toIndex(pos.lineNumber, token.startColumn),
-                        end: lineColumn(this.$props.code).toIndex(pos.lineNumber, token.endColumn),
+                        start: start,
+                        end: end,
                     };
                     return variable;
                 };
