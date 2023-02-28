@@ -254,15 +254,13 @@
     });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
     .code-editor-container {
         transform: translateZ(0);
         position: relative;
         z-index: 40;
     }
-</style>
 
-<style lang="scss">
     .highlight-variable {
         color: white !important;
         border-radius: 5px;
