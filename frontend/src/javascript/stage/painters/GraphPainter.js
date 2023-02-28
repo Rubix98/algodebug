@@ -94,12 +94,18 @@ export class GraphPainter extends Painter {
             edgeGroup.add(edgeLine);
 
             if (edge.d) {
+                const offset = this.getPerpendicularNormalVector({
+                    x: vertexTo.x() - vertexFrom.x(),
+                    y: vertexTo.y() - vertexFrom.y(),
+                });
                 const edgeText = new Konva.Text({
                     id: `edge-text-${edge.a}-${edge.b}`,
                     name: "edge-text",
                     text: String(edge.d),
-                    x: centerPoint.x,
-                    y: centerPoint.y,
+                    x: centerPoint.x + offset.x * 20,
+                    y: centerPoint.y + offset.y * 20,
+                    align: "center",
+                    verticalAlign: "middle",
                     fill: this.color,
                     fontSize: this.style.fontSize,
                 });
@@ -176,9 +182,13 @@ export class GraphPainter extends Painter {
             }
 
             const edgeLineText = edgeNode.find(".edge-text")[0];
+            const offset = this.getPerpendicularNormalVector({
+                x: vertexTo.x() - vertexFrom.x(),
+                y: vertexTo.y() - vertexFrom.y(),
+            });
             if (edgeLineText) {
-                edgeLineText.x(centerPoint.x);
-                edgeLineText.y(centerPoint.y);
+                edgeLineText.x(centerPoint.x + offset.x * 20);
+                edgeLineText.y(centerPoint.y + offset.y * 20);
             }
         });
 
@@ -194,5 +204,12 @@ export class GraphPainter extends Painter {
             x: R * Math.cos(alpha),
             y: R * Math.sin(alpha),
         };
+    }
+
+    getPerpendicularNormalVector(vec) {
+        const dist = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
+        vec.x /= dist;
+        vec.y /= dist;
+        return { x: -vec.y, y: vec.x };
     }
 }
