@@ -83,11 +83,3 @@
         },
     });
 </script>
-
-<style lang="scss" scoped>
-    ul {
-        list-style-type: none;
-        li.author-entry {
-        }
-    }
-</style>
