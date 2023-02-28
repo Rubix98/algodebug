@@ -179,7 +179,6 @@ export class GraphPainter extends Painter {
                 edgeLineNode.points([vertexFrom.x(), vertexFrom.y(), vertexTo.x(), vertexTo.y()]);
             }
 
-            const edgeLineText = edgeNode.find(".edge-text")[0];
             if (edgeLineText) {
                 edgeLineText.x(centerPoint.x);
                 edgeLineText.y(centerPoint.y);
