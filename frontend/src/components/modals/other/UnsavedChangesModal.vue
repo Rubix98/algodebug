@@ -2,7 +2,7 @@
     <AlgoModal title="Niezapisane zmiany" :cantClose="true">
         Masz niezapisane zmiany. Czy na pewno zamknąć?
         <template #buttons>
-            <v-btn @click="close()" color="#ff0000">Tak</v-btn>
+            <v-btn @click="close()" color="primary">Tak</v-btn>
             <v-btn @click="dontClose()" color="primary">Nie</v-btn>
         </template>
     </AlgoModal>
