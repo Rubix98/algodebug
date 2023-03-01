@@ -2,7 +2,7 @@ name: Frontend CD
 
 on:
   push:
-    branches: ["main"]
+    branches: ["master", "feat/add_cd"]
 
 jobs:
   deploy:
