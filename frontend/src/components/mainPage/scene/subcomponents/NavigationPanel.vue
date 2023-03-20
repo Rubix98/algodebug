@@ -12,7 +12,8 @@
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
-
+    let animationInterval;
+    let animationDelay = 500;
     export default defineComponent({
         data() {
             return {
@@ -30,7 +31,19 @@
                             this.setFrameId(this.currentFrame.id - 1);
                         },
                     },
-                    { icon: "mdi-play", action: () => {} },
+                    {
+                        icon: "mdi-play",
+                        action: () => {
+                            if (animationInterval) {
+                                clearInterval(animationInterval);
+                                animationInterval = false;
+                                this.icons[2].icon = "mdi-play";
+                            } else {
+                                this.icons[2].icon = "mdi-stop";
+                                animationInterval = this.runAnimation(animationDelay);
+                            }
+                        },
+                    },
                     {
                         icon: "mdi-step-forward",
                         action: () => {
@@ -54,6 +67,20 @@
                 if (index < 0 || index >= this.numberOfFrames) return;
                 this.switchCurrentFrame(index);
                 this.emitter.emit("currentFrameChangedEvent");
+            },
+            runAnimation(delay) {
+                var intervalID = window.setInterval(
+                    function (e) {
+                        e.setFrameId(e.currentFrame.id + 1);
+                        if (e.currentFrame.id == e.numberOfFrames - 1) {
+                            e.icons[2].icon = "mdi-play";
+                            window.clearInterval(intervalID);
+                        }
+                    },
+                    delay,
+                    this
+                );
+                return intervalID;
             },
         },
 
