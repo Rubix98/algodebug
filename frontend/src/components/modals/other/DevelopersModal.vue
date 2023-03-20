@@ -45,7 +45,7 @@
                 },
                 {
                     name: "Łukasz Skabowski",
-                    role: "Pracownik miesiąca grudzień 2022",
+                    role: "Pracownik miesiąca grudzień 2022, luty 2023",
                     githubId: 27860636,
                     githubLink: "https://github.com/xenix1337",
                 },
