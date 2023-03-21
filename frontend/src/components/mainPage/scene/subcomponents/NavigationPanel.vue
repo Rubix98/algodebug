@@ -12,12 +12,12 @@
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
-    let animationInterval;
-    let animationDelay = 500;
     export default defineComponent({
         data() {
             return {
                 // Cannot read properties of undefined reading id
+                animationInterval: null,
+                animationDelay: 500,
                 icons: [
                     {
                         icon: "mdi-skip-backward",
@@ -34,13 +34,13 @@
                     {
                         icon: "mdi-play",
                         action: () => {
-                            if (animationInterval) {
-                                clearInterval(animationInterval);
-                                animationInterval = false;
+                            if (this.animationInterval) {
+                                clearInterval(this.animationInterval);
+                                this.animationInterval = null;
                                 this.icons[2].icon = "mdi-play";
                             } else {
                                 this.icons[2].icon = "mdi-stop";
-                                animationInterval = this.runAnimation(animationDelay);
+                                this.animationInterval = this.runAnimation(this.animationDelay);
                             }
                         },
                     },
@@ -59,7 +59,9 @@
                 ],
             };
         },
-
+        unmounted() {
+            clearInterval(this.animationInterval);
+        },
         methods: {
             ...mapActions(useProjectStore, ["switchCurrentFrame"]),
 
