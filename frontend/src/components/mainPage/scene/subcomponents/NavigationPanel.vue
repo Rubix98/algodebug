@@ -77,6 +77,7 @@
                         if (e.currentFrame.id == e.numberOfFrames - 1) {
                             e.icons[2].icon = "mdi-play";
                             window.clearInterval(intervalID);
+                            e.animationInterval = null;
                         }
                     },
                     delay,
