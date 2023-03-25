@@ -35,11 +35,10 @@
                         icon: "mdi-play",
                         action: () => {
                             if (this.animationInterval) {
-                                clearInterval(this.animationInterval);
-                                this.animationInterval = null;
-                                this.icons[2].icon = "mdi-play";
+                                this.stopAnimation();
+                                this.playStopIcon = "mdi-play";
                             } else {
-                                this.icons[2].icon = "mdi-stop";
+                                this.playStopIcon = "mdi-stop";
                                 this.animationInterval = this.runAnimation(this.animationDelay);
                             }
                         },
@@ -70,14 +69,17 @@
                 this.switchCurrentFrame(index);
                 this.emitter.emit("currentFrameChangedEvent");
             },
+            stopAnimation() {
+                clearInterval(this.animationInterval);
+                this.animationInterval = null;
+            },
             runAnimation(delay) {
                 var intervalID = window.setInterval(
-                    function (e) {
+                    (e) => {
                         e.setFrameId(e.currentFrame.id + 1);
                         if (e.currentFrame.id == e.numberOfFrames - 1) {
-                            e.icons[2].icon = "mdi-play";
-                            window.clearInterval(intervalID);
-                            e.animationInterval = null;
+                            e.playStopIcon = "mdi-play";
+                            e.stopAnimation();
                         }
                     },
                     delay,
@@ -89,6 +91,14 @@
 
         computed: {
             ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
+            playStopIcon: {
+                get() {
+                    return this.icons[2].icon;
+                },
+                set(icon) {
+                    this.icons[2].icon = icon;
+                },
+            },
         },
     });
 </script>
