@@ -12,11 +12,12 @@
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
-
     export default defineComponent({
         data() {
             return {
                 // Cannot read properties of undefined reading id
+                animationInterval: null,
+                animationDelay: 500,
                 icons: [
                     {
                         icon: "mdi-skip-backward",
@@ -30,7 +31,18 @@
                             this.setFrameId(this.currentFrame.id - 1);
                         },
                     },
-                    { icon: "mdi-play", action: () => {} },
+                    {
+                        icon: "mdi-play",
+                        action: () => {
+                            if (this.animationInterval) {
+                                this.stopAnimation();
+                                this.playStopIcon = "mdi-play";
+                            } else {
+                                this.playStopIcon = "mdi-stop";
+                                this.animationInterval = this.runAnimation(this.animationDelay);
+                            }
+                        },
+                    },
                     {
                         icon: "mdi-step-forward",
                         action: () => {
@@ -46,7 +58,9 @@
                 ],
             };
         },
-
+        unmounted() {
+            clearInterval(this.animationInterval);
+        },
         methods: {
             ...mapActions(useProjectStore, ["switchCurrentFrame"]),
 
@@ -55,10 +69,36 @@
                 this.switchCurrentFrame(index);
                 this.emitter.emit("currentFrameChangedEvent");
             },
+            stopAnimation() {
+                clearInterval(this.animationInterval);
+                this.animationInterval = null;
+            },
+            runAnimation(delay) {
+                var intervalID = window.setInterval(
+                    (e) => {
+                        e.setFrameId(e.currentFrame.id + 1);
+                        if (e.currentFrame.id == e.numberOfFrames - 1) {
+                            e.playStopIcon = "mdi-play";
+                            e.stopAnimation();
+                        }
+                    },
+                    delay,
+                    this
+                );
+                return intervalID;
+            },
         },
 
         computed: {
             ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
+            playStopIcon: {
+                get() {
+                    return this.icons[2].icon;
+                },
+                set(icon) {
+                    this.icons[2].icon = icon;
+                },
+            },
         },
     });
 </script>
