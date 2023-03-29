@@ -27,7 +27,7 @@
 
     export default defineComponent({
         components: { MonacoEditor },
-        props: ["id", "code", "editable", "clickable", "showHighlightedVariables", "showBreakpoints"],
+        props: ["id", "code", "editable", "clickable", "highlightedVariables", "showBreakpoints", "showCurrentLine"],
 
         data() {
             return {
@@ -151,9 +151,9 @@
             },
 
             variablesDecorations() {
-                if (!this.$props.showHighlightedVariables) return [];
+                if (this.highlightedVariables == null) return [];
 
-                return this.variables.map((variable) => {
+                return this.highlightedVariables.map((variable) => {
                     let startLineColumn = lineColumn(this.$props.code, variable.start);
                     let endLineColumn = lineColumn(this.$props.code, variable.end);
                     return {
@@ -182,7 +182,7 @@
             },
 
             lineDecorations() {
-                if (!this.$props.showHighlightedVariables) return [];
+                if (!this.$props.showCurrentLine) return [];
                 if (!this.isRunning) return [];
 
                 return [

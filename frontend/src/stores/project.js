@@ -24,8 +24,9 @@ export const useProjectStore = defineStore("project", {
 
         variables() {
             return this.sceneObjectsFlat
-                .filter((sceneObject) => sceneObject.variable != null)
-                .map((sceneObject) => sceneObject.variable)
+                .filter((sceneObject) => sceneObject.variables != null)
+                .map((sceneObject) => sceneObject.variables)
+                .flat()
                 .unique();
         },
 
@@ -138,12 +139,20 @@ export const useProjectStore = defineStore("project", {
             variable.id = variable.name + "@" + variable.start;
             this.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
-                .find((sceneObject) => sceneObject.variable?.id === id).variable = variable;
+                .forEach((sceneObject) => {
+                    sceneObject.variables.forEach((oldVariable, index) => {
+                        if (oldVariable.id === id) sceneObject.variables[index] = variable;
+                    });
+                });
         },
         deleteVariable(id) {
             this.sceneObjects
                 .flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects])
-                .find((sceneObject) => sceneObject.variable?.id === id).variable = null;
+                .forEach((sceneObject) => {
+                    sceneObject.variables = sceneObject.variables.filter((oldVariable) => {
+                        oldVariable.id !== id;
+                    });
+                });
         },
 
         /* Logic */

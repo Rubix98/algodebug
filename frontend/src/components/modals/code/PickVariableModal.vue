@@ -1,12 +1,12 @@
 <template>
-    <AlgoModal title="Zaznacz zmienną">
+    <AlgoModal title="Zaznacz zmienne" closeButtonLabel="Gotowe">
         <CodeViewer
             id="pick-variable-viewer"
             :code="this.code"
             :editable="false"
             :clickable="true"
             @pickVariableEvent="handlePickVariable"
-            :showHighlightedVariables="true"
+            :highlightedVariables="this.$props.sceneObject.variables"
             :showBreakpoints="true"
         />
     </AlgoModal>
@@ -23,12 +23,26 @@
     export default defineComponent({
         components: { CodeViewer, AlgoModal },
 
-        props: ["callback"],
+        props: ["callback", "sceneObject"],
+
+        data() {
+            return {
+                selectedVariables: [],
+            };
+        },
+
+        mounted() {
+            this.selectedVariables = this.$props.sceneObject.variables;
+        },
 
         methods: {
             handlePickVariable(variable) {
                 this.$props.callback(variable);
-                popModal();
+                /*
+                let index = this.selectedVariables.findIndex((v) => v.id === variable.id);
+                if (index == -1) this.selectedVariables.push(variable);
+                else this.selectedVariables.splice(index, 1);
+                */
             },
         },
         computed: {

@@ -13,11 +13,15 @@ export class VariablePainter extends Painter {
 
         const variableText = new Konva.Text({
             name: "variable",
-            text: this.sceneObject.variable.name + ": " + variable,
+            text: this.getLabel() + ": " + variable,
             fontSize: this.style.fontSize,
             fill: this.color,
             y: variableNumber * this.style.fontSize,
         });
         this.mainGroup.add(variableText);
+    }
+
+    getLabel() {
+        return this.sceneObject.variables.map((variable) => variable.name).join(", ");
     }
 }
