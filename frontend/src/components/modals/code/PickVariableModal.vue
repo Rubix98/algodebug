@@ -37,11 +37,6 @@
         methods: {
             handlePickVariable(variable) {
                 this.$props.callback(variable);
-                /*
-                let index = this.selectedVariables.findIndex((v) => v.id === variable.id);
-                if (index == -1) this.selectedVariables.push(variable);
-                else this.selectedVariables.splice(index, 1);
-                */
             },
         },
         computed: {
