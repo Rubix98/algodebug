@@ -52,6 +52,9 @@
         border-width: 1px;
         border-color: $border-color-root;
 
+        display: flex;
+        flex-direction: column;
+
         &__content {
             padding: 1rem 2rem;
             max-height: 65vh;

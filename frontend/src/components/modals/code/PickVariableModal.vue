@@ -1,5 +1,16 @@
 <template>
     <AlgoModal title="Zaznacz zmienne" closeButtonLabel="Gotowe">
+        <div id="variable-chips-container">
+            <v-chip
+                closable
+                v-for="variable in this.selectedVariables"
+                class="ma-2"
+                :key="variable.id"
+                @click:close="deleteVariable(variable)"
+            >
+                {{ variable.name }}
+            </v-chip>
+        </div>
         <CodeViewer
             id="pick-variable-viewer"
             :code="this.code"
@@ -38,6 +49,10 @@
             handlePickVariable(variable) {
                 this.$props.callback(variable);
             },
+
+            deleteVariable(variable) {
+                this.$props.callback(variable);
+            },
         },
         computed: {
             ...mapState(useProjectStore, ["code"]),
@@ -48,9 +63,18 @@
 <style scoped>
     .dialog {
         width: 80vw;
+        height: 85vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #variable-chips-container {
+        height: 15%;
+        white-space: nowrap;
+        overflow-y: auto;
     }
 
     #pick-variable-viewer {
-        height: 20rem;
+        height: 85%;
     }
 </style>
