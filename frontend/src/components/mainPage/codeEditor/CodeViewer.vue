@@ -1,12 +1,7 @@
 <template>
     <div :id="id" class="code-editor-container">
         <slot></slot>
-        <MonacoEditor
-            :id="id"
-            v-model:value="modelCode"
-            :options="options"
-            @editorDidMount="editorDidMount"
-        ></MonacoEditor>
+        <MonacoEditor v-model:value="modelCode" :options="options" @editorDidMount="editorDidMount"></MonacoEditor>
     </div>
 </template>
 
