@@ -16,7 +16,6 @@
     import CodeViewer from "../../mainPage/codeEditor/CodeViewer.vue";
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
-    import { popModal } from "jenesius-vue-modal";
     import { mapState } from "pinia";
     import { useProjectStore } from "@/stores/project";
 
