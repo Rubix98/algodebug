@@ -22,12 +22,18 @@
                     {
                         icon: "mdi-skip-backward",
                         action: () => {
+                            if (this.animationInterval) {
+                                this.stopAnimation();
+                            }
                             this.setFrameId(0);
                         },
                     },
                     {
                         icon: "mdi-step-backward",
                         action: () => {
+                            if (this.animationInterval) {
+                                this.stopAnimation();
+                            }
                             this.setFrameId(this.currentFrame.id - 1);
                         },
                     },
@@ -36,9 +42,10 @@
                         action: () => {
                             if (this.animationInterval) {
                                 this.stopAnimation();
-                                this.playStopIcon = "mdi-play";
                             } else {
-                                this.playStopIcon = "mdi-stop";
+                                if (this.currentFrame.id == this.numberOfFrames - 1) {
+                                    this.setFrameId(0);
+                                }
                                 this.animationInterval = this.runAnimation(this.animationDelay);
                             }
                         },
@@ -46,6 +53,9 @@
                     {
                         icon: "mdi-step-forward",
                         action: () => {
+                            if (this.animationInterval) {
+                                this.stopAnimation();
+                            }
                             this.setFrameId(this.currentFrame.id + 1);
                         },
                     },
@@ -72,26 +82,29 @@
             stopAnimation() {
                 clearInterval(this.animationInterval);
                 this.animationInterval = null;
+                this.playPauseIcon = "mdi-play";
             },
             runAnimation(delay) {
+                this.playPausIcon = "mdi-pause";
                 var intervalID = window.setInterval(
                     (e) => {
                         e.setFrameId(e.currentFrame.id + 1);
                         if (e.currentFrame.id == e.numberOfFrames - 1) {
-                            e.playStopIcon = "mdi-play";
+                            e.playPauseIcon = "mdi-play";
                             e.stopAnimation();
                         }
                     },
                     delay,
                     this
                 );
+                this.playPauseIcon = "mdi-pause";
                 return intervalID;
             },
         },
 
         computed: {
             ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
-            playStopIcon: {
+            playPauseIcon: {
                 get() {
                     return this.icons[2].icon;
                 },
