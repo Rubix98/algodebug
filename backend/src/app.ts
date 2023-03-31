@@ -119,12 +119,15 @@ app.use((err: ResponseError, _req: Request, res: Response, next: NextFunction) =
 });
 
 /* API endpoints */
-
+const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.isAuthenticated());
+    req.isAuthenticated() ? next() : res.sendStatus(403);
+}
 // project
 app.get("/project/findAll", getAllProjects);
 app.get("/project/find/:id", getProjectById);
-app.post("/project/save", saveProject);
-app.put("/project/save", updateProject);
+app.post("/project/save", isLoggedIn, saveProject);
+app.put("/project/save", isLoggedIn, updateProject);
 
 // converter
 app.get("/converter/findAll", getAllConverters);
