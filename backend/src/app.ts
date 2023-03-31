@@ -120,7 +120,6 @@ app.use((err: ResponseError, _req: Request, res: Response, next: NextFunction) =
 
 /* API endpoints */
 const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.isAuthenticated());
     req.isAuthenticated() ? next() : res.sendStatus(403);
 };
 // project
