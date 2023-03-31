@@ -34,5 +34,5 @@ export const validateProject = (req: unknown): validProjectOrError => {
 };
 
 export const isUserAuthorised = (project: Project, userName: string): boolean => {
-    return (project.author === "AlgoDebug" || userName !== undefined && project.author === userName);
+    return project.author === "AlgoDebug" || (userName !== undefined && project.author === userName);
 };
