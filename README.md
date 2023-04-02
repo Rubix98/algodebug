@@ -2,7 +2,7 @@
 
 AlgoDebug is a tool designed for debugging user provided source code through visualization of its operations. It was created primarily for people working with algorithmics and computer science students.
 
-Current version of application: <http://srv16.mikr.us:20232> (work in progress)
+Current version of application: <https://algodebug.pl> (work in progress)
 
 AlgoDebug compiler repository: <https://github.com/Rubix98/algodebug_compiler>
 

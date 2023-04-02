@@ -14,7 +14,7 @@ export default defineConfig({
     base: "/",
     assetsDir: "/",
     devServer: {
-        allowedHosts: ["srv16.mikr.us"],
+        allowedHosts: ["algodebug.pl"],
     },
     define: {
         BACKEND_URL: JSON.stringify(env.VITE_APP_BACKEND_URL),
