@@ -36,8 +36,9 @@
     import AlgoTable from "@/components/global/AlgoTable.vue";
     import PickVariableModal from "@/components/modals/code/PickVariableModal.vue";
     import SelectConverterModal from "@/components/modals/converter/SelectConverterModal.vue";
+    import UnsavedChangesModal from "@/components/modals/other/UnsavedChangesModal.vue";
     import { cloneDeep } from "lodash";
-    import { closeModal, pushModal } from "jenesius-vue-modal";
+    import { closeModal, pushModal, promptModal } from "jenesius-vue-modal";
     import { validateSceneObject } from "@/javascript/utils/validationUtils";
     import { defineComponent } from "vue";
     import {
@@ -50,7 +51,7 @@
 
     export default defineComponent({
         components: { AlgoModal, AlgoTable },
-        props: ["sceneObject"],
+        props: ["sceneObject", "variable"],
 
         data() {
             return {
@@ -60,6 +61,8 @@
                     converter: null,
                     subobjects: [],
                 },
+
+                modelBeforeChanges: "",
             };
         },
 
@@ -67,6 +70,12 @@
             if (this.$props.sceneObject) {
                 this.model = cloneDeep(this.$props.sceneObject);
             }
+
+            if (this.$props.variable) {
+                this.model.variable = this.$props.variable;
+            }
+
+            this.modelBeforeChanges = JSON.stringify(this.model);
         },
 
         methods: {
@@ -136,6 +145,13 @@
             hasSubtypes() {
                 return (key) => hasSubtypes(key);
             },
+        },
+
+        async beforeModalClose(e) {
+            if (e.background && JSON.stringify(this.model) != this.modelBeforeChanges) {
+                const shouldClose = await promptModal(UnsavedChangesModal);
+                return shouldClose;
+            }
         },
     });
 </script>

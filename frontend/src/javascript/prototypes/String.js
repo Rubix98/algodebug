@@ -28,3 +28,13 @@ String.prototype.escapeHTML = function () {
 String.prototype.numberOfLines = function () {
     return this.split("\n").length;
 };
+
+String.prototype.findAllOccurences = function (needle) {
+    let result = [];
+    let i = 0;
+    while ((i = this.indexOf(needle, i)) >= 0) {
+        result.push(i);
+        i += needle.length;
+    }
+    return result;
+};

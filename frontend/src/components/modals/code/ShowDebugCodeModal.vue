@@ -1,6 +1,6 @@
 <template>
     <AlgoModal title="Kod debugujący">
-        <CodeEditor id="debug-code-editor" :code="this.debugCode" :editable="false" :clickable="false" />
+        <CodeViewer id="debug-code-viewer" :code="this.debugCode" :editable="false" :clickable="false" />
 
         <template #buttons>
             <v-btn @click="copy()" color="primary">Kopiuj</v-btn>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import CodeEditor from "@/components/mainPage/codeEditor/CodeEditor.vue";
+    import CodeViewer from "@/components/mainPage/codeEditor/CodeViewer.vue";
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
     import toast from "@/javascript/utils/toastUtils";
@@ -17,7 +17,7 @@
     import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
-        components: { AlgoModal, CodeEditor },
+        components: { AlgoModal, CodeViewer },
 
         methods: {
             copy() {
@@ -32,7 +32,7 @@
 </script>
 
 <style scoped>
-    #debug-code-editor {
+    #debug-code-viewer {
         height: 50vh;
         min-width: 90rem;
     }

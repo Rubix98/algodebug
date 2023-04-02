@@ -19,8 +19,8 @@ export const getAllProjects = async (req: Request, res: Response) => {
             .find({
                 author: { $in: ["AlgoDebug", username] },
             })
+            .sort({ modificationDate: -1 })
             .toArray();
-
         if (!result || result.length === 0) {
             res.status(204).send();
         } else {

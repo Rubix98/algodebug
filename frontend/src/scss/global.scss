@@ -3,7 +3,7 @@
     font-weight: 400;
     font-style: normal;
     font-display: auto;
-    src: local("SourceCodePro"), url("/public/fonts/SourceCodePro-Regular.ttf");
+    src: local("SourceCodePro"), url("/fonts/SourceCodePro-Regular.ttf");
 }
 
 html {
@@ -98,6 +98,6 @@ h5 {
 }
 
 .modal-container {
-    background-color: transparentize(black, 0.7);
+    background-color: transparentize(black, 0.7) !important;
     z-index: 2000;
 }

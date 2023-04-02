@@ -9,7 +9,7 @@ on:
       - frontend/**
 
 jobs:
-  build:
+  ci_frontend:
     runs-on: ubuntu-latest
 
     steps:
