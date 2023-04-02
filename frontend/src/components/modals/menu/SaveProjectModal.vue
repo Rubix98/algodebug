@@ -14,7 +14,7 @@
     import { closeModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
-    import { mapActions, mapState } from "pinia";
+    import { mapActions, mapWritableState } from "pinia";
 
     export default defineComponent({
         components: { AlgoModal },
@@ -39,7 +39,7 @@
         },
 
         computed: {
-            ...mapState(useProjectStore, ["title", "_id"]),
+            ...mapWritableState(useProjectStore, ["title", "_id"]),
         },
     });
 </script>
