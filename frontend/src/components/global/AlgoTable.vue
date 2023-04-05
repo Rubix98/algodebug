@@ -44,6 +44,7 @@
     import { getSceneObjectTypeLabel } from "@/javascript/utils/sceneObjectTypesUtils";
     import { pushModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
+    import { cloneDeep } from "lodash";
 
     export default defineComponent({
         components: { AlgoLink },
@@ -61,7 +62,7 @@
 
         methods: {
             addRow() {
-                this.model.addElement({ ...this.emptyRow });
+                this.model.addElement(cloneDeep(this.emptyRow));
             },
 
             removeRow(id) {
@@ -80,8 +81,11 @@
             selectVariable(row) {
                 pushModal(PickVariableModal, {
                     callback: (selectedVariable) => {
-                        row.variable = selectedVariable;
+                        let index = row.variables.findIndex((variable) => variable.id === selectedVariable.id);
+                        if (index == -1) row.variables.push(selectedVariable);
+                        else row.variables.splice(index, 1);
                     },
+                    sceneObject: row,
                 });
             },
 
@@ -103,7 +107,7 @@
 
             variableName() {
                 return (row) => {
-                    return row.variable?.name;
+                    return row.variables.map((v) => v.name).join(", ");
                 };
             },
 
