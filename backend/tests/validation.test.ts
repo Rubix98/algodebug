@@ -1,6 +1,6 @@
 import { validateConverter } from "../src/converter/service";
 import { validateProject } from "../src/project/service";
-import { Converter } from "../src/converter/model";
+import { Converter, sanitizeConverter } from "../src/converter/model";
 import { Project } from "../src/project/model";
 import { Breakpoint } from "../src/project/structures/Breakpoint";
 import { Language } from "../src/converter/structures/Language";
@@ -8,7 +8,7 @@ import { Variable } from "../src/project/structures/Variable";
 import { SceneObject } from "../src/project/structures/SceneObject";
 import { ObjectType } from "../src/project/structures/ObjectType";
 import { TestCase } from "../src/project/structures/TestCase";
-import { sanitizeConverter } from "../src/converter/service";
+import { Uuid } from "../src/user/structures/Uuid";
 
 const checkProject = (o: unknown) => {
     // might throw an error
@@ -45,7 +45,8 @@ let validProject = {
     breakpoints: [],
     testData: [],
     sceneObjects: [],
-    author: "nonempty",
+    public: false,
+    authorId: { id: "nonempty", provider: "google" } as Uuid,
 } as Project;
 
 let validNestedProject = {
@@ -164,8 +165,8 @@ describe("Project validation", () => {
         });
     });
 
-    // in POST id is only hint but will not override existing object
-    // but specifiying id will be required in PUT to update existing object
+    // in POST id is only a hint and will not override existing project
+    // but specifiying id will be required in PUT to update existing project
     test("Id present", () => {
         expect(() => checkProject({ ...validProject, _id: null })).toThrow();
         expect(() => checkProject({ ...validProject, _id: "1234" })).toThrow();
@@ -205,8 +206,8 @@ describe("Converter validation", () => {
         expect(sanitizeConverter(null)).toEqual(null);
     });
 
-    // in POST id is only hint but will not override existing object
-    // but specifiying id will be required in PUT to update existing object
+    // in POST id is only a hint and will not override existing converter
+    // but specifiying id will be required in PUT to update existing converter
     test("Id present", () => {
         expect(() => checkConverter({ ...validConverter, _id: null })).toThrow();
         expect(() => checkConverter({ ...validConverter, _id: "1234" })).toThrow();

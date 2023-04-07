@@ -1,31 +1,8 @@
-import { ObjectId } from "mongodb";
-import { Project } from "./model";
+import { ValidTypeOrError } from "../types";
 import { User } from "../user/model";
-import { sanitizeBreakpoint } from "./structures/Breakpoint";
-import { sanitizeSceneObject } from "./structures/SceneObject";
-import { sanitizeTestCase } from "./structures/TestCase";
+import { Project, sanitizeProject } from "./model";
 
-type validProjectOrError = [true, Project] | [false, unknown];
-
-export const sanitizeProject = (p: Project) => {
-    const result = {
-        _id: p._id ? new ObjectId(p._id) : undefined,
-        title: p.title,
-        code: p.code,
-        language: p.language,
-        breakpoints: p.breakpoints.map(sanitizeBreakpoint),
-        testData: p.testData.map(sanitizeTestCase),
-        sceneObjects: p.sceneObjects.map(sanitizeSceneObject),
-        modificationDate: p.modificationDate ?? new Date(),
-    } as Project;
-
-    if (p.author != null) result.author = p.author;
-    if (p.creationDate != null) result.creationDate = p.creationDate;
-
-    return result;
-};
-
-export const validateProject = (req: unknown): validProjectOrError => {
+export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
         return [true, sanitizeProject(Project.check(req))];
     } catch (error) {
@@ -33,6 +10,10 @@ export const validateProject = (req: unknown): validProjectOrError => {
     }
 };
 
-export const isUserAuthorised = (project: Project, userName: string): boolean => {
-    return project.author === "AlgoDebug" || (userName !== undefined && project.author === userName);
+export const isUserAuthor = (project: Project, user: User): boolean => {
+    return project.authorId.id === user?._id.id && project.authorId.provider === user?._id.provider;
+}
+
+export const isUserAuthorised = (project: Project, user: User): boolean => {
+    return isUserAuthor(project, user) || project.public;
 };
