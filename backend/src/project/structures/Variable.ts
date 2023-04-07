@@ -9,11 +9,8 @@ export const Variable = Record({
 
 export type Variable = Static<typeof Variable>;
 
-export const sanitizeVariable = (m: Variable) => {
-    return {
-        id: m.id,
-        start: m.start,
-        end: m.end,
-        name: m.name,
-    } as Variable;
+export const sanitizeVariables = (m: Variable[]) => {
+    return m.map((v) => {
+        return { id: v.id, start: v.start, end: v.end, name: v.name };
+    }) as Variable[];
 };

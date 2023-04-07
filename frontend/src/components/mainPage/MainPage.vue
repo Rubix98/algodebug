@@ -9,7 +9,8 @@
                     :code="this.code"
                     :editable="!this.isRunning && !this.waitingForCompile"
                     :clickable="false"
-                    :showHighlightedVariables="true"
+                    :highlightedVariables="this.variables"
+                    :showCurrentLine="true"
                     :showBreakpoints="true"
                 >
                     <CodePanel />
@@ -47,7 +48,7 @@
         },
 
         computed: {
-            ...mapState(useProjectStore, ["code", "isRunning", "waitingForCompile"]),
+            ...mapState(useProjectStore, ["code", "isRunning", "waitingForCompile", "variables"]),
             projectId() {
                 const urlParams = new URLSearchParams(window.location.search);
                 return urlParams.get("projectId");
