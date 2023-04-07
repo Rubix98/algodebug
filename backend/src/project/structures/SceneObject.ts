@@ -1,5 +1,5 @@
 import { Converter, sanitizeConverter } from "../../converter/model";
-import { Variable, sanitizeVariable } from "./Variable";
+import { Variable, sanitizeVariables } from "./Variable";
 import { ObjectType } from "./ObjectType";
 import { Record, String, Array, Number, Lazy, Runtype, Unknown, Optional, Null } from "runtypes";
 
@@ -8,7 +8,7 @@ export const SceneObject: Runtype<SceneObject> = Lazy(() =>
     Record({
         id: Number,
         type: ObjectType,
-        variable: Variable,
+        variables: Array(Variable),
         converter: Converter.Or(Null),
         color: Optional(String.Or(Null)),
         position: Optional(Unknown.Or(Null)),
@@ -20,7 +20,7 @@ export const SceneObject: Runtype<SceneObject> = Lazy(() =>
 export type SceneObject = {
     id: number;
     type: ObjectType;
-    variable: Variable;
+    variables: Variable[];
     converter: Converter | null;
     color?: string | null;
     position?: unknown | null;
@@ -31,7 +31,7 @@ export const sanitizeSceneObject = (s: SceneObject): SceneObject => {
     const result = {
         id: s.id,
         type: s.type,
-        variable: sanitizeVariable(s.variable),
+        variables: sanitizeVariables(s.variables),
         converter: sanitizeConverter(s.converter),
     } as SceneObject;
 

@@ -57,14 +57,14 @@ let validNestedProject = {
         {
             id: 0,
             type: "graph" as ObjectType,
-            variable: { id: "x@0", start: 0, end: 1, name: "x" } as Variable,
+            variables: [{ id: "x@0", start: 0, end: 1, name: "x" }] as Variable[],
             converter: validConverter,
             color: "#000000",
             subobjects: [
                 {
                     id: 0,
                     type: "variable" as ObjectType,
-                    variable: { id: "y@2", start: 2, end: 3, name: "y" } as Variable,
+                    variables: [{ id: "y@2", start: 2, end: 3, name: "y" }] as Variable[],
                     converter: validConverter,
                     color: "#000000",
                     subobjects: [],
