@@ -87,7 +87,7 @@ export const saveProject = async (req: Request, res: Response) => {
 
 export const updateProject = async (req: Request, res: Response) => {
     const { projects } = getCollections();
-    const user = (req.user as User);
+    const user = req.user as User;
 
     const data = {
         ...req.body,

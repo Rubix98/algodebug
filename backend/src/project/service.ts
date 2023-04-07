@@ -12,7 +12,7 @@ export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
 
 export const isUserAuthor = (project: Project, user: User): boolean => {
     return project.authorId.id === user?._id.id && project.authorId.provider === user?._id.provider;
-}
+};
 
 export const isUserAuthorised = (project: Project, user: User): boolean => {
     return isUserAuthor(project, user) || project.public;
