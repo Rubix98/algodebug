@@ -9,6 +9,9 @@
             @click:close="deleteSceneObject(sceneObject.id)"
         >
             {{ sceneObjectLabel(sceneObject) }}
+            <span class="subObjectStyle" v-if="sceneObject.subobjects && sceneObject.subobjects.length > 0">
+                &nbsp;[{{ sceneObject.subobjects.length }}]
+            </span>
         </v-chip>
     </div>
 </template>
@@ -44,3 +47,10 @@
         },
     });
 </script>
+
+
+<style>
+    .subObjectStyle {
+        color: gray; 
+    }
+</style>
