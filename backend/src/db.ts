@@ -16,19 +16,19 @@ export const getCollections = () => {
 };
 
 export const initializeDatabase = async () => {
-	try {
-		const client = new MongoClient(process.env.DATABASE_URI as string);
-		await client.connect();
-		const database = client.db(process.env.DATABASE_NAME);
+    try {
+        const client = new MongoClient(process.env.DATABASE_URI as string);
+        await client.connect();
+        const database = client.db(process.env.DATABASE_NAME);
 
-		projectCollection = database.collection<Project>("projects");
-		converterCollection = database.collection<Converter>("converters");
+        projectCollection = database.collection<Project>("projects");
+        converterCollection = database.collection<Converter>("converters");
 
-		userCollection = database.collection<User>("users");
+        userCollection = database.collection<User>("users");
 
-		console.log("Successfully connected to database");
-	} catch (error) {
-		console.log("Error while connecting to database:");
-		throw error;
-	}
+        console.log("Successfully connected to database");
+    } catch (error) {
+        console.log("Error while connecting to database:");
+        throw error;
+    }
 };

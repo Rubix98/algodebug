@@ -16,7 +16,7 @@ export const initializePassport = () => {
     passport.deserializeUser((user, done: (arg0: null, arg1: any) => any) => {
         return done(null, user);
     });
-}
+};
 
 export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
     const data = {
