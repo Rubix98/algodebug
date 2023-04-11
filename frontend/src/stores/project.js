@@ -160,9 +160,17 @@ export const useProjectStore = defineStore("project", {
         loadProject(projectId) {
             sendRequest("/project/find/" + projectId, null, "GET").then((responseData) => {
                 const project = responseData;
-                ["_id", "title", "code", "breakpoints", "language", "testData", "sceneObjects", "title", "public"].forEach(
-                    (property) => (this[property] = project[property])
-                );
+                [
+                    "_id",
+                    "title",
+                    "code",
+                    "breakpoints",
+                    "language",
+                    "testData",
+                    "sceneObjects",
+                    "title",
+                    "public",
+                ].forEach((property) => (this[property] = project[property]));
                 this.currentTestCaseId = project.testData.firstId();
             });
         },
