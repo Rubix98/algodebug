@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { getCollections } from "../app";
+import { getCollections } from "../db";
 import {
     validateProject,
     isUserAuthorised,

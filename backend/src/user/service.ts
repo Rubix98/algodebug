@@ -1,12 +1,12 @@
 import passport from "passport";
-import { getCollections } from "../app";
+import { getCollections } from "../db";
 import { ValidTypeOrError } from "../types";
 import { sanitizeUser, User } from "./model";
 import { initializeGoogle } from "./strategies/google";
 import { Provider } from "./structures/Provider";
 import { Uuid } from "./structures/Uuid";
 
-export function initializePassport() {
+export const initializePassport = () => {
     initializeGoogle();
 
     passport.serializeUser((user, done: (arg0: null, arg1: any) => any) => {

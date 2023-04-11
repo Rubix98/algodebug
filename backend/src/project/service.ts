@@ -2,7 +2,7 @@ import { ValidTypeOrError } from "../types";
 import { User } from "../user/model";
 import { Project, sanitizeProject } from "./model";
 import { ProjectLike } from "../types";
-import { getCollections } from "../app";
+import { getCollections } from "../db";
 import { ObjectId } from "mongodb";
 
 const authorLookup = [
