@@ -74,7 +74,6 @@ try {
     converterCollection = database.collection<Converter>("converters");
 
     userCollection = database.collection<User>("users");
-    await userCollection.createIndex({ provider: 1, _id: 1 }, { unique: true });
 
     console.log("Successfully connected to database");
 } catch (error) {
