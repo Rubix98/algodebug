@@ -1,19 +1,20 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { getCollections } from "../app";
-import { validateProject, isUserAuthorised, isUserAuthor } from "./service";
+import {
+    validateProject,
+    isUserAuthorised,
+    isUserAuthor,
+    getAllProjectsWithAuthor,
+    getProjectByIdWithAuthor,
+} from "./service";
 import { User } from "../user/model";
 
 export const getAllProjects = async (req: Request, res: Response) => {
-    const { projects } = getCollections();
-    const uuid = (req.user as User)?._id;
     let result;
 
     try {
-        result = await projects
-            .find({ $or: [{ public: true }, { authorId: uuid }] })
-            .sort({ modificationDate: -1 })
-            .toArray();
+        result = await getAllProjectsWithAuthor(req.user as User);
     } catch (err) {
         res.status(500).json({ error: "Database error" });
         return;
@@ -27,7 +28,6 @@ export const getAllProjects = async (req: Request, res: Response) => {
 };
 
 export const getProjectById = async (req: Request, res: Response) => {
-    const { projects } = getCollections();
     let projectId, result;
 
     try {
@@ -38,7 +38,7 @@ export const getProjectById = async (req: Request, res: Response) => {
     }
 
     try {
-        result = await projects.findOne({ _id: projectId });
+        result = await getProjectByIdWithAuthor(projectId);
     } catch (err) {
         res.status(500).json({ error: "Database error" });
         return;
@@ -65,7 +65,9 @@ export const saveProject = async (req: Request, res: Response) => {
     const data = {
         ...req.body,
         authorId: uuid,
-        public: req.body.public || false,
+        // change this when we have a way to set project visibility in the frontend
+        // public: req.body.public || false,
+        public: false,
         creationDate: new Date(),
         modificationDate: new Date(),
     };
