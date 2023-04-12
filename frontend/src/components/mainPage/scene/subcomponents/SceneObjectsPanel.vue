@@ -9,8 +9,8 @@
             @click:close="deleteSceneObject(sceneObject.id)"
         >
             {{ sceneObjectLabel(sceneObject) }}
-            <span class="subObjectStyle" v-if="sceneObject.subobjects && sceneObject.subobjects.length > 0">
-                &nbsp;[{{ sceneObject.subobjects.length }}]
+            <span class="subObjectStyle">
+                {{ hasSubObject(sceneObject) }}
             </span>
         </v-chip>
     </div>
@@ -23,6 +23,7 @@
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
+    import { isEmpty } from "lodash";
 
     export default defineComponent({
         methods: {
@@ -44,13 +45,22 @@
                     }`;
                 };
             },
+
+            hasSubObject() {
+                return (sceneObject) => {
+                    if (!isEmpty(sceneObject.subobjects)) {
+                        const subObjectCount = sceneObject.subobjects ? sceneObject.subobjects.length : 0;
+                        return `[${subObjectCount}]`;
+                    }
+                };
+            },
         },
     });
 </script>
 
-
 <style>
     .subObjectStyle {
-        color: gray; 
+        margin-left: 5px;
+        color: gray;
     }
 </style>
