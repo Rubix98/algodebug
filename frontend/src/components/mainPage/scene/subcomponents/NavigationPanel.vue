@@ -39,8 +39,10 @@
                             if (this.currentFrame.id == this.numberOfFrames - 1) {
                                 this.setFrameId(0);
                             }
-                            if (animationInterval == null) {
+                            if (this.animationInterval == null) {
                                 this.animationInterval = this.runAnimation(this.animationDelay);
+                            } else {
+                                this.stopAnimation();
                             }
                         },
                     },
