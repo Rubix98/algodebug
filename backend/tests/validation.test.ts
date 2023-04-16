@@ -8,7 +8,7 @@ import { Variable } from "../src/project/structures/Variable";
 import { SceneObject } from "../src/project/structures/SceneObject";
 import { ObjectType } from "../src/project/structures/ObjectType";
 import { TestCase } from "../src/project/structures/TestCase";
-import { Uuid } from "../src/user/structures/Uuid";
+import { ObjectId } from "mongodb";
 
 const checkProject = (o: unknown) => {
     // might throw an error
@@ -46,7 +46,7 @@ let validProject = {
     testData: [],
     sceneObjects: [],
     public: false,
-    authorId: { id: "nonempty", provider: "google" } as Uuid,
+    authorId: new ObjectId("0123456789abcdef01234567"),
 } as Project;
 
 let validNestedProject = {

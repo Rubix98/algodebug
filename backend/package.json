@@ -6,7 +6,7 @@
         "start": "node --experimental-specifier-resolution=node dist/src/app.js",
         "dev": "ts-node src/app.ts",
         "build": "tsc -p . --outDir ./dist",
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --coverage",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll",
         "test:ci": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "format": "prettier --write --list-different .",
         "format:check": "prettier --check ."
