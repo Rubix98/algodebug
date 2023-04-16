@@ -9,8 +9,8 @@
             @click:close="deleteSceneObject(sceneObject.id)"
         >
             {{ sceneObjectLabel(sceneObject) }}
-            <span class="subObjectStyle">
-                {{ hasSubObject(sceneObject) }}
+            <span class="subObjectStyle" v-if="subObjectCount(sceneObject)">
+                [{{ sceneObject.subobjects.length }}]
             </span>
         </v-chip>
     </div>
@@ -46,14 +46,11 @@
                 };
             },
 
-            hasSubObject() {
+            subObjectCount() {
                 return (sceneObject) => {
-                    if (!isEmpty(sceneObject.subobjects)) {
-                        const subObjectCount = sceneObject.subobjects ? sceneObject.subobjects.length : 0;
-                        return `[${subObjectCount}]`;
-                    }
-                };
-            },
+                    return !isEmpty(sceneObject.subobjects);
+                }
+            }
         },
     });
 </script>
