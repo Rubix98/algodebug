@@ -20,7 +20,7 @@ export const initializePassport = () => {
 
 export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
     const data = {
-        _id: {
+        uuid: {
             id: profile.id,
             provider: provider,
         },
@@ -38,12 +38,11 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
     }
 
     try {
-        await saveUser(user);
+        const id = await saveUser(user);
+        return { ...user, _id: id } as User; 
     } catch (error) {
         return null;
     }
-
-    return data;
 };
 
 export const validateUser = (req: unknown): ValidTypeOrError<User> => {
@@ -54,19 +53,25 @@ export const validateUser = (req: unknown): ValidTypeOrError<User> => {
     }
 };
 
-export const getUserById = async (uuid: Uuid) => {
+export const getUserByUuid = async (uuid: Uuid) => {
     const { users } = getCollections();
-    const user = await users.findOne({ _id: uuid });
-    return user;
+    return await users.findOne({ uuid: uuid });
 };
 
 export const saveUser = async (user: User) => {
     const { users } = getCollections();
-    const uuid = user._id;
 
-    if (await getUserById(uuid)) {
-        await users.updateOne({ _id: uuid }, { $set: user });
+    const id = (await getUserByUuid(user.uuid))?._id;
+
+    // update user without overwriting _id
+    // even if _id was the same this would throw an error if it was included
+    delete user._id;
+
+    if (id) {
+        await users.updateOne({ _id: id }, { $set: user });
+        return id;
     } else {
-        await users.insertOne(user);
+        const result = await users.insertOne(user);
+        return result.insertedId;
     }
 };

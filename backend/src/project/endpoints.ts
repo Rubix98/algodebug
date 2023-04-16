@@ -20,11 +20,7 @@ export const getAllProjects = async (req: Request, res: Response) => {
         return;
     }
 
-    if (!result || result.length === 0) {
-        res.status(404).json({ error: "No projects found" });
-    } else {
-        res.status(200).json(result);
-    }
+    res.status(200).json(result);
 };
 
 export const getProjectById = async (req: Request, res: Response) => {
@@ -60,11 +56,11 @@ export const getProjectById = async (req: Request, res: Response) => {
 
 export const saveProject = async (req: Request, res: Response) => {
     const { projects } = getCollections();
-    const uuid = (req.user as User)?._id;
+    const user = req.user as User;
 
     const data = {
         ...req.body,
-        authorId: uuid,
+        authorId: user?._id,
         // change this when we have a way to set project visibility in the frontend
         // public: req.body.public || false,
         public: false,
@@ -80,7 +76,7 @@ export const saveProject = async (req: Request, res: Response) => {
     }
 
     try {
-        const result = await projects.insertOne(data);
+        const result = await projects.insertOne(project);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ error: "Database error" });

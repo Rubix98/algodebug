@@ -2,19 +2,10 @@ import { Language } from "./structures/Language";
 import { Static, Record, String, Unknown, Optional } from "runtypes";
 
 import { ObjectId } from "mongodb";
-
-const isId = (x: any): x is ObjectId => {
-    if (!x) return false;
-    try {
-        new ObjectId(x);
-        return true;
-    } catch (e) {
-        return false;
-    }
-};
+import { isObjectId } from "../db";
 
 export const Converter = Record({
-    _id: Optional(Unknown.withGuard(isId)),
+    _id: Optional(Unknown.withGuard(isObjectId)),
     title: String.withConstraint((s) => s.length > 0),
     language: Language,
     code: String,

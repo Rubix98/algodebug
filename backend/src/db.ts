@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb";
+import { Collection, MongoClient, ObjectId } from "mongodb";
 import { Project } from "./project/model";
 import { Converter } from "./converter/model";
 import { User } from "./user/model";
@@ -23,12 +23,21 @@ export const initializeDatabase = async () => {
 
         projectCollection = database.collection<Project>("projects");
         converterCollection = database.collection<Converter>("converters");
-
         userCollection = database.collection<User>("users");
 
         console.log("Successfully connected to database");
     } catch (error) {
         console.log("Error while connecting to database:");
         throw error;
+    }
+};
+
+export const isObjectId = (x: any): x is ObjectId => {
+    if (!x) return false;
+    try {
+        new ObjectId(x);
+        return true;
+    } catch (e) {
+        return false;
     }
 };

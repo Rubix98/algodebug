@@ -22,7 +22,7 @@ const authorLookup = [
     },
     {
         // here can be adjusted which user fields are returned
-        $unset: ["author._id", "author.email"],
+        $unset: ["author.uuid", "author.email"],
     },
 ];
 
@@ -35,7 +35,7 @@ export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
 };
 
 export const isUserAuthor = (project: ProjectLike, user: User): boolean => {
-    return project.authorId.id === user?._id.id && project.authorId.provider === user?._id.provider;
+    return project.authorId.equals(new ObjectId(user?._id));
 };
 
 export const isUserAuthorised = (project: ProjectLike, user: User): boolean => {
@@ -49,10 +49,10 @@ export const isUserAuthorised = (project: ProjectLike, user: User): boolean => {
  */
 export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
     const { projects } = getCollections();
-    const uuid = user?._id;
+    const id = new ObjectId(user?._id);
 
     const result = await projects
-        .aggregate([{ $match: { $or: [{ public: true }, { authorId: uuid }] } }, ...authorLookup])
+        .aggregate([{ $match: { $or: [{ public: true }, { authorId: id }] } }, ...authorLookup])
         .sort({ modificationDate: -1 })
         .toArray();
 

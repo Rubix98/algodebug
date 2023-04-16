@@ -14,11 +14,7 @@ export const getAllConverters = async (_req: Request, res: Response) => {
         return;
     }
 
-    if (!result || result.length === 0) {
-        res.status(404).json({ error: "No converters found" });
-    } else {
-        res.status(200).json(result);
-    }
+    res.status(200).json(result);
 };
 
 export const getConverterById = async (req: Request, res: Response) => {
