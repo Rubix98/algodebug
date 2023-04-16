@@ -49,8 +49,8 @@
             subObjectCount() {
                 return (sceneObject) => {
                     return !isEmpty(sceneObject.subobjects);
-                }
-            }
+                };
+            },
         },
     });
 </script>
