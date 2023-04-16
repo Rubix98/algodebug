@@ -22,30 +22,24 @@
                     {
                         icon: "mdi-skip-backward",
                         action: () => {
-                            if (this.animationInterval) {
-                                this.stopAnimation();
-                            }
+                            this.stopAnimation();
                             this.setFrameId(0);
                         },
                     },
                     {
                         icon: "mdi-step-backward",
                         action: () => {
-                            if (this.animationInterval) {
-                                this.stopAnimation();
-                            }
+                            this.stopAnimation();
                             this.setFrameId(this.currentFrame.id - 1);
                         },
                     },
                     {
                         icon: "mdi-play",
                         action: () => {
-                            if (this.animationInterval) {
-                                this.stopAnimation();
-                            } else {
-                                if (this.currentFrame.id == this.numberOfFrames - 1) {
-                                    this.setFrameId(0);
-                                }
+                            if (this.currentFrame.id == this.numberOfFrames - 1) {
+                                this.setFrameId(0);
+                            }
+                            if (animationInterval == null) {
                                 this.animationInterval = this.runAnimation(this.animationDelay);
                             }
                         },
@@ -53,15 +47,14 @@
                     {
                         icon: "mdi-step-forward",
                         action: () => {
-                            if (this.animationInterval) {
-                                this.stopAnimation();
-                            }
+                            this.stopAnimation();
                             this.setFrameId(this.currentFrame.id + 1);
                         },
                     },
                     {
                         icon: "mdi-skip-forward",
                         action: () => {
+                            this.stopAnimation();
                             this.setFrameId(this.numberOfFrames - 1);
                         },
                     },
@@ -80,6 +73,7 @@
                 this.emitter.emit("currentFrameChangedEvent");
             },
             stopAnimation() {
+                if (this.animationInterval == null) return;
                 clearInterval(this.animationInterval);
                 this.animationInterval = null;
                 this.playPauseIcon = "mdi-play";
