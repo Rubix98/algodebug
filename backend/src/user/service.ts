@@ -39,7 +39,7 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
 
     try {
         const id = await saveUser(user);
-        return { ...user, _id: id } as User; 
+        return { ...user, _id: id } as User;
     } catch (error) {
         return null;
     }
