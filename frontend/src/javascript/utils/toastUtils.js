@@ -35,7 +35,7 @@ export function getEndpointRelatedToast(url) {
     if (url.startsWith("/project/findAll")) return { error: "Nie można pobrać listy projektów" };
     if (url.startsWith("/project/find")) return { error: "Nie można pobrać projektu" };
     if (url.startsWith("/converter/findAll")) return { error: "Nie można pobrać listy konwerterów" };
-    if (url.startsWith("/auth/verify")) return { error: "Błąd podczas sprawdzania czy jest zalogowany użytkownik" };
+    if (url.startsWith("/auth/verify")) return { error: "Błąd identyfikacji użytkownika" };
 
     if (url.startsWith("/project/save"))
         return {
