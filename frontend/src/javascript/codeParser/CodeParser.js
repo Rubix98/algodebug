@@ -46,7 +46,6 @@ export class CodeParser {
     }
 
     parse() {
-        console.log(this.sceneObjectsFlat);
         this.prepareCode();
 
         let tags = this.findAllPositionsOfEveryTag();
