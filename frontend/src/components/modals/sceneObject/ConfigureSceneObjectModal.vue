@@ -10,7 +10,7 @@
         </v-combobox>
 
         <span @click="selectVariable">
-            <v-combobox label="Przypisana zmienna" :model-value="variableName" @keypress.prevent />
+            <v-combobox label="Przypisane zmienne" :model-value="variableName" @keypress.prevent />
         </span>
 
         <span @click="selectConverter">
@@ -21,8 +21,8 @@
             v-if="hasSubtypes(model.type)"
             :sceneObject="model"
             label="Właściwości"
-            :headers="['Rodzaj', 'Przypisana zmienna', 'Konwerter', 'Kolor']"
-            :emptyRow="{ type: null, variable: null, converter: null, color: '#000000' }"
+            :headers="['Rodzaj', 'Przypisane zmienne', 'Konwerter', 'Kolor']"
+            :emptyRow="{ type: null, variables: [], converter: null, color: '#000000' }"
         ></AlgoTable>
 
         <template #buttons>
@@ -57,7 +57,7 @@
             return {
                 model: {
                     type: null,
-                    variable: null,
+                    variables: [],
                     converter: null,
                     subobjects: [],
                 },
@@ -72,7 +72,7 @@
             }
 
             if (this.$props.variable) {
-                this.model.variable = this.$props.variable;
+                this.model.variables = [this.$props.variable];
             }
 
             this.modelBeforeChanges = JSON.stringify(this.model);
@@ -97,8 +97,11 @@
             selectVariable() {
                 pushModal(PickVariableModal, {
                     callback: (selectedVariable) => {
-                        this.model.variable = selectedVariable;
+                        let index = this.model.variables.findIndex((variable) => variable.id === selectedVariable.id);
+                        if (index == -1) this.model.variables.push(selectedVariable);
+                        else this.model.variables.splice(index, 1);
                     },
+                    sceneObject: this.model,
                 });
             },
 
@@ -125,7 +128,7 @@
             },
 
             variableName() {
-                return this.model.variable?.name;
+                return this.model.variables.map((v) => v.name).join(", ");
             },
 
             converterTitle() {

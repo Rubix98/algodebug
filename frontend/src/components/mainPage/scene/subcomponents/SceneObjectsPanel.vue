@@ -37,7 +37,7 @@
             sceneObjectLabel() {
                 return (sceneObject) => {
                     return `${getSceneObjectTypeLabel(sceneObject.type)} ${
-                        sceneObject.variable ? sceneObject.variable.name : "null"
+                        sceneObject.variables.length > 0 ? sceneObject.variables[0].name : "null"
                     }`;
                 };
             },

@@ -23,7 +23,7 @@
                     const variable = this.getVariableInPosition(this.editor.getPosition());
                     const sceneObject = {
                         type: "variable",
-                        variable: variable,
+                        variables: [variable],
                         converter: null,
                         subobjects: [],
                     };
@@ -44,7 +44,7 @@
                     const variable = this.getVariableInPosition(this.editor.getPosition());
 
                     pushModal(ConfigureSceneObjectModal, {
-                        variable: variable,
+                        variables: [variable],
                     });
                 },
             });

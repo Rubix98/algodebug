@@ -1,12 +1,7 @@
 <template>
     <div :id="id" class="code-editor-container">
         <slot></slot>
-        <MonacoEditor
-            :id="id"
-            v-model:value="modelCode"
-            :options="options"
-            @editorDidMount="editorDidMount"
-        ></MonacoEditor>
+        <MonacoEditor v-model:value="modelCode" :options="options" @editorDidMount="editorDidMount"></MonacoEditor>
     </div>
 </template>
 
@@ -27,7 +22,7 @@
 
     export default defineComponent({
         components: { MonacoEditor },
-        props: ["id", "code", "editable", "clickable", "showHighlightedVariables", "showBreakpoints"],
+        props: ["id", "code", "editable", "clickable", "highlightedVariables", "showBreakpoints", "showCurrentLine"],
 
         data() {
             return {
@@ -138,7 +133,7 @@
         },
 
         computed: {
-            ...mapState(useProjectStore, ["variables", "currentFrame", "breakpoints"]),
+            ...mapState(useProjectStore, ["variables", "currentFrame", "breakpoints", "isRunning"]),
             ...mapState(useProjectStore, { projectCode: (state) => state.code }),
 
             modelCode: {
@@ -151,9 +146,9 @@
             },
 
             variablesDecorations() {
-                if (!this.$props.showHighlightedVariables) return [];
+                if (this.highlightedVariables == null) return [];
 
-                return this.variables.map((variable) => {
+                return this.highlightedVariables.map((variable) => {
                     let startLineColumn = lineColumn(this.$props.code, variable.start);
                     let endLineColumn = lineColumn(this.$props.code, variable.end);
                     return {
@@ -182,7 +177,7 @@
             },
 
             lineDecorations() {
-                if (!this.$props.showHighlightedVariables) return [];
+                if (!this.$props.showCurrentLine) return [];
                 if (!this.isRunning) return [];
 
                 return [
