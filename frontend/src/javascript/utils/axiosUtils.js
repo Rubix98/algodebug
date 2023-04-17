@@ -24,7 +24,13 @@ export function sendRequest(url, data = {}, method) {
             console.error(error);
             let errorMessage = error.message + (error.response ? "\nDetails: " + error.response.data.error : "");
             console.error(errorMessage);
-            toast.error(toastStrings.error ? toastStrings.error : "Wystąpił błąd! Spróbuj ponownie później.");
+            toast.error(
+                url.startsWith("/compiler/compile") && error.response.data
+                    ? error.response.data
+                    : toastStrings.error
+                    ? error.response.data
+                    : "Wystąpił błąd! Spróbuj ponownie później."
+            );
             throw error;
         })
         .finally(() => {
