@@ -22,36 +22,41 @@
                     {
                         icon: "mdi-skip-backward",
                         action: () => {
+                            this.stopAnimation();
                             this.setFrameId(0);
                         },
                     },
                     {
                         icon: "mdi-step-backward",
                         action: () => {
+                            this.stopAnimation();
                             this.setFrameId(this.currentFrame.id - 1);
                         },
                     },
                     {
                         icon: "mdi-play",
                         action: () => {
-                            if (this.animationInterval) {
-                                this.stopAnimation();
-                                this.playStopIcon = "mdi-play";
-                            } else {
-                                this.playStopIcon = "mdi-stop";
+                            if (this.currentFrame.id == this.numberOfFrames - 1) {
+                                this.setFrameId(0);
+                            }
+                            if (this.animationInterval == null) {
                                 this.animationInterval = this.runAnimation(this.animationDelay);
+                            } else {
+                                this.stopAnimation();
                             }
                         },
                     },
                     {
                         icon: "mdi-step-forward",
                         action: () => {
+                            this.stopAnimation();
                             this.setFrameId(this.currentFrame.id + 1);
                         },
                     },
                     {
                         icon: "mdi-skip-forward",
                         action: () => {
+                            this.stopAnimation();
                             this.setFrameId(this.numberOfFrames - 1);
                         },
                     },
@@ -70,28 +75,32 @@
                 this.emitter.emit("currentFrameChangedEvent");
             },
             stopAnimation() {
+                if (this.animationInterval == null) return;
                 clearInterval(this.animationInterval);
                 this.animationInterval = null;
+                this.playPauseIcon = "mdi-play";
             },
             runAnimation(delay) {
+                this.playPausIcon = "mdi-pause";
                 var intervalID = window.setInterval(
                     (e) => {
                         e.setFrameId(e.currentFrame.id + 1);
                         if (e.currentFrame.id == e.numberOfFrames - 1) {
-                            e.playStopIcon = "mdi-play";
+                            e.playPauseIcon = "mdi-play";
                             e.stopAnimation();
                         }
                     },
                     delay,
                     this
                 );
+                this.playPauseIcon = "mdi-pause";
                 return intervalID;
             },
         },
 
         computed: {
             ...mapState(useProjectStore, ["currentFrame", "numberOfFrames"]),
-            playStopIcon: {
+            playPauseIcon: {
                 get() {
                     return this.icons[2].icon;
                 },
