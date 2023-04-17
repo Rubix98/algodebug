@@ -28,33 +28,43 @@ export class CodeParserUtils {
         return code;
     }
 
-    static replaceBreakpointTags(code, parsedBreakpoints) {
+    static replaceBreakpointTags(code, sceneObjectsFlat, parsedBreakpoints) {
         for (let breakpoint of parsedBreakpoints) {
-            let variables = breakpoint.variables
-                .map((variable) => `ALGODEBUG_VARIABLE(${variable.name}, ${variable.id.split("@")[1]})`)
-                .join(" << ");
-            code = code.replace(
-                this.encloseInTag(breakpoint.line, breakpointTagName),
-                variables.length !== 0
-                    ? ` ALGODEBUG_BREAKPOINT(${breakpoint.line}, ${variables});`
-                    : ` ALGODEBUG_EMPTY_BREAKPOINT(${breakpoint.line});`
-            );
+            let breakpointText = `ALGODEBUG_BREAKPOINT_START(${breakpoint.line}); `;
+            for (let sceneObject of sceneObjectsFlat) {
+                const isEveryVariableAvailable = sceneObject.variables.every((v1) =>
+                    breakpoint.variables.find((v2) => v1.id == v2.id)
+                );
+                if (!isEveryVariableAvailable) continue;
+
+                let converterName = sceneObject.converter ? `algodebug_converter_${sceneObject.converter._id}` : "";
+                let variables = sceneObject.variables.map((v) => v.name).join(", ");
+                let converterText = `${converterName}(${variables})`;
+
+                breakpointText += `ALGODEBUG_OBJECT(${sceneObject.id}, ${converterText}); `;
+            }
+            breakpointText += "ALGODEBUG_BREAKPOINT_END();";
+
+            code = code.replace(this.encloseInTag(breakpoint.line, breakpointTagName), breakpointText);
         }
         return code;
     }
 
     static insertAlgodebugMacros(code) {
         return (
-            `#define ALGODEBUG_VARIABLE(x, y) "<algodebug-variable " << "name=\\"" << #x << "@" << y << "\\">\\n" << x << "\\n</algodebug-variable>\\n"\n` +
-            `#define ALGODEBUG_BREAKPOINT(line, x) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n" << x << "</algodebug-breakpoint>\\n"\n` +
-            `#define ALGODEBUG_EMPTY_BREAKPOINT(line) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n</algodebug-breakpoint>\\n"\n\n` +
+            `#define ALGODEBUG_OBJECT(id, x) std::cout << "<algodebug-object " << "id=\\"" << #id << "\\">\\n"; std::cout << x; std::cout << "\\n</algodebug-object>\\n"\n` +
+            `#define ALGODEBUG_BREAKPOINT_START(line) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n"\n` +
+            `#define ALGODEBUG_BREAKPOINT_END() std::cout << "</algodebug-breakpoint>\\n"\n\n` +
             code
         );
     }
 
     static insertConvertersAfterIncludes(code, converters) {
         converters = converters
-            .map((converter) => converter.code.slice(0, converter.code.indexOf("{")).trim() + ";")
+            .map((converter) => {
+                let code = this.getRenamedConverterCode(converter);
+                return code.slice(0, code.indexOf("{")).trim() + ";";
+            })
             .join("\n");
 
         let includeStartPosition = code.lastIndexOf("#include");
@@ -68,7 +78,7 @@ export class CodeParserUtils {
     }
 
     static insertConvertersAtTheEnd(code, converters) {
-        converters = converters.map((converter) => converter.code).join("\n\n");
+        converters = converters.map((converter) => this.getRenamedConverterCode(converter)).join("\n\n");
         return code + "\n\n" + converters;
     }
 
@@ -78,6 +88,15 @@ export class CodeParserUtils {
             return "#include <iostream>\n" + code;
         }
         return code;
+    }
+
+    static getRenamedConverterCode(converter) {
+        let nameStart = converter.code.indexOf("std::string") + 12;
+        let nameEnd = converter.code.indexOf("(");
+        let newConverterName = `algodebug_converter_${converter._id}`;
+        let newConverterCode =
+            converter.code.substring(0, nameStart) + newConverterName + converter.code.substring(nameEnd);
+        return newConverterCode;
     }
 
     static removeTagsAndMapContent(code, tag, mappingFunction) {

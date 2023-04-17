@@ -32,8 +32,9 @@ export class CodeParser {
         },
     };
 
-    constructor(code, variables, breakpoints, converters) {
+    constructor(code, sceneObjectsFlat, variables, breakpoints, converters) {
         this.code = code;
+        this.sceneObjectsFlat = sceneObjectsFlat;
         this.variables = variables;
         this.breakpoints = breakpoints;
         this.converters = converters;
@@ -45,6 +46,7 @@ export class CodeParser {
     }
 
     parse() {
+        console.log(this.sceneObjectsFlat);
         this.prepareCode();
 
         let tags = this.findAllPositionsOfEveryTag();
@@ -119,7 +121,7 @@ export class CodeParser {
 
     parseCode() {
         this.code = CodeParserUtils.removeVariableTags(this.code);
-        this.code = CodeParserUtils.replaceBreakpointTags(this.code, this.parsedBreakpoints);
+        this.code = CodeParserUtils.replaceBreakpointTags(this.code, this.sceneObjectsFlat, this.parsedBreakpoints);
         this.code = CodeParserUtils.insertConvertersAfterIncludes(this.code, this.converters);
         this.code = CodeParserUtils.insertConvertersAtTheEnd(this.code, this.converters);
         this.code = CodeParserUtils.insertAlgodebugMacros(this.code);
