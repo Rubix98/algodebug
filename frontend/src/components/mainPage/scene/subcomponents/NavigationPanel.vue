@@ -36,12 +36,10 @@
                     {
                         icon: "mdi-play",
                         action: () => {
-                            console.log(this.currentFrame.id + " " + this.numberOfFrames);
                             if (this.currentFrame.id == this.numberOfFrames - 1) {
                                 this.setFrameId(0);
                             }
                             if (this.animationInterval == null) {
-                                console.log("dadad");
                                 this.animationInterval = this.runAnimation(this.animationDelay);
                             } else {
                                 this.stopAnimation();
