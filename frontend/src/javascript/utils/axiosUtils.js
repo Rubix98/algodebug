@@ -27,7 +27,7 @@ export function sendRequest(url, data = {}, method) {
                 url.startsWith("/compiler/compile") && error.response.data
                     ? error.response.data
                     : toastStrings.error
-                    ? error.response.data
+                    ? toastStrings.error
                     : "Wystąpił błąd! Spróbuj ponownie później."
             );
             throw error;
