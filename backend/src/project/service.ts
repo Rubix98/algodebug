@@ -36,15 +36,15 @@ export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     }
 };
 
-const isUserAuthorOfProject = (user: User, project: ProjectLike, ): boolean => {
+const isUserAuthorOfProject = (user: User, project: ProjectLike): boolean => {
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
-export const canUserReadProject = (user: User, project: ProjectLike, ): boolean => {
+export const canUserReadProject = (user: User, project: ProjectLike): boolean => {
     return project.public || isUserAuthorOfProject(user, project);
 };
 
-export const canUserEditProject = (user: User, project: ProjectLike, ): boolean => {
+export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
     return canUserReadProject(user, project) && isUserAuthorOfProject(user, project);
 };
 
