@@ -3,8 +3,8 @@ import { ObjectId } from "mongodb";
 import { getCollections } from "../db";
 import {
     validateProject,
-    isUserAuthorised,
-    isUserAuthor,
+    canUserReadProject,
+    canUserEditProject,
     getAllProjectsWithAuthor,
     getProjectByIdWithAuthor,
 } from "./service";
@@ -47,7 +47,7 @@ export const getProjectById = async (req: Request, res: Response) => {
 
     const user = req.user as User;
 
-    if (isUserAuthorised(result, user)) {
+    if (canUserReadProject(user, result)) {
         res.status(200).json(result);
     } else {
         res.status(403).json({ error: "User is not authorised" });
@@ -121,7 +121,7 @@ export const updateProject = async (req: Request, res: Response) => {
         return;
     }
 
-    if (!isUserAuthor(projectToEdit, user)) {
+    if (!canUserEditProject(user, projectToEdit)) {
         res.status(401).json({ error: "You are not authorised to edit this project" });
         return;
     }
