@@ -45,7 +45,7 @@ export const canUserReadProject = (user: User, project: ProjectLike): boolean =>
 };
 
 export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
-    return canUserReadProject(user, project) && isUserAuthorOfProject(user, project);
+    return isUserAuthorOfProject(user, project);
 };
 
 /**

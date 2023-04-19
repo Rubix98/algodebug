@@ -7,5 +7,5 @@ export function canUserReadProject(user, project) {
 }
 
 export function canUserEditProject(user, project) {
-    return canUserReadProject(user, project) && isUserAuthorOfProject(user, project);
+    return isUserAuthorOfProject(user, project);
 }
