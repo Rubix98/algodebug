@@ -11,6 +11,7 @@ export const useProjectStore = defineStore("project", {
         breakpoints: [],
         testData: [{ id: 0, input: "" }],
         sceneObjects: [],
+        authorId: null,
         public: false,
         isRunning: false,
         waitingForCompile: false,
@@ -168,7 +169,7 @@ export const useProjectStore = defineStore("project", {
                     "language",
                     "testData",
                     "sceneObjects",
-                    "title",
+                    "authorId",
                     "public",
                 ].forEach((property) => (this[property] = project[property]));
                 this.currentTestCaseId = project.testData.firstId();

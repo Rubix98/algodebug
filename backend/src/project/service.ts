@@ -26,6 +26,8 @@ const authorLookup = [
     },
 ];
 
+const canUserReadProjectDBQuery = (userId: ObjectId) => ({ $match: { $or: [{ public: true }, { authorId: userId }] } });
+
 export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
         return [true, sanitizeProject(Project.check(req))];
@@ -34,12 +36,16 @@ export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     }
 };
 
-export const isUserAuthor = (project: ProjectLike, user: User): boolean => {
+const isUserAuthorOfProject = (user: User, project: ProjectLike): boolean => {
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
-export const isUserAuthorised = (project: ProjectLike, user: User): boolean => {
-    return isUserAuthor(project, user) || project.public;
+export const canUserReadProject = (user: User, project: ProjectLike): boolean => {
+    return project.public || isUserAuthorOfProject(user, project);
+};
+
+export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
+    return isUserAuthorOfProject(user, project);
 };
 
 /**
@@ -52,7 +58,7 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
     const id = new ObjectId(user?._id);
 
     const result = await projects
-        .aggregate([{ $match: { $or: [{ public: true }, { authorId: id }] } }, ...authorLookup])
+        .aggregate([canUserReadProjectDBQuery(id), ...authorLookup])
         .sort({ modificationDate: -1 })
         .toArray();
 
