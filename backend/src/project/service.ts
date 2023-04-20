@@ -59,7 +59,7 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
 
     const result = await projects
         .aggregate([canUserReadProjectDBQuery(id), ...authorLookup])
-        .sort({ modificationDate: -1 })
+        .sort({ author: -1, modificationDate: -1 })
         .toArray();
 
     return result as ProjectLike[];
