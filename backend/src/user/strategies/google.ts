@@ -1,7 +1,7 @@
 import passport from "passport";
 import Strategy from "passport-google-oauth20";
 
-import { processUser } from "../service";
+import { processUserAuthAttempt } from "../service";
 
 export function initializeGoogle() {
     const GoogleStrategy = Strategy.Strategy;
@@ -16,7 +16,7 @@ export function initializeGoogle() {
                 passReqToCallback: true,
             },
             async (request, _accessToken, _refreshToken, profile, done: (arg0: null, arg1: any) => any) => {
-                const user = await processUser("google", profile);
+                const user = await processUserAuthAttempt("google", profile);
                 if (user == null) return done(null, false);
                 return done(null, { user: user, referer: request.query.state });
             }

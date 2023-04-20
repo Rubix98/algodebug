@@ -1,0 +1,16 @@
+name: Deploy Backend
+
+on: [ workflow_dispatch ]
+
+jobs:
+  deploy_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Run deploy script on server"
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: "bash deploy_backend.sh"
+          host: "${{ secrets.SFTP_ADDRESS }}"
+          port: "${{ secrets.SFTP_PORT }}"
+          username: "${{ secrets.SFTP_USERNAME }}"
+          password: "${{ secrets.SFTP_PASSWORD }}"
