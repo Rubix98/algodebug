@@ -67,6 +67,8 @@ export class CodeParserUtils {
             })
             .join("\n");
 
+        converters += "\n" + this.getDefaultConverters();
+
         let includeStartPosition = code.lastIndexOf("#include");
         let includeEndPosition = code.indexOf(">", includeStartPosition);
         let usingNamespaceStartPosition = code.lastIndexOf("using namespace");
@@ -83,20 +85,26 @@ export class CodeParserUtils {
     }
 
     static insertNecessaryIncludes(code) {
-        const regex = /#include[ \t]*<iostream>/g;
+        let regex = /#include[ \t]*<iostream>/g;
         if (!regex.test(code)) {
-            return "#include <iostream>\n" + code;
+            code = "#include <iostream>\n" + code;
+        }
+
+        regex = /#include[ \t]*<vector>/g;
+        if (!regex.test(code)) {
+            code = "#include <vector>\n" + code;
+        }
+
+        regex = /#include[ \t]*<tuple>/g;
+        if (!regex.test(code)) {
+            code = "#include <tuple>\n" + code;
         }
         return code;
     }
 
     static getRenamedConverterCode(converter) {
-        let nameStart = converter.code.indexOf("std::string") + 12;
-        let nameEnd = converter.code.indexOf("(");
         let newConverterName = `algodebug_converter_${converter._id}`;
-        let newConverterCode =
-            converter.code.substring(0, nameStart) + newConverterName + converter.code.substring(nameEnd);
-        return newConverterCode;
+        return converter.code.replace("convert", newConverterName);
     }
 
     static removeTagsAndMapContent(code, tag, mappingFunction) {
@@ -112,5 +120,28 @@ export class CodeParserUtils {
 
     static encloseInTag(content, tag) {
         return `<${tag}>${content}</${tag}>`;
+    }
+
+    static getDefaultConverters() {
+        return (
+            "template <class A, class B>\n" +
+            "std::ostream& operator<<(std::ostream& os, const std::pair<A,B>& p)\n" +
+            "{\n" +
+            '\tos << p.first << " " << p.second << "\\n";\n' +
+            "\treturn os;\n" +
+            "}\n" +
+            "template <class A, class B, class C>\n" +
+            "std::ostream& operator<<(std::ostream& os, const std::tuple<A,B,C>& t)\n" +
+            "{\n" +
+            '\tos << std::get<0>(t) << " " << std::get<1>(t) << " " << std::get<2>(t) << "\\n";\n' +
+            "\treturn os;\n" +
+            "}\n" +
+            "template <class A>\n" +
+            "std::ostream& operator<<(std::ostream& os, const std::vector<A>& v)\n" +
+            "{\n" +
+            '\tfor(auto e : v) os << e << "\\n";\n' +
+            "\treturn os;\n" +
+            "}"
+        );
     }
 }
