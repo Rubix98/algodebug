@@ -8,25 +8,9 @@ import { getProjectById, getAllProjects, saveProject, updateProject } from "./pr
 import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./converter/endpoints";
 import { compileCode } from "./compiler/endpoints";
 import { CompilerTypes } from "./compiler/compilers/compilerFactory";
-import { Collection, MongoClient } from "mongodb";
-import { Project } from "./project/model";
-import { Converter } from "./converter/model";
-import { User } from "./user/model";
 import { initializePassport } from "./user/service";
 import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoints";
-
-let projectCollection: Collection<Project>;
-let converterCollection: Collection<Converter>;
-let userCollection: Collection<User>;
-
-export const getCollections = () => {
-    return {
-        projects: projectCollection,
-        converters: converterCollection,
-        users: userCollection,
-    };
-};
-
+import { initializeDatabase } from "./db";
 interface ResponseError extends Error {
     status?: number;
 }
@@ -64,23 +48,7 @@ if (process.env.COMPILER == CompilerTypes.JDOODLE) {
     });
 }
 
-// initialize database connection
-try {
-    const client = new MongoClient(process.env.DATABASE_URI as string);
-    await client.connect();
-    const database = client.db(process.env.DATABASE_NAME);
-
-    projectCollection = database.collection<Project>("projects");
-    converterCollection = database.collection<Converter>("converters");
-
-    userCollection = database.collection<User>("users");
-    await userCollection.createIndex({ provider: 1, _id: 1 }, { unique: true });
-
-    console.log("Successfully connected to database");
-} catch (error) {
-    console.log("Error while connecting to database:");
-    throw error;
-}
+await initializeDatabase();
 
 // initialize express app
 const app = express();

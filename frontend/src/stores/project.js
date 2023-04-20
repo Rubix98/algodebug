@@ -11,6 +11,8 @@ export const useProjectStore = defineStore("project", {
         breakpoints: [],
         testData: [{ id: 0, input: "" }],
         sceneObjects: [],
+        authorId: null,
+        public: false,
         isRunning: false,
         waitingForCompile: false,
         currentTestCaseId: 0,
@@ -63,7 +65,7 @@ export const useProjectStore = defineStore("project", {
                     _id: override ? this._id : undefined,
                     title: title ?? this.title,
                 };
-                ["code", "language", "breakpoints", "testData", "sceneObjects"].forEach(
+                ["code", "language", "breakpoints", "testData", "sceneObjects", "public"].forEach(
                     (property) => (result[property] = this[property])
                 );
 
@@ -159,9 +161,17 @@ export const useProjectStore = defineStore("project", {
         loadProject(projectId) {
             sendRequest("/project/find/" + projectId, null, "GET").then((responseData) => {
                 const project = responseData;
-                ["_id", "title", "code", "breakpoints", "language", "testData", "sceneObjects", "title"].forEach(
-                    (property) => (this[property] = project[property])
-                );
+                [
+                    "_id",
+                    "title",
+                    "code",
+                    "breakpoints",
+                    "language",
+                    "testData",
+                    "sceneObjects",
+                    "authorId",
+                    "public",
+                ].forEach((property) => (this[property] = project[property]));
                 this.currentTestCaseId = project.testData.firstId();
             });
         },
