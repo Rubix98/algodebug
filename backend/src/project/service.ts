@@ -58,8 +58,22 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
     const id = new ObjectId(user?._id);
 
     const result = await projects
-        .aggregate([canUserReadProjectDBQuery(id), ...authorLookup])
-        .sort({ author: -1, modificationDate: -1 })
+        .aggregate([
+            canUserReadProjectDBQuery(id),
+            ...authorLookup,
+            {
+                $addFields: {
+                    authorIsId: {
+                        $cond: {
+                            if: { $eq: ["$authorId", id] },
+                            then: 1,
+                            else: 0,
+                        },
+                    },
+                },
+            },
+            { $sort: { authorIsId: -1, modificationDate: -1 } },
+        ])
         .toArray();
 
     return result as ProjectLike[];
