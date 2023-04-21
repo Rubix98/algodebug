@@ -63,7 +63,7 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
             ...authorLookup,
             {
                 $addFields: {
-                    authorIsId: {
+                    IsAuthor: {
                         $cond: {
                             if: { $eq: ["$authorId", id] },
                             then: 1,
@@ -72,7 +72,7 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
                     },
                 },
             },
-            { $sort: { authorIsId: -1, modificationDate: -1 } },
+            { $sort: { IsAuthor: -1, modificationDate: -1 } },
         ])
         .toArray();
 
