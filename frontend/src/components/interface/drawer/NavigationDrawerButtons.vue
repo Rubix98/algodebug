@@ -89,8 +89,7 @@
             },
 
             openSaveProjectModal() {
-                if (!this.loggedIn)
-                    return this.login();
+                if (!this.loggedIn) return this.login();
                 openModal(SaveProjectModal);
             },
 
