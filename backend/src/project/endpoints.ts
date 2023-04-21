@@ -1,115 +1,135 @@
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
-import { getCollections } from "../app";
-import { validateProject, isUserAuthorised } from "./service";
+import { getCollections } from "../db";
+import {
+    validateProject,
+    canUserReadProject,
+    canUserEditProject,
+    getAllProjectsWithAuthor,
+    getProjectByIdWithAuthor,
+} from "./service";
 import { User } from "../user/model";
-import { Project } from "./model";
-import { log } from "node:util";
-
-export const getAuthenticatedUserName = (req: Request): string => {
-    const user = req.user as User;
-    return user?.username;
-};
 
 export const getAllProjects = async (req: Request, res: Response) => {
-    const { projects } = getCollections();
+    let result;
+
     try {
-        const username = getAuthenticatedUserName(req);
-        const result = await projects
-            .find({
-                author: { $in: ["AlgoDebug", username] },
-            })
-            .sort({ modificationDate: -1 })
-            .toArray();
-        if (!result || result.length === 0) {
-            res.status(204).send();
-        } else {
-            res.status(200).json(result);
-        }
+        result = await getAllProjectsWithAuthor(req.user as User);
     } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
+        res.status(500).json({ error: "Database error" });
+        return;
     }
+
+    res.status(200).json(result);
 };
 
 export const getProjectById = async (req: Request, res: Response) => {
-    const { projects } = getCollections();
+    let projectId, result;
+
     try {
-        const id = new ObjectId(req.params.id);
-
-        try {
-            const result = await projects.findOne({ _id: id });
-
-            if (!result) {
-                res.status(404).json({ error: "No project found with given id" });
-                return;
-            } else {
-                const user = getAuthenticatedUserName(req);
-
-                if (isUserAuthorised(result, user)) {
-                    res.status(200).json(result);
-                } else {
-                    res.status(403).json({ error: "User is not authorised" });
-                }
-            }
-        } catch (err) {
-            res.status(500).json(err);
-        }
-    } catch {
+        projectId = new ObjectId(req.params.id);
+    } catch (err) {
         res.status(400).json({ error: "Invalid id" });
+        return;
+    }
+
+    try {
+        result = await getProjectByIdWithAuthor(projectId);
+    } catch (err) {
+        res.status(500).json({ error: "Database error" });
+        return;
+    }
+
+    if (!result) {
+        res.status(404).json({ error: "No project found with given id" });
+        return;
+    }
+
+    const user = req.user as User;
+
+    if (canUserReadProject(user, result)) {
+        res.status(200).json(result);
+    } else {
+        res.status(403).json({ error: "User is not authorised" });
     }
 };
 
 export const saveProject = async (req: Request, res: Response) => {
     const { projects } = getCollections();
-    const [isOk, data] = validateProject(req.body);
+    const user = req.user as User;
+
+    const data = {
+        ...req.body,
+        authorId: user?._id,
+        // change this when we have a way to set project visibility in the frontend
+        // public: req.body.public || false,
+        public: false,
+        creationDate: new Date(),
+        modificationDate: new Date(),
+    };
+
+    const [isOk, project] = validateProject(data);
 
     if (!isOk) {
-        res.status(400).json({ error: "Invalid request body: " + data });
+        res.status(400).json({ error: "Invalid request body: " + project });
         return;
     }
-    const author = getAuthenticatedUserName(req);
-    const project = { ...data, author, creationDate: new Date(), modificationDate: new Date() };
 
     try {
         const result = await projects.insertOne(project);
         res.status(200).json(result);
     } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({ error: "Database error" });
     }
 };
 
 export const updateProject = async (req: Request, res: Response) => {
     const { projects } = getCollections();
-    const [isOk, data] = validateProject(req.body);
+    const user = req.user as User;
+
+    const data = {
+        ...req.body,
+        authorId: user?._id,
+        public: req.body.public || false,
+        modificationDate: new Date(),
+    };
+
+    const [isOk, project] = validateProject(data);
+    let projectId, projectToEdit;
 
     if (!isOk) {
-        res.status(400).json({ error: "Invalid request body: " + data });
+        res.status(400).json({ error: "Invalid request body: " + project });
         return;
     }
-    try {
-        const user = req.user as User;
-        const id = new ObjectId(data._id);
-        const projectToEdit = await projects.findOne({ _id: id });
-        if (projectToEdit == null) {
-            res.status(404).json({ error: "Project you wanted to edit does not exist" });
-            return;
-        }
-        if (projectToEdit.author != user.username) {
-            res.status(401).json({ error: "You can't edit this project" });
-            return;
-        }
 
-        try {
-            const user = req.user as User;
-            data.author = user.username;
-            data.modificationDate = new Date();
-            const result = await projects.updateOne({ _id: id }, { $set: data });
-            res.status(200).json(result);
-        } catch (err) {
-            res.status(500).json(err);
-        }
-    } catch {
+    try {
+        projectId = new ObjectId(project._id);
+    } catch (err) {
         res.status(400).json({ error: "Invalid id" });
+        return;
+    }
+
+    try {
+        projectToEdit = await projects.findOne({ _id: projectId });
+    } catch (err) {
+        res.status(500).json({ error: "Database error" });
+        return;
+    }
+
+    if (projectToEdit == null) {
+        res.status(404).json({ error: "Project you wanted to edit does not exist" });
+        return;
+    }
+
+    if (!canUserEditProject(user, projectToEdit)) {
+        res.status(401).json({ error: "You are not authorised to edit this project" });
+        return;
+    }
+
+    try {
+        const result = await projects.updateOne({ _id: projectId }, { $set: project });
+        res.status(200).json(result);
+    } catch (err) {
+        res.status(500).json({ error: "Database error" });
     }
 };

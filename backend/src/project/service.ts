@@ -1,31 +1,34 @@
-import { ObjectId } from "mongodb";
-import { Project } from "./model";
+import { ValidTypeOrError } from "../types";
 import { User } from "../user/model";
-import { sanitizeBreakpoint } from "./structures/Breakpoint";
-import { sanitizeSceneObject } from "./structures/SceneObject";
-import { sanitizeTestCase } from "./structures/TestCase";
+import { Project, sanitizeProject } from "./model";
+import { ProjectLike } from "../types";
+import { getCollections } from "../db";
+import { ObjectId } from "mongodb";
 
-type validProjectOrError = [true, Project] | [false, unknown];
+const authorLookup = [
+    {
+        $lookup: {
+            from: "users",
+            localField: "authorId",
+            foreignField: "_id",
+            as: "author",
+        },
+    },
+    {
+        $unwind: {
+            path: "$author",
+            preserveNullAndEmptyArrays: true,
+        },
+    },
+    {
+        // here can be adjusted which user fields are returned
+        $unset: ["author.uuid", "author.email"],
+    },
+];
 
-export const sanitizeProject = (p: Project) => {
-    const result = {
-        _id: p._id ? new ObjectId(p._id) : undefined,
-        title: p.title,
-        code: p.code,
-        language: p.language,
-        breakpoints: p.breakpoints.map(sanitizeBreakpoint),
-        testData: p.testData.map(sanitizeTestCase),
-        sceneObjects: p.sceneObjects.map(sanitizeSceneObject),
-        modificationDate: p.modificationDate ?? new Date(),
-    } as Project;
+const canUserReadProjectDBQuery = (userId: ObjectId) => ({ $match: { $or: [{ public: true }, { authorId: userId }] } });
 
-    if (p.author != null) result.author = p.author;
-    if (p.creationDate != null) result.creationDate = p.creationDate;
-
-    return result;
-};
-
-export const validateProject = (req: unknown): validProjectOrError => {
+export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
         return [true, sanitizeProject(Project.check(req))];
     } catch (error) {
@@ -33,6 +36,43 @@ export const validateProject = (req: unknown): validProjectOrError => {
     }
 };
 
-export const isUserAuthorised = (project: Project, userName: string): boolean => {
-    return project.author === "AlgoDebug" || (userName !== undefined && project.author === userName);
+const isUserAuthorOfProject = (user: User, project: ProjectLike): boolean => {
+    return project.authorId.equals(new ObjectId(user?._id));
+};
+
+export const canUserReadProject = (user: User, project: ProjectLike): boolean => {
+    return project.public || isUserAuthorOfProject(user, project);
+};
+
+export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
+    return isUserAuthorOfProject(user, project);
+};
+
+/**
+ * Returns all projects which user is authorised to see with author information included as author field.
+ * If user is not provided, only public projects are returned.
+ * Can throw when database error occurs.
+ */
+export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
+    const { projects } = getCollections();
+    const id = new ObjectId(user?._id);
+
+    const result = await projects
+        .aggregate([canUserReadProjectDBQuery(id), ...authorLookup])
+        .sort({ modificationDate: -1 })
+        .toArray();
+
+    return result as ProjectLike[];
+};
+
+/**
+ * Returns project with matching id with author information included as author field.
+ * Can throw when database error occurs.
+ */
+export const getProjectByIdWithAuthor = async (projectId: ObjectId): Promise<ProjectLike> => {
+    const { projects } = getCollections();
+
+    const result = await projects.aggregate([{ $match: { _id: projectId } }, ...authorLookup]).next();
+
+    return result as ProjectLike;
 };
