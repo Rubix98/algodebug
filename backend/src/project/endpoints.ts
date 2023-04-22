@@ -133,3 +133,40 @@ export const updateProject = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Database error" });
     }
 };
+
+export const deleteProject = async (req: Request, res: Response) => {
+    const { projects } = getCollections();
+    const user = req.user as User;
+    let projectId, projectToDelete;
+
+    try {
+        projectId = new ObjectId(req.params.id);
+    } catch (err) {
+        res.status(400).json({ error: "Invalid id" });
+        return;
+    }
+
+    try {
+        projectToDelete = await projects.findOne({ _id: projectId });
+    } catch (err) {
+        res.status(500).json({ error: "Database error" });
+        return;
+    }
+
+    if (projectToDelete == null) {
+        res.status(404).json({ error: "Project you wanted to delete does not exist" });
+        return;
+    }
+
+    if (!canUserEditProject(user, projectToDelete)) {
+        res.status(401).json({ error: "You are not authorised to delete this project" });
+        return;
+    }
+
+    try {
+        projects.deleteOne(projectToDelete)
+        res.status(200).send("OK");
+    }catch (err) {
+        res.status(500).json({error: "Database error"})
+    }
+}
