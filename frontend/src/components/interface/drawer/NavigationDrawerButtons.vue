@@ -38,7 +38,7 @@
             const deleteButton = {
                 title: "Usuń projekt",
                 icon: "mdi-delete",
-                onClick: this.showDeleteModal,
+                onClick: this.openDeleteModal,
                 hidden: true,
             };
             const darkModeButton = {
@@ -94,7 +94,7 @@
                 window.location = "/";
             },
 
-            showDeleteModal() {
+            openDeleteModal() {
                 openModal(DeleteProjectModal);
             },
 
