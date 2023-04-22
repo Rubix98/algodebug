@@ -18,7 +18,7 @@
 
 <script>
     import { defineComponent } from "vue";
-    import { mapActions, mapState, mapWritableState } from "pinia";
+    import { mapActions, mapWritableState } from "pinia";
     import { useUserStore } from "@/stores/user";
     import { openModal } from "jenesius-vue-modal";
     import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
@@ -26,6 +26,7 @@
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
     import { useProjectStore } from "@/stores/project";
+    import DeleteProjectModal from "@/components/modals/menu/DeleteProjectModal.vue";
 
     export default defineComponent({
         name: "NavigationDrawerButtons",
@@ -34,7 +35,12 @@
 
         data() {
             const logoutButton = { title: "Wyloguj", icon: "mdi-logout", onClick: this.logout, hidden: !this.loggedIn };
-            const deleteButton = { title: "Usuń projekt", icon: "mdi-delete", onClick: () => null, hidden: true };
+            const deleteButton = {
+                title: "Usuń projekt",
+                icon: "mdi-delete",
+                onClick: this.showDeleteModal,
+                hidden: true,
+            };
             const darkModeButton = {
                 title: "Tryb ciemny",
                 icon: "mdi-theme-light-dark",
@@ -88,6 +94,10 @@
                 window.location = "/";
             },
 
+            showDeleteModal() {
+                openModal(DeleteProjectModal);
+            },
+
             openLoadProjectModal() {
                 openModal(LoadProjectModal);
             },
@@ -130,13 +140,13 @@
             },
 
             shouldShowDeleteButton() {
-                return this.authorId === this.userId;
+                return this.projectId && this.authorId === this.userId;
             },
         },
 
         computed: {
             ...mapWritableState(useUserStore, ["loggedIn", "userId"]),
-            ...mapWritableState(useProjectStore, ["authorId"]),
+            ...mapWritableState(useProjectStore, ["authorId", "projectId"]),
         },
 
         watch: {
@@ -146,7 +156,6 @@
 
             authorId() {
                 this.deleteButton.hidden = !this.shouldShowDeleteButton();
-                console.log(this.deleteButton.hidden);
             },
         },
     });
