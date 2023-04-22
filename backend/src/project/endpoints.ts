@@ -164,9 +164,9 @@ export const deleteProject = async (req: Request, res: Response) => {
     }
 
     try {
-        projects.deleteOne(projectToDelete)
+        projects.deleteOne(projectToDelete);
         res.status(200).send("OK");
-    }catch (err) {
-        res.status(500).json({error: "Database error"})
+    } catch (err) {
+        res.status(500).json({ error: "Database error" });
     }
-}
+};
