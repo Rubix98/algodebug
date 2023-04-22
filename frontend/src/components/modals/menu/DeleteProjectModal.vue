@@ -5,7 +5,7 @@
             <p>Usuwanie projektu...</p>
         </div>
         <div v-else class="delete-info">
-            <p class="title">Zamierzasz usunąc projekt {{ projectTitle }}.</p>
+            <p class="title">Zamierzasz usunąć projekt {{ projectTitle }}.</p>
             <p>Aby potwierdzić usunięcie projektu, prosimy wpisać "{{ projectTitle }}" w poniższym polu.</p>
             <br />
             <v-text-field label="Tytuł projektu do usunięcia" v-model="inputProjectTitle" />
