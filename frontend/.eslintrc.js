@@ -14,6 +14,8 @@ module.exports = {
     plugins: ["vue"],
     globals: {
         BACKEND_URL: true,
+        GIT_COMMIT_HASH: true,
+        GIT_BRANCH_NAME: true,
     },
     rules: {
         "vue/order-in-components": [
