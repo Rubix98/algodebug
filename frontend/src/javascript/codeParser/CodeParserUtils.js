@@ -1,3 +1,6 @@
+import { getDefines } from "@/javascript/languages/cpp";
+import { getDefaultConverters } from "@/javascript/languages/cpp";
+
 const variableTagName = "algodebug-variable";
 const breakpointTagName = "algodebug-breakpoint";
 
@@ -51,12 +54,7 @@ export class CodeParserUtils {
     }
 
     static insertAlgodebugMacros(code) {
-        return (
-            `#define ALGODEBUG_OBJECT(id, x) std::cout << "<algodebug-object " << "id=\\"" << #id << "\\">\\n"; std::cout << x; std::cout << "\\n</algodebug-object>\\n"\n` +
-            `#define ALGODEBUG_BREAKPOINT_START(line) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n"\n` +
-            `#define ALGODEBUG_BREAKPOINT_END() std::cout << "</algodebug-breakpoint>\\n"\n\n` +
-            code
-        );
+        return getDefines() + code;
     }
 
     static insertConvertersAfterIncludes(code, converters) {
@@ -67,7 +65,7 @@ export class CodeParserUtils {
             })
             .join("\n");
 
-        converters += "\n" + this.getDefaultConverters();
+        converters += "\n" + getDefaultConverters();
 
         let includeStartPosition = code.lastIndexOf("#include");
         let includeEndPosition = code.indexOf(">", includeStartPosition);
@@ -85,19 +83,9 @@ export class CodeParserUtils {
     }
 
     static insertNecessaryIncludes(code) {
-        let regex = /#include[ \t]*<iostream>/g;
-        if (!regex.test(code)) {
-            code = "#include <iostream>\n" + code;
-        }
-
-        regex = /#include[ \t]*<vector>/g;
-        if (!regex.test(code)) {
-            code = "#include <vector>\n" + code;
-        }
-
-        regex = /#include[ \t]*<tuple>/g;
-        if (!regex.test(code)) {
-            code = "#include <tuple>\n" + code;
+        const necessaryIncludes = ["iostream", "vector", "tuple"];
+        for (let include of necessaryIncludes) {
+            code = this.insertIncludeIfNotPresent(code, include);
         }
         return code;
     }
@@ -118,30 +106,15 @@ export class CodeParserUtils {
         return code;
     }
 
-    static encloseInTag(content, tag) {
-        return `<${tag}>${content}</${tag}>`;
+    static insertIncludeIfNotPresent(code, library) {
+        const regex = new RegExp(`#include[ \t]*<${library}>`);
+        if (!regex.test(code)) {
+            return `#include <${library}>\n` + code;
+        }
+        return code;
     }
 
-    static getDefaultConverters() {
-        return (
-            "template <class A, class B>\n" +
-            "std::ostream& operator<<(std::ostream& os, const std::pair<A,B>& p)\n" +
-            "{\n" +
-            '\tos << p.first << " " << p.second << "\\n";\n' +
-            "\treturn os;\n" +
-            "}\n" +
-            "template <class A, class B, class C>\n" +
-            "std::ostream& operator<<(std::ostream& os, const std::tuple<A,B,C>& t)\n" +
-            "{\n" +
-            '\tos << std::get<0>(t) << " " << std::get<1>(t) << " " << std::get<2>(t) << "\\n";\n' +
-            "\treturn os;\n" +
-            "}\n" +
-            "template <class A>\n" +
-            "std::ostream& operator<<(std::ostream& os, const std::vector<A>& v)\n" +
-            "{\n" +
-            '\tfor(auto e : v) os << e << "\\n";\n' +
-            "\treturn os;\n" +
-            "}"
-        );
+    static encloseInTag(content, tag) {
+        return `<${tag}>${content}</${tag}>`;
     }
 }
