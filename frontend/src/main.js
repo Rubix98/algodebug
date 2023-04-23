@@ -61,3 +61,5 @@ app.use(Toast, {
 });
 app.use(vuetify);
 app.mount("#app");
+
+console.log(`[GIT INFO]\nCommit: ${GIT_COMMIT_HASH}\nBranch: ${GIT_BRANCH_NAME}`);
