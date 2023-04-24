@@ -1,7 +1,7 @@
 import passport from "passport";
 import { getCollections } from "../db";
 import { ValidTypeOrError } from "../types";
-import { sanitizeUser, User } from "./model";
+import { sanitizeUser, User, Role } from "./model";
 import { initializeGoogle } from "./strategies/google";
 import { Provider } from "./structures/Provider";
 import { Uuid } from "./structures/Uuid";
@@ -29,6 +29,7 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
         // should always exist but technically not required in certain services
         email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
         picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
+        role: "USER",
     };
 
     const [isOk, user] = validateUser(data);
@@ -38,8 +39,16 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
     }
 
     try {
-        const id = await saveUser(user);
-        return { ...user, _id: id } as User;
+        const doesUserExist = await getUserByUuid(user.uuid);
+        if (!doesUserExist) {
+            user.role = Role.USER;
+            const id = await saveUser(user);
+            return { ...user, _id: id } as User;
+        } else {
+            user.role = doesUserExist.role;
+            const id = await saveUser(user);
+            return { ...user, _id: id } as User;
+        }
     } catch (error) {
         return null;
     }
