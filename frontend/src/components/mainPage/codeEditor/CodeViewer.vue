@@ -46,6 +46,7 @@
         mounted() {
             this.updateAllDecorations();
             this.emitter.on("themeChangeEvent", () => {
+                monaco.editor.setTheme(this.getEditorTheme());
                 this.options.theme = this.getEditorTheme();
             });
         },
