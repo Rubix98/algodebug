@@ -67,7 +67,7 @@
             },
 
             getEditorTheme() {
-                if (getCurrentThemeFromStorage() === "light") return "vs-light";
+                if (getCurrentThemeFromStorage() === "light") return "vs";
                 return "vs-dark";
             },
 
