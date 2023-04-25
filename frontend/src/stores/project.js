@@ -187,7 +187,7 @@ export const useProjectStore = defineStore("project", {
                     return true;
                 })
                 .catch((error) => {
-                    this.testData.forEach((testCase, index) => {
+                    this.testData.forEach((testCase) => {
                         Object.assign(testCase, { error: error.response.data });
                     });
                 })
