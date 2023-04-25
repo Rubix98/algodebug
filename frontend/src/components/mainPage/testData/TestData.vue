@@ -23,7 +23,7 @@
                         class="shrink ma-0"
                     />
                 </template>
-                <AlgoTextarea class="outputTextArea" :value="output" :auto-grow="true" :readonly="true" />
+                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
         </div>
     </div>
@@ -65,7 +65,6 @@
                 console.log(this.currentTestCase);
                 let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
                 if (this.currentTestCase.error) {
-                    // this.AlgoBlock.AlgoTextarea.color="red";
                     return this.currentTestCase.error;
                 }
 
