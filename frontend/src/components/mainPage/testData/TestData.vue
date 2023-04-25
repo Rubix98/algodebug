@@ -12,7 +12,7 @@
                 />
             </AlgoBlock>
 
-            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.isRunning">
+            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe">
                 <template #checkbox>
                     <v-checkbox-btn
                         v-model="isDynamicOutputOn"
@@ -23,7 +23,7 @@
                         class="shrink ma-0"
                     />
                 </template>
-                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
+                <AlgoTextarea class="outputTextArea" :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
         </div>
     </div>
@@ -62,8 +62,14 @@
             },
 
             output() {
+                console.log(this.currentTestCase);
                 let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
-                return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
+                if (this.currentTestCase.error) {
+                    // this.AlgoBlock.AlgoTextarea.color="red";
+                    return this.currentTestCase.error;
+                }
+
+                return this.currentTestCase.partialOutputs?.slice(0, endIndex).join("");
             },
         },
     });

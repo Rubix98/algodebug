@@ -180,10 +180,17 @@ export const useProjectStore = defineStore("project", {
             return sendRequest("/compiler/compile", this.jsonForCompile, "POST")
                 .then((responseData) => {
                     this.testData.forEach((testCase, index) => {
+                        console.log(responseData[index]);
                         Object.assign(testCase, responseData[index].output);
                     });
                     this.isRunning = true;
                     return true;
+                })
+                .catch((error) => {
+                    this.testData.forEach((testCase, index) => {
+                        //console.log(error.response.data)
+                        Object.assign(testCase, { error: error.response.data });
+                    });
                 })
                 .finally(() => {
                     this.waitingForCompile = false;

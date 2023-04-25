@@ -1,5 +1,23 @@
 import axios from "axios";
 import toast, { getEndpointRelatedToast } from "@/javascript/utils/toastUtils";
+import { openModal } from "jenesius-vue-modal";
+import AlgoModal from "@/components/global/AlgoModal.vue";
+export default {
+    name: "App",
+    components: {
+        AlgoModal,
+    },
+    data() {
+        return {
+            isModalVisible: true,
+        };
+    },
+    methods: {
+        showModal() {
+            openModal(AlgoModal);
+        },
+    },
+};
 
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;
@@ -11,25 +29,16 @@ export function sendRequest(url, data = {}, method) {
 
     method = method.toLowerCase();
     url = BACKEND_URL + url;
-    console.log(method, url);
 
     return axios[method](url, data)
         .then((response) => {
-            console.log(response);
             if (toastStrings.success) toast.success(toastStrings.success);
             return response.data;
         })
         .catch((error) => {
-            console.error(error);
+            console.error(error.response);
             let errorMessage = error.message + (error.response ? "\nDetails: " + error.response.data.error : "");
-            console.error(errorMessage);
-            toast.error(
-                url.startsWith("/compiler/compile") && error.response.data
-                    ? error.response.data
-                    : toastStrings.error
-                    ? toastStrings.error
-                    : "Wystąpił błąd! Spróbuj ponownie później."
-            );
+            toast.error(toastStrings.error ? toastStrings.error : "Wystąpił błąd! Spróbuj ponownie później.");
             throw error;
         })
         .finally(() => {
