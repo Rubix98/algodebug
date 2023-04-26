@@ -21,7 +21,13 @@ export const useProjectStore = defineStore("project", {
 
     getters: {
         debugCode() {
-            return new CodeParser(this.code, this.variables, this.breakpoints, this.converters).parse();
+            return new CodeParser(
+                this.code,
+                this.sceneObjectsFlat,
+                this.variables,
+                this.breakpoints,
+                this.converters
+            ).parse();
         },
 
         variables() {
@@ -40,7 +46,12 @@ export const useProjectStore = defineStore("project", {
         },
 
         sceneObjectsFlat() {
-            return this.sceneObjects.flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects]);
+            return this.sceneObjects.flatMap((sceneObject) => [
+                sceneObject,
+                ...sceneObject.subobjects.map((subObject) => {
+                    return { ...subObject, id: sceneObject.id + "_" + subObject.id };
+                }),
+            ]);
         },
 
         currentTestCase() {

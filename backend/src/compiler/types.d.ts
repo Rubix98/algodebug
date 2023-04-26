@@ -28,5 +28,5 @@ export type CodeOutput = {
 export type CodeBreakpoint = {
     id: number;
     line: number;
-    variables: Record<string, string>;
+    sceneObjects: Record<string, string>;
 };
