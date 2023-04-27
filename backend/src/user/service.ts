@@ -38,6 +38,10 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
     }
 
     try {
+        const oldUsername = (await getUserByUuid(user.uuid))?.username;
+        if (oldUsername !== undefined) {
+            user.username = oldUsername;
+        }
         const id = await saveUser(user);
         return { ...user, _id: id } as User;
     } catch (error) {

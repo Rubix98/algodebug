@@ -25,6 +25,7 @@
     import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
+    import UserSettingsModal from "@/components/modals/settings/UserSettingsModal.vue";
 
     export default defineComponent({
         name: "NavigationDrawerButtons",
@@ -33,6 +34,12 @@
 
         data() {
             const logoutButton = { title: "Wyloguj", icon: "mdi-logout", onClick: this.logout, hidden: !this.loggedIn };
+            const userEditButton = {
+                title: "Edycja konta",
+                icon: "mdi-account-edit",
+                onClick: this.openUserSettingsModal,
+                hidden: !this.loggedIn,
+            };
             const darkModeButton = {
                 title: "Tryb ciemny",
                 icon: "mdi-theme-light-dark",
@@ -41,6 +48,7 @@
             return {
                 darkModeButton,
                 logoutButton,
+                userEditButton,
                 buttons: {
                     project: [
                         {
@@ -67,6 +75,7 @@
                     settings: [
                         darkModeButton,
                         { title: "GitHub", icon: "mdi-github", onClick: this.openGithub },
+                        userEditButton,
                         logoutButton,
                     ],
                 },
@@ -82,6 +91,10 @@
 
             createNewProject() {
                 window.location = "/";
+            },
+
+            openUserSettingsModal() {
+                openModal(UserSettingsModal);
             },
 
             openLoadProjectModal() {
@@ -133,6 +146,7 @@
         watch: {
             loggedIn(newValue) {
                 this.logoutButton.hidden = !newValue;
+                this.userEditButton.hidden = !newValue;
             },
         },
     });
