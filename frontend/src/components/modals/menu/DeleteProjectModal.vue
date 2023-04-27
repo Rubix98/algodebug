@@ -5,16 +5,13 @@
             <p>Usuwanie projektu...</p>
         </div>
         <div v-else class="delete-info">
-            <p class="title">Zamierzasz usunąć projekt {{ projectTitle }}.</p>
-            <p>Aby potwierdzić usunięcie projektu, prosimy wpisać "{{ projectTitle }}" w poniższym polu.</p>
-            <br />
-            <v-text-field label="Tytuł projektu do usunięcia" v-model="inputProjectTitle" />
+            <p class="title">Zamierzasz usunąć projekt "{{ projectTitle }}".</p>
             <p class="warning">
                 Usunięcie projektu jest operacją nieodwracalną. Nie ma późniejszej możliwości go odzyskania.
             </p>
         </div>
         <template #buttons>
-            <v-btn color="primary" :disabled="isDeleteButtonDisabled" @click="this.onDeleteProject">Usuń projekt</v-btn>
+            <v-btn color="primary" @click="this.onDeleteProject">Usuń projekt</v-btn>
         </template>
     </AlgoModal>
 </template>
@@ -33,7 +30,6 @@
 
         data() {
             return {
-                inputProjectTitle: "",
                 showLoading: false,
             };
         },
@@ -54,10 +50,6 @@
 
         computed: {
             ...mapState(useProjectStore, ["projectTitle"]),
-
-            isDeleteButtonDisabled() {
-                return !(this.inputProjectTitle === this.projectTitle) || this.showLoading;
-            },
         },
     });
 </script>
