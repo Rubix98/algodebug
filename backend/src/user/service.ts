@@ -29,7 +29,7 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
         // should always exist but technically not required in certain services
         email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
         picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
-        role: "USER",
+        role: Role.USER,
     };
 
     const [isOk, user] = validateUser(data);
@@ -39,16 +39,14 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
     }
 
     try {
-        const doesUserExist = await getUserByUuid(user.uuid);
-        if (!doesUserExist) {
-            user.role = Role.USER;
-            const id = await saveUser(user);
-            return { ...user, _id: id } as User;
+        const userFromDB = await getUserByUuid(user.uuid);
+        if (userFromDB) {
+            user.role = userFromDB.role;
         } else {
-            user.role = doesUserExist.role;
-            const id = await saveUser(user);
-            return { ...user, _id: id } as User;
+            user.role = Role.USER;
         }
+        const id = await saveUser(user);
+        return { ...user, _id: id } as User;
     } catch (error) {
         return null;
     }

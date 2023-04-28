@@ -1,5 +1,5 @@
 import { ValidTypeOrError } from "../types";
-import { User } from "../user/model";
+import { User, Role } from "../user/model";
 import { Project, sanitizeProject } from "./model";
 import { ProjectLike } from "../types";
 import { getCollections } from "../db";
@@ -27,10 +27,7 @@ const authorLookup = [
 ];
 
 const isAdmin = (user?: User): boolean => {
-    if (user?.role == "ADMIN") {
-        return true;
-    }
-    return false;
+    return user?.role == Role.ADMIN;
 };
 
 const canUserReadProjectDBQuery = (userId: ObjectId, user?: User) => {
@@ -50,18 +47,15 @@ export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
 };
 
 const isUserAuthorOfProject = (user: User, project: ProjectLike): boolean => {
-    if (isAdmin(user)) {
-        return true;
-    }
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
 export const canUserReadProject = (user: User, project: ProjectLike): boolean => {
-    return project.public || isUserAuthorOfProject(user, project);
+    return project.public || isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
 export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
-    return isUserAuthorOfProject(user, project);
+    return isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
 /**

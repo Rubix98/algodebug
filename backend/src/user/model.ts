@@ -14,7 +14,7 @@ export const User = Record({
     // since these are provided by google I don't think some crazy regex is needed
     email: String.withConstraint((s) => s.length > 0).Or(Null),
     picture: String.withConstraint((s) => s.length > 0).Or(Null),
-    role: String.withConstraint((s): s is Role => s === Role.USER || s === Role.ADMIN),
+    role: Literal(Role.USER).Or(Literal(Role.ADMIN).withConstraint((role) => role === Role.ADMIN)),
 });
 
 export type User = Static<typeof User>;
