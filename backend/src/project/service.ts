@@ -30,11 +30,11 @@ const isAdmin = (user?: User): boolean => {
     return user?.role == Role.ADMIN;
 };
 
-const canUserReadProjectDBQuery = (userId: ObjectId, user?: User) => {
+const canUserReadProjectDBQuery = (user?: User) => {
     if (isAdmin(user)) {
         return { $match: {} };
     } else {
-        return { $match: { $or: [{ public: true }, { authorId: userId }] } };
+        return { $match: { $or: [{ public: true }, { authorId: new ObjectId(user?._id) }] } };
     }
 };
 
@@ -68,7 +68,7 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
     const id = new ObjectId(user?._id);
 
     const result = await projects
-        .aggregate([canUserReadProjectDBQuery(id, user), ...authorLookup])
+        .aggregate([canUserReadProjectDBQuery(user), ...authorLookup])
         .sort({ modificationDate: -1 })
         .toArray();
 
