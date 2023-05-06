@@ -95,7 +95,7 @@
             },
 
             openDeleteModal() {
-                openModal(DeleteProjectModal);
+                openModal(DeleteProjectModal, {projectToDelete: this.project});
             },
 
             openLoadProjectModal() {
@@ -146,7 +146,7 @@
 
         computed: {
             ...mapWritableState(useUserStore, ["loggedIn", "userId"]),
-            ...mapWritableState(useProjectStore, ["authorId", "projectId"]),
+            ...mapWritableState(useProjectStore, ["authorId", "projectId", "project"]),
         },
 
         watch: {

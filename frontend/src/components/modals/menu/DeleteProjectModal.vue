@@ -5,7 +5,7 @@
             <p>Usuwanie projektu...</p>
         </div>
         <div v-else class="delete-info">
-            <p class="title">Zamierzasz usunąć projekt "{{ projectTitle }}".</p>
+            <p class="title">Zamierzasz usunąć projekt "{{ projectToDelete.title }}".</p>
             <p class="warning">
                 Usunięcie projektu jest operacją nieodwracalną. Nie ma późniejszej możliwości go odzyskania.
             </p>
@@ -19,14 +19,18 @@
 <script>
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
-    import { mapActions, mapState } from "pinia";
+    import {mapActions, mapState} from "pinia";
     import { useProjectStore } from "@/stores/project";
-    import { closeModal } from "jenesius-vue-modal";
+    import {popModal} from "jenesius-vue-modal";
+    import {deleteProject} from "@/javascript/utils/projectUtils";
+    import {useCachedListStore} from "@/stores/cachedList";
 
     export default defineComponent({
         name: "DeleteProjectModal",
 
         components: { AlgoModal },
+
+        props: ["projectToDelete"],
 
         data() {
             return {
@@ -35,21 +39,27 @@
         },
 
         methods: {
-            ...mapActions(useProjectStore, ["deleteProject"]),
+            ...mapActions(useCachedListStore, ["updateProjects"]),
+
             onDeleteProject() {
                 this.showLoading = true;
-                this.deleteProject()
+                const projectIdToDelete = this.projectToDelete !== undefined ? this.projectToDelete._id : this.id;
+
+                deleteProject(projectIdToDelete)
                     .then(() => {
-                        window.location.href = "/";
-                    })
-                    .finally(() => {
-                        closeModal();
-                    });
+                        popModal();
+                        this.updateProjects();
+                        if (projectIdToDelete === this.projectId) {
+                            window.location.href = "/";
+                        }
+                    }).finally(() => {
+                        this.showLoading = false;
+                });
             },
         },
 
         computed: {
-            ...mapState(useProjectStore, ["projectTitle"]),
+            ...mapState(useProjectStore, ["projectId"]),
         },
     });
 </script>

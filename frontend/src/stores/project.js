@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { CodeParser } from "@/javascript/codeParser/CodeParser";
+import {deleteProject} from "@/javascript/utils/projectUtils";
 
 export const useProjectStore = defineStore("project", {
     state: () => ({
@@ -87,6 +88,10 @@ export const useProjectStore = defineStore("project", {
 
         projectId() {
             return this._id;
+        },
+
+        project() {
+            return this.$state;
         },
     },
 
@@ -190,7 +195,7 @@ export const useProjectStore = defineStore("project", {
         },
 
         deleteProject() {
-            return sendRequest(`/project/${this._id}`, null, "DELETE");
+            deleteProject(this._id);
         },
 
         compile() {
