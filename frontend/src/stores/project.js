@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { CodeParser } from "@/javascript/codeParser/CodeParser";
-import {deleteProject} from "@/javascript/utils/projectUtils";
+import { deleteProject } from "@/javascript/utils/projectUtils";
 
 export const useProjectStore = defineStore("project", {
     state: () => ({

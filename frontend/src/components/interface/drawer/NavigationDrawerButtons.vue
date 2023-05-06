@@ -27,7 +27,7 @@
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
     import { useProjectStore } from "@/stores/project";
     import DeleteProjectModal from "@/components/modals/menu/DeleteProjectModal.vue";
-    import {canUserEditProject} from "@/javascript/utils/authorizationUtils";
+    import { canUserEditProject } from "@/javascript/utils/authorizationUtils";
 
     export default defineComponent({
         name: "NavigationDrawerButtons",
@@ -96,7 +96,7 @@
             },
 
             openDeleteModal() {
-                openModal(DeleteProjectModal, {projectToDelete: this.project});
+                openModal(DeleteProjectModal, { projectToDelete: this.project });
             },
 
             openLoadProjectModal() {

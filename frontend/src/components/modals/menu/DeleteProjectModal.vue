@@ -19,11 +19,11 @@
 <script>
     import AlgoModal from "@/components/global/AlgoModal.vue";
     import { defineComponent } from "vue";
-    import {mapActions, mapState} from "pinia";
+    import { mapActions, mapState } from "pinia";
     import { useProjectStore } from "@/stores/project";
-    import {popModal} from "jenesius-vue-modal";
-    import {deleteProject} from "@/javascript/utils/projectUtils";
-    import {useCachedListStore} from "@/stores/cachedList";
+    import { popModal } from "jenesius-vue-modal";
+    import { deleteProject } from "@/javascript/utils/projectUtils";
+    import { useCachedListStore } from "@/stores/cachedList";
 
     export default defineComponent({
         name: "DeleteProjectModal",
@@ -52,9 +52,10 @@
                         if (projectIdToDelete === this.projectId) {
                             window.location.href = "/";
                         }
-                    }).finally(() => {
+                    })
+                    .finally(() => {
                         this.showLoading = false;
-                });
+                    });
             },
         },
 
