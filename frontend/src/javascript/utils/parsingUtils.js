@@ -117,5 +117,5 @@ function parseCircles(value) {
 }
 
 function parseArrayOrString(value) {
-    return value.includes(" ") ? parseArray(value) : value;
+    return value.includes(" ") || value.includes("\n") ? parseArray(value) : value;
 }

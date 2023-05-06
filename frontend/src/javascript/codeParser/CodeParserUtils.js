@@ -1,3 +1,6 @@
+import { getDefines } from "@/javascript/languages/cpp";
+import { getDefaultConverters } from "@/javascript/languages/cpp";
+
 const variableTagName = "algodebug-variable";
 const breakpointTagName = "algodebug-breakpoint";
 
@@ -28,34 +31,41 @@ export class CodeParserUtils {
         return code;
     }
 
-    static replaceBreakpointTags(code, parsedBreakpoints) {
+    static replaceBreakpointTags(code, sceneObjectsFlat, parsedBreakpoints) {
         for (let breakpoint of parsedBreakpoints) {
-            let variables = breakpoint.variables
-                .map((variable) => `ALGODEBUG_VARIABLE(${variable.name}, ${variable.id.split("@")[1]})`)
-                .join(" << ");
-            code = code.replace(
-                this.encloseInTag(breakpoint.line, breakpointTagName),
-                variables.length !== 0
-                    ? ` ALGODEBUG_BREAKPOINT(${breakpoint.line}, ${variables});`
-                    : ` ALGODEBUG_EMPTY_BREAKPOINT(${breakpoint.line});`
-            );
+            let breakpointText = `ALGODEBUG_BREAKPOINT_START(${breakpoint.line}); `;
+            for (let sceneObject of sceneObjectsFlat) {
+                const isEveryVariableAvailable = sceneObject.variables.every((v1) =>
+                    breakpoint.variables.find((v2) => v1.id == v2.id)
+                );
+                if (!isEveryVariableAvailable) continue;
+
+                let converterName = sceneObject.converter ? `algodebug_converter_${sceneObject.converter._id}` : "";
+                let variables = sceneObject.variables.map((v) => v.name).join(", ");
+                let converterText = `${converterName}(${variables})`;
+
+                breakpointText += `ALGODEBUG_OBJECT(${sceneObject.id}, ${converterText}); `;
+            }
+            breakpointText += "ALGODEBUG_BREAKPOINT_END();";
+
+            code = code.replace(this.encloseInTag(breakpoint.line, breakpointTagName), breakpointText);
         }
         return code;
     }
 
     static insertAlgodebugMacros(code) {
-        return (
-            `#define ALGODEBUG_VARIABLE(x, y) "<algodebug-variable " << "name=\\"" << #x << "@" << y << "\\">\\n" << x << "\\n</algodebug-variable>\\n"\n` +
-            `#define ALGODEBUG_BREAKPOINT(line, x) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n" << x << "</algodebug-breakpoint>\\n"\n` +
-            `#define ALGODEBUG_EMPTY_BREAKPOINT(line) std::cout << "<algodebug-breakpoint " << "line=\\"" << line << "\\">\\n</algodebug-breakpoint>\\n"\n\n` +
-            code
-        );
+        return getDefines() + code;
     }
 
     static insertConvertersAfterIncludes(code, converters) {
         converters = converters
-            .map((converter) => converter.code.slice(0, converter.code.indexOf("{")).trim() + ";")
+            .map((converter) => {
+                let code = this.getRenamedConverterCode(converter);
+                return code.slice(0, code.indexOf("{")).trim() + ";";
+            })
             .join("\n");
+
+        converters += "\n" + getDefaultConverters();
 
         let includeStartPosition = code.lastIndexOf("#include");
         let includeEndPosition = code.indexOf(">", includeStartPosition);
@@ -68,16 +78,21 @@ export class CodeParserUtils {
     }
 
     static insertConvertersAtTheEnd(code, converters) {
-        converters = converters.map((converter) => converter.code).join("\n\n");
+        converters = converters.map((converter) => this.getRenamedConverterCode(converter)).join("\n\n");
         return code + "\n\n" + converters;
     }
 
     static insertNecessaryIncludes(code) {
-        const regex = /#include[ \t]*<iostream>/g;
-        if (!regex.test(code)) {
-            return "#include <iostream>\n" + code;
+        const necessaryIncludes = ["iostream", "vector", "tuple"];
+        for (let include of necessaryIncludes) {
+            code = this.insertIncludeIfNotPresent(code, include);
         }
         return code;
+    }
+
+    static getRenamedConverterCode(converter) {
+        let newConverterName = `algodebug_converter_${converter._id}`;
+        return converter.code.replace("convert", newConverterName);
     }
 
     static removeTagsAndMapContent(code, tag, mappingFunction) {
@@ -87,6 +102,14 @@ export class CodeParserUtils {
             let end = code.indexOf(`</${tag}>`, start);
             let content = code.substring(start, end);
             code = code.substring(0, i) + mappingFunction(content) + code.substring(end + `</${tag}>`.length);
+        }
+        return code;
+    }
+
+    static insertIncludeIfNotPresent(code, library) {
+        const regex = new RegExp(`#include[ \t]*<${library}>`);
+        if (!regex.test(code)) {
+            return `#include <${library}>\n` + code;
         }
         return code;
     }
