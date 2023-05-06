@@ -84,6 +84,10 @@ export const useProjectStore = defineStore("project", {
         projectTitle() {
             return this.title;
         },
+
+        project() {
+            return this.$state;
+        },
     },
 
     actions: {

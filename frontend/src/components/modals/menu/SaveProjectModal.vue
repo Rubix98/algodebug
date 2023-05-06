@@ -15,6 +15,7 @@
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
     import { useUserStore } from "@/stores/user";
+    import { canUserEditProject } from "@/javascript/utils/authorizationUtils";
 
     export default defineComponent({
         components: { AlgoModal },
@@ -39,11 +40,11 @@
         },
 
         computed: {
-            ...mapState(useProjectStore, ["title", "_id", "authorId"]),
+            ...mapState(useProjectStore, ["title", "project"]),
             ...mapState(useUserStore, ["user"]),
 
             showOverrideButton() {
-                return this._id && this.authorId === this.user._id;
+                return canUserEditProject(this.user, this.project);
             },
         },
     });
