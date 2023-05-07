@@ -34,7 +34,9 @@ export const initializeDatabase = async () => {
     }
 };
 
-export const asyncTryCatchAssign = async <T>(promise: Promise<T> | (() => Promise<T>)): Promise<ValidTypeOrError<T>> => {
+export const asyncTryCatchAssign = async <T>(
+    promise: Promise<T> | (() => Promise<T>)
+): Promise<ValidTypeOrError<T>> => {
     try {
         if (isPromise(promise)) {
             return { isOk: true, value: await promise };

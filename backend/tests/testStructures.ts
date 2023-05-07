@@ -51,37 +51,18 @@ export const validNestedProject = {
     ],
 } as Project;
 
-interface Profile {
-	provider: string;
-	id: string;
-	displayName: string;
-	username?: string | undefined;
-	name?: {
-		familyName: string;
-		givenName: string;
-		middleName?: string | undefined;
-	} | undefined;
-	emails?: Array<{
-		value: string;
-		type?: string | undefined;
-	}> | undefined;
-	photos?: Array<{
-		value: string;
-	}> | undefined;
-}
-
 export const validUserProile = {
     provider: "google",
     id: "1234567890",
     displayName: "nonempty",
     emails: [{ value: "test@example.com" }],
     photos: [{ value: "https://example.com/photo.jpg" }],
-}
+};
 
 export const validUser = {
     _id: new ObjectId("0123456789abcdef01234567"),
     uuid: { id: "1234567890", provider: "google" },
     username: "nonempty",
     email: "test@example.com",
-    picture: "https://example.com/photo.jpg"
+    picture: "https://example.com/photo.jpg",
 } as WithId<User>;

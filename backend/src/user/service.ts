@@ -42,7 +42,7 @@ export const validateUserUpdate = (data: unknown): ValidTypeOrError<Subset<User>
     } catch (error) {
         return { isOk: false, error: error };
     }
-}
+};
 
 export const getUserByUuid = async (uuid: Uuid): Promise<WithId<User> | null> => {
     const { users } = getCollections();
@@ -68,7 +68,7 @@ const createUser = async (uuid: Uuid, data: profileEssentials): Promise<WithId<U
 
     const insertedId = result.value.insertedId;
     return { ...user.value, _id: insertedId } as WithId<User>;
-}
+};
 
 export const updateUser = async (data: WithId<Subset<User>>) => {
     const { users } = getCollections();
@@ -76,16 +76,16 @@ export const updateUser = async (data: WithId<Subset<User>>) => {
     const user = validateUserUpdate(data);
     if (!user.isOk || !user.value._id) return null;
 
-    const [id, withoutId] = (({_id, ...o }) => [_id, o])(user.value);
-    const result = await asyncTryCatchAssign(users.updateOne({ _id: id }, { $set:  withoutId }));
+    const [id, withoutId] = (({ _id, ...o }) => [_id, o])(user.value);
+    const result = await asyncTryCatchAssign(users.updateOne({ _id: id }, { $set: withoutId }));
     if (!result.isOk) return null;
 
     return user.value as User;
-}
+};
 
 export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
     const uuid = { id: profile.id, provider: provider } as Uuid;
-    
+
     const user = await getUserByUuid(uuid);
     if (!user) {
         return await createUser(uuid, profile);
@@ -96,9 +96,9 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
         username: profile.displayName,
 
         email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
-        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null
+        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
     } as Subset<User>;
 
-    const updatedUser = await updateUser({_id: user._id, ...toUpdate});
+    const updatedUser = await updateUser({ _id: user._id, ...toUpdate });
     return updatedUser;
 };

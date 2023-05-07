@@ -30,7 +30,7 @@ const canUserReadProjectDBQuery = (userId: ObjectId) => ({ $match: { $or: [{ pub
 
 export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
-        return {isOk: true, value: sanitizeProject(Project.check(req)) };
+        return { isOk: true, value: sanitizeProject(Project.check(req)) };
     } catch (error) {
         return { isOk: false, error: error };
     }
