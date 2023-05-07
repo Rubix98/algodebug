@@ -4,6 +4,7 @@
             <v-card-title class="algo-block__card__title">
                 {{ header }}
                 <slot name="checkbox"></slot>
+                <slot name="tooltip"></slot>
             </v-card-title>
             <v-divider />
             <v-card-text class="algo-block__card__content">

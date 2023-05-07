@@ -1,23 +1,5 @@
 import axios from "axios";
 import toast, { getEndpointRelatedToast } from "@/javascript/utils/toastUtils";
-import { openModal } from "jenesius-vue-modal";
-import AlgoModal from "@/components/global/AlgoModal.vue";
-export default {
-    name: "App",
-    components: {
-        AlgoModal,
-    },
-    data() {
-        return {
-            isModalVisible: true,
-        };
-    },
-    methods: {
-        showModal() {
-            openModal(AlgoModal);
-        },
-    },
-};
 
 export function sendRequest(url, data = {}, method) {
     if (!validateMethod(method)) return;

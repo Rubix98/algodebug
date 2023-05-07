@@ -13,6 +13,7 @@ export const useProjectStore = defineStore("project", {
         sceneObjects: [],
         isRunning: false,
         waitingForCompile: false,
+        lastCompilationSuccess: true,
         currentTestCaseId: 0,
         currentFrameId: 0,
     }),
@@ -180,16 +181,17 @@ export const useProjectStore = defineStore("project", {
             return sendRequest("/compiler/compile", this.jsonForCompile, "POST")
                 .then((responseData) => {
                     this.testData.forEach((testCase, index) => {
-                        console.log(responseData[index]);
                         Object.assign(testCase, responseData[index].output);
                     });
                     this.isRunning = true;
+                    this.lastCompilationSuccess = true;
                     return true;
                 })
                 .catch((error) => {
                     this.testData.forEach((testCase) => {
-                        Object.assign(testCase, { error: error.response.data });
+                        testCase.error = error.response.data;
                     });
+                    this.lastCompilationSuccess = false;
                 })
                 .finally(() => {
                     this.waitingForCompile = false;

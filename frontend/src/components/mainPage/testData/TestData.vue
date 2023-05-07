@@ -12,7 +12,7 @@
                 />
             </AlgoBlock>
 
-            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe">
+            <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.isRunning">
                 <template #checkbox>
                     <v-checkbox-btn
                         v-model="isDynamicOutputOn"
@@ -25,6 +25,17 @@
                 </template>
                 <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
+
+            <AlgoBlock class="full-size ma-0" header="Błąd kompilacji" v-if="!this.lastCompilationSuccess">
+                <template #tooltip>
+                    <v-tooltip text="Poniższy błąd kompilacji dotyczy kodu debugującego">
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props" @click="showExtendedCode">?</v-btn>
+                        </template>
+                    </v-tooltip>
+                </template>
+                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
+            </AlgoBlock>
         </div>
     </div>
 </template>
@@ -33,10 +44,11 @@
     import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
     import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+    import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
-
     export default defineComponent({
         components: { TestCasePicker, AlgoTextarea, AlgoBlock },
 
@@ -48,10 +60,19 @@
 
         methods: {
             ...mapActions(useProjectStore, ["updateCurrentTestCaseInput"]),
+            showExtendedCode() {
+                openModal(ShowDebugCodeModal);
+            },
         },
 
         computed: {
-            ...mapState(useProjectStore, ["currentTestCase", "currentFrame", "numberOfFrames", "isRunning"]),
+            ...mapState(useProjectStore, [
+                "currentTestCase",
+                "currentFrame",
+                "numberOfFrames",
+                "isRunning",
+                "lastCompilationSuccess",
+            ]),
             input: {
                 get() {
                     return this.currentTestCase.input;
@@ -62,13 +83,11 @@
             },
 
             output() {
-                console.log(this.currentTestCase);
-                let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
-                if (this.currentTestCase.error) {
+                if (!this.lastCompilationSuccess) {
                     return this.currentTestCase.error;
                 }
-
-                return this.currentTestCase.partialOutputs?.slice(0, endIndex).join("");
+                let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
+                return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
             },
         },
     });

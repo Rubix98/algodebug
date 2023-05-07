@@ -12,6 +12,7 @@ export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsReque
             language: request.language,
         });
         results.push(result);
+        if(!result.success) return results;
     }
     return results;
 }

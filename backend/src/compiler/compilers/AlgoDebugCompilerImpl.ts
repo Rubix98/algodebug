@@ -18,7 +18,6 @@ export class AlgoDebugCompilerImpl implements Compiler {
             headers: { "Content-Type": "application/json" },
         });
         const response: AlgoDebugCompilerApiResponse = await apiResponse.json();
-
         if (response.success) {
             return {
                 success: true,
