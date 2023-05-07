@@ -12,13 +12,14 @@ export class Painter {
     }
 
     draw() {
-        this.model = this.getVariable(this.sceneObject);
+        this.model = this.getObjectData(this.sceneObject.id, this.sceneObject);
         if (!this.model) return;
 
         this.drawModel(this.model);
 
         for (let subobject of this.sceneObject.subobjects) {
-            let variable = this.getVariable(subobject);
+            let subobjectId = this.sceneObject.id + "_" + subobject.id;
+            let variable = this.getObjectData(subobjectId, subobject);
             if (!variable) continue;
             this.subobjectFunctionMap[subobject.type].call(this, variable, subobject);
         }
@@ -46,11 +47,9 @@ export class Painter {
         });
     }
 
-    getVariable(sceneObject) {
-        const id = sceneObject.variables[0].id;
-        const type = sceneObject.type;
-        let variable = this.frame.variables[id];
-        return variable ? parse(variable, type) : undefined;
+    getObjectData(id, sceneObject) {
+        let sceneObjectData = this.frame.sceneObjects[id];
+        return sceneObjectData ? parse(sceneObjectData, sceneObject.type) : undefined;
     }
 
     getPosition(name, defaultPosition = { x: 0, y: 0 }) {

@@ -1,21 +1,7 @@
-import { ObjectId } from "mongodb";
-import { Converter } from "./model";
+import { ValidTypeOrError } from "../types";
+import { Converter, sanitizeConverter } from "./model";
 
-type validConverterOrError = [true, Converter] | [false, unknown];
-
-export const sanitizeConverter = (c: Converter | null) => {
-    if (c === null) {
-        return null;
-    }
-    return {
-        _id: c._id ? new ObjectId(c._id) : undefined,
-        title: c.title,
-        language: c.language,
-        code: c.code,
-    } as Converter;
-};
-
-export const validateConverter = (req: unknown): validConverterOrError => {
+export const validateConverter = (req: unknown): ValidTypeOrError<Converter> => {
     try {
         const converter = sanitizeConverter(Converter.check(req));
         if (!converter) throw new Error("Converter cannot be null");
