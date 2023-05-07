@@ -2,6 +2,8 @@ import { Collection, MongoClient, ObjectId } from "mongodb";
 import { Project } from "./project/model";
 import { Converter } from "./converter/model";
 import { User } from "./user/model";
+import { ValidTypeOrError } from "./types";
+import { isPromise } from "node:util/types";
 
 let projectCollection: Collection<Project>;
 let converterCollection: Collection<Converter>;
@@ -29,6 +31,18 @@ export const initializeDatabase = async () => {
     } catch (error) {
         console.log("Error while connecting to database:");
         throw error;
+    }
+};
+
+export const asyncTryCatchAssign = async <T>(promise: Promise<T> | (() => Promise<T>)): Promise<ValidTypeOrError<T>> => {
+    try {
+        if (isPromise(promise)) {
+            return { isOk: true, value: await promise };
+        } else {
+            return { isOk: true, value: await promise() };
+        }
+    } catch (err) {
+        return { isOk: false, error: err };
     }
 };
 

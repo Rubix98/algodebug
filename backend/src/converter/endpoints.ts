@@ -1,5 +1,5 @@
 import { validateConverter } from "./service";
-import { getCollections } from "../db";
+import { getCollections } from "../service";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 
@@ -44,15 +44,15 @@ export const getConverterById = async (req: Request, res: Response) => {
 
 export const saveConverter = async (req: Request, res: Response) => {
     const { converters } = getCollections();
-    const [isOk, data] = validateConverter(req.body);
+    const converter = validateConverter(req.body);
 
-    if (!isOk) {
-        res.status(400).send({ error: "Invalid request body: " + data });
+    if (!converter.isOk) {
+        res.status(400).send({ error: "Invalid request body: " + converter.error });
         return;
     }
 
     try {
-        const result = await converters.insertOne(data);
+        const result = await converters.insertOne(converter.value);
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ error: "Database error" });
@@ -61,11 +61,11 @@ export const saveConverter = async (req: Request, res: Response) => {
 
 export const updateConverter = async (req: Request, res: Response) => {
     const { converters } = getCollections();
-    const [isOk, data] = validateConverter(req.body);
+    const converter = validateConverter(req.body);
     let id;
 
-    if (!isOk) {
-        res.status(400).send({ error: "Invalid request body: " + data });
+    if (!converter.isOk) {
+        res.status(400).send({ error: "Invalid request body: " + converter.error });
         return;
     }
 
@@ -77,7 +77,7 @@ export const updateConverter = async (req: Request, res: Response) => {
     }
 
     try {
-        const result = await converters.updateOne({ _id: id }, { $set: data });
+        const result = await converters.updateOne({ _id: id }, { $set: converter.value });
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json(err);

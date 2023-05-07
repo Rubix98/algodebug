@@ -10,7 +10,7 @@ import { compileCode } from "./compiler/endpoints";
 import { CompilerTypes } from "./compiler/compilers/compilerFactory";
 import { initializePassport } from "./user/service";
 import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoints";
-import { initializeDatabase } from "./db";
+import { initializeDatabase } from "./service";
 interface ResponseError extends Error {
     status?: number;
 }

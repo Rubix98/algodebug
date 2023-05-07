@@ -2,7 +2,7 @@ import { Language } from "./structures/Language";
 import { Static, Record, String, Unknown, Optional } from "runtypes";
 
 import { ObjectId } from "mongodb";
-import { isObjectId } from "../db";
+import { isObjectId } from "../service";
 
 export const Converter = Record({
     _id: Optional(Unknown.withGuard(isObjectId)),
