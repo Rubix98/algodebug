@@ -108,7 +108,7 @@ app.put("/converter/save", updateConverter);
 app.post("/compiler/compile", compileCode);
 
 // user
-app.put("/user/username", updateUsername);
+app.put("/user/username", isLoggedIn, updateUsername);
 
 // passport
 // order of these routes is important

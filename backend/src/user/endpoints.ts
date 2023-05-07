@@ -2,8 +2,9 @@ import passport from "passport";
 import { Provider } from "./structures/Provider";
 import { NextFunction, Request, Response } from "express";
 import { User } from "./model";
-import { getUserByUuid } from "./service";
-import { getCollections } from "../db";
+import { updateUser, validateUserUpdate } from "./service";
+import { ObjectId, WithId } from "mongodb";
+import { getCollections } from "../service";
 
 type RequestData = {
     user: User;
@@ -80,33 +81,28 @@ export const authVerify = (req: Request, res: Response) => {
 };
 
 export const updateUsername = async (req: Request, res: Response) => {
-    const reqUser = req.user as User;
-
     const newUsername = req.body["username"];
+    const user = req.user as WithId<User>;
+    const id = new ObjectId(user._id);
 
-    if (!req.isAuthenticated()) {
-        res.status(401).json({ error: "Unable to change the username for an unregistered user" });
+    const updateData = validateUserUpdate({
+        username: newUsername,
+    });
+
+    if (!updateData.isOk) {
+        res.status(400).json({ error: updateData.error });
         return;
     }
 
-    if (newUsername === undefined) {
-        res.status(400).json({ error: "Please enter a new username to set" });
-        return;
-    }
+    const result = await updateUser({ _id: id, ...updateData.value });
 
-    const user = await getUserByUuid(reqUser.uuid);
-
-    if (user == null) {
-        res.status(404).json({ error: "This user could not be found in the database" });
-        return;
-    }
-
-    try {
-        user.username = newUsername;
-        const { users } = getCollections();
-        await users.updateOne({ _id: user._id }, { $set: user });
-        res.status(200).send("OK");
-    } catch (err) {
+    if (!result) {
         res.status(500).json({ error: "Database error" });
+        return;
     }
+
+    // updates user in session (req.user)
+    req.login(result, () => {
+        res.status(200).json(result);
+    });
 };

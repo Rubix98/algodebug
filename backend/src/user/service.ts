@@ -78,9 +78,10 @@ export const updateUser = async (data: WithId<Subset<User>>) => {
 
     const [id, withoutId] = (({ _id, ...o }) => [_id, o])(user.value);
     const result = await asyncTryCatchAssign(users.updateOne({ _id: id }, { $set: withoutId }));
+    
     if (!result.isOk) return null;
 
-    return user.value as User;
+    return await users.findOne({ _id: id });
 };
 
 export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
@@ -93,7 +94,7 @@ export const processUserAuthAttempt = async (provider: Provider, profile: passpo
 
     // these fields will by updated on every login
     const toUpdate = {
-        username: profile.displayName,
+        // username: profile.displayName,
 
         email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
         picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
