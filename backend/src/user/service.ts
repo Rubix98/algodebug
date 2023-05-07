@@ -78,7 +78,7 @@ export const updateUser = async (data: WithId<Subset<User>>) => {
 
     const [id, withoutId] = (({ _id, ...o }) => [_id, o])(user.value);
     const result = await asyncTryCatchAssign(users.updateOne({ _id: id }, { $set: withoutId }));
-    
+
     if (!result.isOk) return null;
 
     return await users.findOne({ _id: id });
