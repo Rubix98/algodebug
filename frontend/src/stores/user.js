@@ -52,6 +52,12 @@ export const useUserStore = defineStore("user", {
             });
         },
 
+        updateUsername(username) {
+            return sendRequest("/user/username", { username }, "put").then(() => {
+                this.user.username = username;
+            });
+        },
+
         logout() {
             sendRequest("/logout", {}, "GET").then(() => {
                 this.user = null;

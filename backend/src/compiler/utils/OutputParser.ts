@@ -2,7 +2,7 @@ import { CodeBreakpoint, CodeOutput } from "../types";
 import { parse } from "node-html-parser";
 
 const BREAKPOINT_TAG = "algodebug-breakpoint";
-const VARIABLE_TAG = "algodebug-variable";
+const SCENEOBJECT_TAG = "algodebug-object";
 
 const BREAKPOINT_BEGIN_TAG = "<algodebug-breakpoint";
 const BREAKPOINT_END_TAG = "</algodebug-breakpoint>\n";
@@ -62,19 +62,19 @@ export class OutputParser {
         const parsedBreakpoint = parse(breakpoint.tag).getElementsByTagName(BREAKPOINT_TAG)[0];
         let line = Number(parsedBreakpoint.getAttribute("line"));
 
-        let variables: Record<string, string> = {};
-        for (let variable of parsedBreakpoint.getElementsByTagName(VARIABLE_TAG)) {
-            let variableName = variable.getAttribute("name");
-            let variableValue = variable.innerHTML;
-            if (variableName) {
-                variables[variableName] = variableValue;
+        let sceneObjects: Record<string, string> = {};
+        for (let sceneObject of parsedBreakpoint.getElementsByTagName(SCENEOBJECT_TAG)) {
+            let objectId = sceneObject.getAttribute("id");
+            let objectValue = sceneObject.innerHTML;
+            if (objectId) {
+                sceneObjects[objectId] = objectValue;
             }
         }
 
-        return { id, line, variables };
+        return { id, line, sceneObjects };
     }
 
-    parseVariable(variable: Element) {
-        return [variable.getAttribute("name"), variable.innerHTML];
+    parseVariable(sceneObject: Element) {
+        return [sceneObject.getAttribute("name"), sceneObject.innerHTML];
     }
 }

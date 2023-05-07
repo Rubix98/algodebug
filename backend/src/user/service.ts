@@ -1,12 +1,12 @@
 import passport from "passport";
-import { getCollections } from "../app";
-import { User } from "./model";
+import { getCollections } from "../db";
+import { ValidTypeOrError } from "../types";
+import { sanitizeUser, User } from "./model";
 import { initializeGoogle } from "./strategies/google";
 import { Provider } from "./structures/Provider";
+import { Uuid } from "./structures/Uuid";
 
-type validUserOrError = [true, User] | [false, unknown];
-
-export function initializePassport() {
+export const initializePassport = () => {
     initializeGoogle();
 
     passport.serializeUser((user, done: (arg0: null, arg1: any) => any) => {
@@ -16,46 +16,40 @@ export function initializePassport() {
     passport.deserializeUser((user, done: (arg0: null, arg1: any) => any) => {
         return done(null, user);
     });
-}
+};
 
-export const processUser = async (provider: Provider, profile: passport.Profile) => {
-    const user = {
-        _id: profile.id,
-        provider: provider,
+export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
+    const data = {
+        uuid: {
+            id: profile.id,
+            provider: provider,
+        },
         username: profile.displayName,
+
         // should always exist but technically not required in certain services
         email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
         picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
-    } as User;
+    };
 
-    const [isOk, data] = validateUser(user);
+    const [isOk, user] = validateUser(data);
 
     if (!isOk) {
         return null;
     }
 
     try {
-        await saveUser(data);
+        const oldUsername = (await getUserByUuid(user.uuid))?.username;
+        if (oldUsername !== undefined) {
+            user.username = oldUsername;
+        }
+        const id = await saveUser(user);
+        return { ...user, _id: id } as User;
     } catch (error) {
         return null;
     }
-
-    return data;
 };
 
-const sanitizeUser = (u: User) => {
-    const user = {
-        _id: u._id,
-        provider: u.provider,
-        username: u.username,
-        picture: u.picture,
-        email: u.email,
-    } as User;
-
-    return user;
-};
-
-export const validateUser = (req: unknown): validUserOrError => {
+export const validateUser = (req: unknown): ValidTypeOrError<User> => {
     try {
         return [true, sanitizeUser(User.check(req))];
     } catch (error) {
@@ -63,17 +57,25 @@ export const validateUser = (req: unknown): validUserOrError => {
     }
 };
 
-export const getUserById = async (id: string, provider: Provider) => {
+export const getUserByUuid = async (uuid: Uuid) => {
     const { users } = getCollections();
-    const user = await users.findOne({ _id: id, provider: provider });
-    return user;
+    return await users.findOne({ uuid: uuid });
 };
 
 export const saveUser = async (user: User) => {
     const { users } = getCollections();
-    if (await getUserById(user._id, user.provider)) {
-        await users.updateOne({ _id: user._id, provider: user.provider }, { $set: user });
+
+    const id = (await getUserByUuid(user.uuid))?._id;
+
+    // update user without overwriting _id
+    // even if _id was the same this would throw an error if it was included
+    delete user._id;
+
+    if (id) {
+        await users.updateOne({ _id: id }, { $set: user });
+        return id;
     } else {
-        await users.insertOne(user);
+        const result = await users.insertOne(user);
+        return result.insertedId;
     }
 };
