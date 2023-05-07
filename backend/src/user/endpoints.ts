@@ -2,6 +2,8 @@ import passport from "passport";
 import { Provider } from "./structures/Provider";
 import { NextFunction, Request, Response } from "express";
 import { User } from "./model";
+import { getUserByUuid } from "./service";
+import { getCollections } from "../db";
 
 type RequestData = {
     user: User;
@@ -74,5 +76,37 @@ export const authVerify = (req: Request, res: Response) => {
         res.status(200).json({ loggedIn: true, user: req.user as User });
     } else {
         res.status(200).json({ loggedIn: false });
+    }
+};
+
+export const updateUsername = async (req: Request, res: Response) => {
+    const reqUser = req.user as User;
+
+    const newUsername = req.body["username"];
+
+    if (!req.isAuthenticated()) {
+        res.status(401).json({ error: "Unable to change the username for an unregistered user" });
+        return;
+    }
+
+    if (newUsername === undefined) {
+        res.status(400).json({ error: "Please enter a new username to set" });
+        return;
+    }
+
+    const user = await getUserByUuid(reqUser.uuid);
+
+    if (user == null) {
+        res.status(404).json({ error: "This user could not be found in the database" });
+        return;
+    }
+
+    try {
+        user.username = newUsername;
+        const { users } = getCollections();
+        await users.updateOne({ _id: user._id }, { $set: user });
+        res.status(200).send("OK");
+    } catch (err) {
+        res.status(500).json({ error: "Database error" });
     }
 };
