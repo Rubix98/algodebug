@@ -1,3 +1,14 @@
+import defines from "./cpp/defines.cpp?raw";
+import defaultConverters from "./cpp/converters.cpp?raw";
+
+export function getDefines() {
+    return defines;
+}
+
+export function getDefaultConverters() {
+    return defaultConverters;
+}
+
 export const reservedKeywords = new Set([
     "alignas",
     "alignof",
