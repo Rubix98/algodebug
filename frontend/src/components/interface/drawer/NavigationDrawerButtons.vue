@@ -78,7 +78,7 @@
         },
 
         methods: {
-            ...mapActions(useUserStore, ["logout"]),
+            ...mapActions(useUserStore, ["logout", "login"]),
 
             createNewProject() {
                 window.location = "/";
@@ -89,6 +89,7 @@
             },
 
             openSaveProjectModal() {
+                if (!this.loggedIn) return this.login();
                 openModal(SaveProjectModal);
             },
 
