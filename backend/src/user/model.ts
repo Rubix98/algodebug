@@ -25,7 +25,7 @@ export function sanitizeUser(u: TypeLike<Subset<User>>): Subset<User> | User {
         ...(u._id && { _id: u._id }),
         ...(u.uuid && { uuid: sanitizeUuid(u.uuid) }),
         ...(u.username && { username: u.username }),
-        ...((u.email == null || u.email) && { email: u.email }),
-        ...((u.picture == null || u.picture) && { picture: u.picture }),
+        ...((u.email === null || u.email) && { email: u.email }),
+        ...((u.picture === null || u.picture) && { picture: u.picture }),
     };
 }
