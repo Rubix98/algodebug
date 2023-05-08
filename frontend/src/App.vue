@@ -41,7 +41,7 @@
             this.updateProjects();
             this.updateConverters();
 
-            console.log(`[GIT INFO]\nCommit: ${GIT_COMMIT_HASH}\nBranch: ${GIT_BRANCH_NAME}`);
+            console.log(`[GIT INFO]\nCommit: ${GIT_COMMIT_INFO}\nBranch: ${GIT_BRANCH_NAME}`);
         },
 
         methods: {

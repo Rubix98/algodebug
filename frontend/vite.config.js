@@ -6,7 +6,7 @@ const envMode = process.env.NODE_ENV === "production" ? "production" : "";
 const env = loadEnv(envMode, process.cwd(), "");
 
 import { execSync } from "child_process";
-const commitHash = execSync("git rev-parse HEAD").toString();
+const commitInfo = execSync('git log --format="%B(%h) %ci" -n 1 HEAD').toString();
 const branchName = execSync("git rev-parse --abbrev-ref HEAD").toString();
 
 export default defineConfig({
@@ -22,7 +22,7 @@ export default defineConfig({
     },
     define: {
         BACKEND_URL: JSON.stringify(env.VITE_APP_BACKEND_URL),
-        GIT_COMMIT_HASH: JSON.stringify(commitHash),
+        GIT_COMMIT_INFO: JSON.stringify(commitInfo),
         GIT_BRANCH_NAME: JSON.stringify(branchName),
     },
     resolve: {
