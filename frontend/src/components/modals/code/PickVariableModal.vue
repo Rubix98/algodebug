@@ -1,15 +1,25 @@
 <template>
     <AlgoModal title="Zaznacz zmienne" closeButtonLabel="Gotowe">
-        <div id="variable-chips-container">
+        <div
+            id="variable-chips-container"
+            v-on:drop="drop"
+            v-on:dragover="
+                (event) => {
+                    event.preventDefault();
+                }
+            "
+        >
             <v-chip
                 closable
                 v-for="variable in this.selectedVariables"
                 class="ma-2"
+                v-bind:class="{ dragged: draggedVariableId === variable.id }"
                 :key="variable.id"
                 @click:close="deleteVariable(variable)"
                 draggable
+                style="cursor: move"
                 v-on:dragstart="dragStart"
-                v-on:dragover="dragOver"
+                v-on:dragenter="dragOver"
                 :id="variable.id"
             >
                 {{ variable.name }}
@@ -42,6 +52,7 @@
         data() {
             return {
                 selectedVariables: [],
+                draggedVariableId: "",
             };
         },
 
@@ -59,6 +70,7 @@
             },
 
             dragStart: function (event) {
+                this.draggedVariableId = event.target.id;
                 event.dataTransfer.clearData();
                 event.dataTransfer.setData("text/plain", event.target.id);
             },
@@ -71,6 +83,10 @@
                     let cutOut = this.selectedVariables.splice(index_from, 1)[0];
                     this.selectedVariables.splice(index_to, 0, cutOut);
                 }
+            },
+            drop: function (event) {
+                console.log(event);
+                this.draggedVariableId = "";
             },
         },
         computed: {
@@ -95,5 +111,9 @@
 
     #pick-variable-viewer {
         height: 85%;
+    }
+
+    .dragged {
+        transform: translate(0px, -5px);
     }
 </style>
