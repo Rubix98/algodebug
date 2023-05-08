@@ -1,13 +1,13 @@
 version: "3"
 
 services:
-  frontend: 
+  frontend:
     image: frontend:latest
     build: ./frontend
     ports:
-    - ${FRONTEND_PORT}:${FRONTEND_PORT}
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
     volumes:
-    - ./frontend/src/:/app/src
+      - ./frontend/src/:/app/src
     environment:
       - PORT=${FRONTEND_PORT}
       - VUE_APP_BACKEND_URL=${BACKEND_URL}
@@ -16,7 +16,7 @@ services:
     image: backend:latest
     build: ./backend
     ports:
-    - ${BACKEND_PORT}:${BACKEND_PORT}
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     environment:
       - BACKEND_URL=${BACKEND_URL}
       - PORT=${BACKEND_PORT}
