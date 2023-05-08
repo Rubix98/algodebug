@@ -9,7 +9,7 @@ import { getAllConverters, getConverterById, saveConverter, updateConverter } fr
 import { compileCode } from "./compiler/endpoints";
 import { CompilerTypes } from "./compiler/compilers/compilerFactory";
 import { initializePassport } from "./user/service";
-import { authCallback, authLogout, authSuccess, authUser, authVerify } from "./user/endpoints";
+import { authCallback, authLogout, authSuccess, authUser, authVerify, updateUsername } from "./user/endpoints";
 import { initializeDatabase } from "./db";
 interface ResponseError extends Error {
     status?: number;
@@ -105,6 +105,9 @@ app.put("/converter/save", updateConverter);
 
 // compiler
 app.post("/compiler/compile", compileCode);
+
+// user
+app.put("/user/username", updateUsername);
 
 // passport
 // order of these routes is important

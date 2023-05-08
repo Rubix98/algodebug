@@ -28,6 +28,7 @@
     import { useProjectStore } from "@/stores/project";
     import DeleteProjectModal from "@/components/modals/menu/DeleteProjectModal.vue";
     import { canUserEditProject } from "@/javascript/utils/authorizationUtils";
+    import UserSettingsModal from "@/components/modals/settings/UserSettingsModal.vue";
 
     export default defineComponent({
         name: "NavigationDrawerButtons",
@@ -42,6 +43,12 @@
                 onClick: this.openDeleteModal,
                 hidden: true,
             };
+            const userEditButton = {
+                title: "Edycja konta",
+                icon: "mdi-account-edit",
+                onClick: this.openUserSettingsModal,
+                hidden: !this.loggedIn,
+            };
             const darkModeButton = {
                 title: "Tryb ciemny",
                 icon: "mdi-theme-light-dark",
@@ -51,6 +58,7 @@
                 darkModeButton,
                 logoutButton,
                 deleteButton,
+                userEditButton,
                 buttons: {
                     project: [
                         {
@@ -78,6 +86,7 @@
                     settings: [
                         darkModeButton,
                         { title: "GitHub", icon: "mdi-github", onClick: this.openGithub },
+                        userEditButton,
                         logoutButton,
                     ],
                 },
@@ -89,7 +98,7 @@
         },
 
         methods: {
-            ...mapActions(useUserStore, ["logout"]),
+            ...mapActions(useUserStore, ["logout", "login"]),
 
             createNewProject() {
                 window.location = "/";
@@ -99,11 +108,16 @@
                 openModal(DeleteProjectModal, { projectToDelete: this.project });
             },
 
+            openUserSettingsModal() {
+                openModal(UserSettingsModal);
+            },
+
             openLoadProjectModal() {
                 openModal(LoadProjectModal);
             },
 
             openSaveProjectModal() {
+                if (!this.loggedIn) return this.login();
                 openModal(SaveProjectModal);
             },
 
@@ -153,6 +167,7 @@
         watch: {
             loggedIn(newValue) {
                 this.logoutButton.hidden = !newValue;
+                this.userEditButton.hidden = !newValue;
             },
 
             authorId() {

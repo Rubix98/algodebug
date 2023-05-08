@@ -6,7 +6,7 @@
 
         <template #buttons>
             <v-btn color="primary" @click="addConverter()">Ustaw</v-btn>
-            <v-btn color="primary" @click="saveConverter()">Zapisz i ustaw</v-btn>
+            <v-btn color="primary" v-if="this.showSaveConverterButton" @click="saveConverter()">Zapisz i ustaw</v-btn>
         </template>
     </AlgoModal>
 </template>
@@ -21,6 +21,7 @@
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapState } from "pinia";
+    import { useUserStore } from "@/stores/user";
 
     export default defineComponent({
         components: { AlgoModal, AlgoInput, AlgoTextarea },
@@ -53,6 +54,11 @@
 
         computed: {
             ...mapState(useProjectStore, ["language"]),
+            ...mapState(useUserStore, ["loggedIn"]),
+
+            showSaveConverterButton() {
+                return this.loggedIn;
+            },
         },
 
         async beforeModalClose(e) {
