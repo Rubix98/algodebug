@@ -87,6 +87,7 @@
                     return this.currentTestCase.error;
                 }
                 let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
+
                 return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
             },
         },
