@@ -7,6 +7,10 @@
                 class="ma-2"
                 :key="variable.id"
                 @click:close="deleteVariable(variable)"
+                draggable
+                v-on:dragstart="dragStart"
+                v-on:dragover="dragOver"
+                :id = "variable.id"
             >
                 {{ variable.name }}
             </v-chip>
@@ -52,6 +56,21 @@
 
             deleteVariable(variable) {
                 this.$props.callback(variable);
+            },
+
+            dragStart:function(event) {
+                event.dataTransfer.clearData();
+                event.dataTransfer.setData("text/plain", event.target.id);
+            },
+            dragOver:function(event) {
+                event.preventDefault();
+                var data = event.dataTransfer.getData("text");
+                if(event.target.id != data && event.target.parentNode.id == "variable-chips-container"){
+                    let index_from = this.selectedVariables.findIndex((variable) => variable.id === data);
+                    let index_to   = this.selectedVariables.findIndex((variable) => variable.id === event.target.id);
+                    let cutOut = this.selectedVariables.splice(index_from, 1) [0];
+                    this.selectedVariables.splice(index_to, 0, cutOut);
+                }
             },
         },
         computed: {
