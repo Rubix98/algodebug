@@ -1,5 +1,5 @@
-const isAdmin = (user?: User): boolean => {
-    return user?.role == Role.ADMIN;
+function isAdmin = (user) => {
+    return user?.role === Role.ADMIN;
 };
 function isUserAuthorOfProject(user, project) {
     return project.authorId == user?._id;
