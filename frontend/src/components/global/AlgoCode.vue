@@ -27,5 +27,7 @@
     pre {
         border: 1px solid gray;
         padding: 4px;
+        overflow: scroll;
+        max-height: 220px;
     }
 </style>
