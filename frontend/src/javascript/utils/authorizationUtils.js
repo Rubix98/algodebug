@@ -2,7 +2,7 @@ function isAdmin(user) {
     return user?.role === "ADMIN";
 }
 function isUserAuthorOfProject(user, project) {
-    return project.authorId == user?._id;
+    return project.authorId === user?._id;
 }
 
 export function canUserReadProject(user, project) {
