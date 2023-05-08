@@ -65,7 +65,6 @@ export const canUserEditProject = (user: User, project: ProjectLike): boolean =>
  */
 export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
     const { projects } = getCollections();
-    const id = new ObjectId(user?._id);
 
     const result = await projects
         .aggregate([canUserReadProjectDBQuery(user), ...authorLookup])
