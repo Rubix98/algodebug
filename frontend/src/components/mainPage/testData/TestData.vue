@@ -28,11 +28,11 @@
 
             <AlgoBlock class="full-size ma-0" header="Błąd kompilacji" v-if="!this.lastCompilationSuccess">
                 <template #tooltip>
-                    <v-tooltip text="Poniższy błąd kompilacji dotyczy kodu debugującego">
-                        <template v-slot:activator="{ props }">
-                            <v-btn v-bind="props" @click="showExtendedCode">?</v-btn>
-                        </template>
-                    </v-tooltip>
+                    <AlgoTooltip
+                        icon="mdi-help-circle"
+                        text="Poniższy błąd dotyczy kodu debugującego. Kliknij aby zobaczyć szczegóły"
+                        :onClick="showExtendedCode"
+                    ></AlgoTooltip>
                 </template>
                 <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
@@ -45,12 +45,13 @@
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
     import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+    import AlgoTooltip from "../../global/AlgoTooltip.vue";
     import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
     export default defineComponent({
-        components: { TestCasePicker, AlgoTextarea, AlgoBlock },
+        components: { TestCasePicker, AlgoTextarea, AlgoBlock, AlgoTooltip },
 
         data() {
             return {
