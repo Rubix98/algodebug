@@ -85,7 +85,6 @@
                 }
             },
             drop: function (event) {
-                console.log(event);
                 this.draggedVariableId = "";
             },
         },
