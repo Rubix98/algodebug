@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { CodeParser } from "@/javascript/codeParser/CodeParser";
+import { deleteProject } from "@/javascript/utils/projectUtils";
 
 export const useProjectStore = defineStore("project", {
     state: () => ({
@@ -21,7 +22,13 @@ export const useProjectStore = defineStore("project", {
 
     getters: {
         debugCode() {
-            return new CodeParser(this.code, this.variables, this.breakpoints, this.converters).parse();
+            return new CodeParser(
+                this.code,
+                this.sceneObjectsFlat,
+                this.variables,
+                this.breakpoints,
+                this.converters
+            ).parse();
         },
 
         variables() {
@@ -40,7 +47,12 @@ export const useProjectStore = defineStore("project", {
         },
 
         sceneObjectsFlat() {
-            return this.sceneObjects.flatMap((sceneObject) => [sceneObject, ...sceneObject.subobjects]);
+            return this.sceneObjects.flatMap((sceneObject) => [
+                sceneObject,
+                ...sceneObject.subobjects.map((subObject) => {
+                    return { ...subObject, id: sceneObject.id + "_" + subObject.id };
+                }),
+            ]);
         },
 
         currentTestCase() {
@@ -83,6 +95,14 @@ export const useProjectStore = defineStore("project", {
 
         projectTitle() {
             return this.title;
+        },
+
+        projectId() {
+            return this._id;
+        },
+
+        project() {
+            return this.$state;
         },
     },
 
@@ -177,12 +197,16 @@ export const useProjectStore = defineStore("project", {
         },
 
         saveProject(title, override) {
-            if (override || this.title == "") this.title = title;
+            if (override || this.title === "") this.title = title;
             sendRequest("/project/save", this.jsonForSave(override, title), override ? "PUT" : "POST").then(
                 (responseData) => {
                     if (this._id == null) this._id = responseData.insertedId;
                 }
             );
+        },
+
+        deleteProject() {
+            deleteProject(this._id);
         },
 
         compile() {
