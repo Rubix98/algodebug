@@ -55,24 +55,27 @@ export const canUserEditProject = (user: User, project: ProjectLike): boolean =>
  */
 export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
     const { projects } = getCollections();
-    const id = new ObjectId(user?._id);
+    const userId = new ObjectId(user?._id);
+
+    const query = canUserReadProjectDBQuery(userId);
+    const lookup = authorLookup;
 
     const result = await projects
         .aggregate([
-            canUserReadProjectDBQuery(id),
-            ...authorLookup,
+            query,
+            ...lookup,
             {
                 $addFields: {
-                    IsAuthor: {
+                    isAuthor: {
                         $cond: {
-                            if: { $eq: ["$authorId", id] },
+                            if: { $eq: ["$authorId", userId] },
                             then: 1,
                             else: 0,
                         },
                     },
                 },
             },
-            { $sort: { IsAuthor: -1, modificationDate: -1 } },
+            { $sort: { isAuthor: -1, modificationDate: -1 } },
         ])
         .toArray();
 
