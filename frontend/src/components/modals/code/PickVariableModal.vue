@@ -91,7 +91,7 @@
                     this.selectedVariables.splice(index_to, 0, cutOut);
                 }
             },
-            
+
             drop: function () {
                 this.draggedVariableId = "";
             },
