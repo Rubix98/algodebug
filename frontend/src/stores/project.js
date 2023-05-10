@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
 import { CodeParser } from "@/javascript/codeParser/CodeParser";
+import { deleteProject } from "@/javascript/utils/projectUtils";
 
 export const useProjectStore = defineStore("project", {
     state: () => ({
@@ -15,6 +16,7 @@ export const useProjectStore = defineStore("project", {
         public: false,
         isRunning: false,
         waitingForCompile: false,
+        lastCompilationSuccess: true,
         currentTestCaseId: 0,
         currentFrameId: 0,
     }),
@@ -94,6 +96,10 @@ export const useProjectStore = defineStore("project", {
 
         projectTitle() {
             return this.title;
+        },
+
+        projectId() {
+            return this._id;
         },
 
         project() {
@@ -192,12 +198,16 @@ export const useProjectStore = defineStore("project", {
         },
 
         saveProject(title, override) {
-            if (override || this.title == "") this.title = title;
+            if (override || this.title === "") this.title = title;
             sendRequest("/project/save", this.jsonForSave(override, title), override ? "PUT" : "POST").then(
                 (responseData) => {
                     if (this._id == null) this._id = responseData.insertedId;
                 }
             );
+        },
+
+        deleteProject() {
+            deleteProject(this._id);
         },
 
         compile() {
@@ -208,7 +218,14 @@ export const useProjectStore = defineStore("project", {
                         Object.assign(testCase, responseData[index].output);
                     });
                     this.isRunning = true;
+                    this.lastCompilationSuccess = true;
                     return true;
+                })
+                .catch((error) => {
+                    this.testData.forEach((testCase) => {
+                        testCase.error = error.response.data;
+                    });
+                    this.lastCompilationSuccess = false;
                 })
                 .finally(() => {
                     this.waitingForCompile = false;

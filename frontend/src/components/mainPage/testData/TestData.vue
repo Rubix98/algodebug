@@ -25,6 +25,17 @@
                 </template>
                 <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
+
+            <AlgoBlock class="full-size ma-0" header="Błąd kompilacji" v-if="!this.lastCompilationSuccess">
+                <template #tooltip>
+                    <AlgoTooltip
+                        icon="mdi-help-circle"
+                        text="Poniższy błąd dotyczy kodu debugującego. Kliknij aby zobaczyć szczegóły"
+                        :onClick="showExtendedCode"
+                    ></AlgoTooltip>
+                </template>
+                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
+            </AlgoBlock>
         </div>
     </div>
 </template>
@@ -33,12 +44,14 @@
     import TestCasePicker from "@/components/mainPage/testData/subcomponents/TestCasePicker.vue";
     import AlgoBlock from "@/components/global/AlgoBlock.vue";
     import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
+    import AlgoTooltip from "../../global/AlgoTooltip.vue";
+    import { openModal } from "jenesius-vue-modal";
     import { defineComponent } from "vue";
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
-
     export default defineComponent({
-        components: { TestCasePicker, AlgoTextarea, AlgoBlock },
+        components: { TestCasePicker, AlgoTextarea, AlgoBlock, AlgoTooltip },
 
         data() {
             return {
@@ -48,10 +61,19 @@
 
         methods: {
             ...mapActions(useProjectStore, ["updateCurrentTestCaseInput"]),
+            showExtendedCode() {
+                openModal(ShowDebugCodeModal);
+            },
         },
 
         computed: {
-            ...mapState(useProjectStore, ["currentTestCase", "currentFrame", "numberOfFrames", "isRunning"]),
+            ...mapState(useProjectStore, [
+                "currentTestCase",
+                "currentFrame",
+                "numberOfFrames",
+                "isRunning",
+                "lastCompilationSuccess",
+            ]),
             input: {
                 get() {
                     return this.currentTestCase.input;
@@ -62,7 +84,11 @@
             },
 
             output() {
+                if (!this.lastCompilationSuccess) {
+                    return this.currentTestCase.error;
+                }
                 let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
+
                 return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
             },
         },

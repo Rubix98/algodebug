@@ -3,7 +3,9 @@ import { Record } from "runtypes";
 
 import { asyncTryCatchAssign, getCollections } from "../service";
 import { Subset, ValidTypeOrError } from "../types";
-import { sanitizeUser, User } from "./model";
+import { sanitizeUser, User, Role } from "./model";
+import { ValidTypeOrError } from "../types";
+
 import { initializeGoogle } from "./strategies/google";
 import { Provider } from "./structures/Provider";
 import { Uuid } from "./structures/Uuid";
@@ -55,6 +57,7 @@ const createUser = async (uuid: Uuid, data: profileEssentials): Promise<WithId<U
     const user = validateUser({
         uuid: uuid,
         username: data.displayName,
+        role: Role.user,
 
         // should always exist but technically not required in certain services
         email: data.emails && data.emails.length > 0 ? data.emails[0].value : null,

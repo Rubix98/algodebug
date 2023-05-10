@@ -1,5 +1,5 @@
 import { ValidTypeOrError } from "../types";
-import { User } from "../user/model";
+import { User, Role } from "../user/model";
 import { Project, sanitizeProject } from "./model";
 import { TypeLike } from "../types";
 import { getCollections } from "../service";
@@ -26,7 +26,17 @@ const authorLookup = [
     },
 ];
 
-const canUserReadProjectDBQuery = (userId: ObjectId) => ({ $match: { $or: [{ public: true }, { authorId: userId }] } });
+const isAdmin = (user?: User): boolean => {
+    return user?.role == Role.ADMIN;
+};
+
+const canUserReadProjectDBQuery = (user?: User) => {
+    if (isAdmin(user)) {
+        return { $match: {} };
+    } else {
+        return { $match: { $or: [{ public: true }, { authorId: new ObjectId(user?._id) }] } };
+    }
+};
 
 export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
@@ -40,12 +50,14 @@ const isUserAuthorOfProject = (user: User, project: TypeLike<Project>): boolean 
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
+
 export const canUserReadProject = (user: User, project: TypeLike<Project>): boolean => {
-    return project.public || isUserAuthorOfProject(user, project);
+    return project.public || isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
 export const canUserEditProject = (user: User, project: TypeLike<Project>): boolean => {
-    return isUserAuthorOfProject(user, project);
+    return isUserAuthorOfProject(user, project) || isAdmin(user);
+
 };
 
 /**
@@ -55,10 +67,9 @@ export const canUserEditProject = (user: User, project: TypeLike<Project>): bool
  */
 export const getAllProjectsWithAuthor = async (user?: User): Promise<TypeLike<WithId<Project>>[]> => {
     const { projects } = getCollections();
-    const id = new ObjectId(user?._id);
 
     const result = await projects
-        .aggregate([canUserReadProjectDBQuery(id), ...authorLookup])
+        .aggregate([canUserReadProjectDBQuery(user), ...authorLookup])
         .sort({ modificationDate: -1 })
         .toArray();
 
