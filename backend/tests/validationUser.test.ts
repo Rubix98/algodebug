@@ -3,6 +3,7 @@ import { validateUser, validateUserUpdate } from "../src/user/service";
 import { Uuid } from "../src/user/structures/Uuid";
 import { validUserProile, validUser } from "./testStructures";
 import { ObjectId } from "mongodb";
+import { RoleEnum } from "../src/user/structures/Role";
 
 describe("User validation", () => {
     test("New user", () => {
@@ -15,6 +16,7 @@ describe("User validation", () => {
 
             email: data.emails && data.emails.length > 0 ? data.emails[0].value : null,
             picture: data.photos && data.photos.length > 0 ? data.photos[0].value : null,
+            role: RoleEnum.USER,
         });
 
         expect(user.isOk).toBe(true);
@@ -34,6 +36,7 @@ describe("User validation", () => {
 
             email: data.emails && data.emails.length > 0 ? data.emails[0].value : null,
             picture: data.photos && data.photos.length > 0 ? data.photos[0].value : null,
+            role: RoleEnum.USER,
         });
 
         expect(user.isOk).toBe(true);

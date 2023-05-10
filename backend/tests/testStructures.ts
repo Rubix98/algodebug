@@ -8,6 +8,7 @@ import { ObjectType } from "../src/project/structures/ObjectType";
 import { Variable } from "../src/project/structures/Variable";
 import { SceneObject } from "../src/project/structures/SceneObject";
 import { User } from "../src/user/model";
+import { RoleEnum } from "../src/user/structures/Role";
 
 export const validConverter = {
     title: "nonempty",
@@ -65,4 +66,5 @@ export const validUser = {
     username: "nonempty",
     email: "test@example.com",
     picture: "https://example.com/photo.jpg",
+    role: RoleEnum.USER,
 } as WithId<User>;
