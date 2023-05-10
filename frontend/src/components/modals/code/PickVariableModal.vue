@@ -90,8 +90,7 @@
                     this.selectedVariables.splice(index_to, 0, cutOut);
                 }
             },
-            drop: function (event) {
-                console.log(event);
+            drop: function () {
                 this.draggedVariableId = "";
             },
         },
