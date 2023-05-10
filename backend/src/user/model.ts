@@ -2,11 +2,7 @@ import { Static, Record, String, Null, Unknown, Optional, Literal } from "runtyp
 import { Uuid, sanitizeUuid } from "./structures/Uuid";
 import { isObjectId } from "../service";
 import { Subset, TypeLike } from "../types";
-
-export enum Role {
-    USER = "USER",
-    ADMIN = "ADMIN",
-}
+import { Role } from "./structures/Role";
 
 export const User = Record({
     _id: Optional(Unknown.withGuard(isObjectId)),
@@ -14,7 +10,7 @@ export const User = Record({
     username: String.withConstraint((s) => s.length > 0),
     email: String.withConstraint((s) => s.length > 0).Or(Null),
     picture: String.withConstraint((s) => s.length > 0).Or(Null),
-    role: Literal(Role.USER).Or(Literal(Role.ADMIN).withConstraint((role) => role === Role.ADMIN)),
+    role: Role,
 });
 
 export type User = Static<typeof User>;
@@ -33,7 +29,6 @@ export function sanitizeUser(u: TypeLike<Subset<User>>): Subset<User> | User {
         ...(u.username && { username: u.username }),
         ...((u.email === null || u.email) && { email: u.email }),
         ...((u.picture === null || u.picture) && { picture: u.picture }),
-        ...((u.role) && { role: u.role }),
+        ...(u.role && { role: u.role }),
     };
 }
-

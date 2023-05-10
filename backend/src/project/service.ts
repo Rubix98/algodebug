@@ -1,5 +1,6 @@
 import { ValidTypeOrError } from "../types";
-import { User, Role } from "../user/model";
+import { User } from "../user/model";
+import { RoleEnum } from "../user/structures/Role";
 import { Project, sanitizeProject } from "./model";
 import { TypeLike } from "../types";
 import { getCollections } from "../service";
@@ -27,7 +28,7 @@ const authorLookup = [
 ];
 
 const isAdmin = (user?: User): boolean => {
-    return user?.role == Role.ADMIN;
+    return user?.role == RoleEnum.ADMIN;
 };
 
 const canUserReadProjectDBQuery = (user?: User) => {
@@ -50,14 +51,12 @@ const isUserAuthorOfProject = (user: User, project: TypeLike<Project>): boolean 
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
-
 export const canUserReadProject = (user: User, project: TypeLike<Project>): boolean => {
     return project.public || isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
 export const canUserEditProject = (user: User, project: TypeLike<Project>): boolean => {
     return isUserAuthorOfProject(user, project) || isAdmin(user);
-
 };
 
 /**
