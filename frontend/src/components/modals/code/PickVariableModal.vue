@@ -9,21 +9,23 @@
                 }
             "
         >
-            <v-chip
-                closable
-                v-for="variable in this.selectedVariables"
-                class="ma-2"
-                v-bind:class="{ dragged: draggedVariableId === variable.id }"
-                :key="variable.id"
-                @click:close="deleteVariable(variable)"
-                draggable
-                style="cursor: move"
-                v-on:dragstart="dragStart"
-                v-on:dragenter="dragOver"
-                :id="variable.id"
-            >
-                {{ variable.name }}
-            </v-chip>
+            <TransitionGroup name="variable-chips-group">
+                <v-chip
+                    closable
+                    v-for="variable in this.selectedVariables"
+                    class="ma-2"
+                    v-bind:class="{ dragged: draggedVariableId === variable.id }"
+                    :key="variable.id"
+                    @click:close="deleteVariable(variable)"
+                    draggable
+                    style="cursor: move"
+                    v-on:dragstart="dragStart"
+                    v-on:dragenter="dragEnter"
+                    :id="variable.id"
+                >
+                    {{ variable.name }}
+                </v-chip>
+            </TransitionGroup>
         </div>
         <CodeViewer
             id="pick-variable-viewer"
@@ -74,10 +76,14 @@
                 event.dataTransfer.clearData();
                 event.dataTransfer.setData("text/plain", event.target.id);
             },
-            dragOver: function (event) {
+            dragEnter: function (event) {
                 event.preventDefault();
                 var data = event.dataTransfer.getData("text");
-                if (event.target.id != data && event.target.parentNode.id == "variable-chips-container") {
+                if (
+                    event.target.id != data &&
+                    event.target.parentNode.id == "variable-chips-container" &&
+                    !event.target.classList.contains("variable-chips-group-move")
+                ) {
                     let index_from = this.selectedVariables.findIndex((variable) => variable.id === data);
                     let index_to = this.selectedVariables.findIndex((variable) => variable.id === event.target.id);
                     let cutOut = this.selectedVariables.splice(index_from, 1)[0];
@@ -115,5 +121,24 @@
 
     .dragged {
         transform: translate(0px, -5px);
+    }
+
+    .variable-chips-group-move,
+    .variable-chips-group-enter-active,
+    .variable-chips-group-leave-active {
+        transition: all 0.5s ease;
+    }
+
+    .variable-chips-group-enter-from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    .variable-chips-group-leave-to {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    .variable-chips-group-leave-active {
+        position: absolute;
     }
 </style>
