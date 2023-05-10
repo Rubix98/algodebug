@@ -16,6 +16,7 @@ export const useProjectStore = defineStore("project", {
         public: false,
         isRunning: false,
         waitingForCompile: false,
+        lastCompilationSuccess: true,
         currentTestCaseId: 0,
         currentFrameId: 0,
     }),
@@ -217,7 +218,14 @@ export const useProjectStore = defineStore("project", {
                         Object.assign(testCase, responseData[index].output);
                     });
                     this.isRunning = true;
+                    this.lastCompilationSuccess = true;
                     return true;
+                })
+                .catch((error) => {
+                    this.testData.forEach((testCase) => {
+                        testCase.error = error.response.data;
+                    });
+                    this.lastCompilationSuccess = false;
                 })
                 .finally(() => {
                     this.waitingForCompile = false;
