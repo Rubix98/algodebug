@@ -76,6 +76,7 @@
                 event.dataTransfer.clearData();
                 event.dataTransfer.setData("text/plain", event.target.id);
             },
+
             dragEnter: function (event) {
                 event.preventDefault();
                 var data = event.dataTransfer.getData("text");
@@ -90,6 +91,7 @@
                     this.selectedVariables.splice(index_to, 0, cutOut);
                 }
             },
+            
             drop: function () {
                 this.draggedVariableId = "";
             },
