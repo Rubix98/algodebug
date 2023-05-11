@@ -1,9 +1,9 @@
-import { ValidTypeOrError } from "../types";
+import { ValidTypeOrError } from "../shared/types";
 import { User } from "../user/model";
 import { RoleEnum } from "../user/structures/Role";
 import { Project, sanitizeProject } from "./model";
-import { TypeLike } from "../types";
-import { getCollections } from "../service";
+import { TypeLike } from "../shared/types";
+import { getCollections } from "../db";
 import { ObjectId, WithId } from "mongodb";
 
 const authorLookup = [

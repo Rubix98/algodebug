@@ -11,7 +11,7 @@ import { CompilerTypes } from "./compiler/compilers/compilerFactory";
 import { initializePassport } from "./user/service";
 
 import { authCallback, authLogout, authSuccess, authUser, authVerify, updateUsername } from "./user/endpoints";
-import { initializeDatabase } from "./service";
+import { initializeDatabase } from "./db";
 
 interface ResponseError extends Error {
     status?: number;

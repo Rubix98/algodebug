@@ -1,4 +1,4 @@
-import { ValidTypeOrError } from "../types";
+import { ValidTypeOrError } from "../shared/types";
 import { Converter, sanitizeConverter } from "./model";
 
 export const validateConverter = (req: unknown): ValidTypeOrError<Converter> => {

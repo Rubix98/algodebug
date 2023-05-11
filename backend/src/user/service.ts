@@ -3,8 +3,9 @@ import { Record } from "runtypes";
 import { WithId } from "mongodb";
 
 import { initializeGoogle } from "./strategies/google";
-import { asyncTryCatchAssign, getCollections } from "../service";
-import { Subset, ValidTypeOrError } from "../types";
+import { asyncTryCatchAssign } from "../shared/handling";
+import { getCollections } from "../db";
+import { Subset, ValidTypeOrError } from "../shared/types";
 import { profileEssentials } from "./types";
 import { sanitizeUser, User } from "./model";
 import { Provider } from "./structures/Provider";

@@ -5,7 +5,7 @@ import { Language } from "../converter/structures/Language";
 
 import { Static, Record, String, Array, Unknown, Optional, Boolean } from "runtypes";
 import { ObjectId } from "mongodb";
-import { isObjectId } from "../service";
+import { isObjectId } from "../db";
 
 const isValidDate = (x: any): x is Date => x instanceof Date && !isNaN(x.getTime());
 

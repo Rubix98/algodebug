@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { User } from "./model";
 import { updateUser, validateUserUpdate } from "./service";
 import { ObjectId, WithId } from "mongodb";
-import { getCollections } from "../service";
+import { getCollections } from "../db";
 
 type RequestData = {
     user: User;

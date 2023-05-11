@@ -1,5 +1,5 @@
 import { validateConverter } from "./service";
-import { getCollections } from "../service";
+import { getCollections } from "../db";
 import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 

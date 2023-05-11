@@ -1,7 +1,7 @@
 import { Static, Record, String, Null, Unknown, Optional, Literal } from "runtypes";
 import { Uuid, sanitizeUuid } from "./structures/Uuid";
-import { isObjectId } from "../service";
-import { Subset, TypeLike } from "../types";
+import { isObjectId } from "../db";
+import { Subset, TypeLike } from "../shared/types";
 import { Role } from "./structures/Role";
 
 export const User = Record({
