@@ -1,3 +1,6 @@
+import { isPromise } from "util/types";
+import { ValidTypeOrError } from "./types";
+
 export const asyncTryCatchAssign = async <T>(
     promise: Promise<T> | (() => Promise<T>)
 ): Promise<ValidTypeOrError<T>> => {
