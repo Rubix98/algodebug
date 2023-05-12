@@ -38,6 +38,20 @@ const canUserReadProjectDBQuery = (user?: User) => {
     }
 };
 
+const isAuthorField = (user?: User) => {
+    return {
+        $addFields: {
+            isAuthor: {
+                $cond: {
+                    if: { $eq: ["$authorId", new ObjectId(user?._id)] },
+                    then: 1,
+                    else: 0,
+                },
+            },
+        },
+    };
+};
+
 export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
         return [true, sanitizeProject(Project.check(req))];
@@ -64,14 +78,14 @@ export const canUserEditProject = (user: User, project: ProjectLike): boolean =>
  * Can throw when database error occurs.
  */
 export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
-    const { projects } = getCollections();
+  const { projects } = getCollections();
 
-    const result = await projects
-        .aggregate([canUserReadProjectDBQuery(user), ...authorLookup])
-        .sort({ modificationDate: -1 })
-        .toArray();
+  const result = await projects
+    .aggregate([{ ...canUserReadProjectDBQuery(user) }, ...authorLookup, isAuthorField(user)])
+    .sort({ isAuthor: -1, modificationDate: -1 })
+    .toArray();
 
-    return result as ProjectLike[];
+  return result as ProjectLike[];
 };
 
 /**
