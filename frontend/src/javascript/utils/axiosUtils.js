@@ -11,16 +11,13 @@ export function sendRequest(url, data = {}, method) {
 
     method = method.toLowerCase();
     url = BACKEND_URL + url;
-    console.log(method, url);
 
     return axios[method](url, data)
         .then((response) => {
-            console.log(response);
             if (toastStrings.success) toast.success(toastStrings.success);
             return response.data;
         })
         .catch((error) => {
-            console.error(error);
             let errorMessage = error.message + (error.response ? "\nDetails: " + error.response.data.error : "");
             console.error(errorMessage);
             toast.error(toastStrings.error ? toastStrings.error : "Wystąpił błąd! Spróbuj ponownie później.");
