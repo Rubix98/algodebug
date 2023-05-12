@@ -78,14 +78,14 @@ export const canUserEditProject = (user: User, project: ProjectLike): boolean =>
  * Can throw when database error occurs.
  */
 export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
-  const { projects } = getCollections();
+    const { projects } = getCollections();
 
-  const result = await projects
-    .aggregate([{ ...canUserReadProjectDBQuery(user) }, ...authorLookup, isAuthorField(user)])
-    .sort({ isAuthor: -1, modificationDate: -1 })
-    .toArray();
+    const result = await projects
+        .aggregate([{ ...canUserReadProjectDBQuery(user) }, ...authorLookup, isAuthorField(user)])
+        .sort({ isAuthor: -1, modificationDate: -1 })
+        .toArray();
 
-  return result as ProjectLike[];
+    return result as ProjectLike[];
 };
 
 /**
