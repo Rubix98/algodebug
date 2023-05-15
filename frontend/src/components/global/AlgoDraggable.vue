@@ -1,5 +1,6 @@
 <template>
     <div
+        :id="id"
         class="algo-draggable-container"
         v-on:drop="drop"
         v-on:dragover="
