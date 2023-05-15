@@ -1,8 +1,6 @@
 <template>
     <AlgoModal title="Zaznacz zmienne" closeButtonLabel="Gotowe">
-        <AlgoDraggable
-            :draggable-list="this.selectedVariables"
-        />
+        <AlgoDraggable :draggable-list="this.selectedVariables" />
 
         <CodeViewer
             id="pick-variable-viewer"
