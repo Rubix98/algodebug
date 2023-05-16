@@ -39,6 +39,20 @@ const canUserReadProjectDBQuery = (user?: User) => {
     }
 };
 
+const isAuthorField = (user?: User) => {
+    return {
+        $addFields: {
+            isAuthor: {
+                $cond: {
+                    if: { $eq: ["$authorId", new ObjectId(user?._id)] },
+                    then: 1,
+                    else: 0,
+                },
+            },
+        },
+    };
+};
+
 export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
         return { isOk: true, value: sanitizeProject(Project.check(req)) };
@@ -68,8 +82,8 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<TypeLike<Wi
     const { projects } = getCollections();
 
     const result = await projects
-        .aggregate([canUserReadProjectDBQuery(user), ...authorLookup])
-        .sort({ modificationDate: -1 })
+        .aggregate([{ ...canUserReadProjectDBQuery(user) }, ...authorLookup, isAuthorField(user)])
+        .sort({ isAuthor: -1, modificationDate: -1 })
         .toArray();
 
     return result as TypeLike<WithId<Project>>[];
