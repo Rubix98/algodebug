@@ -1,9 +1,10 @@
-import { ValidTypeOrError } from "../types";
-import { User, Role } from "../user/model";
+import { ValidTypeOrError } from "../shared/types";
+import { User } from "../user/model";
+import { RoleEnum } from "../user/structures/Role";
 import { Project, sanitizeProject } from "./model";
-import { ProjectLike } from "../types";
+import { TypeLike } from "../shared/types";
 import { getCollections } from "../db";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
 const authorLookup = [
     {
@@ -27,7 +28,7 @@ const authorLookup = [
 ];
 
 const isAdmin = (user?: User): boolean => {
-    return user?.role == Role.ADMIN;
+    return user?.role == RoleEnum.ADMIN;
 };
 
 const canUserReadProjectDBQuery = (user?: User) => {
@@ -40,21 +41,21 @@ const canUserReadProjectDBQuery = (user?: User) => {
 
 export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
     try {
-        return [true, sanitizeProject(Project.check(req))];
+        return { isOk: true, value: sanitizeProject(Project.check(req)) };
     } catch (error) {
-        return [false, error];
+        return { isOk: false, error: error };
     }
 };
 
-const isUserAuthorOfProject = (user: User, project: ProjectLike): boolean => {
+const isUserAuthorOfProject = (user: User, project: TypeLike<Project>): boolean => {
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
-export const canUserReadProject = (user: User, project: ProjectLike): boolean => {
+export const canUserReadProject = (user: User, project: TypeLike<Project>): boolean => {
     return project.public || isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
-export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
+export const canUserEditProject = (user: User, project: TypeLike<Project>): boolean => {
     return isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
@@ -63,7 +64,7 @@ export const canUserEditProject = (user: User, project: ProjectLike): boolean =>
  * If user is not provided, only public projects are returned.
  * Can throw when database error occurs.
  */
-export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
+export const getAllProjectsWithAuthor = async (user?: User): Promise<TypeLike<WithId<Project>>[]> => {
     const { projects } = getCollections();
 
     const result = await projects
@@ -71,17 +72,17 @@ export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike
         .sort({ modificationDate: -1 })
         .toArray();
 
-    return result as ProjectLike[];
+    return result as TypeLike<WithId<Project>>[];
 };
 
 /**
  * Returns project with matching id with author information included as author field.
  * Can throw when database error occurs.
  */
-export const getProjectByIdWithAuthor = async (projectId: ObjectId): Promise<ProjectLike> => {
+export const getProjectByIdWithAuthor = async (projectId: ObjectId): Promise<TypeLike<WithId<Project>>> => {
     const { projects } = getCollections();
 
     const result = await projects.aggregate([{ $match: { _id: projectId } }, ...authorLookup]).next();
 
-    return result as ProjectLike;
+    return result as TypeLike<WithId<Project>>;
 };

@@ -1,10 +1,16 @@
 import passport from "passport";
-import { getCollections } from "../db";
-import { ValidTypeOrError } from "../types";
-import { sanitizeUser, User, Role } from "./model";
+import { Record } from "runtypes";
+import { WithId } from "mongodb";
+
 import { initializeGoogle } from "./strategies/google";
+import { asyncTryCatchAssign } from "../shared/handling";
+import { getCollections } from "../db";
+import { Subset, ValidTypeOrError } from "../shared/types";
+import { profileEssentials } from "./types";
+import { sanitizeUser, User } from "./model";
 import { Provider } from "./structures/Provider";
 import { Uuid } from "./structures/Uuid";
+import { RoleEnum } from "./structures/Role";
 
 export const initializePassport = () => {
     initializeGoogle();
@@ -18,71 +24,85 @@ export const initializePassport = () => {
     });
 };
 
-export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
-    const data = {
-        uuid: {
-            id: profile.id,
-            provider: provider,
-        },
-        username: profile.displayName,
-
-        // should always exist but technically not required in certain services
-        email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
-        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
-        role: Role.USER,
-    };
-
-    const [isOk, user] = validateUser(data);
-
-    if (!isOk) {
-        return null;
-    }
-
+export const validateUser = (data: unknown): ValidTypeOrError<User> => {
     try {
-        const userFromDB = await getUserByUuid(user.uuid);
-        if (userFromDB) {
-            user.role = userFromDB.role;
-        } else {
-            user.role = Role.USER;
-        }
-        const oldUsername = (await getUserByUuid(user.uuid))?.username;
-        if (oldUsername !== undefined) {
-            user.username = oldUsername;
-        }
-        const id = await saveUser(user);
-        return { ...user, _id: id } as User;
+        return { isOk: true, value: sanitizeUser(User.check(data)) };
     } catch (error) {
-        return null;
+        return { isOk: false, error: error };
     }
 };
 
-export const validateUser = (req: unknown): ValidTypeOrError<User> => {
+/**
+ * Less strict validation for updating user data.
+ * All fields are optional but must be of the correct type if present.
+ */
+export const validateUserUpdate = (data: unknown): ValidTypeOrError<Subset<User>> => {
+    const subsetRuntype = Record(User.fields).asPartial();
+
     try {
-        return [true, sanitizeUser(User.check(req))];
+        return { isOk: true, value: sanitizeUser(subsetRuntype.check(data)) };
     } catch (error) {
-        return [false, error];
+        return { isOk: false, error: error };
     }
 };
 
-export const getUserByUuid = async (uuid: Uuid) => {
+export const getUserByUuid = async (uuid: Uuid): Promise<WithId<User> | null> => {
     const { users } = getCollections();
     return await users.findOne({ uuid: uuid });
 };
 
-export const saveUser = async (user: User) => {
+const createUser = async (uuid: Uuid, data: profileEssentials): Promise<WithId<User> | null> => {
     const { users } = getCollections();
 
-    const id = (await getUserByUuid(user.uuid))?._id;
+    const user = validateUser({
+        uuid: uuid,
+        username: data.displayName,
+        role: RoleEnum.USER,
 
-    // update user without overwriting _id
-    // even if _id was the same this would throw an error if it was included
-    delete user._id;
+        // should always exist but technically not required in certain services
+        email: data.emails && data.emails.length > 0 ? data.emails[0].value : null,
+        picture: data.photos && data.photos.length > 0 ? data.photos[0].value : null,
+    });
 
-    if (id) {
-        await users.updateOne({ _id: id }, { $set: user });
-        return id;
-    } else {
-        const result = await users.insertOne(user);
-        return result.insertedId;
+    if (!user.isOk) return null;
+
+    const result = await asyncTryCatchAssign(users.insertOne(user.value));
+    if (!result.isOk) return null;
+
+    const insertedId = result.value.insertedId;
+    return { ...user.value, _id: insertedId } as WithId<User>;
+};
+
+export const updateUser = async (data: WithId<Subset<User>>) => {
+    const { users } = getCollections();
+
+    const user = validateUserUpdate(data);
+    if (!user.isOk || !user.value._id) return null;
+
+    const [id, withoutId] = (({ _id, ...o }) => [_id, o])(user.value);
+    const result = await asyncTryCatchAssign(users.updateOne({ _id: id }, { $set: withoutId }));
+
+    if (!result.isOk) return null;
+
+    return await users.findOne({ _id: id });
+};
+
+export const processUserAuthAttempt = async (provider: Provider, profile: passport.Profile) => {
+    const uuid = { id: profile.id, provider: provider } as Uuid;
+
+    const user = await getUserByUuid(uuid);
+    if (!user) {
+        return await createUser(uuid, profile);
     }
+
+    // these fields will by updated on every login
+    const toUpdate = {
+        // username: profile.displayName,
+
+        email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null,
+        picture: profile.photos && profile.photos.length > 0 ? profile.photos[0].value : null,
+    } as Subset<User>;
+
+    const updatedUser = await updateUser({ _id: user._id, ...toUpdate });
+    return updatedUser;
 };
