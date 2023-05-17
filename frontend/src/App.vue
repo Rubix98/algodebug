@@ -46,7 +46,7 @@
 
             window.addEventListener("keydown", this.keyUpOrDown);
             window.addEventListener("keyup", this.keyUpOrDown);
-            
+
             console.log(`[GIT INFO]\nCommit: ${GIT_COMMIT_INFO}\nBranch: ${GIT_BRANCH_NAME}`);
         },
 
