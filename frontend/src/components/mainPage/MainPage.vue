@@ -16,7 +16,7 @@
                     <CodePanel />
                 </CodeEditor>
 
-                <DebugScene class="width-1-of-2" />
+                <DebugScene ref="debugScene" class="width-1-of-2" />
             </div>
 
             <TestData />

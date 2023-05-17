@@ -1,7 +1,7 @@
 <template>
     <div class="bottom-buttons">
         <v-fab-transition>
-            <RunButton />
+            <RunButton ref="runButton" />
         </v-fab-transition>
     </div>
 </template>

@@ -6,7 +6,7 @@
             <CenterPanel v-if="!this.isRunning" />
             <SceneObjectsPanel v-if="!this.isRunning" />
             <DownloadPanel v-if="this.isRunning" />
-            <NavigationPanel v-if="this.isRunning" />
+            <NavigationPanel ref="navigationPanel" v-if="this.isRunning" />
             <FrameNumberPanel v-if="this.isRunning" />
         </div>
         <div class="full-size d-flex flex-center flex-column" :class="{ hidden: !showLoading }">
