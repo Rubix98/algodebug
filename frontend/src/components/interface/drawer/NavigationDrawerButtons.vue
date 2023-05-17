@@ -18,13 +18,16 @@
 
 <script>
     import { defineComponent } from "vue";
-    import { mapActions, mapState } from "pinia";
+    import { mapActions, mapWritableState } from "pinia";
     import { useUserStore } from "@/stores/user";
     import { openModal } from "jenesius-vue-modal";
     import LoadProjectModal from "@/components/modals/menu/LoadProjectModal.vue";
     import SaveProjectModal from "@/components/modals/menu/SaveProjectModal.vue";
     import ShowDebugCodeModal from "@/components/modals/code/ShowDebugCodeModal.vue";
     import { getCurrentThemeFromStorage, setCurrentThemeInStorage } from "@/javascript/storage/themeStorage";
+    import { useProjectStore } from "@/stores/project";
+    import DeleteProjectModal from "@/components/modals/menu/DeleteProjectModal.vue";
+    import { canUserEditProject } from "@/javascript/utils/authorizationUtils";
     import UserSettingsModal from "@/components/modals/settings/UserSettingsModal.vue";
 
     export default defineComponent({
@@ -34,6 +37,12 @@
 
         data() {
             const logoutButton = { title: "Wyloguj", icon: "mdi-logout", onClick: this.logout, hidden: !this.loggedIn };
+            const deleteButton = {
+                title: "Usuń projekt",
+                icon: "mdi-delete",
+                onClick: this.openDeleteModal,
+                hidden: true,
+            };
             const userEditButton = {
                 title: "Edycja konta",
                 icon: "mdi-account-edit",
@@ -48,6 +57,7 @@
             return {
                 darkModeButton,
                 logoutButton,
+                deleteButton,
                 userEditButton,
                 buttons: {
                     project: [
@@ -61,6 +71,7 @@
                             icon: "mdi-content-save",
                             onClick: this.openSaveProjectModal,
                         },
+                        deleteButton,
                         {
                             title: "Otwórz projekt",
                             icon: "mdi-folder-open",
@@ -91,6 +102,10 @@
 
             createNewProject() {
                 window.location = "/";
+            },
+
+            openDeleteModal() {
+                openModal(DeleteProjectModal, { projectToDelete: this.project });
             },
 
             openUserSettingsModal() {
@@ -138,16 +153,25 @@
             filterVisibleButtons(buttonsToFilter) {
                 return buttonsToFilter.filter((button) => !!button.hidden === false);
             },
+
+            shouldShowDeleteButton() {
+                return canUserEditProject(this.user, this.project);
+            },
         },
 
         computed: {
-            ...mapState(useUserStore, ["loggedIn"]),
+            ...mapWritableState(useUserStore, ["loggedIn", "user"]),
+            ...mapWritableState(useProjectStore, ["authorId", "projectId", "project"]),
         },
 
         watch: {
             loggedIn(newValue) {
                 this.logoutButton.hidden = !newValue;
                 this.userEditButton.hidden = !newValue;
+            },
+
+            authorId() {
+                this.deleteButton.hidden = !this.shouldShowDeleteButton();
             },
         },
     });

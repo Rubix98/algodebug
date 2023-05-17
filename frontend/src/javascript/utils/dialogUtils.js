@@ -14,7 +14,7 @@ export function getDialogDataForConverter(converter) {
     return {
         properties: [
             { label: "Nazwa", value: converter.title },
-            { label: "Kod", value: converter.code, fieldType: "textarea" },
+            { label: "Kod", value: converter.code, fieldType: "textarea", language: converter.language },
         ],
     };
 }
