@@ -1,14 +1,5 @@
 <template>
-    <div
-        :id="id"
-        class="algo-draggable-container"
-        v-on:drop="drop"
-        v-on:dragover="
-            (event) => {
-                event.preventDefault();
-            }
-        "
-    >
+    <div :id="id" class="algo-draggable-container" v-on:drop="drop" v-on:dragover.prevent>
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
@@ -20,7 +11,7 @@
                 draggable
                 style="cursor: move"
                 v-on:dragstart="dragStart"
-                v-on:dragenter="dragEnter"
+                v-on:dragenter.prevent="dragEnter"
                 :id="variable.id"
             >
                 {{ variable.name }}
@@ -33,7 +24,7 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["draggableList"],
+        props: ["id", "draggableList"],
 
         data() {
             return {
@@ -54,19 +45,17 @@
 
             dragStart: function (event) {
                 this.draggedVariableId = event.target.id;
-                event.dataTransfer.clearData();
-                event.dataTransfer.setData("text/plain", event.target.id);
             },
 
             dragEnter: function (event) {
-                event.preventDefault();
-                var data = event.dataTransfer.getData("text");
                 if (
-                    event.target.id != data &&
+                    event.target.id != this.draggedVariableId &&
                     event.target.parentNode.classList.contains("algo-draggable-container") &&
                     !event.target.classList.contains("algo-draggable-group-move")
                 ) {
-                    let index_from = this.selectedVariables.findIndex((variable) => variable.id === data);
+                    let index_from = this.selectedVariables.findIndex(
+                        (variable) => variable.id === this.draggedVariableId
+                    );
                     let index_to = this.selectedVariables.findIndex((variable) => variable.id === event.target.id);
                     let cutOut = this.selectedVariables.splice(index_from, 1)[0];
                     this.selectedVariables.splice(index_to, 0, cutOut);
