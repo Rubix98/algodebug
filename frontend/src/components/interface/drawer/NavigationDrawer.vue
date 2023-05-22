@@ -9,7 +9,7 @@
             <v-list-item :prepend-avatar="userAvatarImg" :title="userNameToShow" subtitle="" />
         </v-list>
         <v-divider />
-        <NavigationDrawerButtons ref="drawerButtons" />
+        <NavigationDrawerButtons />
         <NavigationFooter />
     </v-navigation-drawer>
 </template>
