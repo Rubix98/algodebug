@@ -1,6 +1,6 @@
 name: Deploy Frontend
 
-on: [ workflow_dispatch ]
+on: [workflow_dispatch]
 
 jobs:
   deploy_frontend:

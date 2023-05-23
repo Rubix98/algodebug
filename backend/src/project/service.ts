@@ -1,9 +1,10 @@
-import { ValidTypeOrError } from "../types";
+import { ValidTypeOrError } from "../shared/types";
 import { User } from "../user/model";
+import { RoleEnum } from "../user/structures/Role";
 import { Project, sanitizeProject } from "./model";
-import { ProjectLike } from "../types";
+import { TypeLike } from "../shared/types";
 import { getCollections } from "../db";
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
 const authorLookup = [
     {
@@ -26,26 +27,50 @@ const authorLookup = [
     },
 ];
 
-const canUserReadProjectDBQuery = (userId: ObjectId) => ({ $match: { $or: [{ public: true }, { authorId: userId }] } });
+const isAdmin = (user?: User): boolean => {
+    return user?.role == RoleEnum.ADMIN;
+};
 
-export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
-    try {
-        return [true, sanitizeProject(Project.check(req))];
-    } catch (error) {
-        return [false, error];
+const canUserReadProjectDBQuery = (user?: User) => {
+    if (isAdmin(user)) {
+        return { $match: {} };
+    } else {
+        return { $match: { $or: [{ public: true }, { authorId: new ObjectId(user?._id) }] } };
     }
 };
 
-const isUserAuthorOfProject = (user: User, project: ProjectLike): boolean => {
+const isAuthorField = (user?: User) => {
+    return {
+        $addFields: {
+            isAuthor: {
+                $cond: {
+                    if: { $eq: ["$authorId", new ObjectId(user?._id)] },
+                    then: 1,
+                    else: 0,
+                },
+            },
+        },
+    };
+};
+
+export const validateProject = (req: unknown): ValidTypeOrError<Project> => {
+    try {
+        return { isOk: true, value: sanitizeProject(Project.check(req)) };
+    } catch (error) {
+        return { isOk: false, error: error };
+    }
+};
+
+const isUserAuthorOfProject = (user: User, project: TypeLike<Project>): boolean => {
     return project.authorId.equals(new ObjectId(user?._id));
 };
 
-export const canUserReadProject = (user: User, project: ProjectLike): boolean => {
-    return project.public || isUserAuthorOfProject(user, project);
+export const canUserReadProject = (user: User, project: TypeLike<Project>): boolean => {
+    return project.public || isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
-export const canUserEditProject = (user: User, project: ProjectLike): boolean => {
-    return isUserAuthorOfProject(user, project);
+export const canUserEditProject = (user: User, project: TypeLike<Project>): boolean => {
+    return isUserAuthorOfProject(user, project) || isAdmin(user);
 };
 
 /**
@@ -53,26 +78,25 @@ export const canUserEditProject = (user: User, project: ProjectLike): boolean =>
  * If user is not provided, only public projects are returned.
  * Can throw when database error occurs.
  */
-export const getAllProjectsWithAuthor = async (user?: User): Promise<ProjectLike[]> => {
+export const getAllProjectsWithAuthor = async (user?: User): Promise<TypeLike<WithId<Project>>[]> => {
     const { projects } = getCollections();
-    const id = new ObjectId(user?._id);
 
     const result = await projects
-        .aggregate([canUserReadProjectDBQuery(id), ...authorLookup])
-        .sort({ modificationDate: -1 })
+        .aggregate([{ ...canUserReadProjectDBQuery(user) }, ...authorLookup, isAuthorField(user)])
+        .sort({ isAuthor: -1, modificationDate: -1 })
         .toArray();
 
-    return result as ProjectLike[];
+    return result as TypeLike<WithId<Project>>[];
 };
 
 /**
  * Returns project with matching id with author information included as author field.
  * Can throw when database error occurs.
  */
-export const getProjectByIdWithAuthor = async (projectId: ObjectId): Promise<ProjectLike> => {
+export const getProjectByIdWithAuthor = async (projectId: ObjectId): Promise<TypeLike<WithId<Project>>> => {
     const { projects } = getCollections();
 
     const result = await projects.aggregate([{ $match: { _id: projectId } }, ...authorLookup]).next();
 
-    return result as ProjectLike;
+    return result as TypeLike<WithId<Project>>;
 };

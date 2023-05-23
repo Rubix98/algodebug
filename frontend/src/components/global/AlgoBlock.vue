@@ -2,7 +2,10 @@
     <div class="algo-block">
         <v-card class="algo-block__card" elevation="3">
             <v-card-title class="algo-block__card__title">
-                {{ header }}
+                <div>
+                    {{ header }}
+                    <slot name="tooltip"></slot>
+                </div>
                 <slot name="checkbox"></slot>
             </v-card-title>
             <v-divider />
