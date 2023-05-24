@@ -29,5 +29,5 @@ export function sendRequest(url, data = {}, method) {
 }
 
 function validateMethod(method) {
-    return method && ["get", "post", "put"].includes(method.toLowerCase());
+    return method && ["get", "post", "put", "delete"].includes(method.toLowerCase());
 }

@@ -4,13 +4,15 @@ import session from "express-session";
 import cors from "cors";
 import * as dotenv from "dotenv";
 
-import { getProjectById, getAllProjects, saveProject, updateProject } from "./project/endpoints";
+import { getProjectById, getAllProjects, saveProject, updateProject, deleteProject } from "./project/endpoints";
 import { getAllConverters, getConverterById, saveConverter, updateConverter } from "./converter/endpoints";
 import { compileCode } from "./compiler/endpoints";
 import { CompilerTypes } from "./compiler/compilers/compilerFactory";
 import { initializePassport } from "./user/service";
+
 import { authCallback, authLogout, authSuccess, authUser, authVerify, updateUsername } from "./user/endpoints";
 import { initializeDatabase } from "./db";
+
 interface ResponseError extends Error {
     status?: number;
 }
@@ -95,6 +97,7 @@ app.get("/project/findAll", getAllProjects);
 app.get("/project/find/:id", getProjectById);
 app.post("/project/save", isLoggedIn, saveProject);
 app.put("/project/save", isLoggedIn, updateProject);
+app.delete("/project/:id", isLoggedIn, deleteProject);
 
 // converter
 app.get("/converter/findAll", getAllConverters);
@@ -106,7 +109,7 @@ app.put("/converter/save", updateConverter);
 app.post("/compiler/compile", compileCode);
 
 // user
-app.put("/user/username", updateUsername);
+app.put("/user/username", isLoggedIn, updateUsername);
 
 // passport
 // order of these routes is important

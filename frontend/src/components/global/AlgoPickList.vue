@@ -16,16 +16,10 @@
                         <v-list-item-title v-if="index === 0">
                             {{ property.value }}
                         </v-list-item-title>
-                        <v-list-item-subtitle v-else>
-                            {{ property.label }}:
-
-                            <span v-if="property.fieldType === 'textarea'">
-                                <AlgoTextarea class="small" :value="property.value" :readonly="true" />
-                            </span>
-                            <span v-else>
-                                {{ property.value }}
-                            </span>
+                        <v-list-item-subtitle v-else-if="property.fieldType !== 'textarea'">
+                            {{ property.label }}: {{ property.value }}
                         </v-list-item-subtitle>
+                        <AlgoCode v-else :code="property.value" :language="property.language" class="code" />
                     </div>
                 </div>
                 <v-list-item-title v-else>
@@ -38,11 +32,11 @@
 </template>
 
 <script>
-    import AlgoTextarea from "@/components/global/AlgoTextarea.vue";
+    import AlgoCode from "@/components/global/AlgoCode.vue";
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        components: { AlgoTextarea },
+        components: { AlgoCode },
         emits: ["selectOptionEvent"],
         props: ["options"],
 
@@ -60,5 +54,12 @@
     a {
         color: inherit;
         text-decoration: inherit;
+    }
+</style>
+
+<style scoped>
+    .code {
+        margin-top: 5px;
+        margin-bottom: 30px;
     }
 </style>
