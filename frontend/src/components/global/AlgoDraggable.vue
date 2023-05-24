@@ -1,5 +1,5 @@
 <template>
-    <div :id="id" class="algo-draggable-container" v-on:drop="drop" v-on:dragover.prevent>
+    <div :id="id" class="algo-draggable-container">
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
@@ -9,9 +9,10 @@
                 :key="variable.id"
                 @click:close="deleteVariable(variable)"
                 draggable
-                style="cursor: move"
+                style="cursor: grab"
                 v-on:dragstart="dragStart"
-                v-on:dragenter.prevent="dragEnter"
+                v-on:dragenter="dragEnter"
+                v-on:dragend="dragEnd"
                 :id="variable.id"
             >
                 {{ variable.name }}
@@ -62,7 +63,7 @@
                 }
             },
 
-            drop: function () {
+            dragEnd: function () {
                 this.draggedVariableId = "";
             },
         },
