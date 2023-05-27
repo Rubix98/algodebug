@@ -13,6 +13,8 @@ const parsingMap = {
     shape: parsePoints,
     array: parseArrayOrString,
 
+    chart: parsePoints,
+
     array_index: parseArray,
     array_part: parseArrayOfPairs,
 };
@@ -63,7 +65,6 @@ function parseEdges(value) {
 
 function parseArray(value) {
     let array = [];
-
     const delimiter = value.includes("\n") ? "\n" : " ";
     for (let element of value.split(delimiter)) {
         if (!element) continue;
