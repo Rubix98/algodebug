@@ -61,7 +61,6 @@ export class ChartPainter extends Painter {
         let segmentsOfYAxis = maxY / unitY;
         let segmentsOfXAxis = maxX / unitX;
         for (let i = 0; i < segmentsOfYAxis; i++) {
-            const pointGroup = new Konva.Group();
             this.mainGroup.add(
                 new Konva.Line({
                     points: [
