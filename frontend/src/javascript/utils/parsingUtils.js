@@ -13,7 +13,7 @@ const parsingMap = {
     shape: parsePoints,
     array: parseArrayOrString,
 
-    chart: parsePoints,
+    chart: parseChart,
 
     array_index: parseArray,
     array_part: parseArrayOfPairs,
@@ -61,6 +61,18 @@ function parseEdges(value) {
     }
 
     return edges;
+}
+
+function parseChart(value) {
+    let array = parseArray(value);
+    let points = [];
+    for (let i = 0; i < array.length; i++) {
+        points.push({
+            x: i,
+            y: Number(array[i]),
+        });
+    }
+    return points;
 }
 
 function parseArray(value) {

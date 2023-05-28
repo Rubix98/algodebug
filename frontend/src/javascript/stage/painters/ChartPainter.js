@@ -28,6 +28,7 @@ export class ChartPainter extends Painter {
     }
 
     drawAxis(points) {
+        let minY = points.map((point) => point.y).getMinValue();
         let maxX = points.map((point) => point.x).getMaxValue();
         let maxY = points.map((point) => point.y).getMaxValue();
         this.mainGroup.add(
@@ -46,19 +47,19 @@ export class ChartPainter extends Painter {
                 tension: 1,
             })
         );
-        this.drawAxisIndicators(maxX, maxY);
+        this.drawAxisIndicators(maxX, maxY, minY);
     }
 
-    drawAxisIndicators(maxX, maxY) {
+    drawAxisIndicators(maxX, maxY, minY) {
         let unitY = 1;
         let unitX = 1;
         while (maxX / unitX > 10) {
             unitX *= 10;
         }
-        while (maxY / unitY > 10) {
+        while ((maxY - minY) / unitY > 10) {
             unitY *= 10;
         }
-        let segmentsOfYAxis = maxY / unitY;
+        let segmentsOfYAxis = (maxY - minY) / unitY;
         let segmentsOfXAxis = maxX / unitX;
         for (let i = 0; i < segmentsOfYAxis; i++) {
             this.mainGroup.add(
@@ -76,14 +77,14 @@ export class ChartPainter extends Painter {
             );
             this.mainGroup.add(
                 new Konva.Text({
-                    text: String(Math.round(unitY * (segmentsOfYAxis - i))),
+                    text: String(Math.round(minY + unitY * (segmentsOfYAxis - i))),
                     x: -this.boxSize - 4 * this.indicatorWidth,
                     y: -this.boxSize / 2 + i * (this.boxSize / segmentsOfYAxis) - this.indicatorWidth,
                     fill: this.color,
                 })
             );
         }
-        for (let i = 1; i <= segmentsOfXAxis; i++) {
+        for (let i = segmentsOfXAxis; i > 0; i--) {
             this.mainGroup.add(
                 new Konva.Line({
                     points: [
