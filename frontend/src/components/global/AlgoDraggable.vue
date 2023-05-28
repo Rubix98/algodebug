@@ -5,7 +5,6 @@
                 closable
                 v-for="variable in this.selectedVariables"
                 class="ma-2"
-                v-bind:class="{ dragged: draggedVariableId === variable.id }"
                 :key="variable.id"
                 @click:close="deleteVariable(variable)"
                 draggable
@@ -50,6 +49,7 @@
 
             dragEnter: function (event) {
                 if (
+                    this.draggedVariableId != "" &&
                     event.target.id != this.draggedVariableId &&
                     event.target.parentNode.classList.contains("algo-draggable-container") &&
                     !event.target.classList.contains("algo-draggable-group-move")
@@ -75,10 +75,6 @@
         height: 15%;
         white-space: nowrap;
         overflow-y: auto;
-    }
-
-    .dragged {
-        transform: translate(0px, -5px);
     }
 
     .algo-draggable-group-move,
