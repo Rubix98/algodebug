@@ -63,6 +63,13 @@
                 ],
             };
         },
+        created() {
+            this.emitter.on("first-frame-shortcut", this.icons[0].action);
+            this.emitter.on("previous-frame-shortcut", this.icons[1].action);
+            this.emitter.on("toggle-animation-shortcut", this.icons[2].action);
+            this.emitter.on("next-frame-shortcut", this.icons[3].action);
+            this.emitter.on("last-frame-shortcut", this.icons[4].action);
+        },
         unmounted() {
             clearInterval(this.animationInterval);
         },
