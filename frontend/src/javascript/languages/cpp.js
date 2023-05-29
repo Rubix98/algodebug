@@ -1,112 +1,27 @@
-import defines from "./cpp/defines.cpp?raw";
-import defaultConverters from "./cpp/converters.cpp?raw";
+import prefix from "./cpp/prefix.cpp?raw";
+import reservedKeywords from "./cpp/reservedKeywords.txt?raw";
 
-export function getDefines() {
-    return defines;
-}
+const cpp = {
+    getCodePrefix: () => {
+        return prefix;
+    },
 
-export function getDefaultConverters() {
-    return defaultConverters;
-}
+    getReservedKeywords: () => {
+        return new Set(reservedKeywords.split("\n"));
+    },
 
-export const reservedKeywords = new Set([
-    "alignas",
-    "alignof",
-    "and",
-    "and_eq",
-    "asm",
-    "atomic_cancel",
-    "atomic_commit",
-    "atomic_noexcept",
-    "auto",
-    "bitand",
-    "bitor",
-    "bool",
-    "break",
-    "case",
-    "catch",
-    "char",
-    "char8_t",
-    "char16_t",
-    "char32_t",
-    "class",
-    "compl",
-    "concept",
-    "const",
-    "consteval",
-    "constexpr",
-    "constinit",
-    "const_cast",
-    "continue",
-    "co_await",
-    "co_return",
-    "co_yield",
-    "decltype",
-    "default",
-    "delete",
-    "do",
-    "double",
-    "dynamic_cast",
-    "else",
-    "enum",
-    "explicit",
-    "export",
-    "extern",
-    "false",
-    "float",
-    "for",
-    "friend",
-    "goto",
-    "if",
-    "inline",
-    "int",
-    "long",
-    "mutable",
-    "namespace",
-    "new",
-    "noexcept",
-    "not",
-    "not_eq",
-    "nullptr",
-    "operator",
-    "or",
-    "or_eq",
-    "private",
-    "protected",
-    "public",
-    "reflexpr",
-    "register",
-    "reinterpret_cast",
-    "requires",
-    "return",
-    "short",
-    "signed",
-    "sizeof",
-    "static",
-    "static_assert",
-    "static_cast",
-    "struct",
-    "switch",
-    "synchronized",
-    "template",
-    "this",
-    "thread_local",
-    "throw",
-    "true",
-    "try",
-    "typedef",
-    "typeid",
-    "typename",
-    "union",
-    "unsigned",
-    "using",
-    "virtual",
-    "void",
-    "volatile",
-    "wchar_t",
-    "while",
-    "xor",
-    "xor_eq",
-    "include",
-    "define",
-]);
+    getConvertersPosition: (code) => {
+        let includeStartPosition = code.lastIndexOf("#include");
+        let includeEndPosition = code.indexOf(">", includeStartPosition);
+        let usingNamespaceStartPosition = code.lastIndexOf("using namespace");
+        let usingNamespaceEndPosition = code.indexOf(";", usingNamespaceStartPosition);
+
+        let position = Math.max(includeEndPosition, usingNamespaceEndPosition) + 1;
+        return position;
+    },
+
+    getConverterDeclaration: (code) => {
+        return code.slice(0, code.indexOf("{")).trim() + ";";
+    },
+};
+export default cpp;

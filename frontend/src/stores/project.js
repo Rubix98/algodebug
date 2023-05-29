@@ -27,7 +27,8 @@ export const useProjectStore = defineStore("project", {
                 this.sceneObjectsFlat,
                 this.variables,
                 this.breakpoints,
-                this.converters
+                this.converters,
+                this.language
             ).parse();
         },
 

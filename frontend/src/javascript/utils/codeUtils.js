@@ -1,10 +1,11 @@
 import { useProjectStore } from "@/stores/project";
 import { applyChangeOnInterval, areIntervalsIntersectOrTouching, isIntervalEmpty } from "./intervalsUtils";
 import lineColumn from "line-column";
-import { reservedKeywords as cppReservedKeywords } from "@/javascript/languages/cpp";
+import { getLanguage } from "@/javascript/languages/languageList";
 
-export function getVariablesArray(language, code) {
-    const reservedKeywords = getReservedKeywords(language);
+export function getVariablesArray(languageName, code) {
+    const language = getLanguage(languageName);
+    const reservedKeywords = language.getReservedKeywords();
     let variables = code.getWordsArray();
     variables = variables.filter((word) => !reservedKeywords.has(word));
     variables = variables.filter((word) => word[0] < "0" || word[0] > "9");
@@ -136,11 +137,6 @@ function expandRight(varObj, code) {
     let i = varObj.end;
     while (i < code.length && isLegalVariableCharacter(code[i])) i++;
     varObj.end = i;
-}
-
-function getReservedKeywords(language = "cpp") {
-    if (language == "cpp") return cppReservedKeywords;
-    return [];
 }
 
 function findFirstLegalVariableName(text) {

@@ -32,12 +32,13 @@ export class CodeParser {
         },
     };
 
-    constructor(code, sceneObjectsFlat, variables, breakpoints, converters) {
+    constructor(code, sceneObjectsFlat, variables, breakpoints, converters, language) {
         this.code = code;
         this.sceneObjectsFlat = sceneObjectsFlat;
         this.variables = variables;
         this.breakpoints = breakpoints;
         this.converters = converters;
+        this.language = language;
 
         this.parsedBreakpoints = [];
         this.stack = [];
@@ -121,9 +122,8 @@ export class CodeParser {
     parseCode() {
         this.code = CodeParserUtils.removeVariableTags(this.code);
         this.code = CodeParserUtils.replaceBreakpointTags(this.code, this.sceneObjectsFlat, this.parsedBreakpoints);
-        this.code = CodeParserUtils.insertConvertersAfterIncludes(this.code, this.converters);
+        this.code = CodeParserUtils.insertConvertersAfterIncludes(this.code, this.converters, this.language);
         this.code = CodeParserUtils.insertConvertersAtTheEnd(this.code, this.converters);
-        this.code = CodeParserUtils.insertAlgodebugMacros(this.code);
-        this.code = CodeParserUtils.insertNecessaryIncludes(this.code);
+        this.code = CodeParserUtils.insertCodePrefix(this.code, this.language);
     }
 }
