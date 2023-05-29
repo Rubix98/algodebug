@@ -13,6 +13,7 @@ export const ObjectType = Union(
     Literal("points_point"),
     Literal("points_stretch"),
     Literal("points_path"),
+    Literal("chart"),
     Literal("circle"),
     Literal("shape")
 );
