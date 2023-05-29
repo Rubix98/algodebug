@@ -121,6 +121,9 @@ export const useProjectStore = defineStore("project", {
         setWaitingForCompile(newValue) {
             this.waitingForCompile = newValue;
         },
+        setLanguage(newValue) {
+            this.language = newValue;
+        },
         switchCurrentTestCase(index) {
             this.currentTestCaseId = index;
         },
