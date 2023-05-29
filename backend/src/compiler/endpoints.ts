@@ -10,16 +10,9 @@ export const compileCode = async (req: Request, res: Response) => {
         return;
     }
     try {
-        let response = await sendRequestsToCompilerAPI(req.body);
-        let numberOfErrors = response.filter((response) => !response.success).length;
-        if (numberOfErrors === 0) {
-            res.status(200).json(response);
-        } else if (numberOfErrors < response.length) {
-            res.status(206).json(response);
-        } else {
-            let errorMessage = response.map((response) => (!response.success ? response.error : "")).join("\n");
-            res.status(400).json(errorMessage);
-        }
+        const [isOk, response] = await sendRequestsToCompilerAPI(req.body);
+        let status = isOk ? 200 : 400;
+        res.status(status).json(response);
     } catch (err) {
         console.log(err);
         res.status(500).json(err);

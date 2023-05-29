@@ -13,6 +13,14 @@
             </AlgoBlock>
 
             <AlgoBlock class="full-size ma-0" header="Dane wyjściowe" v-if="this.isRunning">
+                <template #tooltip>
+                    <AlgoTooltip
+                        v-if="compilationError"
+                        icon="mdi-exclamation-thick"
+                        :text="compilationError"
+                        color="red"
+                    ></AlgoTooltip>
+                </template>
                 <template #checkbox>
                     <v-checkbox-btn
                         v-model="isDynamicOutputOn"
@@ -31,10 +39,10 @@
                     <AlgoTooltip
                         icon="mdi-help-circle"
                         text="Poniższy błąd dotyczy kodu debugującego. Kliknij aby zobaczyć szczegóły"
-                        :onClick="showExtendedCode"
+                        @click="showExtendedCode"
                     ></AlgoTooltip>
                 </template>
-                <AlgoTextarea :value="output" :auto-grow="true" :readonly="true" />
+                <AlgoTextarea :value="compilationError" :auto-grow="true" :readonly="true" />
             </AlgoBlock>
         </div>
     </div>
@@ -84,12 +92,12 @@
             },
 
             output() {
-                if (!this.lastCompilationSuccess) {
-                    return this.currentTestCase.error;
-                }
                 let endIndex = this.isDynamicOutputOn ? this.currentFrame.id + 1 : undefined;
-
                 return this.currentTestCase.partialOutputs.slice(0, endIndex).join("");
+            },
+
+            compilationError() {
+                return this.currentTestCase.error;
             },
         },
     });
