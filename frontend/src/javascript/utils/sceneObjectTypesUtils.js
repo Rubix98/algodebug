@@ -15,6 +15,8 @@ const SCENE_OBJECT_TYPES = [
     { key: "points_stretch", label: "Odcinki" },
     { key: "points_path", label: "Łamana" },
 
+    { key: "chart", label: "Wykres" },
+
     { key: "circle", label: "Okrąg" },
 
     { key: "shape", label: "Wielokąt" },
