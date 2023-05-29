@@ -216,6 +216,7 @@ export const useProjectStore = defineStore("project", {
                 .then((responseData) => {
                     this.testData.forEach((testCase, index) => {
                         Object.assign(testCase, responseData[index].output);
+                        testCase.error = responseData[index].error;
                     });
                     this.isRunning = true;
                     this.lastCompilationSuccess = true;

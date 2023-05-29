@@ -20,6 +20,10 @@
     export default defineComponent({
         name: "RunButton",
 
+        created() {
+            this.emitter.on("run-project-shortcut", this.runButtonPressed);
+        },
+
         methods: {
             ...mapActions(useProjectStore, ["setIsRunning", "setWaitingForCompile", "switchCurrentFrame", "compile"]),
             runButtonPressed() {

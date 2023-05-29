@@ -2,7 +2,9 @@ import { CompilerMultiTestsRequest, CompilerResponse } from "./types";
 import { Code } from "./structures/Code";
 import { getCompiler } from "./compilers/compilerFactory";
 
-export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsRequest): Promise<CompilerResponse[]> {
+export async function sendRequestsToCompilerAPI(
+    request: CompilerMultiTestsRequest
+): Promise<[true, CompilerResponse[]] | [false, string]> {
     let results: CompilerResponse[] = [];
     const compiler = getCompiler();
     for (const input of request.inputs) {
@@ -11,10 +13,10 @@ export async function sendRequestsToCompilerAPI(request: CompilerMultiTestsReque
             input: input,
             language: request.language,
         });
+        if (!result.success) return [false, result.error];
         results.push(result);
-        if (!result.success) return results;
     }
-    return results;
+    return [true, results];
 }
 
 type validCodeOrError = [true, Code] | [false, unknown];
