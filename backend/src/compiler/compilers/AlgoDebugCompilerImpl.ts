@@ -22,6 +22,7 @@ export class AlgoDebugCompilerImpl implements Compiler {
             return {
                 success: true,
                 output: new OutputParser(response.output).parse(),
+                error: response.error,
             };
         } else {
             return {
@@ -36,6 +37,7 @@ export class AlgoDebugCompilerImpl implements Compiler {
 type AlgoDebugCompilerApiResponse = {
     success: true;
     output: string;
+    error: string;
 } | {
     success: false;
     error: string;

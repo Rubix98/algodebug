@@ -23,7 +23,6 @@ export class OutputParser {
 
     parse(): CodeOutput {
         let result: CodeOutput = {
-            fullOutput: this.output,
             partialOutputs: [],
             frames: [],
         };
@@ -36,7 +35,9 @@ export class OutputParser {
                 this.position = breakpoint.end;
             }
         } while (found);
-        result.partialOutputs.push(this.output.substring(this.position));
+        if (!this.output.substring(this.position).includes(BREAKPOINT_TAG)) {
+            result.partialOutputs.push(this.output.substring(this.position));
+        }
 
         return result;
     }
