@@ -59,6 +59,7 @@ export class ChartPainter extends Painter {
         while ((maxY - minY) / unitY > 10) {
             unitY *= 10;
         }
+
         let segmentsOfYAxis = (maxY - minY) / unitY;
         let segmentsOfXAxis = maxX / unitX;
         for (let i = 0; i < segmentsOfYAxis; i++) {
@@ -78,7 +79,7 @@ export class ChartPainter extends Painter {
             this.mainGroup.add(
                 new Konva.Text({
                     text: String(Math.round(minY + unitY * (segmentsOfYAxis - i))),
-                    x: -this.boxSize - 4 * this.indicatorWidth,
+                    x: -this.boxSize - (Math.log10(maxY) + 2) * this.indicatorWidth,
                     y: -this.boxSize / 2 + i * (this.boxSize / segmentsOfYAxis) - this.indicatorWidth,
                     fill: this.color,
                 })
