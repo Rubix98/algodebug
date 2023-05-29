@@ -1,16 +1,7 @@
 <template>
     <AlgoModal title="Zaznacz zmienne" closeButtonLabel="Gotowe">
-        <div id="variable-chips-container">
-            <v-chip
-                closable
-                v-for="variable in this.selectedVariables"
-                class="ma-2"
-                :key="variable.id"
-                @click:close="deleteVariable(variable)"
-            >
-                {{ variable.name }}
-            </v-chip>
-        </div>
+        <AlgoDraggable id="variable-chips" :draggableList="this.$props.sceneObject.variables" />
+
         <CodeViewer
             id="pick-variable-viewer"
             :code="this.code"
@@ -26,12 +17,13 @@
 <script>
     import CodeViewer from "../../mainPage/codeEditor/CodeViewer.vue";
     import AlgoModal from "@/components/global/AlgoModal.vue";
+    import AlgoDraggable from "../../global/AlgoDraggable.vue";
     import { defineComponent } from "vue";
     import { mapState } from "pinia";
     import { useProjectStore } from "@/stores/project";
 
     export default defineComponent({
-        components: { CodeViewer, AlgoModal },
+        components: { CodeViewer, AlgoModal, AlgoDraggable },
 
         props: ["callback", "sceneObject"],
 
@@ -66,12 +58,6 @@
         height: 85vh;
         display: flex;
         flex-direction: column;
-    }
-
-    #variable-chips-container {
-        height: 15%;
-        white-space: nowrap;
-        overflow-y: auto;
     }
 
     #pick-variable-viewer {
