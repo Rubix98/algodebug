@@ -1,7 +1,7 @@
 <template>
     <v-tooltip :text="text">
         <template v-slot:activator="{ props }">
-            <v-icon size="25" v-bind="props" @click="handleClick">{{ icon }}</v-icon>
+            <v-icon size="25" :color="color" v-bind="props">{{ icon }}</v-icon>
         </template>
     </v-tooltip>
 </template>
@@ -17,14 +17,8 @@
             icon: {
                 type: String,
             },
-            onClick: {
-                type: Function,
-            },
-        },
-
-        methods: {
-            handleClick() {
-                this.onClick(); // Wywołanie dostarczonej funkcji onClick
+            color: {
+                type: String,
             },
         },
     });

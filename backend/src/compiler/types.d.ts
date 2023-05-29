@@ -14,13 +14,13 @@ export type CompilerRequest = {
 export type CompilerResponse = {
     success: true;
     output: CodeOutput;
+    error?: string
 } | {
     success: false;
     error: string;
 }
 
 export type CodeOutput = {
-    fullOutput: string;
     partialOutputs: string[];
     frames: CodeBreakpoint[];
 };
