@@ -95,6 +95,11 @@
 
         created() {
             this.updateDarkLightModeButton();
+
+            this.emitter.on("open-save-project-modal-shortcut", this.openSaveProjectModal);
+            this.emitter.on("create-new-project-shortcut", this.createNewProject);
+            this.emitter.on("open-load-project-modal-shortcut", this.openLoadProjectModal);
+            this.emitter.on("show-extended-code-shortcut", this.showExtendedCode);
         },
 
         methods: {

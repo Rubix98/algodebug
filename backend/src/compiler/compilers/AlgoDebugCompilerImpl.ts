@@ -18,11 +18,11 @@ export class AlgoDebugCompilerImpl implements Compiler {
             headers: { "Content-Type": "application/json" },
         });
         const response: AlgoDebugCompilerApiResponse = await apiResponse.json();
-
         if (response.success) {
             return {
                 success: true,
                 output: new OutputParser(response.output).parse(),
+                error: response.error,
             };
         } else {
             return {
@@ -37,6 +37,7 @@ export class AlgoDebugCompilerImpl implements Compiler {
 type AlgoDebugCompilerApiResponse = {
     success: true;
     output: string;
+    error: string;
 } | {
     success: false;
     error: string;

@@ -34,7 +34,6 @@ export const sanitizeSceneObject = (s: SceneObject): SceneObject => {
         variables: sanitizeVariables(s.variables),
         converter: sanitizeConverter(s.converter),
     } as SceneObject;
-
     if (s.color) result.color = s.color;
     if (s.position) result.position = s.position;
     if (s.subobjects) result.subobjects = s.subobjects.map(sanitizeSceneObject);

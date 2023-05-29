@@ -24,6 +24,7 @@
     import NavigationDrawer from "@/components/interface/drawer/NavigationDrawer.vue";
     import { useCachedListStore } from "@/stores/cachedList";
     import { mapActions } from "pinia";
+    import { handleShortcuts } from "./javascript/utils/shortcutsUtils";
 
     export default defineComponent({
         name: "App",
@@ -41,6 +42,8 @@
             this.updateProjects();
             this.updateConverters();
 
+            window.addEventListener("keydown", this.keyDown);
+
             console.log(`[GIT INFO]\nCommit: ${GIT_COMMIT_INFO}\nBranch: ${GIT_BRANCH_NAME}`);
         },
 
@@ -55,6 +58,10 @@
             },
             changeDrawerValueTo(value) {
                 this.showDrawer = value;
+            },
+
+            keyDown(event) {
+                handleShortcuts(event, this.emitter);
             },
         },
     });
