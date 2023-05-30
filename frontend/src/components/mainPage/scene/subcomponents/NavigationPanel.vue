@@ -63,7 +63,7 @@
                 ],
             };
         },
-        created() {
+        mounted() {
             this.emitter.on("first-frame-shortcut", this.icons[0].action);
             this.emitter.on("previous-frame-shortcut", this.icons[1].action);
             this.emitter.on("toggle-animation-shortcut", this.icons[2].action);
@@ -71,6 +71,11 @@
             this.emitter.on("last-frame-shortcut", this.icons[4].action);
         },
         unmounted() {
+            this.emitter.off("first-frame-shortcut", this.icons[0].action);
+            this.emitter.off("previous-frame-shortcut", this.icons[1].action);
+            this.emitter.off("toggle-animation-shortcut", this.icons[2].action);
+            this.emitter.off("next-frame-shortcut", this.icons[3].action);
+            this.emitter.off("last-frame-shortcut", this.icons[4].action);
             clearInterval(this.animationInterval);
         },
         methods: {

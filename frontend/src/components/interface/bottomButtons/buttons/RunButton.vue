@@ -20,8 +20,12 @@
     export default defineComponent({
         name: "RunButton",
 
-        created() {
+        mounted() {
             this.emitter.on("run-project-shortcut", this.runButtonPressed);
+        },
+
+        unmounted() {
+            this.emitter.off("run-project-shortcut", this.runButtonPressed);
         },
 
         methods: {

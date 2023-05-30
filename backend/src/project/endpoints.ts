@@ -71,7 +71,7 @@ export const saveProject = async (req: Request, res: Response) => {
     const project = validateProject(data);
 
     if (!project.isOk) {
-        res.status(400).json({ error: "Invalid request body: " + project });
+        res.status(400).json({ error: "Invalid request body: " + project.error });
         return;
     }
 
@@ -98,7 +98,7 @@ export const updateProject = async (req: Request, res: Response) => {
     let projectId, projectToEdit;
 
     if (!project.isOk) {
-        res.status(400).json({ error: "Invalid request body: " + project });
+        res.status(400).json({ error: "Invalid request body: " + project.error });
         return;
     }
 
@@ -127,7 +127,7 @@ export const updateProject = async (req: Request, res: Response) => {
     }
 
     try {
-        const result = await projects.updateOne({ _id: projectId }, { $set: project });
+        const result = await projects.updateOne({ _id: projectId }, { $set: project.value });
         res.status(200).json(result);
     } catch (err) {
         res.status(500).json({ error: "Database error" });
