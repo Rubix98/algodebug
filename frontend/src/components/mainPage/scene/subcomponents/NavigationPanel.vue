@@ -51,7 +51,6 @@
                         action: () => {
                             this.stopAnimation();
                             this.setFrameId(this.currentFrame.id + 1);
-                            console.log(this.currentFrame.id);
                         },
                     },
                     {
