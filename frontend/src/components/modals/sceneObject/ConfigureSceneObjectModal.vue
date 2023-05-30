@@ -22,7 +22,7 @@
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisane zmienne', 'Konwerter', 'Kolor']"
-            :emptyRow="{ type: null, variables: [], converter: null, color: '#000000' }"
+            :emptyRow="emptyRow"
         ></AlgoTable>
 
         <template #buttons>
@@ -63,6 +63,12 @@
                 },
 
                 modelBeforeChanges: "",
+
+                swatchColors: [['#FF0000', '#00FF00'], ['#0000FF', '#FFFF00'], ['#00FFFF', '#FF00FF']],
+
+                presetColors: ['#FF0000', '#FF8000', '#FFFF00', '#80FF00', '#00FF00', '#008000', '#0080FF', '#0000FF', '#8000FF', '#FF00FF', '#FF0080', '#FF80FF', '#FF8000', '#FF0080', '#FF80FF', '#FF8000', '#8000FF', '#0080FF', '#FF0080', '#80FF00', '#008000', '#0080FF', '#0000FF', '#8000FF', '#FF00FF', '#FF0080', '#FF80FF', '#FF8000', '#8000FF', '#0080FF'],
+
+                currentColorIndex: 0,
             };
         },
 
@@ -143,6 +149,21 @@
                 return this.sceneObjectTypes.map((e) => {
                     return e.label;
                 });
+            },
+
+            nextColor() {
+                let index = this.model.subobjects.length % this.presetColors.length;
+            
+                return this.presetColors[index];
+            },
+
+            emptyRow() {
+                return {
+                    type: null,
+                    variables: [],
+                    converter: null,
+                    color: this.nextColor
+                };
             },
 
             hasSubtypes() {
