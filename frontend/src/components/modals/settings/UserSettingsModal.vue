@@ -16,7 +16,7 @@
             <v-text-field label="Nazwa użytkownika" v-model="settingsUsername" />
         </div>
         <template #buttons>
-            <v-btn color="primary" @click="onUpdateUser">Zaaktualizuj</v-btn>
+            <v-btn color="primary" @click="onUpdateUser">Zaktualizuj</v-btn>
         </template>
     </AlgoModal>
 </template>
