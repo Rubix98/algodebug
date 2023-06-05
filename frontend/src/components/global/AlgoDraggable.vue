@@ -45,9 +45,7 @@
                     event.target.parentNode.classList.contains("algo-draggable-container") &&
                     !event.target.classList.contains("algo-draggable-group-move")
                 ) {
-                    let index_from = this.draggableList.findIndex(
-                        (variable) => variable.id == this.draggedVariableId
-                    );
+                    let index_from = this.draggableList.findIndex((variable) => variable.id == this.draggedVariableId);
                     let index_to = this.draggableList.findIndex((variable) => variable.id == event.target.id);
                     let cutOut = this.draggableList.splice(index_from, 1)[0];
                     this.draggableList.splice(index_to, 0, cutOut);
