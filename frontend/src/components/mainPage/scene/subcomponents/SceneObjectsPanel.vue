@@ -1,17 +1,16 @@
 <template>
-    <div class="scene-objects-panel-container">
-        <v-chip
-            closable
-            v-for="sceneObject in this.sceneObjects"
-            class="ma-2"
-            :key="sceneObject.id"
-            @click="configureSceneObject(sceneObject, $event)"
-            @click:close="deleteSceneObject(sceneObject.id)"
-        >
-            {{ sceneObjectLabel(sceneObject) }}
-            <span class="subObjectStyle" v-if="hasSubObject(sceneObject)"> [{{ sceneObject.subobjects.length }}] </span>
-        </v-chip>
-    </div>
+    <AlgoDraggable
+        class="scene-objects-panel-container"
+        id="scene-objects-chips"
+        :draggableList="this.sceneObjects"
+        :on-click-close="deleteSceneObjectId"
+        :on-click="configureSceneObject"
+        :content="
+            (sceneObject) => {
+                return `${sceneObjectLabel(sceneObject)}`;
+            }
+        "
+    />
 </template>
 
 <script>
@@ -22,20 +21,22 @@
     import { useProjectStore } from "@/stores/project";
     import { mapActions, mapState } from "pinia";
     import { isEmpty } from "lodash";
+    import AlgoDraggable from "../../../global/AlgoDraggable.vue";
 
     export default defineComponent({
         methods: {
             ...mapActions(useProjectStore, ["deleteSceneObject"]),
-
             configureSceneObject(sceneObject, event) {
                 if (event.target.localName === "i") return;
                 openModal(ConfigureSceneObjectModal, { sceneObject });
             },
-        },
 
+            deleteSceneObjectId(sceneObject) {
+                deleteSceneObject(sceneObject.id);
+            },
+        },
         computed: {
             ...mapState(useProjectStore, ["sceneObjects"]),
-
             sceneObjectLabel() {
                 return (sceneObject) => {
                     return `${getSceneObjectTypeLabel(sceneObject.type)} ${
@@ -43,13 +44,13 @@
                     }`;
                 };
             },
-
             hasSubObject() {
                 return (sceneObject) => {
                     return !isEmpty(sceneObject.subobjects);
                 };
             },
         },
+        components: { AlgoDraggable },
     });
 </script>
 

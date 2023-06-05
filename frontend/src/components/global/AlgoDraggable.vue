@@ -1,12 +1,13 @@
 <template>
-    <div :id="id" class="algo-draggable-container">
+    <div :id="id" class="algo-draggable-container" :class="class">
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
                 v-for="variable in this.selectedVariables"
                 class="ma-2"
                 :key="variable.id"
-                @click:close="deleteVariable(variable)"
+                @click="onClick(variable, $event)"
+                @click:close="onClickClose(variable, $event)"
                 draggable
                 style="cursor: grab"
                 v-on:dragstart="dragStart"
@@ -14,7 +15,7 @@
                 v-on:dragend="dragEnd"
                 :id="variable.id"
             >
-                {{ variable.name }}
+                {{ content(variable) }}
             </v-chip>
         </TransitionGroup>
     </div>
@@ -24,12 +25,12 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["id", "draggableList"],
+        props: ["id", "draggableList", "onClickClose", "onClick", "content", "class"],
 
         data() {
             return {
                 selectedVariables: [],
-                draggedVariableId: "",
+                draggedVariable: "",
             };
         },
 
@@ -38,11 +39,6 @@
         },
 
         methods: {
-            deleteVariable(selectedVariable) {
-                let index = this.selectedVariables.findIndex((variable) => variable.id === selectedVariable.id);
-                if (index != -1) this.selectedVariables.splice(index, 1);
-            },
-
             dragStart: function (event) {
                 this.draggedVariableId = event.target.id;
             },
@@ -55,9 +51,9 @@
                     !event.target.classList.contains("algo-draggable-group-move")
                 ) {
                     let index_from = this.selectedVariables.findIndex(
-                        (variable) => variable.id === this.draggedVariableId
+                        (variable) => variable.id == this.draggedVariableId
                     );
-                    let index_to = this.selectedVariables.findIndex((variable) => variable.id === event.target.id);
+                    let index_to = this.selectedVariables.findIndex((variable) => variable.id == event.target.id);
                     let cutOut = this.selectedVariables.splice(index_from, 1)[0];
                     this.selectedVariables.splice(index_to, 0, cutOut);
                 }
