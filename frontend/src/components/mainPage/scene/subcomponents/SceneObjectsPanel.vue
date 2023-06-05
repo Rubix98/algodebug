@@ -1,6 +1,6 @@
 <template>
     <AlgoDraggable
-        class="scene-objects-panel-container"
+        additionalClass="scene-objects-panel-container"
         id="scene-objects-chips"
         :draggableList="this.sceneObjects"
         :on-click-close="deleteSceneObjectId"
@@ -10,6 +10,7 @@
                 return `${sceneObjectLabel(sceneObject)}`;
             }
         "
+        :swap-variables="swapVariables"
     />
 </template>
 
@@ -24,6 +25,7 @@
     import AlgoDraggable from "../../../global/AlgoDraggable.vue";
 
     export default defineComponent({
+        components: { AlgoDraggable },
         methods: {
             ...mapActions(useProjectStore, ["deleteSceneObject"]),
             configureSceneObject(sceneObject, event) {
@@ -33,6 +35,11 @@
 
             deleteSceneObjectId(sceneObject) {
                 deleteSceneObject(sceneObject.id);
+            },
+
+            swapVariables(index_from, index_to) {
+                let cutOut = this.sceneObjects.splice(index_from, 1)[0];
+                this.sceneObjects.splice(index_to, 0, cutOut);
             },
         },
         computed: {

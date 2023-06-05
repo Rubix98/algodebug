@@ -1,9 +1,9 @@
 <template>
-    <div :id="id" class="algo-draggable-container" :class="class">
+    <div :id="id" class="algo-draggable-container" :class="additionalClass">
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
-                v-for="variable in this.draggableList"
+                v-for="variable in draggableList"
                 class="ma-2"
                 :key="variable.id"
                 @click="onClick(variable, $event)"
@@ -25,14 +25,13 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["id", "draggableList", "onClickClose", "onClick", "content", "class"],
+        props: ["id", "draggableList", "onClickClose", "onClick", "content", "additionalClass", "swapVariables"],
 
         data() {
             return {
                 draggedVariable: "",
             };
         },
-
         methods: {
             dragStart: function (event) {
                 this.draggedVariableId = event.target.id;
@@ -47,8 +46,7 @@
                 ) {
                     let index_from = this.draggableList.findIndex((variable) => variable.id == this.draggedVariableId);
                     let index_to = this.draggableList.findIndex((variable) => variable.id == event.target.id);
-                    let cutOut = this.draggableList.splice(index_from, 1)[0];
-                    this.draggableList.splice(index_to, 0, cutOut);
+                    this.swapVariables(index_from, index_to);
                 }
             },
 
