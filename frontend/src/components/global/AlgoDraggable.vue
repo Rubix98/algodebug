@@ -3,7 +3,7 @@
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
-                v-for="variable in this.selectedVariables"
+                v-for="variable in this.draggableList"
                 class="ma-2"
                 :key="variable.id"
                 @click="onClick(variable, $event)"
@@ -29,13 +29,8 @@
 
         data() {
             return {
-                selectedVariables: [],
                 draggedVariable: "",
             };
-        },
-
-        mounted() {
-            this.selectedVariables = this.$props.draggableList;
         },
 
         methods: {
@@ -50,12 +45,12 @@
                     event.target.parentNode.classList.contains("algo-draggable-container") &&
                     !event.target.classList.contains("algo-draggable-group-move")
                 ) {
-                    let index_from = this.selectedVariables.findIndex(
+                    let index_from = this.draggableList.findIndex(
                         (variable) => variable.id == this.draggedVariableId
                     );
-                    let index_to = this.selectedVariables.findIndex((variable) => variable.id == event.target.id);
-                    let cutOut = this.selectedVariables.splice(index_from, 1)[0];
-                    this.selectedVariables.splice(index_to, 0, cutOut);
+                    let index_to = this.draggableList.findIndex((variable) => variable.id == event.target.id);
+                    let cutOut = this.draggableList.splice(index_from, 1)[0];
+                    this.draggableList.splice(index_to, 0, cutOut);
                 }
             },
 
