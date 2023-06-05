@@ -34,7 +34,7 @@
             },
 
             deleteSceneObjectId(sceneObject) {
-                deleteSceneObject(sceneObject.id);
+                this.deleteSceneObject(sceneObject.id);
             },
 
             swapVariables(index_from, index_to) {
@@ -57,7 +57,6 @@
                 };
             },
         },
-        components: { AlgoDraggable },
     });
 </script>
 
