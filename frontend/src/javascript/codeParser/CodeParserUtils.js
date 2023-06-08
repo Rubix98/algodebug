@@ -1,4 +1,4 @@
-import { getLanguage } from "@/javascript/languages/languageList";
+import { getLanguage } from "@/javascript/codeParser/languages/languageList";
 
 const variableTagName = "algodebug-variable";
 const breakpointTagName = "algodebug-breakpoint";

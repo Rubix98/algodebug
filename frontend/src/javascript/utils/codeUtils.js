@@ -1,7 +1,7 @@
 import { useProjectStore } from "@/stores/project";
 import { applyChangeOnInterval, areIntervalsIntersectOrTouching, isIntervalEmpty } from "./intervalsUtils";
 import lineColumn from "line-column";
-import { getLanguage } from "@/javascript/languages/languageList";
+import { getLanguage } from "@/javascript/codeParser/languages/languageList";
 
 export function getVariablesArray(languageName, code) {
     const language = getLanguage(languageName);
