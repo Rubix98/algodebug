@@ -1,4 +1,4 @@
-import cpp from "@/javascript/codeParser/languages/cpp";
+import cpp from "@/javascript/debugCode/languages/cpp";
 
 const languages = {
     cpp: cpp,

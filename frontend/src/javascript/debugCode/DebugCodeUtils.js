@@ -1,9 +1,9 @@
-import { getLanguage } from "@/javascript/codeParser/languages/languageList";
+import { getLanguage } from "@/javascript/debugCode/languages/languageList";
 
 const variableTagName = "algodebug-variable";
 const breakpointTagName = "algodebug-breakpoint";
 
-export class CodeParserUtils {
+export class DebugCodeUtils {
     static insertVariableTags(code, variables) {
         for (let variable of variables.sortedBy("start", -1)) {
             code =
