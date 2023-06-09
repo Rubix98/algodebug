@@ -64,11 +64,18 @@
 
                 modelBeforeChanges: "",
 
-                swatchColors: [['#FF0000', '#00FF00'], ['#0000FF', '#FFFF00'], ['#00FFFF', '#FF00FF']],
-
-                presetColors: ['#FF0000', '#FF8000', '#FFFF00', '#80FF00', '#00FF00', '#008000', '#0080FF', '#0000FF', '#8000FF', '#FF00FF', '#FF0080', '#FF80FF', '#FF8000', '#FF0080', '#FF80FF', '#FF8000', '#8000FF', '#0080FF', '#FF0080', '#80FF00', '#008000', '#0080FF', '#0000FF', '#8000FF', '#FF00FF', '#FF0080', '#FF80FF', '#FF8000', '#8000FF', '#0080FF'],
-
-                currentColorIndex: 0,
+                presetColors: [
+                    "#00FF00",
+                    "#093AED",
+                    "#FF0000",
+                    "#FFFF00",
+                    "#FFA500",
+                    "#9909ED",
+                    "#00FFFF",
+                    "#32CD32",
+                    "#EB0CE7",
+                    "#D2691E",
+                ],
             };
         },
 
@@ -153,7 +160,7 @@
 
             nextColor() {
                 let index = this.model.subobjects.length % this.presetColors.length;
-            
+
                 return this.presetColors[index];
             },
 
@@ -162,7 +169,7 @@
                     type: null,
                     variables: [],
                     converter: null,
-                    color: this.nextColor
+                    color: this.nextColor,
                 };
             },
 
