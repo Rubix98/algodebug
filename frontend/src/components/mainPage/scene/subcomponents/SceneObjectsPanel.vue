@@ -5,12 +5,7 @@
         :draggableList="this.sceneObjects"
         :on-click-close="deleteSceneObjectId"
         :on-click="configureSceneObject"
-        :content="
-            (sceneObject) => {
-                return `${sceneObjectLabel(sceneObject)}`;
-            }
-        "
-        :swap-variables="swapVariables"
+        :content="(sceneObject) => `${sceneObjectLabel(sceneObject)}`"
     />
 </template>
 
@@ -35,11 +30,6 @@
 
             deleteSceneObjectId(sceneObject) {
                 this.deleteSceneObject(sceneObject.id);
-            },
-
-            swapVariables(index_from, index_to) {
-                let cutOut = this.sceneObjects.splice(index_from, 1)[0];
-                this.sceneObjects.splice(index_to, 0, cutOut);
             },
         },
         computed: {

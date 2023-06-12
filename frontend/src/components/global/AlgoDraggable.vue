@@ -3,19 +3,19 @@
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
-                v-for="variable in draggableList"
+                v-for="element in draggableList"
                 class="ma-2"
-                :key="variable.id"
-                @click="onClick(variable, $event)"
-                @click:close="onClickClose(variable, $event)"
+                :key="element.id"
+                @click="onClick(element, $event)"
+                @click:close="onClickClose(element, $event)"
                 draggable
                 style="cursor: grab"
                 v-on:dragstart="dragStart"
                 v-on:dragenter="dragEnter"
                 v-on:dragend="dragEnd"
-                :id="variable.id"
+                :id="element.id"
             >
-                {{ content(variable) }}
+                {{ content(element) }}
             </v-chip>
         </TransitionGroup>
     </div>
@@ -25,33 +25,35 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["id", "draggableList", "onClickClose", "onClick", "content", "additionalClass", "swapVariables"],
+        props: ["id", "draggableList", "onClickClose", "onClick", "content", "additionalClass"],
 
         data() {
             return {
-                draggedVariable: "",
+                draggedElement: "",
             };
         },
         methods: {
             dragStart: function (event) {
-                this.draggedVariableId = event.target.id;
+                this.draggedElementId = event.target.id;
             },
 
             dragEnter: function (event) {
                 if (
-                    this.draggedVariableId != "" &&
-                    event.target.id != this.draggedVariableId &&
+                    this.draggedElementId != "" &&
+                    event.target.id != this.draggedElementId &&
                     event.target.parentNode.classList.contains("algo-draggable-container") &&
                     !event.target.classList.contains("algo-draggable-group-move")
                 ) {
-                    let index_from = this.draggableList.findIndex((variable) => variable.id == this.draggedVariableId);
-                    let index_to = this.draggableList.findIndex((variable) => variable.id == event.target.id);
-                    this.swapVariables(index_from, index_to);
+                    let index_from = this.draggableList.findIndex((element) => element.id == this.draggedElementId);
+                    let index_to = this.draggableList.findIndex((element) => element.id == event.target.id);
+
+                    let cutOut = this.draggableList.splice(index_from, 1)[0];
+                    this.draggableList.splice(index_to, 0, cutOut);
                 }
             },
 
             dragEnd: function () {
-                this.draggedVariableId = "";
+                this.draggedElementId = "";
             },
         },
     });
@@ -59,7 +61,8 @@
 
 <style scoped>
     .algo-draggable-container {
-        height: 15%;
+        height: 48px;
+        width: 100%;
         white-space: nowrap;
         overflow-y: auto;
     }
@@ -80,6 +83,6 @@
     }
 
     .algo-draggable-group-leave-active {
-        position: absolute;
+        position: fixed;
     }
 </style>

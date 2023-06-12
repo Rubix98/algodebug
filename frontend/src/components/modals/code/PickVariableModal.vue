@@ -4,12 +4,7 @@
             id="variable-chips"
             :draggableList="selectedVariables"
             :on-click-close="handlePickVariable"
-            :content="
-                (variable) => {
-                    return `${variable.name}`;
-                }
-            "
-            :swap-variables="swapVariables"
+            :content="(variable) => `${variable.name}`"
         />
 
         <CodeViewer
@@ -54,11 +49,6 @@
 
             deleteVariable(variable) {
                 this.$props.callback(variable);
-            },
-
-            swapVariables(index_from, index_to) {
-                let cutOut = this.selectedVariables.splice(index_from, 1)[0];
-                this.selectedVariables.splice(index_to, 0, cutOut);
             },
         },
         computed: {
