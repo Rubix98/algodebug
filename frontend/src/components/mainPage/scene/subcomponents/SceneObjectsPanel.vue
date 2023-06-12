@@ -5,7 +5,11 @@
         :draggableList="this.sceneObjects"
         :on-click-close="deleteSceneObjectId"
         :on-click="configureSceneObject"
-        @update-list="(list) => {this.sceneObject = list}"
+        @update-list="
+            (list) => {
+                this.sceneObject = list;
+            }
+        "
         :content="(sceneObject) => `${sceneObjectLabel(sceneObject)}`"
     />
 </template>

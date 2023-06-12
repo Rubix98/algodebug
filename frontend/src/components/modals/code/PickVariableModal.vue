@@ -4,7 +4,11 @@
             id="variable-chips"
             :draggableList="selectedVariables"
             :on-click-close="handlePickVariable"
-            @update-list="(list) => {this.selectedVariables = list}"
+            @update-list="
+                (list) => {
+                    this.selectedVariables = list;
+                }
+            "
             :content="(variable) => `${variable.name}`"
         />
 
