@@ -47,8 +47,12 @@
                     let index_from = this.draggableList.findIndex((element) => element.id == this.draggedElementId);
                     let index_to = this.draggableList.findIndex((element) => element.id == event.target.id);
 
-                    let cutOut = this.draggableList.splice(index_from, 1)[0];
-                    this.draggableList.splice(index_to, 0, cutOut);
+                    let selectedElements = this.$props.draggableList;
+
+                    let cutOut = selectedElements.splice(index_from, 1)[0];
+                    selectedElements.splice(index_to, 0, cutOut);
+
+                    this.$emit("update-list", selectedElements);
                 }
             },
 
