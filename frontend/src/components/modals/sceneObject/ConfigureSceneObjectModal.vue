@@ -22,7 +22,7 @@
             :sceneObject="model"
             label="Właściwości"
             :headers="['Rodzaj', 'Przypisane zmienne', 'Konwerter', 'Kolor']"
-            :emptyRow="{ type: null, variables: [], converter: null, color: '#000000' }"
+            :emptyRow="emptyRow"
         ></AlgoTable>
 
         <template #buttons>
@@ -63,6 +63,19 @@
                 },
 
                 modelBeforeChanges: "",
+
+                presetColors: [
+                    "#00FF00",
+                    "#093AED",
+                    "#FF0000",
+                    "#FFFF00",
+                    "#FFA500",
+                    "#9909ED",
+                    "#00FFFF",
+                    "#32CD32",
+                    "#EB0CE7",
+                    "#D2691E",
+                ],
             };
         },
 
@@ -143,6 +156,21 @@
                 return this.sceneObjectTypes.map((e) => {
                     return e.label;
                 });
+            },
+
+            nextColor() {
+                let index = this.model.subobjects.length % this.presetColors.length;
+
+                return this.presetColors[index];
+            },
+
+            emptyRow() {
+                return {
+                    type: null,
+                    variables: [],
+                    converter: null,
+                    color: this.nextColor,
+                };
             },
 
             hasSubtypes() {
