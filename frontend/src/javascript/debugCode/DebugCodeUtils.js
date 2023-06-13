@@ -1,10 +1,9 @@
-import { getDefines } from "@/javascript/languages/cpp";
-import { getDefaultConverters } from "@/javascript/languages/cpp";
+import { getLanguage } from "@/javascript/debugCode/languages/languageList";
 
 const variableTagName = "algodebug-variable";
 const breakpointTagName = "algodebug-breakpoint";
 
-export class CodeParserUtils {
+export class DebugCodeUtils {
     static insertVariableTags(code, variables) {
         for (let variable of variables.sortedBy("start", -1)) {
             code =
@@ -53,26 +52,18 @@ export class CodeParserUtils {
         return code;
     }
 
-    static insertAlgodebugMacros(code) {
-        return getDefines() + code;
-    }
+    static insertConvertersAfterIncludes(code, converters, languageName) {
+        const language = getLanguage(languageName);
 
-    static insertConvertersAfterIncludes(code, converters) {
         converters = converters
             .map((converter) => {
                 let code = this.getRenamedConverterCode(converter);
-                return code.slice(0, code.indexOf("{")).trim() + ";";
+                return language.getConverterDeclaration(code);
             })
             .join("\n");
 
-        converters += "\n" + getDefaultConverters();
+        let position = language.getConvertersPosition(code);
 
-        let includeStartPosition = code.lastIndexOf("#include");
-        let includeEndPosition = code.indexOf(">", includeStartPosition);
-        let usingNamespaceStartPosition = code.lastIndexOf("using namespace");
-        let usingNamespaceEndPosition = code.indexOf(";", usingNamespaceStartPosition);
-
-        let position = Math.max(includeEndPosition, usingNamespaceEndPosition) + 1;
         code = code.slice(0, position) + "\n\n" + converters + code.slice(position);
         return code;
     }
@@ -82,12 +73,8 @@ export class CodeParserUtils {
         return code + "\n\n" + converters;
     }
 
-    static insertNecessaryIncludes(code) {
-        const necessaryIncludes = ["iostream", "vector", "tuple"];
-        for (let include of necessaryIncludes) {
-            code = this.insertIncludeIfNotPresent(code, include);
-        }
-        return code;
+    static insertCodePrefix(code, language) {
+        return getLanguage(language).getCodePrefix() + "\n" + code;
     }
 
     static getRenamedConverterCode(converter) {
@@ -102,14 +89,6 @@ export class CodeParserUtils {
             let end = code.indexOf(`</${tag}>`, start);
             let content = code.substring(start, end);
             code = code.substring(0, i) + mappingFunction(content) + code.substring(end + `</${tag}>`.length);
-        }
-        return code;
-    }
-
-    static insertIncludeIfNotPresent(code, library) {
-        const regex = new RegExp(`#include[ \t]*<${library}>`);
-        if (!regex.test(code)) {
-            return `#include <${library}>\n` + code;
         }
         return code;
     }

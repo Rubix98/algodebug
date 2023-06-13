@@ -1,6 +1,6 @@
-import { CodeParserUtils } from "./CodeParserUtils";
+import { DebugCodeUtils } from "./DebugCodeUtils";
 
-export class CodeParser {
+export class DebugCode {
     actions = {
         "<algodebug-variable>": function (parent, tag) {
             let beginIndex = tag.position + tag.key.length;
@@ -32,12 +32,13 @@ export class CodeParser {
         },
     };
 
-    constructor(code, sceneObjectsFlat, variables, breakpoints, converters) {
+    constructor(code, sceneObjectsFlat, variables, breakpoints, converters, language) {
         this.code = code;
         this.sceneObjectsFlat = sceneObjectsFlat;
         this.variables = variables;
         this.breakpoints = breakpoints;
         this.converters = converters;
+        this.language = language;
 
         this.parsedBreakpoints = [];
         this.stack = [];
@@ -114,16 +115,15 @@ export class CodeParser {
     }
 
     prepareCode() {
-        this.code = CodeParserUtils.insertVariableTags(this.code, this.variables);
-        this.code = CodeParserUtils.insertBreakpointTags(this.code, this.breakpoints);
+        this.code = DebugCodeUtils.insertVariableTags(this.code, this.variables);
+        this.code = DebugCodeUtils.insertBreakpointTags(this.code, this.breakpoints);
     }
 
     parseCode() {
-        this.code = CodeParserUtils.removeVariableTags(this.code);
-        this.code = CodeParserUtils.replaceBreakpointTags(this.code, this.sceneObjectsFlat, this.parsedBreakpoints);
-        this.code = CodeParserUtils.insertConvertersAfterIncludes(this.code, this.converters);
-        this.code = CodeParserUtils.insertConvertersAtTheEnd(this.code, this.converters);
-        this.code = CodeParserUtils.insertAlgodebugMacros(this.code);
-        this.code = CodeParserUtils.insertNecessaryIncludes(this.code);
+        this.code = DebugCodeUtils.removeVariableTags(this.code);
+        this.code = DebugCodeUtils.replaceBreakpointTags(this.code, this.sceneObjectsFlat, this.parsedBreakpoints);
+        this.code = DebugCodeUtils.insertConvertersAfterIncludes(this.code, this.converters, this.language);
+        this.code = DebugCodeUtils.insertConvertersAtTheEnd(this.code, this.converters);
+        this.code = DebugCodeUtils.insertCodePrefix(this.code, this.language);
     }
 }

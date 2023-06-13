@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { sendRequest } from "@/javascript/utils/axiosUtils";
-import { CodeParser } from "@/javascript/codeParser/CodeParser";
+import { DebugCode } from "@/javascript/debugCode/DebugCode";
 import { deleteProject } from "@/javascript/utils/projectUtils";
 
 export const useProjectStore = defineStore("project", {
@@ -23,12 +23,13 @@ export const useProjectStore = defineStore("project", {
 
     getters: {
         debugCode() {
-            return new CodeParser(
+            return new DebugCode(
                 this.code,
                 this.sceneObjectsFlat,
                 this.variables,
                 this.breakpoints,
-                this.converters
+                this.converters,
+                this.language
             ).parse();
         },
 
@@ -120,6 +121,9 @@ export const useProjectStore = defineStore("project", {
         },
         setWaitingForCompile(newValue) {
             this.waitingForCompile = newValue;
+        },
+        setLanguage(newValue) {
+            this.language = newValue;
         },
         switchCurrentTestCase(index) {
             this.currentTestCaseId = index;

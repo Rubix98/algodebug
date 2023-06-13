@@ -20,12 +20,15 @@
 
         data() {
             return {
-                languages: [{ key: "cpp", label: "C++" }],
+                languages: [
+                    { key: "cpp", label: "C++" },
+                    { key: "c", label: "C" },
+                ],
             };
         },
 
         methods: {
-            ...mapActions(useProjectStore, ["setLanuage", "switchCurrentFrame", "compile"]),
+            ...mapActions(useProjectStore, ["setLanguage", "switchCurrentFrame", "compile"]),
         },
 
         computed: {
