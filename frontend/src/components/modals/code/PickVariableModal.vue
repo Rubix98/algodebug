@@ -1,6 +1,11 @@
 <template>
     <AlgoModal title="Zaznacz zmienne" closeButtonLabel="Gotowe">
-        <AlgoDraggable id="variable-chips" :draggableList="this.$props.sceneObject.variables" />
+        <AlgoDraggable
+            id="variable-chips"
+            :draggableList="selectedVariables"
+            :on-click-close="handlePickVariable"
+            :content="(variable) => `${variable.name}`"
+        />
 
         <CodeViewer
             id="pick-variable-viewer"

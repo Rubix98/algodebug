@@ -1,20 +1,21 @@
 <template>
-    <div :id="id" class="algo-draggable-container">
+    <div :id="id" class="algo-draggable-container" :class="additionalClass">
         <TransitionGroup name="algo-draggable-group">
             <v-chip
                 closable
-                v-for="variable in this.selectedVariables"
+                v-for="element in selectedElements"
                 class="ma-2"
-                :key="variable.id"
-                @click:close="deleteVariable(variable)"
+                :key="element.id"
+                @click="onClick(element, $event)"
+                @click:close="onClickClose(element, $event)"
                 draggable
                 style="cursor: grab"
                 v-on:dragstart="dragStart"
                 v-on:dragenter="dragEnter"
                 v-on:dragend="dragEnd"
-                :id="variable.id"
+                :id="element.id"
             >
-                {{ variable.name }}
+                {{ content(element) }}
             </v-chip>
         </TransitionGroup>
     </div>
@@ -24,47 +25,46 @@
     import { defineComponent } from "vue";
 
     export default defineComponent({
-        props: ["id", "draggableList"],
+        props: ["id", "draggableList", "onClickClose", "onClick", "content", "additionalClass"],
 
         data() {
             return {
-                selectedVariables: [],
-                draggedVariableId: "",
+                draggedElement: "",
             };
         },
-
-        mounted() {
-            this.selectedVariables = this.$props.draggableList;
-        },
-
         methods: {
-            deleteVariable(selectedVariable) {
-                let index = this.selectedVariables.findIndex((variable) => variable.id === selectedVariable.id);
-                if (index != -1) this.selectedVariables.splice(index, 1);
-            },
-
             dragStart: function (event) {
-                this.draggedVariableId = event.target.id;
+                this.draggedElementId = event.target.id;
             },
 
             dragEnter: function (event) {
                 if (
-                    this.draggedVariableId != "" &&
-                    event.target.id != this.draggedVariableId &&
+                    this.draggedElementId != "" &&
+                    event.target.id != this.draggedElementId &&
                     event.target.parentNode.classList.contains("algo-draggable-container") &&
                     !event.target.classList.contains("algo-draggable-group-move")
                 ) {
-                    let index_from = this.selectedVariables.findIndex(
-                        (variable) => variable.id === this.draggedVariableId
-                    );
-                    let index_to = this.selectedVariables.findIndex((variable) => variable.id === event.target.id);
-                    let cutOut = this.selectedVariables.splice(index_from, 1)[0];
-                    this.selectedVariables.splice(index_to, 0, cutOut);
+                    let index_from = this.selectedElements.findIndex((element) => element.id == this.draggedElementId);
+                    let index_to = this.selectedElements.findIndex((element) => element.id == event.target.id);
+
+                    let cutOut = this.selectedElements.splice(index_from, 1)[0];
+                    this.selectedElements.splice(index_to, 0, cutOut);
                 }
             },
 
             dragEnd: function () {
-                this.draggedVariableId = "";
+                this.draggedElementId = "";
+            },
+        },
+
+        computed: {
+            selectedElements: {
+                get() {
+                    return this.$props.draggableList;
+                },
+                set(draggableList) {
+                    this.$emit("update:draggableList", draggableList);
+                },
             },
         },
     });
@@ -72,7 +72,8 @@
 
 <style scoped>
     .algo-draggable-container {
-        height: 15%;
+        height: 48px;
+        width: 100%;
         white-space: nowrap;
         overflow-y: auto;
     }
@@ -93,6 +94,6 @@
     }
 
     .algo-draggable-group-leave-active {
-        position: absolute;
+        position: fixed;
     }
 </style>
