@@ -1,6 +1,7 @@
 <template>
     <AlgoModal title="Zapisz projekt">
         <v-text-field label="Tytuł projektu" v-model="newTitle" clearable />
+        <v-checkbox label="Publiczny" v-model="project.public" />
         <template #buttons>
             <v-btn color="primary" @click="save(false)">Zapisz jako</v-btn>
             <v-btn color="primary" @click="save(true)" v-if="this.showOverrideButton">Zapisz</v-btn>
